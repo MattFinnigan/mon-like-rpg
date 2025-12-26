@@ -1,4 +1,4 @@
-import { BATTLE_ASSET_KEYS, HEALTH_BAR_ASSET_KEYS, MON_ASSET_KEYS, MON_BACK_ASSET_KEYS, SYSTEM_ASSET_KEYS } from '../assets/asset-keys.js'
+import { BATTLE_ASSET_KEYS, HEALTH_BAR_ASSET_KEYS, MON_ASSET_KEYS, MON_BACK_ASSET_KEYS, SYSTEM_ASSET_KEYS, UI_ASSET_KEYS } from '../assets/asset-keys.js'
 import Phaser from '../lib/phaser.js'
 import { SCENE_KEYS } from './scene-keys.js'
 
@@ -14,6 +14,7 @@ export class PreloadScene extends Phaser.Scene {
     const monsAssetPath = 'assets/images/mons'
     const monsBackAssetPath = 'assets/images/mons/backs'
     const battleAssetPath = 'assets/images/battle'
+    const uiAssestPath = 'assets/images/ui'
 
     this.load.bitmapFont(
       'gb-font',
@@ -34,6 +35,9 @@ export class PreloadScene extends Phaser.Scene {
     )
 
     this.load.image(SYSTEM_ASSET_KEYS.DIALOG_BACKGROUND, `/${backgroundAssetPath}/dialog.png`)
+    this.load.image(UI_ASSET_KEYS.CURSOR, `${uiAssestPath}/cursor.png`)
+
+    this.load.image(BATTLE_ASSET_KEYS.BATTLE_MENU_OPTIONS_BACKGROUND, `/${backgroundAssetPath}/battle-menu-options.png`)
     this.load.image(BATTLE_ASSET_KEYS.P1_BATTLE_DETAILS_BACKGROUND, `/${backgroundAssetPath}/p1-battle-details.png`)
     this.load.image(BATTLE_ASSET_KEYS.P2_BATTLE_DETAILS_BACKGROUND, `/${backgroundAssetPath}/p2-battle-details.png`)
 
