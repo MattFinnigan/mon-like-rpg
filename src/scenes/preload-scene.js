@@ -11,9 +11,9 @@ export class PreloadScene extends Phaser.Scene {
 
   preload () {
     const backgroundAssetPath = 'assets/images/backgrounds'
-    const kenneysAssetPath = 'assets/images/kenneys-assets'
     const monsAssetPath = 'assets/images/mons'
     const monsBackAssetPath = 'assets/images/mons/backs'
+    const battleAssetPath = 'assets/images/battle'
 
     this.load.bitmapFont(
       'gb-font',
@@ -21,12 +21,25 @@ export class PreloadScene extends Phaser.Scene {
       '/assets/fonts/minogram_6x10.xml'
     )
 
-    this.load.image(SYSTEM_ASSET_KEYS.DIALOG_BACKGROUND, `/${backgroundAssetPath}/dialog.png`)
+    this.load.bitmapFont(
+      'gb-font-small',
+      '/assets/fonts/round_6x6.png',
+      '/assets/fonts/round_6x6.xml'
+    )
 
-    this.load.image(BATTLE_ASSET_KEYS.HEALTH_BAR_BACKGROUND, `/${kenneysAssetPath}/ui-space-expansion/custom-ui.png`)
-    this.load.image(HEALTH_BAR_ASSET_KEYS.LEFT_CAP, `/${kenneysAssetPath}/ui-space-expansion/barHorizontal_green_left.png`)
-    this.load.image(HEALTH_BAR_ASSET_KEYS.MIDDLE, `/${kenneysAssetPath}/ui-space-expansion/barHorizontal_green_mid.png`)
-    this.load.image(HEALTH_BAR_ASSET_KEYS.RIGHT_CAP, `/${kenneysAssetPath}/ui-space-expansion/barHorizontal_green_right.png`)
+    this.load.bitmapFont(
+      'gb-font-thick',
+      '/assets/fonts/thick_8x8.png',
+      '/assets/fonts/thick_8x8.xml'
+    )
+
+    this.load.image(SYSTEM_ASSET_KEYS.DIALOG_BACKGROUND, `/${backgroundAssetPath}/dialog.png`)
+    this.load.image(BATTLE_ASSET_KEYS.P1_BATTLE_DETAILS_BACKGROUND, `/${backgroundAssetPath}/p1-battle-details.png`)
+    this.load.image(BATTLE_ASSET_KEYS.P2_BATTLE_DETAILS_BACKGROUND, `/${backgroundAssetPath}/p2-battle-details.png`)
+
+    this.load.image(HEALTH_BAR_ASSET_KEYS.LEFT_CAP, `/${battleAssetPath}/hp_left_cap.png`)
+    this.load.image(HEALTH_BAR_ASSET_KEYS.MIDDLE, `/${battleAssetPath}/hp_mid.png`)
+    this.load.image(HEALTH_BAR_ASSET_KEYS.RIGHT_CAP, `/${battleAssetPath}/hp_right_cap.png`)
 
     const keys = Object.keys(MON_ASSET_KEYS)
 

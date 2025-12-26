@@ -8,8 +8,8 @@ const game = new Phaser.Game({
   pixelArt: true,
   scale: {
     parent: 'game-container',
-    width: 160,
-    height: 144,
+    width: 640,
+    height: 576,
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH
   },
