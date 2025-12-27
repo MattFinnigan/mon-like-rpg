@@ -38,8 +38,8 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image(UI_ASSET_KEYS.CURSOR, `${uiAssestPath}/cursor.png`)
 
     this.load.image(BATTLE_ASSET_KEYS.BATTLE_MENU_OPTIONS_BACKGROUND, `/${backgroundAssetPath}/battle-menu-options.png`)
-    this.load.image(BATTLE_ASSET_KEYS.P1_BATTLE_DETAILS_BACKGROUND, `/${backgroundAssetPath}/p1-battle-details.png`)
-    this.load.image(BATTLE_ASSET_KEYS.P2_BATTLE_DETAILS_BACKGROUND, `/${backgroundAssetPath}/p2-battle-details.png`)
+    this.load.image(BATTLE_ASSET_KEYS.PLAYER_BATTLE_DETAILS_BACKGROUND, `/${backgroundAssetPath}/player-battle-details.png`)
+    this.load.image(BATTLE_ASSET_KEYS.ENEMY_BATTLE_DETAILS_BACKGROUND, `/${backgroundAssetPath}/enemy-battle-details.png`)
 
     this.load.image(HEALTH_BAR_ASSET_KEYS.LEFT_CAP, `/${battleAssetPath}/hp_left_cap.png`)
     this.load.image(HEALTH_BAR_ASSET_KEYS.MIDDLE, `/${battleAssetPath}/hp_mid.png`)
@@ -48,8 +48,11 @@ export class PreloadScene extends Phaser.Scene {
     const keys = Object.keys(MON_ASSET_KEYS)
 
     for (let i = 0; i < keys.length; i++) {
-      this.load.image(keys[i], `/${monsAssetPath}/${i + 1}.PNG`)
-      this.load.image(MON_BACK_ASSET_KEYS[keys[i] + '_BACK'], `/${monsBackAssetPath}/${i + 1}.PNG`)
+      if (keys[i] === 'PIKACHU' || keys[i] === 'BLASTOISE') {
+        this.load.image(keys[i], `/${monsAssetPath}/${i + 1}.PNG`)
+        this.load.image(MON_BACK_ASSET_KEYS[keys[i] + '_BACK'], `/${monsBackAssetPath}/${i + 1}.PNG`)
+      }
+
     }
 
     console.log(`[${PreloadScene.name}:preload] invoked`)
