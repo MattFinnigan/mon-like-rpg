@@ -8,6 +8,10 @@ export const UI_ASSET_KEYS = Object.freeze({
   CURSOR: 'CURSOR'
 })
 
+export const DATA_ASSET_KEYS = Object.freeze({
+  ATTACKS: 'ATTACKS'
+})
+
 export const HEALTH_BAR_ASSET_KEYS = Object.freeze({
   LEFT_CAP: 'LEFT_CAP',
   RIGHT_CAP: 'RIGHT_CAP',

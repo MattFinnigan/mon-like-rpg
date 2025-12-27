@@ -1,5 +1,6 @@
 import { HealthBar } from "../ui/health-bar.js"
-import { BATTLE_ASSET_KEYS } from "../../assets/asset-keys.js"
+import { BATTLE_ASSET_KEYS, DATA_ASSET_KEYS } from "../../assets/asset-keys.js"
+import { DataUtils } from "../../utils/data-utils.js"
 
 export class BattleMon {
   /** @protected @type {Phaser.Scene} */
@@ -40,6 +41,13 @@ export class BattleMon {
     this._phaserMonImageGameObject = this._scene.add.image(396, 5, this._monDetails.assetKey, this._monDetails.assetFrame).setOrigin(0)
     this._phaserMonDetailsBackgroundImageGameObject = this._scene.add.image(0, 0, BATTLE_ASSET_KEYS.ENEMY_BATTLE_DETAILS_BACKGROUND).setOrigin(0)
     this.#createHealthBarComponents()
+
+    this._monDetails.attackIds.forEach(attkId => {
+      const monAttk = DataUtils.getMonAttack(this._scene, attkId)
+      if (monAttk !== undefined) {
+        this._monAttacks.push(monAttk)
+      }
+    })
   }
 
   /** @type {boolean} */

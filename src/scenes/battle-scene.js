@@ -1,11 +1,11 @@
-import { BATTLE_ASSET_KEYS, HEALTH_BAR_ASSET_KEYS, MON_ASSET_KEYS, MON_BACK_ASSET_KEYS } from '../assets/asset-keys.js'
+import { MON_ASSET_KEYS, MON_BACK_ASSET_KEYS } from '../assets/asset-keys.js'
 import Phaser from '../lib/phaser.js'
 import { SCENE_KEYS } from './scene-keys.js'
-import { BITMAP_NEGATIVE_Y_PADDING } from '../lib/consts.js'
 import { BattleMenu } from '../battle/ui/menu/battle-menu.js'
 import { DIRECTION } from '../common/direction.js'
 import { EnemyBattleMon } from '../battle/mons/enemy-battle-monster.js'
 import { PlayerBattleMon } from '../battle/mons/player-battle-monster.js'
+import { StateMachine } from '../utils/state-machine.js'
 
 export class BattleScene extends Phaser.Scene {
   /** @type {BattleMenu} */
@@ -16,6 +16,10 @@ export class BattleScene extends Phaser.Scene {
   #activeEnemyMon
   /** @type {PlayerBattleMon} */
   #activePlayerMon
+  /** @type {number} */
+  #activePlayerAttackIndex
+  /** @type {StateMachine} */
+  #battleStateMachine
 
   constructor () {
     super({
@@ -23,6 +27,9 @@ export class BattleScene extends Phaser.Scene {
     })
   }
   
+  init () {
+    this.#activePlayerAttackIndex = -1
+  }
   
   preload () {
     console.log(`[${BattleScene.name}:preload] invoked`)
@@ -39,11 +46,11 @@ export class BattleScene extends Phaser.Scene {
         name: P2_MON,
         assetKey: MON_ASSET_KEYS[P2_MON],
         assetFrame: 0,
-        currentHp: 19,
-        maxHp: 19,
+        currentHp: 20,
+        maxHp: 20,
         currentLevel: 100,
-        attackIds: [],
-        baseAttack: 5
+        attackIds: [2],
+        baseAttack: 20
       }
     })
 
@@ -53,22 +60,32 @@ export class BattleScene extends Phaser.Scene {
         name: P1_MON,
         assetKey: MON_BACK_ASSET_KEYS[P1_MON + '_BACK'],
         assetFrame: 0,
-        currentHp: 19,
-        maxHp: 19,
+        currentHp: 20,
+        maxHp: 20,
         currentLevel: 15,
-        attackIds: [],
+        attackIds: [1, 2],
         baseAttack: 5
       }
     })
 
-    this.#battleMenu = new BattleMenu(this)
+    this.#battleMenu = new BattleMenu(this, this.#activePlayerMon)
     this.#battleMenu.showMainBattleMenu()
 
-    this.#cursorKeys = this.input.keyboard.createCursorKeys()
-
-    this.#activeEnemyMon.takeDamage(7, () => {
-      this.#activePlayerMon.takeDamage(5)
+    this.#battleStateMachine = new StateMachine('battle', this)
+    this.#battleStateMachine.addState({
+      name: 'INTRO',
+      onEnter: () => {
+        this.time.delayedCall(1000, () => {
+          this.#battleStateMachine.setState('BATTLE')
+        })
+      }
     })
+    this.#battleStateMachine.addState({
+      name: 'BATTLE'
+    })
+    this.#battleStateMachine.setState('INTRO')
+
+    this.#cursorKeys = this.input.keyboard.createCursorKeys()
   }
 
   update () {
@@ -80,11 +97,14 @@ export class BattleScene extends Phaser.Scene {
       if (this.#battleMenu.selectedAttack === undefined) {
         return
       }
-      console.log('Player selected the following move ' + this.#battleMenu.selectedAttack)
+      this.#activePlayerAttackIndex = this.#battleMenu.selectedAttack
+
+      if (!this.#activePlayerMon.attacks[this.#activePlayerAttackIndex]) {
+        return
+      }
+
       this.#battleMenu.hideMonAttackSubMenu()
-      this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(['He did the thing!'], () => {
-        this.#battleMenu.showMainBattleMenu()
-      })
+      this.#handleBattleSequence()
     }
 
     if (Phaser.Input.Keyboard.JustDown(this.#cursorKeys.shift)) {
@@ -109,4 +129,59 @@ export class BattleScene extends Phaser.Scene {
     }
   }
 
+  #handleBattleSequence () {
+    this.#playerAttack()
+  }
+
+  #playerAttack () {
+    const attk = this.#activePlayerMon.attacks[this.#activePlayerAttackIndex]
+    this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`${this.#activePlayerMon.name} used ${attk.name}!`], () => {
+      this.time.delayedCall(500, () => {
+        this.#activeEnemyMon.takeDamage(this.#activePlayerMon.baseAttack, () => {
+          this.#enemyAttack()
+        })
+      })
+    })
+  }
+
+  #enemyAttack() {
+    if (this.#activeEnemyMon.isFainted) {
+      this.#postBattleSequenceCheck()
+      return
+    }
+    const attk = this.#activeEnemyMon.attacks[0]
+    this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`Foe ${this.#activeEnemyMon.name} used ${attk.name}!`], () => {
+      this.time.delayedCall(500, () => {
+        this.#activePlayerMon.takeDamage(this.#activeEnemyMon.baseAttack, () => {
+          this.#postBattleSequenceCheck()
+        })
+      })
+    })
+  }
+
+  #postBattleSequenceCheck() {
+    if (this.#activeEnemyMon.isFainted) {
+      this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`Wild ${this.#activeEnemyMon.name} fainted!`, `${this.#activePlayerMon.name} gained 32 experience points!`], () => {
+        // TODO
+        this.#transitionToNextScene()
+      })
+      return
+    }
+
+    if (this.#activePlayerMon.isFainted) {
+      this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`${this.#activePlayerMon.name} fainted!`, `YOU have no usable Pokemon!`, `YOU whited out!`], () => {
+        // TODO
+        this.#transitionToNextScene()
+      })
+      return
+    }
+    this.#battleMenu.showMainBattleMenu()
+  }
+
+  #transitionToNextScene () {
+    this.cameras.main.fadeOut(500, 255, 255, 255)
+    this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
+      this.scene.start(SCENE_KEYS.BATTLE_SCENE)
+    })
+  }
 }

@@ -1,0 +1,12 @@
+[
+  {
+    "id": 1,
+    "name": "THUNDERBOLT",
+    "animationName": "THUNDERBOLT"
+  },
+  {
+    "id": 2,
+    "name": "WATER GUN",
+    "animationName": "WATER_GUN"
+  }
+]

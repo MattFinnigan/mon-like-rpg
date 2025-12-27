@@ -1,4 +1,4 @@
-import { BATTLE_ASSET_KEYS, HEALTH_BAR_ASSET_KEYS, MON_ASSET_KEYS, MON_BACK_ASSET_KEYS, SYSTEM_ASSET_KEYS, UI_ASSET_KEYS } from '../assets/asset-keys.js'
+import { BATTLE_ASSET_KEYS, DATA_ASSET_KEYS, HEALTH_BAR_ASSET_KEYS, MON_ASSET_KEYS, MON_BACK_ASSET_KEYS, SYSTEM_ASSET_KEYS, UI_ASSET_KEYS } from '../assets/asset-keys.js'
 import Phaser from '../lib/phaser.js'
 import { SCENE_KEYS } from './scene-keys.js'
 
@@ -54,6 +54,8 @@ export class PreloadScene extends Phaser.Scene {
       }
 
     }
+
+    this.load.json(DATA_ASSET_KEYS.ATTACKS, 'assets/data/attacks.json')
 
     console.log(`[${PreloadScene.name}:preload] invoked`)
   }

@@ -3,6 +3,7 @@ import { SYSTEM_ASSET_KEYS, BATTLE_ASSET_KEYS, UI_ASSET_KEYS } from '../../../as
 import { DIRECTION } from '../../../common/direction.js'
 import { exhaustiveGuard } from '../../../utils/guard.js'
 import { ACTIVE_BATTLE_MENU, ATTACK_MOVE_OPTIONS, BATTLE_MENU_OPTIONS } from './battle-menu-options.js'
+import { BattleMon } from '../../mons/battle-mon.js'
 
 const BATTLE_MENU_CURSOR_POS = Object.freeze({
   x: 30,
@@ -45,13 +46,17 @@ export class BattleMenu {
   #waitingForPlayerInput
   /** @type {number | undefined} */
   #selectedAttackIndex
+  /** @type {BattleMon} */
+  #activePlayerMon
 
   /**
    * 
    * @param {Phaser.Scene} scene the Phaser 3 Scene the battle menu will be added to
+   * @param {BattleMon} activePlayerMon
    */
-  constructor (scene) {
+  constructor (scene, activePlayerMon) {
     this.#scene = scene
+    this.#activePlayerMon = activePlayerMon
     this.#INFO_POS_Y = (this.#scene.scale.height / 3) * 2
     this.#battleTextGameObjectLine1 = this.#scene.add.bitmapText(55, this.#INFO_POS_Y + 45, 'gb-font', '', 40)
     this.#selectedBattleMenuOption = BATTLE_MENU_OPTIONS.FIGHT
@@ -60,7 +65,7 @@ export class BattleMenu {
     this.#queuedInfoPanelCallback = undefined
     this.#queuedInfoPanelMessages = []
     this.#waitingForPlayerInput = false
-
+    
     this.#createMainInfoPane(0, this.#INFO_POS_Y)
     this.#createMainBattleMenu()
     this.#createMonAttackSubMenu()
@@ -97,6 +102,7 @@ export class BattleMenu {
   }
 
   hideMonAttackSubMenu () {
+    this.#activeBattleMenu = ACTIVE_BATTLE_MENU.BATTLE_MAIN
     this.#moveSelectionSubBattleMenuPhaserContainerGameObject.setAlpha(0)
   }
   /**
@@ -165,8 +171,8 @@ export class BattleMenu {
   
   #createMainBattleMenu () {
     const MENU_POS_Y = 300
-    this.#battleTextGameObjectLine1 = this.#scene.add.bitmapText(30, this.#INFO_POS_Y + 45, 'gb-font', '', 40)
-    this.#battleTextGameObjectLine2 = this.#scene.add.bitmapText(30, this.#INFO_POS_Y + 100, 'gb-font', '', 40)
+    this.#battleTextGameObjectLine1 = this.#scene.add.bitmapText(30, this.#INFO_POS_Y + 45, 'gb-font', '', 30)
+    this.#battleTextGameObjectLine2 = this.#scene.add.bitmapText(30, this.#INFO_POS_Y + 100, 'gb-font', '', 30)
     this.#mainBattleCursorPhaserImageGameObject = this.#scene.add.image(BATTLE_MENU_CURSOR_POS.x, BATTLE_MENU_CURSOR_POS.y, UI_ASSET_KEYS.CURSOR, 0).setOrigin(0).setScale(1.35)
 
     this.#mainBattleMenuPhaserContainerGameObject = this.#scene.add.container(MENU_POS_Y, this.#INFO_POS_Y, [
@@ -189,11 +195,17 @@ export class BattleMenu {
       .setOrigin(0)
       .setScale(1.35)
 
+    /** @type {string[]} */
+    const attackNames = []
+    for (let i = 0; i < 4; i++) {
+      attackNames.push(this.#activePlayerMon.attacks[i]?.name || '-')
+    }
+
     this.#moveSelectionSubBattleMenuPhaserContainerGameObject = this.#scene.add.container(0, this.#INFO_POS_Y, [
-      this.#scene.add.bitmapText(55, 45, 'gb-font', 'THUNDER WAVE', 30),
-      this.#scene.add.bitmapText(350, 45, 'gb-font', 'THUNDER WAVE', 30),
-      this.#scene.add.bitmapText(55, 110, 'gb-font', '-', 30),
-      this.#scene.add.bitmapText(350, 110, 'gb-font', '-', 30),
+      this.#scene.add.bitmapText(55, 45, 'gb-font', attackNames[0], 30),
+      this.#scene.add.bitmapText(350, 45, 'gb-font', attackNames[1], 30),
+      this.#scene.add.bitmapText(55, 110, 'gb-font', attackNames[2], 30),
+      this.#scene.add.bitmapText(350, 110, 'gb-font', attackNames[3], 30),
       this.#attackCursorPhaserImageGameObject
     ])
 
