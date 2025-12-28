@@ -6,6 +6,19 @@ import { DIRECTION } from '../common/direction.js'
 import { EnemyBattleMon } from '../battle/mons/enemy-battle-monster.js'
 import { PlayerBattleMon } from '../battle/mons/player-battle-monster.js'
 import { StateMachine } from '../utils/state-machine.js'
+import { SKIP_BATTLE_ANIMATIONS } from '../../config.js'
+
+const BATTLE_STATES = Object.freeze({
+  INTRO: 'INTRO',
+  PRE_BATTLE_INFO: 'PRE_BATTLE_INFO',
+  BRING_OUT_MON: 'BRING_OUT_MON',
+  PLAYER_INPUT: 'PLAYER_INPUT',
+  ENEMY_INPUT: 'ENEMY_INPUT',
+  BATTLE: 'BATTLE',
+  POST_ATTACK: 'POST_ATTACK',
+  FINISHED: 'FINISHED',
+  RUN_ATTEMPT: 'RUN_ATTEMPT'
+})
 
 export class BattleScene extends Phaser.Scene {
   /** @type {BattleMenu} */
@@ -51,7 +64,8 @@ export class BattleScene extends Phaser.Scene {
         currentLevel: 100,
         attackIds: [2],
         baseAttack: 20
-      }
+      },
+      skipBattleAnimations: SKIP_BATTLE_ANIMATIONS
     })
 
     this.#activePlayerMon = new PlayerBattleMon({
@@ -64,32 +78,34 @@ export class BattleScene extends Phaser.Scene {
         maxHp: 20,
         currentLevel: 15,
         attackIds: [1, 2],
-        baseAttack: 5
-      }
+        baseAttack: 20
+      },
+      skipBattleAnimations: SKIP_BATTLE_ANIMATIONS
     })
 
     this.#battleMenu = new BattleMenu(this, this.#activePlayerMon)
-    this.#battleMenu.showMainBattleMenu()
-
-    this.#battleStateMachine = new StateMachine('battle', this)
-    this.#battleStateMachine.addState({
-      name: 'INTRO',
-      onEnter: () => {
-        this.time.delayedCall(1000, () => {
-          this.#battleStateMachine.setState('BATTLE')
-        })
-      }
-    })
-    this.#battleStateMachine.addState({
-      name: 'BATTLE'
-    })
-    this.#battleStateMachine.setState('INTRO')
+    this.#createBattleStateMachine()
 
     this.#cursorKeys = this.input.keyboard.createCursorKeys()
   }
 
   update () {
+    this.#battleStateMachine.update()
     const wasSpaceKeyPresed = Phaser.Input.Keyboard.JustDown(this.#cursorKeys.space)
+
+    if (wasSpaceKeyPresed &&
+        (this.#battleStateMachine.currentStateName === BATTLE_STATES.PRE_BATTLE_INFO ||
+          this.#battleStateMachine.currentStateName === BATTLE_STATES.POST_ATTACK) ||
+          this.#battleStateMachine.currentStateName === BATTLE_STATES.RUN_ATTEMPT
+      ) {
+      this.#battleMenu.handlePlayerInput('OK')
+      return
+    }
+
+    if (this.#battleStateMachine.currentStateName !== BATTLE_STATES.PLAYER_INPUT) {
+      return
+    }
+
     if (wasSpaceKeyPresed) {
       this.#battleMenu.handlePlayerInput('OK')
 
@@ -104,7 +120,7 @@ export class BattleScene extends Phaser.Scene {
       }
 
       this.#battleMenu.hideMonAttackSubMenu()
-      this.#handleBattleSequence()
+      this.#battleStateMachine.setState(BATTLE_STATES.ENEMY_INPUT)
     }
 
     if (Phaser.Input.Keyboard.JustDown(this.#cursorKeys.shift)) {
@@ -129,53 +145,56 @@ export class BattleScene extends Phaser.Scene {
     }
   }
 
-  #handleBattleSequence () {
-    this.#playerAttack()
-  }
 
   #playerAttack () {
     const attk = this.#activePlayerMon.attacks[this.#activePlayerAttackIndex]
-    this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`${this.#activePlayerMon.name} used ${attk.name}!`], () => {
+    this.#battleMenu.updateInfoPanelMessagesNoInputRequired(`${this.#activePlayerMon.name} used ${attk.name}!`, () => {
       this.time.delayedCall(500, () => {
-        this.#activeEnemyMon.takeDamage(this.#activePlayerMon.baseAttack, () => {
-          this.#enemyAttack()
+        this.#activeEnemyMon.playMonTakeDamageAnimation(() => {
+          this.#activeEnemyMon.takeDamage(this.#activePlayerMon.baseAttack, () => {
+            this.#enemyAttack()
+          })
         })
       })
-    })
+    }, SKIP_BATTLE_ANIMATIONS)
   }
 
   #enemyAttack() {
     if (this.#activeEnemyMon.isFainted) {
-      this.#postBattleSequenceCheck()
+      this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK)
       return
     }
     const attk = this.#activeEnemyMon.attacks[0]
-    this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`Foe ${this.#activeEnemyMon.name} used ${attk.name}!`], () => {
+    this.#battleMenu.updateInfoPanelMessagesNoInputRequired(`Foe ${this.#activeEnemyMon.name} used ${attk.name}!`, () => {
       this.time.delayedCall(500, () => {
-        this.#activePlayerMon.takeDamage(this.#activeEnemyMon.baseAttack, () => {
-          this.#postBattleSequenceCheck()
+        this.#activePlayerMon.playMonTakeDamageAnimation(() => {
+          this.#activePlayerMon.takeDamage(this.#activeEnemyMon.baseAttack, () => {
+            this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK)
+          })
         })
       })
-    })
+    }, SKIP_BATTLE_ANIMATIONS)
   }
 
   #postBattleSequenceCheck() {
     if (this.#activeEnemyMon.isFainted) {
-      this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`Wild ${this.#activeEnemyMon.name} fainted!`, `${this.#activePlayerMon.name} gained 32 experience points!`], () => {
-        // TODO
-        this.#transitionToNextScene()
+      this.#activeEnemyMon.playDeathAnimation(() => {
+        this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`Wild ${this.#activeEnemyMon.name} fainted!`, `${this.#activePlayerMon.name} gained 32 experience points!`], () => {
+          this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
+        }, SKIP_BATTLE_ANIMATIONS)
       })
       return
     }
 
     if (this.#activePlayerMon.isFainted) {
-      this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`${this.#activePlayerMon.name} fainted!`, `YOU have no usable Pokemon!`, `YOU whited out!`], () => {
-        // TODO
-        this.#transitionToNextScene()
+      this.#activePlayerMon.playDeathAnimation(() => {
+        this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`${this.#activePlayerMon.name} fainted!`, `YOU have no usable Pokemon!`, `YOU whited out!`], () => {
+          this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
+        }, SKIP_BATTLE_ANIMATIONS)
       })
       return
     }
-    this.#battleMenu.showMainBattleMenu()
+    this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_INPUT)
   }
 
   #transitionToNextScene () {
@@ -183,5 +202,103 @@ export class BattleScene extends Phaser.Scene {
     this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
       this.scene.start(SCENE_KEYS.BATTLE_SCENE)
     })
+  }
+
+  #createBattleStateMachine () {
+    this.#battleStateMachine = new StateMachine('battle', this)
+  
+    this.#battleStateMachine.addState({
+      name: BATTLE_STATES.INTRO,
+      onEnter: () => {
+        // wait for scene setup/transitions to finish
+        this.time.delayedCall(500, () => {
+          this.#battleStateMachine.setState(BATTLE_STATES.PRE_BATTLE_INFO)
+        })
+      }
+    })
+  
+    this.#battleStateMachine.addState({
+      name: BATTLE_STATES.PRE_BATTLE_INFO,
+      onEnter: () => {
+        this.#activeEnemyMon.playMonAppearAnimation(() => {
+          this.#activeEnemyMon.playMonHealthBarContainerAppearAnimation(() => {
+            this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`Wild ${this.#activeEnemyMon.name} appeared!`], () => {
+              // wait for txt anim
+              this.time.delayedCall(500, () => {
+                this.#battleStateMachine.setState(BATTLE_STATES.BRING_OUT_MON)
+              })
+            }, SKIP_BATTLE_ANIMATIONS)
+          })
+        })
+      }
+    })
+  
+    this.#battleStateMachine.addState({
+      name: BATTLE_STATES.BRING_OUT_MON,
+      onEnter: () => {
+        // wait for player mon to appear, notify player of mon
+        this.#battleMenu.updateInfoPanelMessagesNoInputRequired(`Go! ${this.#activePlayerMon.name}!`, () => {
+          // wait for txt anim
+          this.time.delayedCall(1000, () => {
+            this.#activePlayerMon.playMonAppearAnimation(() => {
+              // TODO wait for mon cry
+              this.time.delayedCall(500, () => {
+                this.#activePlayerMon.playMonHealthBarContainerAppearAnimation(() => {
+                  this.time.delayedCall(500, () => {
+                    this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_INPUT)
+                  })
+                })
+              })
+            })
+          })
+        }, SKIP_BATTLE_ANIMATIONS)
+      }
+    })
+
+    this.#battleStateMachine.addState({
+      name: BATTLE_STATES.PLAYER_INPUT,
+      onEnter: () => {
+        this.#battleMenu.showMainBattleMenu()
+      }
+    })
+
+    this.#battleStateMachine.addState({
+      name: BATTLE_STATES.ENEMY_INPUT,
+      onEnter: () => {
+        this.#battleStateMachine.setState(BATTLE_STATES.BATTLE)
+      }
+    })
+
+    this.#battleStateMachine.addState({
+      name: BATTLE_STATES.BATTLE,
+      onEnter: () => {
+        this.#playerAttack()
+      }
+    })
+
+    this.#battleStateMachine.addState({
+      name: BATTLE_STATES.POST_ATTACK,
+      onEnter: () => {
+        this.#postBattleSequenceCheck()
+      }
+    })
+
+    this.#battleStateMachine.addState({
+      name: BATTLE_STATES.FINISHED,
+      onEnter: () => {
+        this.#transitionToNextScene()
+      }
+    })
+
+    this.#battleStateMachine.addState({
+      name: BATTLE_STATES.RUN_ATTEMPT,
+      onEnter: () => {
+        this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(['Got away safely!'], () => {
+          this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
+        }, SKIP_BATTLE_ANIMATIONS)
+      }
+    })
+    
+    this.#battleStateMachine.setState(BATTLE_STATES.INTRO)
   }
 }

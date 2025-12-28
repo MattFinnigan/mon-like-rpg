@@ -4,6 +4,8 @@ import { DIRECTION } from '../../../common/direction.js'
 import { exhaustiveGuard } from '../../../utils/guard.js'
 import { ACTIVE_BATTLE_MENU, ATTACK_MOVE_OPTIONS, BATTLE_MENU_OPTIONS } from './battle-menu-options.js'
 import { BattleMon } from '../../mons/battle-mon.js'
+import { animateText } from '../../../utils/text-utils.js'
+import { SKIP_BATTLE_ANIMATIONS } from '../../../../config.js'
 
 const BATTLE_MENU_CURSOR_POS = Object.freeze({
   x: 30,
@@ -15,11 +17,17 @@ const ATTACK_MENU_CURSOR_POS = Object.freeze({
   y: 50
 })
 
+const INFO_POS = Object.freeze({
+  y: 384
+})
+
+const PLAYER_INPUT_CURSOR_POS = Object.freeze({
+  y: INFO_POS.y + 50
+})
+
 export class BattleMenu {
   /** @type {Phaser.Scene} */
   #scene
-  /** @type {Number} */
-  #INFO_POS_Y
   /** @type {Phaser.GameObjects.Container} */
   #mainBattleMenuPhaserContainerGameObject
   /** @type {Phaser.GameObjects.Container} */
@@ -48,6 +56,14 @@ export class BattleMenu {
   #selectedAttackIndex
   /** @type {BattleMon} */
   #activePlayerMon
+  /** @type {Phaser.GameObjects.Image} */
+  #userInputCursorPhaserGameImageObject
+  /** @type {Phaser.Tweens.Tween} */
+  #userInputCursorPhaserTween
+  /** @type {boolean} */
+  #queuedMessageSkipAnimation
+  /** @type {boolean} */
+  #queuedMessageAnimationPlaying
 
   /**
    * 
@@ -57,18 +73,20 @@ export class BattleMenu {
   constructor (scene, activePlayerMon) {
     this.#scene = scene
     this.#activePlayerMon = activePlayerMon
-    this.#INFO_POS_Y = (this.#scene.scale.height / 3) * 2
-    this.#battleTextGameObjectLine1 = this.#scene.add.bitmapText(55, this.#INFO_POS_Y + 45, 'gb-font', '', 40)
+    this.#battleTextGameObjectLine1 = this.#scene.add.bitmapText(55, INFO_POS.y + 45, 'gb-font', '', 40)
     this.#selectedBattleMenuOption = BATTLE_MENU_OPTIONS.FIGHT
     this.#selectedAttackMenuOption = ATTACK_MOVE_OPTIONS.MOVE_1
     this.#activeBattleMenu = ACTIVE_BATTLE_MENU.BATTLE_MAIN
     this.#queuedInfoPanelCallback = undefined
     this.#queuedInfoPanelMessages = []
     this.#waitingForPlayerInput = false
-    
-    this.#createMainInfoPane(0, this.#INFO_POS_Y)
+    this.#queuedMessageSkipAnimation = false
+    this.#queuedMessageAnimationPlaying = false
+
+    this.#createMainInfoPane()
     this.#createMainBattleMenu()
     this.#createMonAttackSubMenu()
+    this.#createPlayerInputCursor()
   }
 
   /** @type {number | undefined} */
@@ -88,6 +106,8 @@ export class BattleMenu {
     this.#selectedBattleMenuOption = BATTLE_MENU_OPTIONS.FIGHT
     this.#mainBattleCursorPhaserImageGameObject.setPosition(BATTLE_MENU_CURSOR_POS.x, BATTLE_MENU_CURSOR_POS.y)
     this.#selectedAttackIndex = undefined
+    this.#battleTextGameObjectLine1.setText('')
+    this.#battleTextGameObjectLine2.setText('')
   }
 
   hideMainBattleMenu () {
@@ -105,11 +125,30 @@ export class BattleMenu {
     this.#activeBattleMenu = ACTIVE_BATTLE_MENU.BATTLE_MAIN
     this.#moveSelectionSubBattleMenuPhaserContainerGameObject.setAlpha(0)
   }
+
+  playInputCursorAnimation () {
+    this.#userInputCursorPhaserGameImageObject.setPosition(
+      this.#battleTextGameObjectLine1.displayWidth + this.#userInputCursorPhaserGameImageObject.width * 4,
+      this.#userInputCursorPhaserGameImageObject.y
+    )
+    this.#userInputCursorPhaserGameImageObject.setAlpha(1)
+    this.#userInputCursorPhaserTween.restart()
+  }
+
+  hideInputCursor () {
+    this.#userInputCursorPhaserGameImageObject.setAlpha(0)
+    this.#userInputCursorPhaserTween.pause()
+  }
+  
   /**
    * 
    * @param {import('../../../common/direction.js').Direction | 'OK'|'CANCEL'} input
    */
   handlePlayerInput (input) {
+    if (this.#queuedMessageAnimationPlaying && input === 'OK') {
+      return
+    }
+
     if (this.#waitingForPlayerInput && (input === 'CANCEL' || input === 'OK')) {
       this.#updateInfoPaneWithMessage()
       return
@@ -142,40 +181,89 @@ export class BattleMenu {
    * 
    * @param {string[]} messages 
    * @param {() => void} [callback] 
+   * @param {boolean} [skipAnimation=false]
    */
-  updateInfoPanelMessagesAndWaitForInput (messages, callback) {
+  updateInfoPanelMessagesAndWaitForInput (messages, callback, skipAnimation = false) {
     this.#queuedInfoPanelMessages = messages
     this.#queuedInfoPanelCallback = callback
+    this.#queuedMessageSkipAnimation = skipAnimation
 
     this.#updateInfoPaneWithMessage()
   }
 
+  /**
+   * 
+   * @param {string} message 
+   * @param {() => void} [callback]
+   * @param {boolean} [skipAnimation=false]
+   */
+  updateInfoPanelMessagesNoInputRequired (message, callback, skipAnimation = false) {
+    this.#battleTextGameObjectLine1.setText('').setAlpha(1)
+  
+    if (skipAnimation) {
+      this.#battleTextGameObjectLine1.setText(message)
+      this.#waitingForPlayerInput = false
+      if (callback) {
+        callback()
+      }
+      return
+    }
+
+    animateText(this.#scene, this.#battleTextGameObjectLine1, message, {
+      delay: 50,
+      callback: () => {
+        this.#waitingForPlayerInput = false
+        if (callback) {
+          callback()
+        }
+      }
+    })
+  }
+
+  
   #updateInfoPaneWithMessage () {
     this.#waitingForPlayerInput = false
     this.#battleTextGameObjectLine1.setText('').setAlpha(1)
-
+    this.hideInputCursor()
     // check if all msgs have been displayed from queue, call the callback
     if (this.#queuedInfoPanelMessages.length === 0) {
       if (this.#queuedInfoPanelCallback) {
         this.#queuedInfoPanelCallback()
         this.#queuedInfoPanelCallback = undefined
       }
+      this.hideInputCursor()
       return
     }
 
-    // get next msg from queue and animate
     const messageToDisplay = this.#queuedInfoPanelMessages.shift()
-    this.#battleTextGameObjectLine1.setText(messageToDisplay)
-    this.#waitingForPlayerInput = true
+
+    if (this.#queuedMessageSkipAnimation) {
+      this.#waitingForPlayerInput = true
+      this.#battleTextGameObjectLine1.setText(messageToDisplay)
+      this.#queuedMessageAnimationPlaying = false
+      this.playInputCursorAnimation()
+      return
+    }
+    
+    this.#queuedMessageAnimationPlaying = true
+    animateText(this.#scene, this.#battleTextGameObjectLine1, messageToDisplay, {
+      delay: 50,
+      callback: () => {
+        this.#waitingForPlayerInput = true
+        this.#queuedMessageAnimationPlaying = false
+        this.playInputCursorAnimation()
+      }
+    })
+
   }
   
   #createMainBattleMenu () {
     const MENU_POS_Y = 300
-    this.#battleTextGameObjectLine1 = this.#scene.add.bitmapText(30, this.#INFO_POS_Y + 45, 'gb-font', '', 30)
-    this.#battleTextGameObjectLine2 = this.#scene.add.bitmapText(30, this.#INFO_POS_Y + 100, 'gb-font', '', 30)
+    this.#battleTextGameObjectLine1 = this.#scene.add.bitmapText(30, INFO_POS.y + 45, 'gb-font', '', 30)
+    this.#battleTextGameObjectLine2 = this.#scene.add.bitmapText(30, INFO_POS.y + 100, 'gb-font', '', 30)
     this.#mainBattleCursorPhaserImageGameObject = this.#scene.add.image(BATTLE_MENU_CURSOR_POS.x, BATTLE_MENU_CURSOR_POS.y, UI_ASSET_KEYS.CURSOR, 0).setOrigin(0).setScale(1.35)
 
-    this.#mainBattleMenuPhaserContainerGameObject = this.#scene.add.container(MENU_POS_Y, this.#INFO_POS_Y, [
+    this.#mainBattleMenuPhaserContainerGameObject = this.#scene.add.container(MENU_POS_Y, INFO_POS.y, [
         this.#createMainInfoSubPane(),
         this.#scene.add.bitmapText(55, 45, 'gb-font', BATTLE_MENU_OPTIONS.FIGHT, 40),
         this.#scene.add.bitmapText(215, 50, 'gb-font-small', 'P', 30),
@@ -201,7 +289,7 @@ export class BattleMenu {
       attackNames.push(this.#activePlayerMon.attacks[i]?.name || '-')
     }
 
-    this.#moveSelectionSubBattleMenuPhaserContainerGameObject = this.#scene.add.container(0, this.#INFO_POS_Y, [
+    this.#moveSelectionSubBattleMenuPhaserContainerGameObject = this.#scene.add.container(0, INFO_POS.y, [
       this.#scene.add.bitmapText(55, 45, 'gb-font', attackNames[0], 30),
       this.#scene.add.bitmapText(350, 45, 'gb-font', attackNames[1], 30),
       this.#scene.add.bitmapText(55, 110, 'gb-font', attackNames[2], 30),
@@ -212,8 +300,8 @@ export class BattleMenu {
     this.hideMonAttackSubMenu()
   }
 
-  #createMainInfoPane (x, y) {
-    return this.#scene.add.image(x, y, SYSTEM_ASSET_KEYS.DIALOG_BACKGROUND).setOrigin(0)
+  #createMainInfoPane () {
+    return this.#scene.add.image(0, INFO_POS.y, SYSTEM_ASSET_KEYS.DIALOG_BACKGROUND).setOrigin(0)
   }
 
   #createMainInfoSubPane () {
@@ -429,6 +517,8 @@ export class BattleMenu {
   }
 
   #switchToMainBattleMenu () {
+    this.#waitingForPlayerInput = false
+    this.hideInputCursor()
     this.hideMonAttackSubMenu()
     this.showMainBattleMenu()
   }
@@ -444,7 +534,7 @@ export class BattleMenu {
       this.#activeBattleMenu = ACTIVE_BATTLE_MENU.BATTLE_ITEM
       this.updateInfoPanelMessagesAndWaitForInput(['Your bag is empty...'], () => {
         this.#switchToMainBattleMenu()
-      })
+      }, SKIP_BATTLE_ANIMATIONS)
       return
     }
 
@@ -452,7 +542,7 @@ export class BattleMenu {
       this.#activeBattleMenu = ACTIVE_BATTLE_MENU.BATTLE_PKMN
       this.updateInfoPanelMessagesAndWaitForInput(['You can\'t switch!'], () => {
         this.#switchToMainBattleMenu()
-      })
+      }, SKIP_BATTLE_ANIMATIONS)
       return
     }
 
@@ -460,7 +550,7 @@ export class BattleMenu {
       this.#activeBattleMenu = ACTIVE_BATTLE_MENU.BATTLE_RUN
       this.updateInfoPanelMessagesAndWaitForInput(['Couldn\'t get away!'], () => {
         this.#switchToMainBattleMenu()
-      })
+      }, SKIP_BATTLE_ANIMATIONS)
       return
     }
 
@@ -487,5 +577,22 @@ export class BattleMenu {
     }
 
     this.#selectedAttackIndex = selectedMoveIndex
+  }
+
+  #createPlayerInputCursor () {
+    this.#userInputCursorPhaserGameImageObject = this.#scene.add.image(0, 0, UI_ASSET_KEYS.CURSOR, 0).setOrigin(0).setAngle(90)
+    this.#userInputCursorPhaserGameImageObject.setAlpha(0)
+
+    this.#userInputCursorPhaserTween = this.#scene.add.tween({
+      delay: 0,
+      duration: 500,
+      repeat: -1,
+      y: {
+        from: PLAYER_INPUT_CURSOR_POS.y,
+        to: PLAYER_INPUT_CURSOR_POS.y + 6
+      },
+      targets: this.#userInputCursorPhaserGameImageObject
+    })
+    this.#userInputCursorPhaserTween.pause()
   }
 }

@@ -24,22 +24,27 @@ export class BattleMon {
   /** @protected @type {Phaser.GameObjects.BitmapText} */
   _monNameGameText
   /** @protected @type {Phaser.GameObjects.BitmapText} */
-  monLvlGameText
+  _monLvlGameText
   /** @protected @type {Phaser.GameObjects.BitmapText} */
-  monHpLabelGameText
+  _monHpLabelGameText
+  /** @protected @type {boolean} */
+  _skipBattleAnimations
+
   /**
    * 
-   * @param {import("../../types/typedef.js").BattleMonConfig} config 
-   */
-  constructor (config) {
+   * @param {import("../../types/typedef.js").BattleMonConfig} config
+   * @param {import("../../types/typedef.js").Coordinate} pos
+    */
+  constructor (config, pos = { x: 0, y: 0 }) {
     this._scene = config.scene
     this._monDetails = config.monDetails
     this._currentHealth = this._monDetails.currentHp
     this._maxHealth = this._monDetails.maxHp
     this._monAttacks = []
+    this._skipBattleAnimations = config.skipBattleAnimations
 
-    this._phaserMonImageGameObject = this._scene.add.image(396, 5, this._monDetails.assetKey, this._monDetails.assetFrame).setOrigin(0)
-    this._phaserMonDetailsBackgroundImageGameObject = this._scene.add.image(0, 0, BATTLE_ASSET_KEYS.ENEMY_BATTLE_DETAILS_BACKGROUND).setOrigin(0)
+    this._phaserMonImageGameObject = this._scene.add.image(pos.x, pos.y, this._monDetails.assetKey, this._monDetails.assetFrame).setOrigin(0).setAlpha(0)
+    this._phaserMonDetailsBackgroundImageGameObject = this._scene.add.image(0, 0 , BATTLE_ASSET_KEYS.ENEMY_BATTLE_DETAILS_BACKGROUND).setOrigin(0)
     this.#createHealthBarComponents()
 
     this._monDetails.attackIds.forEach(attkId => {
@@ -89,6 +94,56 @@ export class BattleMon {
     this._healthBar.setMeterPercentageAnimated(this._currentHealth / this._maxHealth, { callback })
   }
 
+  /**
+   * 
+   * @param {() => void} callback
+   * @returns {void}
+   */
+  playMonAppearAnimation (callback) {
+    throw new Error('playMonAppearAnimation is not implemented')
+  }
+  /**
+   * 
+   * @param {() => void} callback
+   * @returns {void}
+   */
+  playMonHealthBarContainerAppearAnimation (callback) {
+    throw new Error('playMonHealthBarContainerAppearAnimation is not implemented')
+  }
+  /**
+   * 
+   * @param {() => void} callback
+   * @returns {void}
+   */
+  playMonTakeDamageAnimation (callback) {
+    if (this._skipBattleAnimations) {
+      callback()
+      return
+    }
+    this._scene.tweens.add({
+      delay: 0,
+      duration: 150,
+      targets: this._phaserMonImageGameObject,
+      alpha: {
+        from: 0,
+        start: 1,
+        to: 1
+      },
+      repeat: 5,
+      onComplete: () => {
+        callback()
+      }
+    })
+  }
+  /**
+   * 
+   * @param {() => void} callback
+   * @returns {void}
+   */
+  playDeathAnimation (callback) {
+    throw new Error('playDeathAnimation is not implemented')
+  }
+
   #createHealthBarComponents () {
     this._monNameGameText = this._scene.add.bitmapText(0, 2, 'gb-font', this.name, 40)
     this._monLvlGameText = this._scene.add.bitmapText(74, 44, 'gb-font-thick', `Lv${this.currentLevel}`, 30)
@@ -101,6 +156,6 @@ export class BattleMon {
       this._monLvlGameText,
       this._monHpLabelGameText,
       this._healthBar.container
-    ])
+    ]).setAlpha(0)
   }
 }

@@ -22,6 +22,13 @@ export const SYSTEM_ASSET_KEYS = Object.freeze({
   DIALOG_BACKGROUND: 'DIALOG_BACKGROUND'
 })
 
+export const ATTACK_ASSET_KEYS = Object.freeze({
+  THUNDERBOLT: 'THUNDERBOLT',
+  THUNDER_BOLT_START: 'THUNDER_BOLT_START',
+  WATER_GUN: 'WATER_GUN'
+})
+
+
 export const MON_ASSET_KEYS = Object.freeze({
   BULBASAUR: 'BULBASAUR',
   IVYSAUR: 'IVYSAUR',
