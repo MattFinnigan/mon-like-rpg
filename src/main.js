@@ -13,7 +13,7 @@ const game = new Phaser.Game({
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH
   },
-  backgroundColor: '#fff'
+  backgroundColor: '#000000'
 })
 
 game.scene.add(SCENE_KEYS.PRELOAD_SCENE, PreloadScene)

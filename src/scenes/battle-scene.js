@@ -8,6 +8,7 @@ import { PlayerBattleMon } from '../battle/mons/player-battle-monster.js'
 import { StateMachine } from '../utils/state-machine.js'
 import { SKIP_BATTLE_ANIMATIONS } from '../../config.js'
 import { ATTACK_TARGET, AttackManager } from '../battle/attacks/attack-manager.js'
+import { createSceneTransition } from '../utils/scene-transition.js'
 
 const BATTLE_STATES = Object.freeze({
   INTRO: 'INTRO',
@@ -56,6 +57,8 @@ export class BattleScene extends Phaser.Scene {
     const P1_MON = 'PIKACHU'
     const P2_MON = 'BLASTOISE'
 
+    this.cameras.main.setBackgroundColor('#fff')
+
     this.#activeEnemyMon = new EnemyBattleMon({
       scene: this,
       monDetails: {
@@ -81,7 +84,7 @@ export class BattleScene extends Phaser.Scene {
         maxHp: 20,
         currentLevel: 15,
         attackIds: [1, 2],
-        baseAttack: 5
+        baseAttack: 15
       },
       skipBattleAnimations: SKIP_BATTLE_ANIMATIONS
     })
@@ -217,9 +220,11 @@ export class BattleScene extends Phaser.Scene {
     this.#battleStateMachine.addState({
       name: BATTLE_STATES.INTRO,
       onEnter: () => {
-        // wait for scene setup/transitions to finish
-        this.time.delayedCall(500, () => {
-          this.#battleStateMachine.setState(BATTLE_STATES.PRE_BATTLE_INFO)
+        createSceneTransition(this, {
+          skipSceneTransition: SKIP_BATTLE_ANIMATIONS,
+          callback: () => {
+            this.#battleStateMachine.setState(BATTLE_STATES.PRE_BATTLE_INFO)
+          }
         })
       }
     })
