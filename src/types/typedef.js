@@ -33,5 +33,5 @@ import Phaser from "../lib/phaser.js";
  * @type {Object}
  * @property {number} id
  * @property {string} name
- * @property {string} animationName
+ * @property {import("../battle/attacks/attack-keys.js").AttackKeys} animationName
  */

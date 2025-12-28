@@ -1,12 +1,12 @@
 [
   {
     "id": 1,
-    "name": "THUNDERBOLT",
-    "animationName": "THUNDERBOLT"
+    "name": "ICE SHARD",
+    "animationName": "ICE_SHARD"
   },
   {
     "id": 2,
-    "name": "WATER GUN",
-    "animationName": "WATER_GUN"
+    "name": "SLASH",
+    "animationName": "SLASH"
   }
 ]

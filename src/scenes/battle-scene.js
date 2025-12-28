@@ -7,6 +7,7 @@ import { EnemyBattleMon } from '../battle/mons/enemy-battle-monster.js'
 import { PlayerBattleMon } from '../battle/mons/player-battle-monster.js'
 import { StateMachine } from '../utils/state-machine.js'
 import { SKIP_BATTLE_ANIMATIONS } from '../../config.js'
+import { ATTACK_TARGET, AttackManager } from '../battle/attacks/attack-manager.js'
 
 const BATTLE_STATES = Object.freeze({
   INTRO: 'INTRO',
@@ -33,6 +34,8 @@ export class BattleScene extends Phaser.Scene {
   #activePlayerAttackIndex
   /** @type {StateMachine} */
   #battleStateMachine
+  /** @type {AttackManager} */
+  #attackManager
 
   constructor () {
     super({
@@ -63,7 +66,7 @@ export class BattleScene extends Phaser.Scene {
         maxHp: 20,
         currentLevel: 100,
         attackIds: [2],
-        baseAttack: 20
+        baseAttack: 5
       },
       skipBattleAnimations: SKIP_BATTLE_ANIMATIONS
     })
@@ -78,14 +81,14 @@ export class BattleScene extends Phaser.Scene {
         maxHp: 20,
         currentLevel: 15,
         attackIds: [1, 2],
-        baseAttack: 20
+        baseAttack: 5
       },
       skipBattleAnimations: SKIP_BATTLE_ANIMATIONS
     })
 
     this.#battleMenu = new BattleMenu(this, this.#activePlayerMon)
     this.#createBattleStateMachine()
-
+    this.#attackManager = new AttackManager(this, SKIP_BATTLE_ANIMATIONS)
     this.#cursorKeys = this.input.keyboard.createCursorKeys()
   }
 
@@ -150,9 +153,11 @@ export class BattleScene extends Phaser.Scene {
     const attk = this.#activePlayerMon.attacks[this.#activePlayerAttackIndex]
     this.#battleMenu.updateInfoPanelMessagesNoInputRequired(`${this.#activePlayerMon.name} used ${attk.name}!`, () => {
       this.time.delayedCall(500, () => {
-        this.#activeEnemyMon.playMonTakeDamageAnimation(() => {
-          this.#activeEnemyMon.takeDamage(this.#activePlayerMon.baseAttack, () => {
-            this.#enemyAttack()
+        this.#attackManager.playAttackAnimation(attk.animationName, ATTACK_TARGET.ENEMY, () => {
+          this.#activeEnemyMon.playMonTakeDamageAnimation(() => {
+            this.#activeEnemyMon.takeDamage(this.#activePlayerMon.baseAttack, () => {
+              this.#enemyAttack()
+            })
           })
         })
       })
@@ -167,9 +172,11 @@ export class BattleScene extends Phaser.Scene {
     const attk = this.#activeEnemyMon.attacks[0]
     this.#battleMenu.updateInfoPanelMessagesNoInputRequired(`Foe ${this.#activeEnemyMon.name} used ${attk.name}!`, () => {
       this.time.delayedCall(500, () => {
-        this.#activePlayerMon.playMonTakeDamageAnimation(() => {
-          this.#activePlayerMon.takeDamage(this.#activeEnemyMon.baseAttack, () => {
-            this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK)
+        this.#attackManager.playAttackAnimation(attk.animationName, ATTACK_TARGET.PLAYER, () => {
+          this.#activePlayerMon.playMonTakeDamageAnimation(() => {
+            this.#activePlayerMon.takeDamage(this.#activeEnemyMon.baseAttack, () => {
+              this.#postBattleSequenceCheck()
+            })
           })
         })
       })

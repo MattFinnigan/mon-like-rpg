@@ -1,4 +1,4 @@
-import { BATTLE_ASSET_KEYS, DATA_ASSET_KEYS, HEALTH_BAR_ASSET_KEYS, MON_ASSET_KEYS, MON_BACK_ASSET_KEYS, SYSTEM_ASSET_KEYS, UI_ASSET_KEYS } from '../assets/asset-keys.js'
+import { ATTACK_ASSET_KEYS, BATTLE_ASSET_KEYS, DATA_ASSET_KEYS, HEALTH_BAR_ASSET_KEYS, MON_ASSET_KEYS, MON_BACK_ASSET_KEYS, SYSTEM_ASSET_KEYS, UI_ASSET_KEYS } from '../assets/asset-keys.js'
 import Phaser from '../lib/phaser.js'
 import { SCENE_KEYS } from './scene-keys.js'
 
@@ -15,6 +15,7 @@ export class PreloadScene extends Phaser.Scene {
     const monsBackAssetPath = 'assets/images/mons/backs'
     const battleAssetPath = 'assets/images/battle'
     const uiAssestPath = 'assets/images/ui'
+    const attackAnimPath = 'assets/images/anims/attacks'
 
     this.load.bitmapFont(
       'gb-font',
@@ -56,6 +57,21 @@ export class PreloadScene extends Phaser.Scene {
     }
 
     this.load.json(DATA_ASSET_KEYS.ATTACKS, 'assets/data/attacks.json')
+
+    this.load.spritesheet(ATTACK_ASSET_KEYS.ICE_SHARD, `${attackAnimPath}/ice-attack/active.png`, {
+      frameWidth: 32,
+      frameHeight: 32
+    })
+
+    this.load.spritesheet(ATTACK_ASSET_KEYS.ICE_SHARD_START, `${attackAnimPath}/ice-attack/start.png`, {
+      frameWidth: 32,
+      frameHeight: 32
+    })
+
+    this.load.spritesheet(ATTACK_ASSET_KEYS.SLASH, `${attackAnimPath}/slash.png`, {
+      frameWidth: 48,
+      frameHeight: 48
+    })
 
     console.log(`[${PreloadScene.name}:preload] invoked`)
   }

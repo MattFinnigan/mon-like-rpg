@@ -1,3 +1,4 @@
+import Phaser from "../../lib/phaser.js"
 import { HealthBar } from "../ui/health-bar.js"
 import { BATTLE_ASSET_KEYS, DATA_ASSET_KEYS } from "../../assets/asset-keys.js"
 import { DataUtils } from "../../utils/data-utils.js"
