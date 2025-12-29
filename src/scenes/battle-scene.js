@@ -9,6 +9,7 @@ import { StateMachine } from '../utils/state-machine.js'
 import { SKIP_BATTLE_ANIMATIONS } from '../../config.js'
 import { ATTACK_TARGET, AttackManager } from '../battle/attacks/attack-manager.js'
 import { createSceneTransition } from '../utils/scene-transition.js'
+import { Controls } from '../utils/controls.js'
 
 const BATTLE_STATES = Object.freeze({
   INTRO: 'INTRO',
@@ -25,8 +26,8 @@ const BATTLE_STATES = Object.freeze({
 export class BattleScene extends Phaser.Scene {
   /** @type {BattleMenu} */
   #battleMenu
-  /** @type {Phaser.Types.Input.Keyboard.CursorKeys} */
-  #cursorKeys
+  /** @type {Controls} */
+  #controls
   /** @type {EnemyBattleMon} */
   #activeEnemyMon
   /** @type {PlayerBattleMon} */
@@ -53,11 +54,10 @@ export class BattleScene extends Phaser.Scene {
   }
 
   create () {
+    this.cameras.main.setBackgroundColor('#fff')
     console.log(`[${BattleScene.name}:create] invoked`)
     const P1_MON = 'PIKACHU'
     const P2_MON = 'BLASTOISE'
-
-    this.cameras.main.setBackgroundColor('#fff')
 
     this.#activeEnemyMon = new EnemyBattleMon({
       scene: this,
@@ -92,12 +92,12 @@ export class BattleScene extends Phaser.Scene {
     this.#battleMenu = new BattleMenu(this, this.#activePlayerMon)
     this.#createBattleStateMachine()
     this.#attackManager = new AttackManager(this, SKIP_BATTLE_ANIMATIONS)
-    this.#cursorKeys = this.input.keyboard.createCursorKeys()
+    this.#controls = new Controls(this)
   }
 
   update () {
     this.#battleStateMachine.update()
-    const wasSpaceKeyPresed = Phaser.Input.Keyboard.JustDown(this.#cursorKeys.space)
+    const wasSpaceKeyPresed = this.#controls.wasSpaceKeyPressed()
 
     if (wasSpaceKeyPresed &&
         (this.#battleStateMachine.currentStateName === BATTLE_STATES.PRE_BATTLE_INFO ||
@@ -129,23 +129,12 @@ export class BattleScene extends Phaser.Scene {
       this.#battleStateMachine.setState(BATTLE_STATES.ENEMY_INPUT)
     }
 
-    if (Phaser.Input.Keyboard.JustDown(this.#cursorKeys.shift)) {
+    if (this.#controls.wasBackKeyPressed()) {
       this.#battleMenu.handlePlayerInput('CANCEL')
       return
     }
 
-    /** @type {import('../common/direction.js').Direction} */
-    let selectedDirection = DIRECTION.NONE
-    if (this.#cursorKeys.left.isDown) {
-      selectedDirection = DIRECTION.LEFT
-    } else if (this.#cursorKeys.right.isDown) {
-      selectedDirection = DIRECTION.RIGHT
-    } else if (this.#cursorKeys.up.isDown) {
-      selectedDirection = DIRECTION.UP
-    } else if (this.#cursorKeys.down.isDown) {
-      selectedDirection = DIRECTION.DOWN
-    }
-
+    const selectedDirection = this.#controls.getDirectionKeyJustPressed()
     if (selectedDirection !== DIRECTION.NONE) {
       this.#battleMenu.handlePlayerInput(selectedDirection)
     }

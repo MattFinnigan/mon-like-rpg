@@ -1,4 +1,4 @@
-import { ATTACK_ASSET_KEYS, BATTLE_ASSET_KEYS, DATA_ASSET_KEYS, HEALTH_BAR_ASSET_KEYS, MON_ASSET_KEYS, MON_BACK_ASSET_KEYS, SYSTEM_ASSET_KEYS, UI_ASSET_KEYS } from '../assets/asset-keys.js'
+import { ATTACK_ASSET_KEYS, BATTLE_ASSET_KEYS, CHARACTER_ASSET_KEYS, DATA_ASSET_KEYS, HEALTH_BAR_ASSET_KEYS, MON_ASSET_KEYS, MON_BACK_ASSET_KEYS, SYSTEM_ASSET_KEYS, UI_ASSET_KEYS, WORLD_ASSET_KEYS } from '../assets/asset-keys.js'
 import Phaser from '../lib/phaser.js'
 import { SCENE_KEYS } from './scene-keys.js'
 
@@ -10,13 +10,18 @@ export class PreloadScene extends Phaser.Scene {
   }
 
   preload () {
+    console.log(`[${PreloadScene.name}:preload] invoked`)
     const backgroundAssetPath = 'assets/images/backgrounds'
     const monsAssetPath = 'assets/images/mons'
     const monsBackAssetPath = 'assets/images/mons/backs'
     const battleAssetPath = 'assets/images/battle'
     const uiAssestPath = 'assets/images/ui'
-    const attackAnimPath = 'assets/images/anims/attacks'
+    const attackAnimPath = 'assets/images/anims/pimen'
+    const mapAssetPath = 'assets/images/map'
+    const axulAssetPath = 'assets/images/character/axulart'
+    const pbGamesAssetPath = 'assets/images/npc/parabellum-games'
 
+    // global
     this.load.bitmapFont(
       'gb-font',
       '/assets/fonts/minogram_6x10.png',
@@ -38,6 +43,7 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image(SYSTEM_ASSET_KEYS.DIALOG_BACKGROUND, `/${backgroundAssetPath}/dialog.png`)
     this.load.image(UI_ASSET_KEYS.CURSOR, `${uiAssestPath}/cursor.png`)
 
+    // battle
     this.load.image(BATTLE_ASSET_KEYS.BATTLE_MENU_OPTIONS_BACKGROUND, `/${backgroundAssetPath}/battle-menu-options.png`)
     this.load.image(BATTLE_ASSET_KEYS.PLAYER_BATTLE_DETAILS_BACKGROUND, `/${backgroundAssetPath}/player-battle-details.png`)
     this.load.image(BATTLE_ASSET_KEYS.ENEMY_BATTLE_DETAILS_BACKGROUND, `/${backgroundAssetPath}/enemy-battle-details.png`)
@@ -73,11 +79,20 @@ export class PreloadScene extends Phaser.Scene {
       frameHeight: 48
     })
 
-    console.log(`[${PreloadScene.name}:preload] invoked`)
+    // world
+    this.load.image(WORLD_ASSET_KEYS.WORLD_BACKGROUND, `/${mapAssetPath}/level_background.png`)
+    this.load.spritesheet(CHARACTER_ASSET_KEYS.PLAYER, `${axulAssetPath}/custom.png`, {
+      frameWidth: 64,
+      frameHeight: 88
+    })
+    this.load.spritesheet(CHARACTER_ASSET_KEYS.PLAYER, `${pbGamesAssetPath}/characters.png`, {
+      frameWidth: 16,
+      frameHeight: 16
+    })
   }
 
   create () {
     console.log(`[${PreloadScene.name}:create] invoked`)
-    this.scene.start(SCENE_KEYS.BATTLE_SCENE)
+    this.scene.start(SCENE_KEYS.WORLD_SCENE)
   }
 }
