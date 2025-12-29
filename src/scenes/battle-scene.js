@@ -209,12 +209,7 @@ export class BattleScene extends Phaser.Scene {
     this.#battleStateMachine.addState({
       name: BATTLE_STATES.INTRO,
       onEnter: () => {
-        createBattleSceneTransition(this, {
-          skipSceneTransition: SKIP_BATTLE_ANIMATIONS,
-          callback: () => {
-            this.#battleStateMachine.setState(BATTLE_STATES.PRE_BATTLE_INFO)
-          }
-        })
+        this.#battleStateMachine.setState(BATTLE_STATES.PRE_BATTLE_INFO)
       }
     })
   

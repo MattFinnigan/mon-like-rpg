@@ -4,7 +4,7 @@ import { DIRECTION } from '../common/direction.js';
 import Phaser from '../lib/phaser.js'
 import { Controls } from '../utils/controls.js';
 import { DATA_MANAGER_STORE_KEYS, dataManager } from '../utils/data-manager.js';
-import { createBattleSceneTransition } from '../utils/scene-transition.js';
+import { createBattleSceneTransition, createWildEncounterSceneTransition } from '../utils/scene-transition.js';
 import { Player } from '../world/characters/player.js';
 import { SCENE_KEYS } from "./scene-keys.js";
 
@@ -17,6 +17,10 @@ export class WorldScene extends Phaser.Scene {
   #encounterLayer
   /** @type {boolean} */
   #wildMonEncountered
+  /** @type {Phaser.GameObjects.Image} */
+  #worldBackgroundImage
+  /** @type {Phaser.GameObjects.Image} */
+  #worldForegroundImage
 
   constructor () {
     super({
@@ -59,8 +63,8 @@ export class WorldScene extends Phaser.Scene {
     }
     this.#encounterLayer.setAlpha(TILED_COLLISION_ALPHA).setDepth(2)
 
-    const backgroundImg = this.add.image(0, 0, WORLD_ASSET_KEYS.WORLD_BACKGROUND, 0).setOrigin(0)
-    this.cameras.main.setBounds(0, 0, backgroundImg.width, backgroundImg.height)
+    this.#worldBackgroundImage = this.add.image(0, 0, WORLD_ASSET_KEYS.WORLD_BACKGROUND, 0).setOrigin(0)
+    this.cameras.main.setBounds(0, 0, this.#worldBackgroundImage.width, this.#worldBackgroundImage.height)
     this.cameras.main.setZoom(0.8)
     this.cameras.main.centerOn(x, y)
 
@@ -76,7 +80,7 @@ export class WorldScene extends Phaser.Scene {
   
     this.cameras.main.startFollow(this.#player.sprite)
     this.cameras.main.fadeIn(500, 255, 255, 255)
-    this.add.image(0, 0, WORLD_ASSET_KEYS.WORLD_FOREGROUND, 0).setOrigin(0)
+    this.#worldForegroundImage = this.add.image(0, 0, WORLD_ASSET_KEYS.WORLD_FOREGROUND, 0).setOrigin(0)
 
     this.#controls = new Controls(this)
   }
@@ -115,15 +119,19 @@ export class WorldScene extends Phaser.Scene {
     if (this.#wildMonEncountered) {
       console.log(`[${WorldScene.name}:handlePlayerMovementUpdate] player encounted a wild mon`)
 
-      createBattleSceneTransition(this, {
+      createWildEncounterSceneTransition(this, {
         skipSceneTransition: SKIP_BATTLE_ANIMATIONS,
+        spritesToNotBeObscured: [this.#player.sprite],
         callback: () => {
-          this.cameras.main.fadeOut(250, 255, 255, 255)
-          this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
-            this.scene.start(SCENE_KEYS.BATTLE_SCENE)
+          createBattleSceneTransition(this, {
+            skipSceneTransition: SKIP_BATTLE_ANIMATIONS,
+            spritesToNotBeObscured: [this.#player.sprite],
+            callback: () => {
+              this.scene.start(SCENE_KEYS.BATTLE_SCENE)
+            }
           })
-        }
-      })
+        }}
+      )
     }
   }
 }
