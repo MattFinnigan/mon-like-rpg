@@ -9,7 +9,8 @@ export const UI_ASSET_KEYS = Object.freeze({
 })
 
 export const DATA_ASSET_KEYS = Object.freeze({
-  ATTACKS: 'ATTACKS'
+  ATTACKS: 'ATTACKS',
+  ANIMATIONS: 'ANIMATIONS'
 })
 
 export const HEALTH_BAR_ASSET_KEYS = Object.freeze({
@@ -29,7 +30,11 @@ export const ATTACK_ASSET_KEYS = Object.freeze({
 })
 
 export const WORLD_ASSET_KEYS = Object.freeze({
-  WORLD_BACKGROUND: 'WORLD_BACKGROUND'
+  WORLD_BACKGROUND: 'WORLD_BACKGROUND',
+  WORLD_MAIN_LEVEL: 'WORLD_MAIN_LEVEL',
+  WORLD_COLLISION: 'WORLD_COLLISION',
+  WORLD_FOREGROUND: 'WORLD_FOREGROUND',
+  WORLD_ENCOUNTER_ZONE: 'WORLD_ENCOUNTER_ZONE'
 })
 
 export const CHARACTER_ASSET_KEYS = Object.freeze({

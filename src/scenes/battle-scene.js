@@ -8,7 +8,7 @@ import { PlayerBattleMon } from '../battle/mons/player-battle-monster.js'
 import { StateMachine } from '../utils/state-machine.js'
 import { SKIP_BATTLE_ANIMATIONS } from '../../config.js'
 import { ATTACK_TARGET, AttackManager } from '../battle/attacks/attack-manager.js'
-import { createSceneTransition } from '../utils/scene-transition.js'
+import { createBattleSceneTransition } from '../utils/scene-transition.js'
 import { Controls } from '../utils/controls.js'
 
 const BATTLE_STATES = Object.freeze({
@@ -199,7 +199,7 @@ export class BattleScene extends Phaser.Scene {
   #transitionToNextScene () {
     this.cameras.main.fadeOut(500, 255, 255, 255)
     this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
-      this.scene.start(SCENE_KEYS.BATTLE_SCENE)
+      this.scene.start(SCENE_KEYS.WORLD_SCENE)
     })
   }
 
@@ -209,7 +209,7 @@ export class BattleScene extends Phaser.Scene {
     this.#battleStateMachine.addState({
       name: BATTLE_STATES.INTRO,
       onEnter: () => {
-        createSceneTransition(this, {
+        createBattleSceneTransition(this, {
           skipSceneTransition: SKIP_BATTLE_ANIMATIONS,
           callback: () => {
             this.#battleStateMachine.setState(BATTLE_STATES.PRE_BATTLE_INFO)

@@ -63,7 +63,7 @@ export class Controls {
     return selectedDirection
   }
 
-  wasDirectionKeyPressedDown () {
+  getDirectionKeyPressedDown () {
     if (this.#cursorKeys === undefined) {
       return DIRECTION.NONE
     }

@@ -35,3 +35,15 @@ import Phaser from "../lib/phaser.js";
  * @property {string} name
  * @property {import("../battle/attacks/attack-keys.js").AttackKeys} animationName
  */
+
+/**
+ * @typedef Animation
+ * @type {Object}
+ * @property {string} key
+ * @property {number[]} [frames]
+ * @property {number} frameRate
+ * @property {number} repeat
+ * @property {number} delay
+ * @property {boolean} yoyo
+ * @property {string} assetKey
+ */

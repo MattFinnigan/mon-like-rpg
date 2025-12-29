@@ -6,4 +6,10 @@ export class DataUtils {
     const data = scene.cache.json.get(DATA_ASSET_KEYS.ATTACKS)
     return data.find(attk => attk.id === attackId)
   }
+
+  static getAnimations (scene) {
+    /** @type {import("../types/typedef.js").Animation[]} */
+    const data = scene.cache.json.get(DATA_ASSET_KEYS.ANIMATIONS)
+    return data
+  }
 }

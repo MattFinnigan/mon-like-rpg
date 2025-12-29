@@ -5,7 +5,7 @@
  * @param {() => void} [options.callback] 
  * @param {boolean} [options.skipSceneTransition=false] 
  */
-export function createSceneTransition (scene, options) {
+export function createBattleSceneTransition (scene, options) {
   const skipSceneTransition = options?.skipSceneTransition || false
   if (skipSceneTransition) {
     if (options?.callback) {
