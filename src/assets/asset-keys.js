@@ -10,7 +10,9 @@ export const UI_ASSET_KEYS = Object.freeze({
 
 export const DATA_ASSET_KEYS = Object.freeze({
   ATTACKS: 'ATTACKS',
-  ANIMATIONS: 'ANIMATIONS'
+  ANIMATIONS: 'ANIMATIONS',
+  MONS: 'MONS',
+  BASE_MONS: 'BASE_MONS'
 })
 
 export const HEALTH_BAR_ASSET_KEYS = Object.freeze({
@@ -40,6 +42,18 @@ export const WORLD_ASSET_KEYS = Object.freeze({
 export const CHARACTER_ASSET_KEYS = Object.freeze({
   PLAYER: 'PLAYER',
   NPC: 'NPC'
+})
+
+export const BGM_ASSET_KEYS = Object.freeze({
+  CELADON_CITY: 'CELADON_CITY',
+  CINNABAR_ISLAND: 'CINNABAR_ISLAND',
+  GYM: 'GYM',
+  PALLET_TOWN: 'PALLET_TOWN',
+  ROUTE_11: 'ROUTE_11',
+  ROUTE_24: 'ROUTE_24',
+  SILPH_CO: 'SILPH_CO',
+  WILD_ENCOUNTER_BATTLE: 'WILD_ENCOUNTER_BATTLE',
+  WILD_ENCOUNTER_VICTORY: 'WILD_ENCOUNTER_VICTORY'
 })
 
 export const MON_ASSET_KEYS = Object.freeze({

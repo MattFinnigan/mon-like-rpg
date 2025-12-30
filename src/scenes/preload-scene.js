@@ -1,5 +1,6 @@
-import { ATTACK_ASSET_KEYS, BATTLE_ASSET_KEYS, CHARACTER_ASSET_KEYS, DATA_ASSET_KEYS, HEALTH_BAR_ASSET_KEYS, MON_ASSET_KEYS, MON_BACK_ASSET_KEYS, SYSTEM_ASSET_KEYS, UI_ASSET_KEYS, WORLD_ASSET_KEYS } from '../assets/asset-keys.js'
+import { ATTACK_ASSET_KEYS, BATTLE_ASSET_KEYS, BGM_ASSET_KEYS, CHARACTER_ASSET_KEYS, DATA_ASSET_KEYS, HEALTH_BAR_ASSET_KEYS, MON_ASSET_KEYS, MON_BACK_ASSET_KEYS, SYSTEM_ASSET_KEYS, UI_ASSET_KEYS, WORLD_ASSET_KEYS } from '../assets/asset-keys.js'
 import Phaser from '../lib/phaser.js'
+import { AudioManager } from '../utils/audio-manager.js'
 import { DataUtils } from '../utils/data-utils.js'
 import { SCENE_KEYS } from './scene-keys.js'
 
@@ -19,6 +20,8 @@ export class PreloadScene extends Phaser.Scene {
     const uiAssestPath = 'assets/images/ui'
     const charAssetPath = 'assets/images/character'
     const mapAssetPath = 'assets/images/map'
+    const bgmAssetPath = 'assets/audio/bgm'
+    const monCryAssetKeys = 'assets/audio/mons/cries'
 
     const attackAnimPath = 'assets/images/anims/pimen'
     const axulAssetPath = 'assets/images/character/axulart'
@@ -46,7 +49,9 @@ export class PreloadScene extends Phaser.Scene {
     // json
     this.load.json(DATA_ASSET_KEYS.ATTACKS, 'assets/data/attacks.json')
     this.load.json(DATA_ASSET_KEYS.ANIMATIONS, 'assets/data/animations.json')
-  
+    this.load.json(DATA_ASSET_KEYS.BASE_MONS, 'assets/data/base-mons.json')
+    this.load.json(DATA_ASSET_KEYS.MONS, 'assets/data/mons.json')
+
     // common
     this.load.image(SYSTEM_ASSET_KEYS.DIALOG_BACKGROUND, `/${backgroundAssetPath}/dialog.png`)
     this.load.image(UI_ASSET_KEYS.CURSOR, `${uiAssestPath}/cursor.png`)
@@ -61,15 +66,14 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image(HEALTH_BAR_ASSET_KEYS.MIDDLE, `/${battleAssetPath}/hp_mid.png`)
     this.load.image(HEALTH_BAR_ASSET_KEYS.RIGHT_CAP, `/${battleAssetPath}/hp_right_cap.png`)
 
-    // mon sprites
+    // mon stuff
     const keys = Object.keys(MON_ASSET_KEYS)
     for (let i = 0; i < keys.length; i++) {
-      if (keys[i] === 'PIKACHU' || keys[i] === 'BLASTOISE') {
-        this.load.image(keys[i], `/${monsAssetPath}/${i + 1}.PNG`)
-        this.load.image(MON_BACK_ASSET_KEYS[keys[i] + '_BACK'], `/${monsBackAssetPath}/${i + 1}.PNG`)
-      }
-
+      this.load.image(keys[i], `/${monsAssetPath}/${i + 1}.PNG`)
+      this.load.image(MON_BACK_ASSET_KEYS[keys[i] + '_BACK'], `/${monsBackAssetPath}/${i + 1}.PNG`)
+      this.load.audio(keys[i], [monCryAssetKeys + '/' + (i + 1) + '.ogg'])
     }
+  
     // attack
     this.load.spritesheet(ATTACK_ASSET_KEYS.ICE_SHARD, `${attackAnimPath}/ice-attack/active.png`, {
       frameWidth: 32,
@@ -109,7 +113,12 @@ export class PreloadScene extends Phaser.Scene {
       frameWidth: 16,
       frameHeight: 16
     })
-  
+
+    // audio
+    Object.keys(BGM_ASSET_KEYS).forEach(key => {
+      this.load.audio(BGM_ASSET_KEYS[key], [bgmAssetPath + '/' + key + '.flac'])
+    })
+    this.registry.set('audio', new AudioManager(this))
   }
 
   create () {

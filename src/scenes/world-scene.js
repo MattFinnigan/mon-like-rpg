@@ -1,7 +1,8 @@
 import { SKIP_BATTLE_ANIMATIONS, TILE_SIZE, TILED_COLLISION_ALPHA } from '../../config.js';
-import { WORLD_ASSET_KEYS } from '../assets/asset-keys.js';
+import { BGM_ASSET_KEYS, WORLD_ASSET_KEYS } from '../assets/asset-keys.js';
 import { DIRECTION } from '../common/direction.js';
 import Phaser from '../lib/phaser.js'
+import { AudioManager } from '../utils/audio-manager.js';
 import { Controls } from '../utils/controls.js';
 import { DATA_MANAGER_STORE_KEYS, dataManager } from '../utils/data-manager.js';
 import { getTargetPositionFromGameObjectPositionAndDirection } from '../utils/grid-utils.js';
@@ -36,6 +37,8 @@ export class WorldScene extends Phaser.Scene {
   #signLayer
   /** @type {DialogUi} */
   #dialogUi
+  /** @type {AudioManager} */
+  #audioManager
 
   constructor () {
     super({
@@ -106,8 +109,10 @@ export class WorldScene extends Phaser.Scene {
     this.cameras.main.fadeIn(500, 255, 255, 255)
     this.#worldForegroundImage = this.add.image(0, 0, WORLD_ASSET_KEYS.WORLD_FOREGROUND, 0).setOrigin(0)
 
-    this.#dialogUi = new DialogUi(this)
+    this.#audioManager = this.registry.get('audio')
+    this.#audioManager.playBgm(BGM_ASSET_KEYS.CELADON_CITY)
 
+    this.#dialogUi = new DialogUi(this)
     this.#controls = new Controls(this)
   }
 
@@ -190,7 +195,7 @@ export class WorldScene extends Phaser.Scene {
     this.#wildMonEncountered = Math.random() < 0.9
     if (this.#wildMonEncountered) {
       console.log(`[${WorldScene.name}:handlePlayerMovementUpdate] player encounted a wild mon`)
-
+      this.#audioManager.playBgm(BGM_ASSET_KEYS.WILD_ENCOUNTER_BATTLE)
       createWildEncounterSceneTransition(this, {
         skipSceneTransition: SKIP_BATTLE_ANIMATIONS,
         spritesToNotBeObscured: [this.#player.sprite],

@@ -1,4 +1,4 @@
-import { BATTLE_ASSET_KEYS } from "../../assets/asset-keys.js";
+import { BATTLE_ASSET_KEYS, MON_BACK_ASSET_KEYS } from "../../assets/asset-keys.js";
 import { BattleMon } from "./battle-mon.js";
 
 /**
@@ -10,15 +10,12 @@ const PLAYER_IMAGE_POSITION = Object.freeze({
 })
 
 export class PlayerBattleMon extends BattleMon {
-  /** @type {Phaser.GameObjects.BitmapText} */
-  #healthbarTextGameObject
-
   /**
    * 
    * @param {import("../../types/typedef.js").BattleMonConfig} config 
    */
   constructor (config) {
-    super(config, PLAYER_IMAGE_POSITION)
+    super(config, PLAYER_IMAGE_POSITION, MON_BACK_ASSET_KEYS[config.baseMonDetails.assetKey + '_BACK'], true)
 
     this._phaserHealthBarGameContainer.setPosition(330, 224)
     this._phaserMonImageGameObject.setPosition(PLAYER_IMAGE_POSITION.x, PLAYER_IMAGE_POSITION.y)
@@ -28,26 +25,6 @@ export class PlayerBattleMon extends BattleMon {
     this._monHpLabelGameText.setPosition(35, 76)
     this._healthBar.container.setPosition(82, 42)
 
-    this.#addHealthBarComponents()
-  }
-
-  #setHealthBarText () {
-    this.#healthbarTextGameObject.setText(`${this._currentHealth} / ${this._maxHealth}`)
-  }
-
-  #addHealthBarComponents () {
-    this.#healthbarTextGameObject = this._scene.add.bitmapText(90, 100, 'gb-font-thick', `${this._currentHealth} / ${this._maxHealth}`, 30)
-    this._phaserHealthBarGameContainer.add(this.#healthbarTextGameObject)
-  }
-
-  /**
-   * 
-   * @param {number} damage 
-   * @param {() => void} [callback] 
-   */
-  takeDamage (damage, callback) {
-    super.takeDamage(damage, callback)
-    this.#setHealthBarText()
   }
 
   /**
@@ -76,7 +53,9 @@ export class PlayerBattleMon extends BattleMon {
       },
       targets: this._phaserMonImageGameObject,
       onComplete: () => {
-        callback()
+        super.playMonCry(() => {
+          callback()
+        })
       }
     })
   }
@@ -104,18 +83,19 @@ export class PlayerBattleMon extends BattleMon {
       callback()
       return
     }
-
-    this._scene.tweens.add({
-      delay: 0,
-      duration: 300,
-      y: {
-        from: startYPos,
-        to: endYPos
-      },
-      targets: this._phaserMonImageGameObject,
-      onComplete: () => {
-        callback()
-      }
+    super.playMonCry(() => {
+      this._scene.tweens.add({
+        delay: 0,
+        duration: 300,
+        y: {
+          from: startYPos,
+          to: endYPos
+        },
+        targets: this._phaserMonImageGameObject,
+        onComplete: () => {
+          callback()
+        }
+      })
     })
   }
 }

@@ -1,0 +1,1059 @@
+{
+  "0": {
+    "name": "BULBASAUR",
+    "assetKey": "BULBASAUR",
+    "assetFrame": 0,
+    "baseAttack": 49,
+    "teachableAttackIds": []
+  },
+  "1": {
+    "name": "IVYSAUR",
+    "assetKey": "IVYSAUR",
+    "assetFrame": 0,
+    "baseAttack": 62,
+    "teachableAttackIds": []
+  },
+  "2": {
+    "name": "VENUSAUR",
+    "assetKey": "VENUSAUR",
+    "assetFrame": 0,
+    "baseAttack": 82,
+    "teachableAttackIds": []
+  },
+  "3": {
+    "name": "CHARMANDER",
+    "assetKey": "CHARMANDER",
+    "assetFrame": 0,
+    "baseAttack": 52,
+    "teachableAttackIds": []
+  },
+  "4": {
+    "name": "CHARMELEON",
+    "assetKey": "CHARMELEON",
+    "assetFrame": 0,
+    "baseAttack": 64,
+    "teachableAttackIds": []
+  },
+  "5": {
+    "name": "CHARIZARD",
+    "assetKey": "CHARIZARD",
+    "assetFrame": 0,
+    "baseAttack": 84,
+    "teachableAttackIds": []
+  },
+  "6": {
+    "name": "SQUIRTLE",
+    "assetKey": "SQUIRTLE",
+    "assetFrame": 0,
+    "baseAttack": 48,
+    "teachableAttackIds": []
+  },
+  "7": {
+    "name": "WARTORTLE",
+    "assetKey": "WARTORTLE",
+    "assetFrame": 0,
+    "baseAttack": 63,
+    "teachableAttackIds": []
+  },
+  "8": {
+    "name": "BLASTOISE",
+    "assetKey": "BLASTOISE",
+    "assetFrame": 0,
+    "baseAttack": 83,
+    "teachableAttackIds": []
+  },
+  "9": {
+    "name": "CATERPIE",
+    "assetKey": "CATERPIE",
+    "assetFrame": 0,
+    "baseAttack": 30,
+    "teachableAttackIds": []
+  },
+  "10": {
+    "name": "METAPOD",
+    "assetKey": "METAPOD",
+    "assetFrame": 0,
+    "baseAttack": 20,
+    "teachableAttackIds": []
+  },
+  "11": {
+    "name": "BUTTERFREE",
+    "assetKey": "BUTTERFREE",
+    "assetFrame": 0,
+    "baseAttack": 45,
+    "teachableAttackIds": []
+  },
+  "12": {
+    "name": "WEEDLE",
+    "assetKey": "WEEDLE",
+    "assetFrame": 0,
+    "baseAttack": 35,
+    "teachableAttackIds": []
+  },
+  "13": {
+    "name": "KAKUNA",
+    "assetKey": "KAKUNA",
+    "assetFrame": 0,
+    "baseAttack": 25,
+    "teachableAttackIds": []
+  },
+  "14": {
+    "name": "BEEDRILL",
+    "assetKey": "BEEDRILL",
+    "assetFrame": 0,
+    "baseAttack": 90,
+    "teachableAttackIds": []
+  },
+  "15": {
+    "name": "PIDGEY",
+    "assetKey": "PIDGEY",
+    "assetFrame": 0,
+    "baseAttack": 45,
+    "teachableAttackIds": []
+  },
+  "16": {
+    "name": "PIDGEOTTO",
+    "assetKey": "PIDGEOTTO",
+    "assetFrame": 0,
+    "baseAttack": 60,
+    "teachableAttackIds": []
+  },
+  "17": {
+    "name": "PIDGEOT",
+    "assetKey": "PIDGEOT",
+    "assetFrame": 0,
+    "baseAttack": 80,
+    "teachableAttackIds": []
+  },
+  "18": {
+    "name": "RATTATA",
+    "assetKey": "RATTATA",
+    "assetFrame": 0,
+    "baseAttack": 56,
+    "teachableAttackIds": []
+  },
+  "19": {
+    "name": "RATICATE",
+    "assetKey": "RATICATE",
+    "assetFrame": 0,
+    "baseAttack": 81,
+    "teachableAttackIds": []
+  },
+  "20": {
+    "name": "SPEAROW",
+    "assetKey": "SPEAROW",
+    "assetFrame": 0,
+    "baseAttack": 60,
+    "teachableAttackIds": []
+  },
+  "21": {
+    "name": "FEAROW",
+    "assetKey": "FEAROW",
+    "assetFrame": 0,
+    "baseAttack": 90,
+    "teachableAttackIds": []
+  },
+  "22": {
+    "name": "EKANS",
+    "assetKey": "EKANS",
+    "assetFrame": 0,
+    "baseAttack": 60,
+    "teachableAttackIds": []
+  },
+  "23": {
+    "name": "ARBOK",
+    "assetKey": "ARBOK",
+    "assetFrame": 0,
+    "baseAttack": 95,
+    "teachableAttackIds": []
+  },
+  "24": {
+    "name": "PIKACHU",
+    "assetKey": "PIKACHU",
+    "assetFrame": 0,
+    "baseAttack": 55,
+    "teachableAttackIds": []
+  },
+  "25": {
+    "name": "RAICHU",
+    "assetKey": "RAICHU",
+    "assetFrame": 0,
+    "baseAttack": 90,
+    "teachableAttackIds": []
+  },
+  "26": {
+    "name": "SANDSHREW",
+    "assetKey": "SANDSHREW",
+    "assetFrame": 0,
+    "baseAttack": 75,
+    "teachableAttackIds": []
+  },
+  "27": {
+    "name": "SANDSLASH",
+    "assetKey": "SANDSLASH",
+    "assetFrame": 0,
+    "baseAttack": 100,
+    "teachableAttackIds": []
+  },
+  "28": {
+    "name": "NIDORAN_F",
+    "assetKey": "NIDORAN_F",
+    "assetFrame": 0,
+    "baseAttack": 47,
+    "teachableAttackIds": []
+  },
+  "29": {
+    "name": "NIDORINA",
+    "assetKey": "NIDORINA",
+    "assetFrame": 0,
+    "baseAttack": 62,
+    "teachableAttackIds": []
+  },
+  "30": {
+    "name": "NIDOQUEEN",
+    "assetKey": "NIDOQUEEN",
+    "assetFrame": 0,
+    "baseAttack": 92,
+    "teachableAttackIds": []
+  },
+  "31": {
+    "name": "NIDORAN_M",
+    "assetKey": "NIDORAN_M",
+    "assetFrame": 0,
+    "baseAttack": 57,
+    "teachableAttackIds": []
+  },
+  "32": {
+    "name": "NIDORINO",
+    "assetKey": "NIDORINO",
+    "assetFrame": 0,
+    "baseAttack": 72,
+    "teachableAttackIds": []
+  },
+  "33": {
+    "name": "NIDOKING",
+    "assetKey": "NIDOKING",
+    "assetFrame": 0,
+    "baseAttack": 102,
+    "teachableAttackIds": []
+  },
+  "34": {
+    "name": "CLEFAIRY",
+    "assetKey": "CLEFAIRY",
+    "assetFrame": 0,
+    "baseAttack": 45,
+    "teachableAttackIds": []
+  },
+  "35": {
+    "name": "CLEFABLE",
+    "assetKey": "CLEFABLE",
+    "assetFrame": 0,
+    "baseAttack": 70,
+    "teachableAttackIds": []
+  },
+  "36": {
+    "name": "VULPIX",
+    "assetKey": "VULPIX",
+    "assetFrame": 0,
+    "baseAttack": 41,
+    "teachableAttackIds": []
+  },
+  "37": {
+    "name": "NINETALES",
+    "assetKey": "NINETALES",
+    "assetFrame": 0,
+    "baseAttack": 76,
+    "teachableAttackIds": []
+  },
+  "38": {
+    "name": "JIGGLYPUFF",
+    "assetKey": "JIGGLYPUFF",
+    "assetFrame": 0,
+    "baseAttack": 45,
+    "teachableAttackIds": []
+  },
+  "39": {
+    "name": "WIGGLYTUFF",
+    "assetKey": "WIGGLYTUFF",
+    "assetFrame": 0,
+    "baseAttack": 70,
+    "teachableAttackIds": []
+  },
+  "40": {
+    "name": "ZUBAT",
+    "assetKey": "ZUBAT",
+    "assetFrame": 0,
+    "baseAttack": 45,
+    "teachableAttackIds": []
+  },
+  "41": {
+    "name": "GOLBAT",
+    "assetKey": "GOLBAT",
+    "assetFrame": 0,
+    "baseAttack": 80,
+    "teachableAttackIds": []
+  },
+  "42": {
+    "name": "ODDISH",
+    "assetKey": "ODDISH",
+    "assetFrame": 0,
+    "baseAttack": 50,
+    "teachableAttackIds": []
+  },
+  "43": {
+    "name": "GLOOM",
+    "assetKey": "GLOOM",
+    "assetFrame": 0,
+    "baseAttack": 65,
+    "teachableAttackIds": []
+  },
+  "44": {
+    "name": "VILEPLUME",
+    "assetKey": "VILEPLUME",
+    "assetFrame": 0,
+    "baseAttack": 80,
+    "teachableAttackIds": []
+  },
+  "45": {
+    "name": "PARAS",
+    "assetKey": "PARAS",
+    "assetFrame": 0,
+    "baseAttack": 70,
+    "teachableAttackIds": []
+  },
+  "46": {
+    "name": "PARASECT",
+    "assetKey": "PARASECT",
+    "assetFrame": 0,
+    "baseAttack": 95,
+    "teachableAttackIds": []
+  },
+  "47": {
+    "name": "VENONAT",
+    "assetKey": "VENONAT",
+    "assetFrame": 0,
+    "baseAttack": 55,
+    "teachableAttackIds": []
+  },
+  "48": {
+    "name": "VENOMOTH",
+    "assetKey": "VENOMOTH",
+    "assetFrame": 0,
+    "baseAttack": 65,
+    "teachableAttackIds": []
+  },
+  "49": {
+    "name": "DIGLETT",
+    "assetKey": "DIGLETT",
+    "assetFrame": 0,
+    "baseAttack": 55,
+    "teachableAttackIds": []
+  },
+  "50": {
+    "name": "DUGTRIO",
+    "assetKey": "DUGTRIO",
+    "assetFrame": 0,
+    "baseAttack": 80,
+    "teachableAttackIds": []
+  },
+  "51": {
+    "name": "MEOWTH",
+    "assetKey": "MEOWTH",
+    "assetFrame": 0,
+    "baseAttack": 45,
+    "teachableAttackIds": []
+  },
+  "52": {
+    "name": "PERSIAN",
+    "assetKey": "PERSIAN",
+    "assetFrame": 0,
+    "baseAttack": 70,
+    "teachableAttackIds": []
+  },
+  "53": {
+    "name": "PSYDUCK",
+    "assetKey": "PSYDUCK",
+    "assetFrame": 0,
+    "baseAttack": 52,
+    "teachableAttackIds": []
+  },
+  "54": {
+    "name": "GOLDUCK",
+    "assetKey": "GOLDUCK",
+    "assetFrame": 0,
+    "baseAttack": 82,
+    "teachableAttackIds": []
+  },
+  "55": {
+    "name": "MANKEY",
+    "assetKey": "MANKEY",
+    "assetFrame": 0,
+    "baseAttack": 80,
+    "teachableAttackIds": []
+  },
+  "56": {
+    "name": "PRIMEAPE",
+    "assetKey": "PRIMEAPE",
+    "assetFrame": 0,
+    "baseAttack": 105,
+    "teachableAttackIds": []
+  },
+  "57": {
+    "name": "GROWLITHE",
+    "assetKey": "GROWLITHE",
+    "assetFrame": 0,
+    "baseAttack": 70,
+    "teachableAttackIds": []
+  },
+  "58": {
+    "name": "ARCANINE",
+    "assetKey": "ARCANINE",
+    "assetFrame": 0,
+    "baseAttack": 110,
+    "teachableAttackIds": []
+  },
+  "59": {
+    "name": "POLIWAG",
+    "assetKey": "POLIWAG",
+    "assetFrame": 0,
+    "baseAttack": 50,
+    "teachableAttackIds": []
+  },
+  "60": {
+    "name": "POLIWHIRL",
+    "assetKey": "POLIWHIRL",
+    "assetFrame": 0,
+    "baseAttack": 65,
+    "teachableAttackIds": []
+  },
+  "61": {
+    "name": "POLIWRATH",
+    "assetKey": "POLIWRATH",
+    "assetFrame": 0,
+    "baseAttack": 95,
+    "teachableAttackIds": []
+  },
+  "62": {
+    "name": "ABRA",
+    "assetKey": "ABRA",
+    "assetFrame": 0,
+    "baseAttack": 20,
+    "teachableAttackIds": []
+  },
+  "63": {
+    "name": "KADABRA",
+    "assetKey": "KADABRA",
+    "assetFrame": 0,
+    "baseAttack": 35,
+    "teachableAttackIds": []
+  },
+  "64": {
+    "name": "ALAKAZAM",
+    "assetKey": "ALAKAZAM",
+    "assetFrame": 0,
+    "baseAttack": 50,
+    "teachableAttackIds": []
+  },
+  "65": {
+    "name": "MACHOP",
+    "assetKey": "MACHOP",
+    "assetFrame": 0,
+    "baseAttack": 80,
+    "teachableAttackIds": []
+  },
+  "66": {
+    "name": "MACHOKE",
+    "assetKey": "MACHOKE",
+    "assetFrame": 0,
+    "baseAttack": 100,
+    "teachableAttackIds": []
+  },
+  "67": {
+    "name": "MACHAMP",
+    "assetKey": "MACHAMP",
+    "assetFrame": 0,
+    "baseAttack": 130,
+    "teachableAttackIds": []
+  },
+  "68": {
+    "name": "BELLSPROUT",
+    "assetKey": "BELLSPROUT",
+    "assetFrame": 0,
+    "baseAttack": 75,
+    "teachableAttackIds": []
+  },
+  "69": {
+    "name": "WEEPINBELL",
+    "assetKey": "WEEPINBELL",
+    "assetFrame": 0,
+    "baseAttack": 90,
+    "teachableAttackIds": []
+  },
+  "70": {
+    "name": "VICTREEBEL",
+    "assetKey": "VICTREEBEL",
+    "assetFrame": 0,
+    "baseAttack": 105,
+    "teachableAttackIds": []
+  },
+  "71": {
+    "name": "TENTACOOL",
+    "assetKey": "TENTACOOL",
+    "assetFrame": 0,
+    "baseAttack": 40,
+    "teachableAttackIds": []
+  },
+  "72": {
+    "name": "TENTACRUEL",
+    "assetKey": "TENTACRUEL",
+    "assetFrame": 0,
+    "baseAttack": 70,
+    "teachableAttackIds": []
+  },
+  "73": {
+    "name": "GEODUDE",
+    "assetKey": "GEODUDE",
+    "assetFrame": 0,
+    "baseAttack": 80,
+    "teachableAttackIds": []
+  },
+  "74": {
+    "name": "GRAVELER",
+    "assetKey": "GRAVELER",
+    "assetFrame": 0,
+    "baseAttack": 95,
+    "teachableAttackIds": []
+  },
+  "75": {
+    "name": "GOLEM",
+    "assetKey": "GOLEM",
+    "assetFrame": 0,
+    "baseAttack": 120,
+    "teachableAttackIds": []
+  },
+  "76": {
+    "name": "PONYTA",
+    "assetKey": "PONYTA",
+    "assetFrame": 0,
+    "baseAttack": 85,
+    "teachableAttackIds": []
+  },
+  "77": {
+    "name": "RAPIDASH",
+    "assetKey": "RAPIDASH",
+    "assetFrame": 0,
+    "baseAttack": 100,
+    "teachableAttackIds": []
+  },
+  "78": {
+    "name": "SLOWPOKE",
+    "assetKey": "SLOWPOKE",
+    "assetFrame": 0,
+    "baseAttack": 65,
+    "teachableAttackIds": []
+  },
+  "79": {
+    "name": "SLOWBRO",
+    "assetKey": "SLOWBRO",
+    "assetFrame": 0,
+    "baseAttack": 75,
+    "teachableAttackIds": []
+  },
+  "80": {
+    "name": "MAGNEMITE",
+    "assetKey": "MAGNEMITE",
+    "assetFrame": 0,
+    "baseAttack": 35,
+    "teachableAttackIds": []
+  },
+  "81": {
+    "name": "MAGNETON",
+    "assetKey": "MAGNETON",
+    "assetFrame": 0,
+    "baseAttack": 60,
+    "teachableAttackIds": []
+  },
+  "82": {
+    "name": "FARFETCHD",
+    "assetKey": "FARFETCHD",
+    "assetFrame": 0,
+    "baseAttack": 90,
+    "teachableAttackIds": []
+  },
+  "83": {
+    "name": "DODUO",
+    "assetKey": "DODUO",
+    "assetFrame": 0,
+    "baseAttack": 85,
+    "teachableAttackIds": []
+  },
+  "84": {
+    "name": "DODRIO",
+    "assetKey": "DODRIO",
+    "assetFrame": 0,
+    "baseAttack": 110,
+    "teachableAttackIds": []
+  },
+  "85": {
+    "name": "SEEL",
+    "assetKey": "SEEL",
+    "assetFrame": 0,
+    "baseAttack": 45,
+    "teachableAttackIds": []
+  },
+  "86": {
+    "name": "DEWGONG",
+    "assetKey": "DEWGONG",
+    "assetFrame": 0,
+    "baseAttack": 70,
+    "teachableAttackIds": []
+  },
+  "87": {
+    "name": "GRIMER",
+    "assetKey": "GRIMER",
+    "assetFrame": 0,
+    "baseAttack": 80,
+    "teachableAttackIds": []
+  },
+  "88": {
+    "name": "MUK",
+    "assetKey": "MUK",
+    "assetFrame": 0,
+    "baseAttack": 105,
+    "teachableAttackIds": []
+  },
+  "89": {
+    "name": "SHELLDER",
+    "assetKey": "SHELLDER",
+    "assetFrame": 0,
+    "baseAttack": 65,
+    "teachableAttackIds": []
+  },
+  "90": {
+    "name": "CLOYSTER",
+    "assetKey": "CLOYSTER",
+    "assetFrame": 0,
+    "baseAttack": 95,
+    "teachableAttackIds": []
+  },
+  "91": {
+    "name": "GASTLY",
+    "assetKey": "GASTLY",
+    "assetFrame": 0,
+    "baseAttack": 35,
+    "teachableAttackIds": []
+  },
+  "92": {
+    "name": "HAUNTER",
+    "assetKey": "HAUNTER",
+    "assetFrame": 0,
+    "baseAttack": 50,
+    "teachableAttackIds": []
+  },
+  "93": {
+    "name": "GENGAR",
+    "assetKey": "GENGAR",
+    "assetFrame": 0,
+    "baseAttack": 65,
+    "teachableAttackIds": []
+  },
+  "94": {
+    "name": "ONIX",
+    "assetKey": "ONIX",
+    "assetFrame": 0,
+    "baseAttack": 45,
+    "teachableAttackIds": []
+  },
+  "95": {
+    "name": "DROWZEE",
+    "assetKey": "DROWZEE",
+    "assetFrame": 0,
+    "baseAttack": 48,
+    "teachableAttackIds": []
+  },
+  "96": {
+    "name": "HYPNO",
+    "assetKey": "HYPNO",
+    "assetFrame": 0,
+    "baseAttack": 73,
+    "teachableAttackIds": []
+  },
+  "97": {
+    "name": "KRABBY",
+    "assetKey": "KRABBY",
+    "assetFrame": 0,
+    "baseAttack": 105,
+    "teachableAttackIds": []
+  },
+  "98": {
+    "name": "KINGLER",
+    "assetKey": "KINGLER",
+    "assetFrame": 0,
+    "baseAttack": 130,
+    "teachableAttackIds": []
+  },
+  "99": {
+    "name": "VOLTORB",
+    "assetKey": "VOLTORB",
+    "assetFrame": 0,
+    "baseAttack": 30,
+    "teachableAttackIds": []
+  },
+  "100": {
+    "name": "ELECTRODE",
+    "assetKey": "ELECTRODE",
+    "assetFrame": 0,
+    "baseAttack": 50,
+    "teachableAttackIds": []
+  },
+  "101": {
+    "name": "EXEGGCUTE",
+    "assetKey": "EXEGGCUTE",
+    "assetFrame": 0,
+    "baseAttack": 40,
+    "teachableAttackIds": []
+  },
+  "102": {
+    "name": "EXEGGUTOR",
+    "assetKey": "EXEGGUTOR",
+    "assetFrame": 0,
+    "baseAttack": 95,
+    "teachableAttackIds": []
+  },
+  "103": {
+    "name": "CUBONE",
+    "assetKey": "CUBONE",
+    "assetFrame": 0,
+    "baseAttack": 50,
+    "teachableAttackIds": []
+  },
+  "104": {
+    "name": "MAROWAK",
+    "assetKey": "MAROWAK",
+    "assetFrame": 0,
+    "baseAttack": 80,
+    "teachableAttackIds": []
+  },
+  "105": {
+    "name": "HITMONLEE",
+    "assetKey": "HITMONLEE",
+    "assetFrame": 0,
+    "baseAttack": 120,
+    "teachableAttackIds": []
+  },
+  "106": {
+    "name": "HITMONCHAN",
+    "assetKey": "HITMONCHAN",
+    "assetFrame": 0,
+    "baseAttack": 105,
+    "teachableAttackIds": []
+  },
+  "107": {
+    "name": "LICKITUNG",
+    "assetKey": "LICKITUNG",
+    "assetFrame": 0,
+    "baseAttack": 55,
+    "teachableAttackIds": []
+  },
+  "108": {
+    "name": "KOFFING",
+    "assetKey": "KOFFING",
+    "assetFrame": 0,
+    "baseAttack": 65,
+    "teachableAttackIds": []
+  },
+  "109": {
+    "name": "WEEZING",
+    "assetKey": "WEEZING",
+    "assetFrame": 0,
+    "baseAttack": 90,
+    "teachableAttackIds": []
+  },
+  "110": {
+    "name": "RHYHORN",
+    "assetKey": "RHYHORN",
+    "assetFrame": 0,
+    "baseAttack": 85,
+    "teachableAttackIds": []
+  },
+  "111": {
+    "name": "RHYDON",
+    "assetKey": "RHYDON",
+    "assetFrame": 0,
+    "baseAttack": 130,
+    "teachableAttackIds": []
+  },
+  "112": {
+    "name": "CHANSEY",
+    "assetKey": "CHANSEY",
+    "assetFrame": 0,
+    "baseAttack": 5,
+    "teachableAttackIds": []
+  },
+  "113": {
+    "name": "TANGELA",
+    "assetKey": "TANGELA",
+    "assetFrame": 0,
+    "baseAttack": 55,
+    "teachableAttackIds": []
+  },
+  "114": {
+    "name": "KANGASKHAN",
+    "assetKey": "KANGASKHAN",
+    "assetFrame": 0,
+    "baseAttack": 95,
+    "teachableAttackIds": []
+  },
+  "115": {
+    "name": "HORSEA",
+    "assetKey": "HORSEA",
+    "assetFrame": 0,
+    "baseAttack": 40,
+    "teachableAttackIds": []
+  },
+  "116": {
+    "name": "SEADRA",
+    "assetKey": "SEADRA",
+    "assetFrame": 0,
+    "baseAttack": 65,
+    "teachableAttackIds": []
+  },
+  "117": {
+    "name": "GOLDEEN",
+    "assetKey": "GOLDEEN",
+    "assetFrame": 0,
+    "baseAttack": 67,
+    "teachableAttackIds": []
+  },
+  "118": {
+    "name": "SEAKING",
+    "assetKey": "SEAKING",
+    "assetFrame": 0,
+    "baseAttack": 92,
+    "teachableAttackIds": []
+  },
+  "119": {
+    "name": "STARYU",
+    "assetKey": "STARYU",
+    "assetFrame": 0,
+    "baseAttack": 45,
+    "teachableAttackIds": []
+  },
+  "120": {
+    "name": "STARMIE",
+    "assetKey": "STARMIE",
+    "assetFrame": 0,
+    "baseAttack": 75,
+    "teachableAttackIds": []
+  },
+  "121": {
+    "name": "MR_MIME",
+    "assetKey": "MR_MIME",
+    "assetFrame": 0,
+    "baseAttack": 45,
+    "teachableAttackIds": []
+  },
+  "122": {
+    "name": "SCYTHER",
+    "assetKey": "SCYTHER",
+    "assetFrame": 0,
+    "baseAttack": 110,
+    "teachableAttackIds": []
+  },
+  "123": {
+    "name": "JYNX",
+    "assetKey": "JYNX",
+    "assetFrame": 0,
+    "baseAttack": 50,
+    "teachableAttackIds": []
+  },
+  "124": {
+    "name": "ELECTABUZZ",
+    "assetKey": "ELECTABUZZ",
+    "assetFrame": 0,
+    "baseAttack": 83,
+    "teachableAttackIds": []
+  },
+  "125": {
+    "name": "MAGMAR",
+    "assetKey": "MAGMAR",
+    "assetFrame": 0,
+    "baseAttack": 95,
+    "teachableAttackIds": []
+  },
+  "126": {
+    "name": "PINSIR",
+    "assetKey": "PINSIR",
+    "assetFrame": 0,
+    "baseAttack": 125,
+    "teachableAttackIds": []
+  },
+  "127": {
+    "name": "TAUROS",
+    "assetKey": "TAUROS",
+    "assetFrame": 0,
+    "baseAttack": 100,
+    "teachableAttackIds": []
+  },
+  "128": {
+    "name": "MAGIKARP",
+    "assetKey": "MAGIKARP",
+    "assetFrame": 0,
+    "baseAttack": 10,
+    "teachableAttackIds": []
+  },
+  "129": {
+    "name": "GYARADOS",
+    "assetKey": "GYARADOS",
+    "assetFrame": 0,
+    "baseAttack": 125,
+    "teachableAttackIds": []
+  },
+  "130": {
+    "name": "LAPRAS",
+    "assetKey": "LAPRAS",
+    "assetFrame": 0,
+    "baseAttack": 85,
+    "teachableAttackIds": []
+  },
+  "131": {
+    "name": "DITTO",
+    "assetKey": "DITTO",
+    "assetFrame": 0,
+    "baseAttack": 48,
+    "teachableAttackIds": []
+  },
+  "132": {
+    "name": "EEVEE",
+    "assetKey": "EEVEE",
+    "assetFrame": 0,
+    "baseAttack": 55,
+    "teachableAttackIds": []
+  },
+  "133": {
+    "name": "VAPOREON",
+    "assetKey": "VAPOREON",
+    "assetFrame": 0,
+    "baseAttack": 65,
+    "teachableAttackIds": []
+  },
+  "134": {
+    "name": "JOLTEON",
+    "assetKey": "JOLTEON",
+    "assetFrame": 0,
+    "baseAttack": 65,
+    "teachableAttackIds": []
+  },
+  "135": {
+    "name": "FLAREON",
+    "assetKey": "FLAREON",
+    "assetFrame": 0,
+    "baseAttack": 130,
+    "teachableAttackIds": []
+  },
+  "136": {
+    "name": "PORYGON",
+    "assetKey": "PORYGON",
+    "assetFrame": 0,
+    "baseAttack": 60,
+    "teachableAttackIds": []
+  },
+  "137": {
+    "name": "OMANYTE",
+    "assetKey": "OMANYTE",
+    "assetFrame": 0,
+    "baseAttack": 40,
+    "teachableAttackIds": []
+  },
+  "138": {
+    "name": "OMASTAR",
+    "assetKey": "OMASTAR",
+    "assetFrame": 0,
+    "baseAttack": 60,
+    "teachableAttackIds": []
+  },
+  "139": {
+    "name": "KABUTO",
+    "assetKey": "KABUTO",
+    "assetFrame": 0,
+    "baseAttack": 80,
+    "teachableAttackIds": []
+  },
+  "140": {
+    "name": "KABUTOPS",
+    "assetKey": "KABUTOPS",
+    "assetFrame": 0,
+    "baseAttack": 115,
+    "teachableAttackIds": []
+  },
+  "141": {
+    "name": "AERODACTYL",
+    "assetKey": "AERODACTYL",
+    "assetFrame": 0,
+    "baseAttack": 105,
+    "teachableAttackIds": []
+  },
+  "142": {
+    "name": "SNORLAX",
+    "assetKey": "SNORLAX",
+    "assetFrame": 0,
+    "baseAttack": 110,
+    "teachableAttackIds": []
+  },
+  "143": {
+    "name": "ARTICUNO",
+    "assetKey": "ARTICUNO",
+    "assetFrame": 0,
+    "baseAttack": 85,
+    "teachableAttackIds": []
+  },
+  "144": {
+    "name": "ZAPDOS",
+    "assetKey": "ZAPDOS",
+    "assetFrame": 0,
+    "baseAttack": 90,
+    "teachableAttackIds": []
+  },
+  "145": {
+    "name": "MOLTRES",
+    "assetKey": "MOLTRES",
+    "assetFrame": 0,
+    "baseAttack": 100,
+    "teachableAttackIds": []
+  },
+  "146": {
+    "name": "DRATINI",
+    "assetKey": "DRATINI",
+    "assetFrame": 0,
+    "baseAttack": 64,
+    "teachableAttackIds": []
+  },
+  "147": {
+    "name": "DRAGONAIR",
+    "assetKey": "DRAGONAIR",
+    "assetFrame": 0,
+    "baseAttack": 84,
+    "teachableAttackIds": []
+  },
+  "148": {
+    "name": "DRAGONITE",
+    "assetKey": "DRAGONITE",
+    "assetFrame": 0,
+    "baseAttack": 134,
+    "teachableAttackIds": []
+  },
+  "149": {
+    "name": "MEWTWO",
+    "assetKey": "MEWTWO",
+    "assetFrame": 0,
+    "baseAttack": 110,
+    "teachableAttackIds": []
+  },
+  "150": {
+    "name": "MEW",
+    "assetKey": "MEW",
+    "assetFrame": 0,
+    "baseAttack": 100,
+    "teachableAttackIds": []
+  }
+}

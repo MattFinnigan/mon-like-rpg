@@ -1,4 +1,4 @@
-import { MON_ASSET_KEYS, MON_BACK_ASSET_KEYS } from '../assets/asset-keys.js'
+import { DATA_ASSET_KEYS, MON_ASSET_KEYS, MON_BACK_ASSET_KEYS } from '../assets/asset-keys.js'
 import Phaser from '../lib/phaser.js'
 import { SCENE_KEYS } from './scene-keys.js'
 import { BattleMenu } from '../battle/ui/menu/battle-menu.js'
@@ -9,6 +9,7 @@ import { StateMachine } from '../utils/state-machine.js'
 import { SKIP_BATTLE_ANIMATIONS } from '../../config.js'
 import { ATTACK_TARGET, AttackManager } from '../battle/attacks/attack-manager.js'
 import { Controls } from '../utils/controls.js'
+import { DataUtils } from '../utils/data-utils.js'
 
 const BATTLE_STATES = Object.freeze({
   INTRO: 'INTRO',
@@ -55,36 +56,24 @@ export class BattleScene extends Phaser.Scene {
   create () {
     this.cameras.main.setBackgroundColor('#fff')
     console.log(`[${BattleScene.name}:create] invoked`)
-    const P1_MON = 'PIKACHU'
-    const P2_MON = 'BLASTOISE'
+    
+    const P1_MON = DataUtils.getMonDetails(this, 1)
+    const P2_MON = DataUtils.getMonDetails(this, 2)
+
+    const P1_BASE_MON = DataUtils.getBaseMonDetails(this, P1_MON.index)
+    const P2_BASE_MON = DataUtils.getBaseMonDetails(this, P2_MON.index)
 
     this.#activeEnemyMon = new EnemyBattleMon({
       scene: this,
-      monDetails: {
-        name: P2_MON,
-        assetKey: MON_ASSET_KEYS[P2_MON],
-        assetFrame: 0,
-        currentHp: 20,
-        maxHp: 20,
-        currentLevel: 100,
-        attackIds: [2],
-        baseAttack: 5
-      },
+      monDetails: P2_MON,
+      baseMonDetails: P2_BASE_MON,
       skipBattleAnimations: SKIP_BATTLE_ANIMATIONS
     })
 
     this.#activePlayerMon = new PlayerBattleMon({
       scene: this,
-      monDetails: {
-        name: P1_MON,
-        assetKey: MON_BACK_ASSET_KEYS[P1_MON + '_BACK'],
-        assetFrame: 0,
-        currentHp: 20,
-        maxHp: 20,
-        currentLevel: 15,
-        attackIds: [1, 2],
-        baseAttack: 20
-      },
+      monDetails: P1_MON,
+      baseMonDetails: P1_BASE_MON,
       skipBattleAnimations: SKIP_BATTLE_ANIMATIONS
     })
 
@@ -97,16 +86,14 @@ export class BattleScene extends Phaser.Scene {
   update () {
     this.#battleStateMachine.update()
     const wasSpaceKeyPresed = this.#controls.wasSpaceKeyPressed()
-
     if (wasSpaceKeyPresed &&
         (this.#battleStateMachine.currentStateName === BATTLE_STATES.PRE_BATTLE_INFO ||
-          this.#battleStateMachine.currentStateName === BATTLE_STATES.POST_ATTACK) ||
-          this.#battleStateMachine.currentStateName === BATTLE_STATES.RUN_ATTEMPT
+          this.#battleStateMachine.currentStateName === BATTLE_STATES.POST_ATTACK ||
+          this.#battleStateMachine.currentStateName === BATTLE_STATES.RUN_ATTEMPT)
       ) {
       this.#battleMenu.handlePlayerInput('OK')
       return
     }
-
     if (this.#battleStateMachine.currentStateName !== BATTLE_STATES.PLAYER_INPUT) {
       return
     }
@@ -166,7 +153,7 @@ export class BattleScene extends Phaser.Scene {
         this.#attackManager.playAttackAnimation(attk.animationName, ATTACK_TARGET.PLAYER, () => {
           this.#activePlayerMon.playMonTakeDamageAnimation(() => {
             this.#activePlayerMon.takeDamage(this.#activeEnemyMon.baseAttack, () => {
-              this.#postBattleSequenceCheck()
+              this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK)
             })
           })
         })

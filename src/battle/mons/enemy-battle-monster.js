@@ -44,7 +44,9 @@ export class EnemyBattleMon extends BattleMon {
       },
       targets: this._phaserMonImageGameObject,
       onComplete: () => {
-        callback()
+        super.playMonCry(() => {
+          callback()
+        })
       }
     })
   }
@@ -71,18 +73,20 @@ export class EnemyBattleMon extends BattleMon {
       callback()
       return
     }
-
-    this._scene.tweens.add({
-      delay: 0,
-      duration: 350,
-      y: {
-        from: startYPos,
-        to: endYPos
-      },
-      targets: this._phaserMonImageGameObject,
-      onComplete: () => {
-        callback()
-      }
+    super.playMonCry(() => {
+      this._scene.tweens.add({
+        delay: 0,
+        duration: 350,
+        y: {
+          from: startYPos,
+          to: endYPos
+        },
+        targets: this._phaserMonImageGameObject,
+        onComplete: () => {
+          callback()
+    
+        }
+      })
     })
   }
 }

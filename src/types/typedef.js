@@ -4,6 +4,7 @@ import Phaser from "../lib/phaser.js";
  * @typedef BattleMonConfig
  * @type {Object}
  * @property {Phaser.Scene} scene
+ * @property {BaseMon} baseMonDetails
  * @property {Mon} monDetails
  * @property {boolean} [skipBattleAnimations=false]
  */
@@ -16,7 +17,7 @@ import Phaser from "../lib/phaser.js";
  */
 
 /**
- * @typedef Mon
+ * @typedef BaseMon
  * @type {Object}
  * @property {string} name
  * @property {string} assetKey
@@ -25,8 +26,19 @@ import Phaser from "../lib/phaser.js";
  * @property {number} currentHp
  * @property {number} currentLevel
  * @property {number} baseAttack
+ * @property {number[]} teachableAttackIds
+ */
+
+/**
+ * @typedef Mon
+ * @type {Object}
+ * @property {number} index
+ * @property {number} maxHp
+ * @property {number} currentHp
+ * @property {number} currentLevel
  * @property {number[]} attackIds
  */
+
 
 /**
  * @typedef Attack
