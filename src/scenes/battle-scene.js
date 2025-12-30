@@ -8,7 +8,6 @@ import { PlayerBattleMon } from '../battle/mons/player-battle-monster.js'
 import { StateMachine } from '../utils/state-machine.js'
 import { SKIP_BATTLE_ANIMATIONS } from '../../config.js'
 import { ATTACK_TARGET, AttackManager } from '../battle/attacks/attack-manager.js'
-import { createBattleSceneTransition } from '../utils/scene-transition.js'
 import { Controls } from '../utils/controls.js'
 
 const BATTLE_STATES = Object.freeze({

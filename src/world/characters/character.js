@@ -65,7 +65,7 @@ export class Character {
     this._origin = config.origin ? { ...config.origin } : { x: 0, y: 0 }
     this._collisionLayer = config.collisionLayer
 
-    this._phaserGameObject = this._scene.add.sprite(config.position.x, config.position.y, config.assetKey, this._getIdleFrame()).setOrigin(this._origin.x, this._origin.y)
+    this._phaserGameObject = this._scene.add.sprite(config.position.x, config.position.y, config.assetKey, this._getIdleFrame()).setOrigin(this._origin.x, this._origin.y).setScale(1.25)
     this._spriteGridMovementFinishedCallback = config.spriteGridMovementFinishedCallback
   }
 
@@ -206,7 +206,6 @@ export class Character {
 
     const { x, y } = position
     const tile = this._collisionLayer.getTileAtWorldXY(x, y, true)
-    console.log(tile)
     return tile.index !== -1
   }
 }

@@ -17,8 +17,10 @@ export class PreloadScene extends Phaser.Scene {
     const monsBackAssetPath = 'assets/images/mons/backs'
     const battleAssetPath = 'assets/images/battle'
     const uiAssestPath = 'assets/images/ui'
-    const attackAnimPath = 'assets/images/anims/pimen'
+    const charAssetPath = 'assets/images/character'
     const mapAssetPath = 'assets/images/map'
+
+    const attackAnimPath = 'assets/images/anims/pimen'
     const axulAssetPath = 'assets/images/character/axulart'
     const pbGamesAssetPath = 'assets/images/npc/parabellum-games'
 
@@ -44,7 +46,6 @@ export class PreloadScene extends Phaser.Scene {
     // json
     this.load.json(DATA_ASSET_KEYS.ATTACKS, 'assets/data/attacks.json')
     this.load.json(DATA_ASSET_KEYS.ANIMATIONS, 'assets/data/animations.json')
-    this.load.tilemapTiledJSON(WORLD_ASSET_KEYS.WORLD_MAIN_LEVEL, 'assets/data/level.json')
   
     // common
     this.load.image(SYSTEM_ASSET_KEYS.DIALOG_BACKGROUND, `/${backgroundAssetPath}/dialog.png`)
@@ -83,18 +84,28 @@ export class PreloadScene extends Phaser.Scene {
       frameHeight: 48
     })
 
-    // world
-    this.load.image(WORLD_ASSET_KEYS.WORLD_BACKGROUND, `/${mapAssetPath}/level_background.png`)
+    // levels
+    // this.load.image(WORLD_ASSET_KEYS.WORLD_BACKGROUND, `/${mapAssetPath}/level_background.png`)
+    // this.load.image(WORLD_ASSET_KEYS.WORLD_FOREGROUND, `/${mapAssetPath}/level_foreground.png`)
+    // this.load.tilemapTiledJSON(WORLD_ASSET_KEYS.WORLD_MAIN_LEVEL, 'assets/data/level.json')
+
+    // this.load.image(WORLD_ASSET_KEYS.WORLD_BACKGROUND, `/${mapAssetPath}/demo_background.png`)
+    // this.load.image(WORLD_ASSET_KEYS.WORLD_FOREGROUND, `/${mapAssetPath}/demo_foreground.png`)
+    // this.load.tilemapTiledJSON(WORLD_ASSET_KEYS.WORLD_MAIN_LEVEL, 'assets/data/demo_level.json')
+
+    this.load.image(WORLD_ASSET_KEYS.WORLD_BACKGROUND, `/${mapAssetPath}/background.png`)
+    this.load.image(WORLD_ASSET_KEYS.WORLD_FOREGROUND, `/${mapAssetPath}/foreground.png`)
+    this.load.tilemapTiledJSON(WORLD_ASSET_KEYS.WORLD_MAIN_LEVEL, 'assets/data/pt_level.json')
+
     this.load.image(WORLD_ASSET_KEYS.WORLD_COLLISION, `/${mapAssetPath}/collision.png`)
-    this.load.image(WORLD_ASSET_KEYS.WORLD_FOREGROUND, `/${mapAssetPath}/level_foreground.png`)
     this.load.image(WORLD_ASSET_KEYS.WORLD_ENCOUNTER_ZONE, `/${mapAssetPath}/encounter.png`)
   
     // character
-    this.load.spritesheet(CHARACTER_ASSET_KEYS.PLAYER, `${axulAssetPath}/custom.png`, {
+    this.load.spritesheet(CHARACTER_ASSET_KEYS.PLAYER, `${charAssetPath}/character.png`, {
       frameWidth: 64,
-      frameHeight: 88
+      frameHeight: 64
     })
-    this.load.spritesheet(CHARACTER_ASSET_KEYS.PLAYER, `${pbGamesAssetPath}/characters.png`, {
+    this.load.spritesheet(CHARACTER_ASSET_KEYS.NPC, `${pbGamesAssetPath}/npcs.png`, {
       frameWidth: 16,
       frameHeight: 16
     })

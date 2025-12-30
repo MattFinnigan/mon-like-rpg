@@ -115,7 +115,7 @@ export class WorldScene extends Phaser.Scene {
     }
 
     console.log(`[${WorldScene.name}:handlePlayerMovementUpdate] player is in an encounter zone`)
-    this.#wildMonEncountered = Math.random() < 0.9
+    // this.#wildMonEncountered = Math.random() < 0.9
     if (this.#wildMonEncountered) {
       console.log(`[${WorldScene.name}:handlePlayerMovementUpdate] player encounted a wild mon`)
 
