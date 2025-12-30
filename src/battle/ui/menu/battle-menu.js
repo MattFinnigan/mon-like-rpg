@@ -6,6 +6,7 @@ import { ACTIVE_BATTLE_MENU, ATTACK_MOVE_OPTIONS, BATTLE_MENU_OPTIONS } from './
 import { BattleMon } from '../../mons/battle-mon.js'
 import { animateText } from '../../../utils/text-utils.js'
 import { SKIP_BATTLE_ANIMATIONS } from '../../../../config.js'
+import { DIALOG_DETAILS } from '../../../assets/consts.js'
 
 const BATTLE_MENU_CURSOR_POS = Object.freeze({
   x: 30,
@@ -17,12 +18,8 @@ const ATTACK_MENU_CURSOR_POS = Object.freeze({
   y: 50
 })
 
-const INFO_POS = Object.freeze({
-  y: 384
-})
-
 const PLAYER_INPUT_CURSOR_POS = Object.freeze({
-  y: INFO_POS.y + 50
+  y: DIALOG_DETAILS.y + 50
 })
 
 export class BattleMenu {
@@ -73,7 +70,7 @@ export class BattleMenu {
   constructor (scene, activePlayerMon) {
     this.#scene = scene
     this.#activePlayerMon = activePlayerMon
-    this.#battleTextGameObjectLine1 = this.#scene.add.bitmapText(55, INFO_POS.y + 45, 'gb-font', '', 40)
+    this.#battleTextGameObjectLine1 = this.#scene.add.bitmapText(DIALOG_DETAILS.paddingLeft, DIALOG_DETAILS.y + DIALOG_DETAILS.paddingTop, 'gb-font', '', 40)
     this.#selectedBattleMenuOption = BATTLE_MENU_OPTIONS.FIGHT
     this.#selectedAttackMenuOption = ATTACK_MOVE_OPTIONS.MOVE_1
     this.#activeBattleMenu = ACTIVE_BATTLE_MENU.BATTLE_MAIN
@@ -259,13 +256,15 @@ export class BattleMenu {
   
   #createMainBattleMenu () {
     const MENU_POS_Y = 300
-    this.#battleTextGameObjectLine1 = this.#scene.add.bitmapText(30, INFO_POS.y + 45, 'gb-font', '', 30)
-    this.#battleTextGameObjectLine2 = this.#scene.add.bitmapText(30, INFO_POS.y + 100, 'gb-font', '', 30)
+    const maxTextWidth = DIALOG_DETAILS.maxTextWidth(this.#scene.scale.width)
+    this.#battleTextGameObjectLine1 = this.#scene.add.bitmapText(DIALOG_DETAILS.paddingLeft, DIALOG_DETAILS.y + DIALOG_DETAILS.paddingTop, 'gb-font', '', 30).setMaxWidth(maxTextWidth)
+    this.#battleTextGameObjectLine2 = this.#scene.add.bitmapText(DIALOG_DETAILS.paddingLeft, DIALOG_DETAILS.y + 100, 'gb-font', '', 30).setMaxWidth(maxTextWidth)
+      
     this.#mainBattleCursorPhaserImageGameObject = this.#scene.add.image(BATTLE_MENU_CURSOR_POS.x, BATTLE_MENU_CURSOR_POS.y, UI_ASSET_KEYS.CURSOR, 0).setOrigin(0).setScale(1.35)
 
-    this.#mainBattleMenuPhaserContainerGameObject = this.#scene.add.container(MENU_POS_Y, INFO_POS.y, [
+    this.#mainBattleMenuPhaserContainerGameObject = this.#scene.add.container(MENU_POS_Y, DIALOG_DETAILS.y, [
         this.#createMainInfoSubPane(),
-        this.#scene.add.bitmapText(55, 45, 'gb-font', BATTLE_MENU_OPTIONS.FIGHT, 40),
+        this.#scene.add.bitmapText(55, DIALOG_DETAILS.paddingTop, 'gb-font', BATTLE_MENU_OPTIONS.FIGHT, 40),
         this.#scene.add.bitmapText(215, 50, 'gb-font-small', 'P', 30),
         this.#scene.add.bitmapText(228, 64, 'gb-font-small', 'K', 30),
         this.#scene.add.bitmapText(245, 50, 'gb-font-small', 'M', 30),
@@ -289,9 +288,9 @@ export class BattleMenu {
       attackNames.push(this.#activePlayerMon.attacks[i]?.name || '-')
     }
 
-    this.#moveSelectionSubBattleMenuPhaserContainerGameObject = this.#scene.add.container(0, INFO_POS.y, [
-      this.#scene.add.bitmapText(55, 45, 'gb-font', attackNames[0], 30),
-      this.#scene.add.bitmapText(350, 45, 'gb-font', attackNames[1], 30),
+    this.#moveSelectionSubBattleMenuPhaserContainerGameObject = this.#scene.add.container(0, DIALOG_DETAILS.y, [
+      this.#scene.add.bitmapText(55, DIALOG_DETAILS.paddingTop, 'gb-font', attackNames[0], 30),
+      this.#scene.add.bitmapText(350, DIALOG_DETAILS.paddingTop, 'gb-font', attackNames[1], 30),
       this.#scene.add.bitmapText(55, 110, 'gb-font', attackNames[2], 30),
       this.#scene.add.bitmapText(350, 110, 'gb-font', attackNames[3], 30),
       this.#attackCursorPhaserImageGameObject
@@ -301,7 +300,7 @@ export class BattleMenu {
   }
 
   #createMainInfoPane () {
-    return this.#scene.add.image(0, INFO_POS.y, SYSTEM_ASSET_KEYS.DIALOG_BACKGROUND).setOrigin(0)
+    return this.#scene.add.image(0, DIALOG_DETAILS.y, SYSTEM_ASSET_KEYS.DIALOG_BACKGROUND).setOrigin(0)
   }
 
   #createMainInfoSubPane () {

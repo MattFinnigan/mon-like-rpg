@@ -35,10 +35,10 @@
             705, 721, 721, 705, 721, 705, 705, 705, 705, 705, 705, 705, 705, 817, 818, 705, 705, 706, 737, 738, 722, 706, 705, 706, 705, 706,
             721, 737, 737, 705, 706, 706, 706, 706, 706, 706, 706, 647, 648, 833, 834, 706, 706, 706, 706, 647, 648, 722, 705, 706, 721, 722,
             737, 738, 706, 705, 705, 705, 705, 705, 705, 705, 705, 663, 664, 833, 834, 722, 722, 722, 722, 663, 664, 738, 705, 706, 737, 738,
-            705, 706, 706, 705, 721, 721, 721, 721, 721, 721, 705, 705, 705, 705, 705, 706, 706, 738, 738, 737, 737, 738, 706, 706, 705, 706,
-            721, 722, 706, 737, 737, 737, 737, 737, 737, 737, 721, 721, 721, 705, 706, 706, 722, 705, 705, 705, 705, 705, 706, 706, 721, 722,
-            705, 706, 706, 721, 721, 721, 721, 721, 721, 721, 737, 737, 737, 721, 722, 722, 738, 721, 721, 721, 721, 721, 706, 706, 737, 706,
-            721, 722, 706, 737, 737, 737, 737, 737, 737, 737, 737, 737, 0, 737, 738, 738, 737, 737, 737, 737, 737, 737, 706, 706, 705, 722,
+            705, 706, 706, 705, 721, 721, 721, 721, 721, 721, 705, 705, 754, 705, 705, 754, 706, 738, 738, 737, 737, 738, 706, 706, 705, 706,
+            721, 722, 706, 737, 737, 737, 737, 737, 737, 737, 721, 721, 754, 705, 706, 754, 722, 705, 705, 705, 705, 705, 706, 706, 721, 722,
+            705, 706, 706, 721, 721, 721, 721, 721, 721, 721, 737, 737, 754, 721, 722, 754, 738, 721, 721, 721, 721, 721, 706, 706, 737, 706,
+            721, 722, 706, 737, 737, 737, 737, 737, 737, 737, 737, 737, 754, 737, 738, 754, 737, 737, 737, 737, 737, 737, 706, 706, 705, 722,
             737, 738, 706, 705, 705, 705, 706, 705, 705, 705, 705, 705, 754, 754, 754, 754, 705, 705, 705, 705, 705, 706, 705, 705, 721, 706,
             705, 721, 722, 754, 754, 754, 754, 754, 754, 754, 754, 754, 754, 754, 754, 754, 754, 754, 754, 754, 754, 754, 754, 721, 737, 722,
             721, 737, 738, 754, 705, 1393, 753, 1393, 753, 1393, 753, 1393, 753, 1393, 753, 1393, 753, 1393, 753, 1393, 753, 705, 754, 737, 737, 738,
@@ -130,6 +130,153 @@
          "type":"tilelayer",
          "visible":true,
          "width":26,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "id":18,
+         "layers":[
+                {
+                 "class":"npc",
+                 "draworder":"topdown",
+                 "id":20,
+                 "name":"NPC1",
+                 "objects":[
+                        {
+                         "gid":1522,
+                         "height":64,
+                         "id":9,
+                         "name":"npc1",
+                         "properties":[
+                                {
+                                 "name":"message",
+                                 "type":"string",
+                                 "value":"HOODOOS;;Got 2 dollas for tha bus lad?"
+                                }],
+                         "rotation":0,
+                         "type":"npc",
+                         "visible":true,
+                         "width":64,
+                         "x":448,
+                         "y":2880
+                        }],
+                 "opacity":1,
+                 "properties":[
+                        {
+                         "name":"message",
+                         "type":"string",
+                         "value":"HOOD OOS;;Got 2 dollas for the bus lad?"
+                        }],
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "class":"npc",
+                 "draworder":"topdown",
+                 "id":21,
+                 "name":"NPC2",
+                 "objects":[
+                        {
+                         "gid":1522,
+                         "height":64,
+                         "id":10,
+                         "name":"",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":64,
+                         "x":832,
+                         "y":3264
+                        }, 
+                        {
+                         "gid":1522,
+                         "height":64,
+                         "id":11,
+                         "name":"1",
+                         "rotation":0,
+                         "type":"npc_path",
+                         "visible":true,
+                         "width":64,
+                         "x":896,
+                         "y":3264
+                        }, 
+                        {
+                         "gid":1522,
+                         "height":64,
+                         "id":12,
+                         "name":"2",
+                         "rotation":0,
+                         "type":"npc_path",
+                         "visible":true,
+                         "width":64,
+                         "x":960,
+                         "y":3264
+                        }, 
+                        {
+                         "gid":1522,
+                         "height":64,
+                         "id":14,
+                         "name":"3",
+                         "rotation":0,
+                         "type":"npc_path",
+                         "visible":true,
+                         "width":64,
+                         "x":960,
+                         "y":3328
+                        }, 
+                        {
+                         "gid":1522,
+                         "height":64,
+                         "id":15,
+                         "name":"4",
+                         "rotation":0,
+                         "type":"npc_path",
+                         "visible":true,
+                         "width":64,
+                         "x":896,
+                         "y":3328
+                        }, 
+                        {
+                         "gid":1522,
+                         "height":64,
+                         "id":16,
+                         "name":"4",
+                         "rotation":0,
+                         "type":"npc_path",
+                         "visible":true,
+                         "width":64,
+                         "x":832,
+                         "y":3328
+                        }],
+                 "opacity":1,
+                 "properties":[
+                        {
+                         "name":"frame",
+                         "type":"int",
+                         "value":20
+                        }, 
+                        {
+                         "name":"message",
+                         "type":"string",
+                         "value":"Hello"
+                        }, 
+                        {
+                         "name":"movement_pattern",
+                         "propertytype":"npc_movement",
+                         "type":"string",
+                         "value":"CLOCKWISE"
+                        }],
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }],
+         "name":"NPCS",
+         "opacity":1,
+         "type":"group",
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -588,7 +735,7 @@
          "name":"Collision",
          "opacity":0.56,
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":26,
          "x":0,
          "y":0
@@ -653,7 +800,7 @@
          "name":"Encounter",
          "opacity":0.54,
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":26,
          "x":0,
          "y":0
@@ -725,117 +872,109 @@
          "y":0
         }, 
         {
-         "id":11,
-         "layers":[
-                {
-                 "class":"sign",
-                 "draworder":"topdown",
-                 "id":10,
-                 "name":"Sign1",
-                 "objects":[
-                        {
-                         "gid":2,
-                         "height":64,
-                         "id":1,
-                         "name":"Sign1",
-                         "properties":[
-                                {
-                                 "name":"message",
-                                 "type":"string",
-                                 "value":"Borris's house"
-                                }],
-                         "rotation":0,
-                         "type":"sign",
-                         "visible":true,
-                         "width":64,
-                         "x":896,
-                         "y":2689.33
-                        }],
-                 "opacity":1,
-                 "type":"objectgroup",
-                 "visible":true,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "draworder":"topdown",
-                 "id":16,
-                 "name":"Sign4",
-                 "objects":[],
-                 "opacity":1,
-                 "type":"objectgroup",
-                 "visible":true,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "draworder":"topdown",
-                 "id":12,
-                 "name":"Sign2",
-                 "objects":[
-                        {
-                         "gid":2,
-                         "height":64,
-                         "id":2,
-                         "name":"Sign 2",
-                         "properties":[
-                                {
-                                 "name":"message",
-                                 "type":"string",
-                                 "value":"ya mum's house"
-                                }],
-                         "rotation":0,
-                         "type":"sign",
-                         "visible":true,
-                         "width":64,
-                         "x":382.667,
-                         "y":2688
-                        }],
-                 "opacity":1,
-                 "type":"objectgroup",
-                 "visible":true,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "draworder":"topdown",
-                 "id":13,
-                 "name":"Sign3",
-                 "objects":[
-                        {
-                         "gid":2,
-                         "height":64,
-                         "id":3,
-                         "name":"Sign 3",
-                         "properties":[
-                                {
-                                 "name":"message",
-                                 "type":"string",
-                                 "value":"Prof. Pipe's Lab"
-                                }],
-                         "rotation":0,
-                         "type":"sign",
-                         "visible":true,
-                         "width":64,
-                         "x":1089.33,
-                         "y":3201.33
-                        }],
-                 "opacity":1,
-                 "type":"objectgroup",
-                 "visible":true,
-                 "x":0,
-                 "y":0
-                }],
-         "locked":true,
+         "class":"sign",
+         "draworder":"topdown",
+         "id":17,
          "name":"Signs",
+         "objects":[
+                {
+                 "gid":2,
+                 "height":64,
+                 "id":4,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"message",
+                         "type":"string",
+                         "value":"HALLAM RD"
+                        }],
+                 "rotation":0,
+                 "type":"sign",
+                 "visible":true,
+                 "width":64,
+                 "x":768,
+                 "y":1792
+                }, 
+                {
+                 "gid":2,
+                 "height":64,
+                 "id":5,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"message",
+                         "type":"string",
+                         "value":"Borris's House"
+                        }],
+                 "rotation":0,
+                 "type":"sign",
+                 "visible":true,
+                 "width":64,
+                 "x":896,
+                 "y":2688
+                }, 
+                {
+                 "gid":2,
+                 "height":64,
+                 "id":6,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"message",
+                         "type":"string",
+                         "value":"My House"
+                        }],
+                 "rotation":0,
+                 "type":"sign",
+                 "visible":true,
+                 "width":64,
+                 "x":384,
+                 "y":2688
+                }, 
+                {
+                 "gid":2,
+                 "height":64,
+                 "id":7,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"message",
+                         "type":"string",
+                         "value":"Made you look"
+                        }],
+                 "rotation":0,
+                 "type":"sign",
+                 "visible":true,
+                 "width":64,
+                 "x":640,
+                 "y":2944
+                }, 
+                {
+                 "gid":2,
+                 "height":64,
+                 "id":8,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"message",
+                         "type":"string",
+                         "value":"PROF. Pipe's lab"
+                        }],
+                 "rotation":0,
+                 "type":"sign",
+                 "visible":true,
+                 "width":64,
+                 "x":1088,
+                 "y":3200
+                }],
          "opacity":1,
-         "type":"group",
+         "type":"objectgroup",
          "visible":true,
          "x":0,
          "y":0
         }],
- "nextlayerid":17,
- "nextobjectid":4,
+ "nextlayerid":22,
+ "nextobjectid":17,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

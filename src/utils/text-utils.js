@@ -29,3 +29,6 @@ export function animateText (scene, target, text, config) {
     delay: config?.delay || 25
   })
 }
+
+export const CANNOT_READ_SIGN_TEXT = 'YOU CANNOT READ THE SIGN FROM THIS DIRECTION'
+export const PLACEHOLDER_TEXT = '...'

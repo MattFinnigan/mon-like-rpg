@@ -4,9 +4,20 @@ import { DIRECTION } from '../common/direction.js';
 import Phaser from '../lib/phaser.js'
 import { Controls } from '../utils/controls.js';
 import { DATA_MANAGER_STORE_KEYS, dataManager } from '../utils/data-manager.js';
+import { getTargetPositionFromGameObjectPositionAndDirection } from '../utils/grid-utils.js';
 import { createBattleSceneTransition, createWildEncounterSceneTransition } from '../utils/scene-transition.js';
+import { CANNOT_READ_SIGN_TEXT, PLACEHOLDER_TEXT } from '../utils/text-utils.js';
 import { Player } from '../world/characters/player.js';
+import { DialogUi } from '../world/dialog-ui.js';
 import { SCENE_KEYS } from "./scene-keys.js";
+
+/**
+ * @typedef TiledObjectProperty
+ * @type {object}
+ * @property {string} name
+ * @property {string} type
+ * @property {any} value
+ */
 
 export class WorldScene extends Phaser.Scene {
   /** @type {Player} */
@@ -21,6 +32,10 @@ export class WorldScene extends Phaser.Scene {
   #worldBackgroundImage
   /** @type {Phaser.GameObjects.Image} */
   #worldForegroundImage
+  /** @type {Phaser.Tilemaps.ObjectLayer} */
+  #signLayer
+  /** @type {DialogUi} */
+  #dialogUi
 
   constructor () {
     super({
@@ -38,7 +53,8 @@ export class WorldScene extends Phaser.Scene {
     const x = 6 * TILE_SIZE
     const y = 22 * TILE_SIZE
     const map = this.make.tilemap({ key: WORLD_ASSET_KEYS.WORLD_MAIN_LEVEL })
-
+  
+    // collision
     const collisonTiles = map.addTilesetImage('collision', WORLD_ASSET_KEYS.WORLD_COLLISION)
     if (!collisonTiles) {
       console.log(`[${WorldScene.name}:create] encounted error while creating collision TILESET using data from tiled`)
@@ -51,6 +67,7 @@ export class WorldScene extends Phaser.Scene {
     }
     collisionLayer.setAlpha(TILED_COLLISION_ALPHA).setDepth(2)
 
+    // encounter
     const encounterTiles = map.addTilesetImage('encounter', WORLD_ASSET_KEYS.WORLD_ENCOUNTER_ZONE)
     if (!encounterTiles) {
       console.log(`[${WorldScene.name}:create] encounted error while creating Encounter TILESET using data from tiled`)
@@ -62,6 +79,13 @@ export class WorldScene extends Phaser.Scene {
       return
     }
     this.#encounterLayer.setAlpha(TILED_COLLISION_ALPHA).setDepth(2)
+
+    // interactives
+    this.#signLayer = map.getObjectLayer('Signs')
+    if (!this.#signLayer) {
+      console.log(`[${WorldScene.name}:create] encounted error while creating Signs LAYER using data from tiled`)
+      return
+    }
 
     this.#worldBackgroundImage = this.add.image(0, 0, WORLD_ASSET_KEYS.WORLD_BACKGROUND, 0).setOrigin(0)
     this.cameras.main.setBounds(0, 0, this.#worldBackgroundImage.width, this.#worldBackgroundImage.height)
@@ -82,6 +106,8 @@ export class WorldScene extends Phaser.Scene {
     this.cameras.main.fadeIn(500, 255, 255, 255)
     this.#worldForegroundImage = this.add.image(0, 0, WORLD_ASSET_KEYS.WORLD_FOREGROUND, 0).setOrigin(0)
 
+    this.#dialogUi = new DialogUi(this)
+
     this.#controls = new Controls(this)
   }
 
@@ -90,13 +116,59 @@ export class WorldScene extends Phaser.Scene {
       this.#player.update(time)
       return
     }
-
+  
+    // process player input
     const selectedDirection = this.#controls.getDirectionKeyPressedDown()
-    if (selectedDirection !== DIRECTION.NONE) {
+    if (selectedDirection !== DIRECTION.NONE && !this.#isPlayerInputLocked()) {
       this.#player.moveCharacter(selectedDirection)
     }
 
+    if (this.#controls.wasSpaceKeyPressed() && !this.#player.isMoving) {
+      this.#handlePlayerInteraction()
+    }
+
     this.#player.update(time)
+  }
+
+  #handlePlayerInteraction () {
+    if (this.#dialogUi.isAnimationPlaying) {
+      return
+    }
+
+    if (this.#dialogUi.isVisible && !this.#dialogUi.moreMessagesToShow) {
+      this.#dialogUi.hideDialogModal()
+      return
+    }
+
+    if (this.#dialogUi.isVisible && this.#dialogUi.moreMessagesToShow) {
+      this.#dialogUi.showNextMessage()
+      return
+    }
+
+    const { x, y } = this.#player.sprite
+    const targetPosition = getTargetPositionFromGameObjectPositionAndDirection({ x, y }, this.#player.direction)
+
+    const nearbySign = this.#signLayer.objects.find(object => {
+      if (!object.x || !object.y) {
+        return
+      }
+      return object.x === targetPosition.x && object.y - TILE_SIZE === targetPosition.y
+    })
+    if (nearbySign) {
+      /** @type {TiledObjectProperty[]} */
+      const props = nearbySign.properties
+      /** @type {string} */
+      const msg = props.find(p => p.name === 'message')?.value
+      
+      const usePlaceholderText = this.#player.direction !== DIRECTION.UP
+      let textToShow = CANNOT_READ_SIGN_TEXT
+
+      if (!usePlaceholderText) {
+        textToShow = msg || PLACEHOLDER_TEXT
+      }
+      this.#dialogUi.showDialogModal([textToShow.toUpperCase(), 'hello'])
+      return
+    }
   }
 
   #handlePlayerMovementUpdate () {
@@ -115,7 +187,7 @@ export class WorldScene extends Phaser.Scene {
     }
 
     console.log(`[${WorldScene.name}:handlePlayerMovementUpdate] player is in an encounter zone`)
-    // this.#wildMonEncountered = Math.random() < 0.9
+    this.#wildMonEncountered = Math.random() < 0.9
     if (this.#wildMonEncountered) {
       console.log(`[${WorldScene.name}:handlePlayerMovementUpdate] player encounted a wild mon`)
 
@@ -133,5 +205,9 @@ export class WorldScene extends Phaser.Scene {
         }}
       )
     }
+  }
+
+  #isPlayerInputLocked () {
+    return this.#dialogUi.isVisible
   }
 }

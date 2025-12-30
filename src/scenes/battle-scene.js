@@ -83,7 +83,7 @@ export class BattleScene extends Phaser.Scene {
         maxHp: 20,
         currentLevel: 15,
         attackIds: [1, 2],
-        baseAttack: 15
+        baseAttack: 20
       },
       skipBattleAnimations: SKIP_BATTLE_ANIMATIONS
     })
