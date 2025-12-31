@@ -1055,5 +1055,12 @@
     "assetFrame": 0,
     "baseAttack": 100,
     "teachableAttackIds": []
+  },
+  "151": {
+    "name": "BORRIS",
+    "assetKey": "CUSTOM",
+    "assetFrame": 0,
+    "baseAttack": 49,
+    "teachableAttackIds": []
   }
 }
