@@ -1,3 +1,4 @@
+import { PLAYER_SPEED } from "../../../config.js"
 import { DIRECTION } from "../../common/direction.js"
 import Phaser from "../../lib/phaser.js"
 import { getTargetPositionFromGameObjectPositionAndDirection } from "../../utils/grid-utils.js"
@@ -184,7 +185,7 @@ export class Character {
 
     this._scene.add.tween({
       delay: 0,
-      duration: 600,
+      duration: 500 - (PLAYER_SPEED * 50),
       y: {
         from: this._phaserGameObject.y,
         start: this._phaserGameObject.y,

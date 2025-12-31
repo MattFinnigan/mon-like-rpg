@@ -3,11 +3,21 @@ import { DIRECTION } from "../../common/direction.js";
 import { exhaustiveGuard } from "../../utils/guard.js";
 
 export class NPC extends Character {
+  /**
+   * @typedef NPCConfigProps
+   * @type {object}
+   * @property {number} frame
+   * @property {string[]} messages
+   */
+  /**
+   * @typedef {Omit<import("./character.js").CharacterConfig, 'idleFrameConfig'> & NPCConfigProps} NPCConfig
+   */
+  
+  /** @type {string[]} */
+  #messages
 
-/**
- * @typedef {Omit<import("./character.js").CharacterConfig, 'idleFrameConfig'> & {frame: number}} NPCConfig
- * 
- */
+  /** @type {boolean} */
+  #isTalkingToPlayer
 
   /**
    * 
@@ -19,12 +29,32 @@ export class NPC extends Character {
       origin: { x: 0.15, y: 0.5 },
       idleFrameConfig: {
         DOWN: config.frame,
-        LEFT: config.frame + config.frame,
-        RIGHT: config.frame + (config.frame * 2),
-        UP: config.frame + (config.frame * 3),
-        NONE: 1
+        LEFT: config.frame + 12,
+        RIGHT: config.frame + 24,
+        UP: config.frame + 36,
+        NONE: config.frame
       }
     })
+
+    this.#messages = config.messages
+    this.#isTalkingToPlayer = false
+  }
+
+  /** @returns {string[]} */
+  get messages () {
+    return [ ...this.#messages ]
+  }
+
+  /** @returns {boolean} */
+  get isTalkingToPlayer () {
+    return this.#isTalkingToPlayer
+  }
+
+  /**
+   * @param {boolean} val
+   */
+  set isTalkingToPlayer (val) {
+    this.#isTalkingToPlayer = val
   }
 
   /**
@@ -35,16 +65,16 @@ export class NPC extends Character {
     switch (playerDirection) {
       case DIRECTION.DOWN:
       case DIRECTION.NONE:
-        this._phaserGameObject.setFrame(this._idleFrameConfig.UP).setFlipX(false)
+        this._phaserGameObject.setFrame(this._idleFrameConfig.UP)
         break
       case DIRECTION.LEFT:
-        this._phaserGameObject.setFrame(this._idleFrameConfig.RIGHT).setFlipX(false)
+        this._phaserGameObject.setFrame(this._idleFrameConfig.RIGHT)
         break
       case DIRECTION.UP:
-        this._phaserGameObject.setFrame(this._idleFrameConfig.LEFT).setFlipX(true)
+        this._phaserGameObject.setFrame(this._idleFrameConfig.DOWN)
         break
       case DIRECTION.RIGHT:
-        this._phaserGameObject.setFrame(this._idleFrameConfig.DOWN)
+        this._phaserGameObject.setFrame(this._idleFrameConfig.LEFT)
         break
       default:
         exhaustiveGuard(playerDirection)

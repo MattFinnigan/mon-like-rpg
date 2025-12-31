@@ -22,7 +22,8 @@ const TILED_NPC_PROPERTY = Object.freeze({
   IS_SPAWN_POINT: 'is_spawn_point',
   MOVEMENT_PATTERN: 'movement_pattern',
   FRAME: 'frame',
-  SHEET: 'sheet'
+  SHEET: 'sheet',
+  MESSAGE: 'message'
 })
 
 /**
@@ -54,6 +55,8 @@ export class WorldScene extends Phaser.Scene {
   #audioManager
   /** @type {NPC[]} */
   #npcs
+  /** @type {NPC | undefined} */
+  #npcPlayerIsInteractingWith
 
   constructor () {
     super({
@@ -63,6 +66,7 @@ export class WorldScene extends Phaser.Scene {
 
   init () {
     this.#wildMonEncountered = false
+    this.#npcPlayerIsInteractingWith = undefined
   }
 
   create () {
@@ -168,6 +172,10 @@ export class WorldScene extends Phaser.Scene {
 
     if (this.#dialogUi.isVisible && !this.#dialogUi.moreMessagesToShow) {
       this.#dialogUi.hideDialogModal()
+      if (this.#npcPlayerIsInteractingWith) {
+        this.#npcPlayerIsInteractingWith.isTalkingToPlayer = false
+        this.#npcPlayerIsInteractingWith = undefined
+      }
       return
     }
 
@@ -185,6 +193,7 @@ export class WorldScene extends Phaser.Scene {
       }
       return object.x === targetPosition.x && object.y - TILE_SIZE === targetPosition.y
     })
+
     if (nearbySign) {
       /** @type {TiledObjectProperty[]} */
       const props = nearbySign.properties
@@ -197,8 +206,22 @@ export class WorldScene extends Phaser.Scene {
       if (!usePlaceholderText) {
         textToShow = msg || PLACEHOLDER_TEXT
       }
-      this.#dialogUi.showDialogModal([textToShow.toUpperCase(), 'hello'])
+      this.#dialogUi.showDialogModal([textToShow.toUpperCase()])
       return
+    }
+
+    const nearbyNpc = this.#npcs.find(npc => {
+      if (!npc.sprite.x || !npc.sprite.y) {
+        return
+      }
+      return npc.sprite.x === targetPosition.x && npc.sprite.y === targetPosition.y
+    })
+
+    if (nearbyNpc) {
+      nearbyNpc.facePlayer(this.#player.direction)
+      nearbyNpc.isTalkingToPlayer = true
+      this.#npcPlayerIsInteractingWith = nearbyNpc
+      this.#dialogUi.showDialogModal(nearbyNpc.messages)
     }
   }
 
@@ -256,16 +279,21 @@ export class WorldScene extends Phaser.Scene {
       if (!npcObject || npcObject.x === undefined || npcObject.y === undefined) {
         return
       }
-
+      /** @type {string} */
       const npcSheet = npcObject.properties.find(prop => prop.name === TILED_NPC_PROPERTY.SHEET)?.value || '1'
+      /** @type {string} */
+      const npcMessagesStr = npcObject.properties.find(prop => prop.name === TILED_NPC_PROPERTY.MESSAGE)?.value || ''
+      /** @type {string} */
       const npcFrame = npcObject.properties.find(prop => prop.name === TILED_NPC_PROPERTY.FRAME)?.value || '0'
-
+      const npcMessages = npcMessagesStr.split(';;')
+      
       const npc = new NPC({
         scene: this,
         assetKey: CHARACTER_ASSET_KEYS['NPC_' + npcSheet],
         position: { x: npcObject.x, y: npcObject.y - TILE_SIZE },
         direction: DIRECTION.DOWN,
-        frame: parseInt(npcFrame, 10)
+        frame: parseInt(npcFrame, 10),
+        messages: npcMessages
       })
 
       this.#npcs.push(npc)

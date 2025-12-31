@@ -84,7 +84,7 @@ export class DialogUi {
 
     this.#uiText.setText('').setAlpha(1)
     animateText(this.#scene, this.#uiText, this.#messagesToShow.shift(), {
-      delay: 50,
+      delay: 25,
       callback: () => {
         this.#textAnimationPlaying = false
       }

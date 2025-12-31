@@ -71,6 +71,7 @@ export class BattleMenu {
     this.#scene = scene
     this.#activePlayerMon = activePlayerMon
     this.#battleTextGameObjectLine1 = this.#scene.add.bitmapText(DIALOG_DETAILS.paddingLeft, DIALOG_DETAILS.y + DIALOG_DETAILS.paddingTop, 'gb-font', '', 40)
+      .setMaxWidth(DIALOG_DETAILS.maxTextWidth(this.#scene.scale.width))
     this.#selectedBattleMenuOption = BATTLE_MENU_OPTIONS.FIGHT
     this.#selectedAttackMenuOption = ATTACK_MOVE_OPTIONS.MOVE_1
     this.#activeBattleMenu = ACTIVE_BATTLE_MENU.BATTLE_MAIN
@@ -207,7 +208,7 @@ export class BattleMenu {
     }
 
     animateText(this.#scene, this.#battleTextGameObjectLine1, message, {
-      delay: 50,
+      delay: 25,
       callback: () => {
         this.#waitingForPlayerInput = false
         if (callback) {
@@ -244,7 +245,7 @@ export class BattleMenu {
     
     this.#queuedMessageAnimationPlaying = true
     animateText(this.#scene, this.#battleTextGameObjectLine1, messageToDisplay, {
-      delay: 50,
+      delay: 25,
       callback: () => {
         this.#waitingForPlayerInput = true
         this.#queuedMessageAnimationPlaying = false

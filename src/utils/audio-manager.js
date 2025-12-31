@@ -1,4 +1,5 @@
-const BASE_VOLUMNE = 0
+import { VOLUME } from "../../config.js"
+
 
 export class AudioManager {
   /** @type {Phaser.Scene} */
@@ -24,7 +25,7 @@ export class AudioManager {
       this.#scene.sound.removeByKey(key)
     }
     this.#bgm = this.#scene.sound.add(key)
-    this.#bgm.setVolume(BASE_VOLUMNE)
+    this.#bgm.setVolume(VOLUME)
     this.#bgm.play({ loop: true })
   }
 
@@ -51,15 +52,15 @@ export class AudioManager {
     }
 
     if (this.#bgm?.isPlaying) {
-      this.#bgm.setVolume(BASE_VOLUMNE / 2)
+      this.#bgm.setVolume(VOLUME / 2)
     }
 
     this.#sfx = this.#scene.sound.add(key)
-    this.#sfx.setVolume(BASE_VOLUMNE)
+    this.#sfx.setVolume(VOLUME)
     this.#sfx.play()
     this.#sfx.once('complete', () => {
       if (this.#bgm?.isPlaying) {
-        this.#bgm.setVolume(BASE_VOLUMNE)
+        this.#bgm.setVolume(VOLUME)
         if (callback) {
           callback()
         }
