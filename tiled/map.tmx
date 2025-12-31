@@ -238,7 +238,7 @@
    <object id="12" name="2" type="npc_path" gid="1522" x="960" y="3264" width="64" height="64"/>
    <object id="14" name="3" type="npc_path" gid="1522" x="960" y="3328" width="64" height="64"/>
    <object id="15" name="4" type="npc_path" gid="1522" x="896" y="3328" width="64" height="64"/>
-   <object id="16" name="4" type="npc_path" gid="1522" x="832" y="3328" width="64" height="64"/>
+   <object id="16" name="5" type="npc_path" gid="1522" x="832" y="3328" width="64" height="64"/>
   </objectgroup>
  </group>
  <layer id="5" name="Water" width="26" height="74">

@@ -273,28 +273,41 @@ export class WorldScene extends Phaser.Scene {
     const npcLayers = map.getObjectLayerNames().filter(layerName => layerName.includes('NPC'))
     npcLayers.forEach(layerName => {
       const layer = map.getObjectLayer(layerName)
-      const npcObject = layer.objects.find(obj => {
-        return obj.type === CUSTOM_TILED_TYPES.NPC
-      })
+      const npcObject = layer.objects.find(obj => obj.type === CUSTOM_TILED_TYPES.NPC)
       if (!npcObject || npcObject.x === undefined || npcObject.y === undefined) {
         return
       }
-      /** @type {string} */
+
+      const pathObjects = layer.objects.filter(obj => obj.type === CUSTOM_TILED_TYPES.NPC_PATH)
+      const npcPath = {
+        0: { x: npcObject.x, y: npcObject.y - TILE_SIZE }
+      }
+
+      pathObjects.forEach(obj => {
+        if (obj.x === undefined || obj.y === undefined) {
+          return
+        }
+        npcPath[parseInt(obj.name, 10)] = { x: obj.x, y: obj.y - TILE_SIZE }
+      })
+
       const npcSheet = npcObject.properties.find(prop => prop.name === TILED_NPC_PROPERTY.SHEET)?.value || '1'
-      /** @type {string} */
       const npcMessagesStr = npcObject.properties.find(prop => prop.name === TILED_NPC_PROPERTY.MESSAGE)?.value || ''
-      /** @type {string} */
       const npcFrame = npcObject.properties.find(prop => prop.name === TILED_NPC_PROPERTY.FRAME)?.value || '0'
       const npcMessages = npcMessagesStr.split(';;')
       
+      const npcMovement = npcObject.properties.find(prop => prop.name === TILED_NPC_PROPERTY.MOVEMENT_PATTERN)?.value || 'IDLE'
+
       const npc = new NPC({
         scene: this,
-        assetKey: CHARACTER_ASSET_KEYS['NPC_' + npcSheet],
+        assetKey: CHARACTER_ASSET_KEYS['NPC_SHEET_' + npcSheet],
         position: { x: npcObject.x, y: npcObject.y - TILE_SIZE },
         direction: DIRECTION.DOWN,
         frame: parseInt(npcFrame, 10),
-        messages: npcMessages
+        messages: npcMessages,
+        npcPath,
+        movementPattern: npcMovement
       })
+      console.log(npc)
 
       this.#npcs.push(npc)
     })

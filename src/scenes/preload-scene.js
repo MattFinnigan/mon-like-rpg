@@ -108,23 +108,23 @@ export class PreloadScene extends Phaser.Scene {
       frameWidth: 72,
       frameHeight: 96
     })
-    this.load.spritesheet(CHARACTER_ASSET_KEYS.NPC_1, `${npcAssetPath}/npc1.png`, {
+    this.load.spritesheet(CHARACTER_ASSET_KEYS.NPC_SHEET_1, `${npcAssetPath}/npc1.png`, {
       frameWidth: 72,
       frameHeight: 96
     })
-    this.load.spritesheet(CHARACTER_ASSET_KEYS.NPC_2, `${npcAssetPath}/npc2.png`, {
+    this.load.spritesheet(CHARACTER_ASSET_KEYS.NPC_SHEET_2, `${npcAssetPath}/npc2.png`, {
       frameWidth: 72,
       frameHeight: 96
     })
-    this.load.spritesheet(CHARACTER_ASSET_KEYS.NPC_3, `${npcAssetPath}/npc3.png`, {
+    this.load.spritesheet(CHARACTER_ASSET_KEYS.NPC_SHEET_3, `${npcAssetPath}/npc3.png`, {
       frameWidth: 72,
       frameHeight: 96
     })
-    this.load.spritesheet(CHARACTER_ASSET_KEYS.NPC_4, `${npcAssetPath}/npc4.png`, {
+    this.load.spritesheet(CHARACTER_ASSET_KEYS.NPC_SHEET_4, `${npcAssetPath}/npc4.png`, {
       frameWidth: 72,
       frameHeight: 96
     })
-    this.load.spritesheet(CHARACTER_ASSET_KEYS.NPC_5, `${npcAssetPath}/npc5.png`, {
+    this.load.spritesheet(CHARACTER_ASSET_KEYS.NPC_SHEET_5, `${npcAssetPath}/npc5.png`, {
       frameWidth: 72,
       frameHeight: 96
     })

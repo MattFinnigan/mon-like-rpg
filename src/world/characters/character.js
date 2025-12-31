@@ -185,7 +185,7 @@ export class Character {
 
     this._scene.add.tween({
       delay: 0,
-      duration: 500 - (PLAYER_SPEED * 50),
+      duration: 600 / PLAYER_SPEED,
       y: {
         from: this._phaserGameObject.y,
         start: this._phaserGameObject.y,
