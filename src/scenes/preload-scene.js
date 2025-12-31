@@ -22,6 +22,7 @@ export class PreloadScene extends Phaser.Scene {
     const mapAssetPath = 'assets/images/map'
     const bgmAssetPath = 'assets/audio/bgm'
     const monCryAssetKeys = 'assets/audio/mons/cries'
+    const npcAssetPath = 'assets/images/npc'
 
     const attackAnimPath = 'assets/images/anims/pimen'
     const axulAssetPath = 'assets/images/character/axulart'
@@ -100,15 +101,35 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image(WORLD_ASSET_KEYS.WORLD_COLLISION, `/${mapAssetPath}/collision.png`)
     this.load.image(WORLD_ASSET_KEYS.WORLD_ENCOUNTER_ZONE, `/${mapAssetPath}/encounter.png`)
   
-    // character
+    // character, npcs
     this.load.spritesheet(CHARACTER_ASSET_KEYS.PLAYER, `${charAssetPath}/character.png`, {
-      frameWidth: 64,
-      frameHeight: 64
+      frameWidth: 72,
+      frameHeight: 96
     })
-    this.load.spritesheet(CHARACTER_ASSET_KEYS.NPC, `${pbGamesAssetPath}/npcs.png`, {
-      frameWidth: 16,
-      frameHeight: 16
+    this.load.spritesheet(CHARACTER_ASSET_KEYS.NPC_1, `${npcAssetPath}/npc1.png`, {
+      frameWidth: 72,
+      frameHeight: 96
     })
+    this.load.spritesheet(CHARACTER_ASSET_KEYS.NPC_2, `${npcAssetPath}/npc2.png`, {
+      frameWidth: 72,
+      frameHeight: 96
+    })
+    this.load.spritesheet(CHARACTER_ASSET_KEYS.NPC_3, `${npcAssetPath}/npc3.png`, {
+      frameWidth: 72,
+      frameHeight: 96
+    })
+    this.load.spritesheet(CHARACTER_ASSET_KEYS.NPC_4, `${npcAssetPath}/npc4.png`, {
+      frameWidth: 72,
+      frameHeight: 96
+    })
+    this.load.spritesheet(CHARACTER_ASSET_KEYS.NPC_5, `${npcAssetPath}/npc5.png`, {
+      frameWidth: 72,
+      frameHeight: 96
+    })
+    // this.load.spritesheet(CHARACTER_ASSET_KEYS.NPC, `${pbGamesAssetPath}/npcs.png`, {
+    //   frameWidth: 16,
+    //   frameHeight: 16
+    // })
 
     // audio
     Object.keys(BGM_ASSET_KEYS).forEach(key => {

@@ -24,6 +24,7 @@ import { exhaustiveGuard } from "../../utils/guard.js"
  * @property {() => void} [spriteGridMovementFinishedCallback]
  * @property {CharacterIdleFrameConfig} idleFrameConfig
  * @property {Phaser.Tilemaps.TilemapLayer} [collisionLayer]
+ * @property {Character[]} [otherCharactersToChckecForCollisionsWith=[]]
  */
 
 export class Character {
@@ -47,6 +48,8 @@ export class Character {
   _origin
   /** @protected @type {Phaser.Tilemaps.TilemapLayer | undefined} */
   _collisionLayer
+  /** @protected @type {Character[]} */
+  _otherCharactersToCheckForCollisionsWith
 
   /**
    * 
@@ -64,6 +67,7 @@ export class Character {
     this._idleFrameConfig = config.idleFrameConfig
     this._origin = config.origin ? { ...config.origin } : { x: 0, y: 0 }
     this._collisionLayer = config.collisionLayer
+    this._otherCharactersToCheckForCollisionsWith = config.otherCharactersToChckecForCollisionsWith || []
 
     this._phaserGameObject = this._scene.add.sprite(config.position.x, config.position.y, config.assetKey, this._getIdleFrame()).setOrigin(this._origin.x, this._origin.y).setScale(1.25)
     this._spriteGridMovementFinishedCallback = config.spriteGridMovementFinishedCallback
@@ -84,6 +88,14 @@ export class Character {
     return this._direction
   }
   
+  /**
+   * 
+   * @param {Character} character 
+   * @returns {void}
+   */
+  addCharacterToCheckForcollsionsWith (character) {
+    this._otherCharactersToCheckForCollisionsWith.push(character)
+  }
 
   /**
    * 
@@ -157,7 +169,7 @@ export class Character {
     const updatedPosition = getTargetPositionFromGameObjectPositionAndDirection(this._targetPosition, this._direction)
 
 
-    return this.#doesPositionCollideWithCollisionLayer(updatedPosition)
+    return this.#doesPositionCollideWithCollisionLayer(updatedPosition) || this.#doesPositionCollideWithOtherCharacter(updatedPosition)
   }
 
   #handleSpriteMovement () {
@@ -207,5 +219,26 @@ export class Character {
     const { x, y } = position
     const tile = this._collisionLayer.getTileAtWorldXY(x, y, true)
     return tile.index !== -1
+  }
+
+  /**
+   * 
+   * @param {import("../../types/typedef").Coordinate} position 
+   * @returns {boolean}
+   */
+  #doesPositionCollideWithOtherCharacter (position) {
+    const { x, y } = position
+    if (this._otherCharactersToCheckForCollisionsWith.length === 0) {
+      return false
+    }
+
+    const collidesWithACharacter = this._otherCharactersToCheckForCollisionsWith.some(char => {
+      return (
+        (char._targetPosition.x === x) && (char._targetPosition.y === y) ||
+        (char._previousTargetPosition.x === x) && (char._previousTargetPosition.y === y) 
+      )
+    })
+
+    return collidesWithACharacter
   }
 }

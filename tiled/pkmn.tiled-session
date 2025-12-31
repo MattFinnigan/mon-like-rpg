@@ -147,6 +147,7 @@
         "map.tmx"
     ],
     "project": "pkmn.tiled-project",
+    "property.type": "int",
     "recentFiles": [
         "map.tmx",
         "untitled.tmx",

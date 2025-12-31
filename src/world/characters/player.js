@@ -17,13 +17,13 @@ export class Player extends Character {
     super({
       ...config,
       assetKey: CHARACTER_ASSET_KEYS.PLAYER,
-      origin: { x: 0.1, y: 0.3 },
+      origin: { x: 0.15, y: 0.5 },
       idleFrameConfig: {
-        DOWN: 7,
-        UP: 1,
-        NONE: 7,
-        LEFT: 10,
-        RIGHT: 4
+        DOWN: 1,
+        LEFT: 13,
+        RIGHT: 24,
+        UP: 37,
+        NONE: 1,
       }
     })
   }

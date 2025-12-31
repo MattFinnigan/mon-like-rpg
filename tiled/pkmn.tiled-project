@@ -166,6 +166,11 @@
                     "propertyType": "npc_movement",
                     "type": "string",
                     "value": "IDLE"
+                },
+                {
+                    "name": "sheet",
+                    "type": "int",
+                    "value": 1
                 }
             ],
             "name": "npc",

@@ -149,9 +149,19 @@
                          "name":"npc1",
                          "properties":[
                                 {
+                                 "name":"frame",
+                                 "type":"int",
+                                 "value":10
+                                }, 
+                                {
                                  "name":"message",
                                  "type":"string",
                                  "value":"HOODOOS;;Got 2 dollas for tha bus lad?"
+                                }, 
+                                {
+                                 "name":"sheet",
+                                 "type":"int",
+                                 "value":2
                                 }],
                          "rotation":0,
                          "type":"npc",
@@ -185,6 +195,11 @@
                          "name":"NPC2",
                          "properties":[
                                 {
+                                 "name":"frame",
+                                 "type":"int",
+                                 "value":10
+                                }, 
+                                {
                                  "name":"message",
                                  "type":"string",
                                  "value":"It's bloody hot!"
@@ -194,6 +209,11 @@
                                  "propertytype":"npc_movement",
                                  "type":"string",
                                  "value":"CLOCKWISE"
+                                }, 
+                                {
+                                 "name":"sheet",
+                                 "type":"int",
+                                 "value":3
                                 }],
                          "rotation":0,
                          "type":"npc",
