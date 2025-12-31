@@ -44,9 +44,9 @@ export class BattleMon {
    * 
    * @param {import("../../types/typedef.js").BattleMonConfig} config
    * @param {import("../../types/typedef.js").Coordinate} pos
-   * @param {string | undefined} [battleSpriteAssetKey]
+   * @param {boolean} [showHpNums=false]
     */
-  constructor (config, pos = { x: 0, y: 0 }, battleSpriteAssetKey, showHpNums = false) {
+  constructor (config, pos = { x: 0, y: 0 }, showHpNums) {
     this._scene = config.scene
     this._monDetails = config.monDetails
     this._baseMonDetails = config.baseMonDetails
@@ -54,7 +54,7 @@ export class BattleMon {
     this._maxHealth = this._monDetails.maxHp
     this._monAttacks = []
     this._skipBattleAnimations = config.skipBattleAnimations
-    this._battleSpriteAssetKey = battleSpriteAssetKey || this._baseMonDetails.assetKey
+    this._battleSpriteAssetKey = this._baseMonDetails.assetKey
     this.#showHpNums = showHpNums
 
     this._phaserMonImageGameObject = this._scene.add.image(pos.x, pos.y, this._battleSpriteAssetKey, this._baseMonDetails.assetFrame).setOrigin(0).setAlpha(0)

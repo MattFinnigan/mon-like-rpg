@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "",
+    "activeFile": "map.tmx",
     "expandedProjectPaths": [
         "."
     ],
@@ -51,47 +51,71 @@
             "scaleInDock": 0.75
         },
         "map.tmx": {
-            "scale": 0.23,
-            "selectedLayer": 0,
+            "expandedGroupLayers": [
+                18
+            ],
+            "scale": 0.33,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 830.4347826086955,
-                "y": 1726.0869565217392
+                "x": 546.9696969696969,
+                "y": 3263.636363636364
             }
         },
         "map.tmx#RBY-BP_A1": {
-            "scaleInDock": 1,
+            "scaleInDock": 0.5,
             "scaleInEditor": 1
         },
         "map.tmx#RBY-BP_A2": {
-            "scaleInDock": 1,
+            "scaleInDock": 0.5,
             "scaleInEditor": 1
         },
         "map.tmx#RBY-BP_A4": {
-            "scaleInDock": 1,
+            "scaleInDock": 0.5,
             "scaleInEditor": 1
         },
         "map.tmx#RBY-BP_A5": {
-            "scaleInDock": 1,
+            "scaleInDock": 0.5,
             "scaleInEditor": 1
         },
         "map.tmx#RBY-BP_B": {
-            "scaleInDock": 1,
+            "scaleInDock": 0.5,
             "scaleInEditor": 1
         },
         "map.tmx#RBY-BP_C": {
-            "scaleInDock": 1,
+            "scaleInDock": 0.5,
             "scaleInEditor": 1
         },
         "map.tmx#RBY-BP_D": {
-            "scaleInDock": 1,
+            "scaleInDock": 0.5,
             "scaleInEditor": 1
         },
+        "map.tmx#RBY-LB_A1": {
+            "scaleInDock": 0.5
+        },
+        "map.tmx#RBY-LB_A2": {
+            "scaleInDock": 0.5
+        },
+        "map.tmx#RBY-LB_A4": {
+            "scaleInDock": 0.5
+        },
+        "map.tmx#RBY-LB_A5": {
+            "scaleInDock": 0.5
+        },
+        "map.tmx#RBY-LB_B": {
+            "scaleInDock": 0.5
+        },
+        "map.tmx#RBY-LB_C": {
+            "scaleInDock": 0.5
+        },
+        "map.tmx#RBY-LB_D": {
+            "scaleInDock": 0.5
+        },
         "map.tmx#collision": {
-            "scaleInDock": 1,
+            "scaleInDock": 0.5,
             "scaleInEditor": 1
         },
         "map.tmx#encounter": {
-            "scaleInDock": 1,
+            "scaleInDock": 0.5,
             "scaleInEditor": 1
         },
         "untitled.tmx": {

@@ -15,7 +15,7 @@ export class PlayerBattleMon extends BattleMon {
    * @param {import("../../types/typedef.js").BattleMonConfig} config 
    */
   constructor (config) {
-    super(config, PLAYER_IMAGE_POSITION, MON_BACK_ASSET_KEYS[config.baseMonDetails.assetKey + '_BACK'], true)
+    super(config, PLAYER_IMAGE_POSITION, true)
 
     this._phaserHealthBarGameContainer.setPosition(330, 224)
     this._phaserMonImageGameObject.setPosition(PLAYER_IMAGE_POSITION.x, PLAYER_IMAGE_POSITION.y)
@@ -25,6 +25,8 @@ export class PlayerBattleMon extends BattleMon {
     this._monHpLabelGameText.setPosition(35, 76)
     this._healthBar.container.setPosition(82, 42)
 
+    const assetKey = this._phaserMonImageGameObject.texture.key
+    this._phaserMonImageGameObject.setTexture(MON_BACK_ASSET_KEYS[assetKey + '_BACK'])
   }
 
   /**

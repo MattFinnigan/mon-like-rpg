@@ -240,7 +240,7 @@ export class WorldScene extends Phaser.Scene {
       return
     }
 
-    this.#wildMonEncountered = Math.random() < 0.5
+    this.#wildMonEncountered = Math.random() < 0.1
     if (this.#wildMonEncountered) {
       this.#audioManager.playBgm(BGM_ASSET_KEYS.WILD_ENCOUNTER_BATTLE)
       createWildEncounterSceneTransition(this, {

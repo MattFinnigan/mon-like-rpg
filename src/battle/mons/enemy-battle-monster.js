@@ -1,3 +1,4 @@
+import { MON_ASSET_KEYS, MON_GRAY_ASSET_KEYS } from "../../assets/asset-keys.js";
 import { BattleMon } from "./battle-mon.js";
 
 /**
@@ -26,6 +27,9 @@ export class EnemyBattleMon extends BattleMon {
   playMonAppearAnimation (callback) {
     const startXPos = -30
     const endXPos = ENEMY_IMAGE_POSITION.x
+    const assetKey = MON_ASSET_KEYS[this._phaserMonImageGameObject.texture.key]
+    this._phaserMonImageGameObject.setTexture(MON_GRAY_ASSET_KEYS[assetKey + '_GRAY']).setFlipX(true)
+
     this._phaserMonImageGameObject.setPosition(startXPos, ENEMY_IMAGE_POSITION.y)
     this._phaserMonImageGameObject.setAlpha(1)
 
@@ -44,6 +48,7 @@ export class EnemyBattleMon extends BattleMon {
       },
       targets: this._phaserMonImageGameObject,
       onComplete: () => {
+        this._phaserMonImageGameObject.setTexture(MON_ASSET_KEYS[assetKey])
         super.playMonCry(() => {
           callback()
         })
@@ -84,7 +89,6 @@ export class EnemyBattleMon extends BattleMon {
         targets: this._phaserMonImageGameObject,
         onComplete: () => {
           callback()
-    
         }
       })
     })
