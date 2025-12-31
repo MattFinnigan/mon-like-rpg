@@ -89,17 +89,13 @@ export class PreloadScene extends Phaser.Scene {
     })
 
     // levels
-    // this.load.image(WORLD_ASSET_KEYS.WORLD_BACKGROUND, `/${mapAssetPath}/level_background.png`)
-    // this.load.image(WORLD_ASSET_KEYS.WORLD_FOREGROUND, `/${mapAssetPath}/level_foreground.png`)
-    // this.load.tilemapTiledJSON(WORLD_ASSET_KEYS.WORLD_MAIN_LEVEL, 'assets/data/level.json')
-
     // this.load.image(WORLD_ASSET_KEYS.WORLD_BACKGROUND, `/${mapAssetPath}/demo_background.png`)
     // this.load.image(WORLD_ASSET_KEYS.WORLD_FOREGROUND, `/${mapAssetPath}/demo_foreground.png`)
     // this.load.tilemapTiledJSON(WORLD_ASSET_KEYS.WORLD_MAIN_LEVEL, 'assets/data/demo_level.json')
 
     this.load.image(WORLD_ASSET_KEYS.WORLD_BACKGROUND, `/${mapAssetPath}/background.png`)
     this.load.image(WORLD_ASSET_KEYS.WORLD_FOREGROUND, `/${mapAssetPath}/foreground.png`)
-    this.load.tilemapTiledJSON(WORLD_ASSET_KEYS.WORLD_MAIN_LEVEL, 'assets/data/pt_level.json')
+    this.load.tilemapTiledJSON(WORLD_ASSET_KEYS.WORLD_MAIN_LEVEL, 'assets/data/level.json')
 
     this.load.image(WORLD_ASSET_KEYS.WORLD_COLLISION, `/${mapAssetPath}/collision.png`)
     this.load.image(WORLD_ASSET_KEYS.WORLD_ENCOUNTER_ZONE, `/${mapAssetPath}/encounter.png`)

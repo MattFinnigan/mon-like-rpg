@@ -1,4 +1,4 @@
-const BASE_VOLUMNE = 0.2
+const BASE_VOLUMNE = 0
 
 export class AudioManager {
   /** @type {Phaser.Scene} */
