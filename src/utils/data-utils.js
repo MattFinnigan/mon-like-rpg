@@ -52,19 +52,9 @@ export class DataUtils {
    * @returns {import("../types/typedef.js").Mon}
    */
   static generateWildMon (scene, area) {
-    let chosenMon = null
     let index = 0
-    // TODO improve this - first mon in the arr is always more likely
-    while (!chosenMon) {
-      if (!area.mons[index]) {
-        index = 0
-      }
-      if (Math.random() < area.mons[index].rate) {
-        /** @type {import("../types/typedef.js").EncounterMon} */
-        chosenMon = area.mons[index]
-      }
-      index++
-    }
+    
+    const chosenMon = this.chooseEncounterMon(area.mons)
 
     // TODO generate wild mon attacks, hp, base attk etc
     // const baseDetails = this.getBaseMonDetails(scene, chosenMon.monIndex)
@@ -77,5 +67,20 @@ export class DataUtils {
       currentHp: 10,
       attackIds: [1, 2]
     }
+  }
+  /**
+   * @param {import("../types/typedef.js").EncounterMon[]} mons
+   * @returns {import("../types/typedef.js").EncounterMon}
+   */
+  static chooseEncounterMon (mons) {
+    const totalWeight = mons.reduce((sum, m) => sum + m.rate, 0)
+    let roll = Math.random() * totalWeight
+
+    for (const mon of mons) {
+      roll -= mon.rate
+      if (roll <= 0) return mon
+    }
+
+    return mons[mons.length - 1]
   }
 }

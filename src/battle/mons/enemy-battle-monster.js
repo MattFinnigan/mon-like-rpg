@@ -34,6 +34,7 @@ export class EnemyBattleMon extends BattleMon {
     this._phaserMonImageGameObject.setAlpha(1)
 
     if (this._skipBattleAnimations) {
+      this._phaserMonImageGameObject.setTexture(MON_ASSET_KEYS[assetKey])
       this._phaserMonImageGameObject.setX(endXPos)
       callback()
       return
