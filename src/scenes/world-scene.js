@@ -1,10 +1,12 @@
 import { SKIP_BATTLE_ANIMATIONS, TILE_SIZE, TILED_COLLISION_ALPHA } from '../../config.js';
-import { BGM_ASSET_KEYS, CHARACTER_ASSET_KEYS, WORLD_ASSET_KEYS } from '../assets/asset-keys.js';
+import { BGM_ASSET_KEYS, CHARACTER_ASSET_KEYS, DATA_ASSET_KEYS, WORLD_ASSET_KEYS } from '../assets/asset-keys.js';
 import { DIRECTION } from '../common/direction.js';
+import { OPPONENT_TYPE } from '../common/opponent_type.js';
 import Phaser from '../lib/phaser.js'
 import { AudioManager } from '../utils/audio-manager.js';
 import { Controls } from '../utils/controls.js';
 import { DATA_MANAGER_STORE_KEYS, dataManager } from '../utils/data-manager.js';
+import { DataUtils } from '../utils/data-utils.js';
 import { getTargetPositionFromGameObjectPositionAndDirection } from '../utils/grid-utils.js';
 import { createBattleSceneTransition, createWildEncounterSceneTransition } from '../utils/scene-transition.js';
 import { CANNOT_READ_SIGN_TEXT, PLACEHOLDER_TEXT } from '../utils/text-utils.js';
@@ -15,7 +17,8 @@ import { SCENE_KEYS } from "./scene-keys.js";
 
 const CUSTOM_TILED_TYPES = Object.freeze({
   NPC: 'npc',
-  NPC_PATH: 'npc_path'
+  NPC_PATH: 'npc_path',
+  ENCOUNTER: 'encounter',
 })
 
 const TILED_NPC_PROPERTY = Object.freeze({
@@ -115,7 +118,7 @@ export class WorldScene extends Phaser.Scene {
     this.cameras.main.centerOn(x, y)
 
     this.#createNPCs(map)
-
+  
     this.#player = new Player({
       scene: this,
       position: dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_POSITION),
@@ -234,13 +237,21 @@ export class WorldScene extends Phaser.Scene {
     if (!this.#encounterLayer) {
       return
     }
-
-    const isInEncounterZone = this.#encounterLayer.getTileAtWorldXY(this.#player.sprite.x, this.#player.sprite.y, true).index !== -1
+    /** @type {Phaser.Tilemaps.Tile} */
+    const tileLandedOn = this.#encounterLayer.getTileAtWorldXY(this.#player.sprite.x, this.#player.sprite.y, true)
+    const isInEncounterZone = tileLandedOn.index !== -1
     if (!isInEncounterZone) {
       return
     }
+    /** @type {number} */
+    const areaId = tileLandedOn.properties.area
+    if (!areaId) {
+      return
+    }
 
-    this.#wildMonEncountered = Math.random() < 0.1
+    const encounterArea = DataUtils.getEncoutnerConfig(this, areaId)
+
+    this.#wildMonEncountered = encounterArea.encounterRate > Math.random() 
     if (this.#wildMonEncountered) {
       this.#audioManager.playBgm(BGM_ASSET_KEYS.WILD_ENCOUNTER_BATTLE)
       createWildEncounterSceneTransition(this, {
@@ -251,7 +262,13 @@ export class WorldScene extends Phaser.Scene {
             skipSceneTransition: SKIP_BATTLE_ANIMATIONS,
             spritesToNotBeObscured: [this.#player.sprite],
             callback: () => {
-              this.scene.start(SCENE_KEYS.BATTLE_SCENE)
+              /** @type {import('../types/typedef.js').Opponent} */
+              const opponent = {
+                type: OPPONENT_TYPE.WILD_MON,
+                mons: [],
+                encounterArea
+              }
+              this.scene.start(SCENE_KEYS.BATTLE_SCENE, { opponent })
             }
           })
         }}
@@ -307,7 +324,6 @@ export class WorldScene extends Phaser.Scene {
         npcPath,
         movementPattern: npcMovement
       })
-      console.log(npc)
 
       this.#npcs.push(npc)
     })

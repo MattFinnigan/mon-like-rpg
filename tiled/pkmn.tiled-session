@@ -10,7 +10,7 @@
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
         "": {
-            "scaleInDock": 1
+            "scaleInDock": 0.5
         },
         "#RBY-BP_A5": {
             "scaleInEditor": 1
@@ -52,13 +52,15 @@
         },
         "map.tmx": {
             "expandedGroupLayers": [
-                18
+                25,
+                18,
+                23
             ],
-            "scale": 0.33,
-            "selectedLayer": 1,
+            "scale": 1,
+            "selectedLayer": 14,
             "viewCenter": {
-                "x": 546.9696969696969,
-                "y": 3263.636363636364
+                "x": 892.5,
+                "y": 2180
             }
         },
         "map.tmx#RBY-BP_A1": {
@@ -68,6 +70,9 @@
         "map.tmx#RBY-BP_A2": {
             "scaleInDock": 0.5,
             "scaleInEditor": 1
+        },
+        "map.tmx#RBY-BP_A2_B": {
+            "scaleInDock": 0.5
         },
         "map.tmx#RBY-BP_A4": {
             "scaleInDock": 0.5,
@@ -94,6 +99,9 @@
         },
         "map.tmx#RBY-LB_A2": {
             "scaleInDock": 0.5
+        },
+        "map.tmx#RBY-LB_A2_B": {
+            "scaleInDock": 1
         },
         "map.tmx#RBY-LB_A4": {
             "scaleInDock": 0.5

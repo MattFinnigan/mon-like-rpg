@@ -548,9 +548,7 @@ export class BattleMenu {
 
     if (this.#selectedBattleMenuOption === BATTLE_MENU_OPTIONS.RUN) {
       this.#activeBattleMenu = ACTIVE_BATTLE_MENU.BATTLE_RUN
-      this.updateInfoPanelMessagesAndWaitForInput(['Couldn\'t get away!'], () => {
-        this.#switchToMainBattleMenu()
-      }, SKIP_BATTLE_ANIMATIONS)
+      this.#scene.events.emit('player:attemptToRun')
       return
     }
 

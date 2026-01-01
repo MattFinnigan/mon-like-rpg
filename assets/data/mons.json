@@ -1,13 +1,13 @@
 {
   "1": {
-    "index": 148,
+    "monIndex": 148,
     "currentHp": 100,
     "maxHp": 100,
     "currentLevel": 50,
     "attackIds": [1, 2]
   },
   "2": {
-    "index": 151,
+    "monIndex": 151,
     "currentHp": 150,
     "maxHp": 150,
     "currentLevel": 45,

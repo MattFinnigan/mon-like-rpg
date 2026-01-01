@@ -1,0 +1,33 @@
+{
+  "1": {
+    "encounterRate": 0.5,
+    "mons": [
+      { "rate": 0.33, "monIndex": 0, "minLevel": 1, "maxLevel": 5 },
+      { "rate": 0.33, "monIndex": 1, "minLevel": 1, "maxLevel": 5 },
+      { "rate": 0.33, "monIndex": 2, "minLevel": 1, "maxLevel": 5 }
+    ]
+  },
+  "2": {
+    "encounterRate": 0.5,
+    "mons": [
+      { "rate": 0.33, "monIndex": 3, "minLevel": 1, "maxLevel": 5 },
+      { "rate": 0.33, "monIndex": 4, "minLevel": 1, "maxLevel": 5 },
+      { "rate": 0.33, "monIndex": 5, "minLevel": 1, "maxLevel": 5 }
+    ]
+  },
+  "3": {
+    "encounterRate": 0.5,
+    "mons": [
+      { "rate": 0.33, "monIndex": 6, "minLevel": 1, "maxLevel": 5 },
+      { "rate": 0.33, "monIndex": 7, "minLevel": 1, "maxLevel": 5 },
+      { "rate": 0.33, "monIndex": 8, "minLevel": 1, "maxLevel": 5 }
+    ]
+  },
+  "4": {
+    "encounterRate": 0.5,
+    "mons": [
+      { "rate": 0.33, "monIndex": 9, "minLevel": 1, "maxLevel": 5 },
+      { "rate": 0.77, "monIndex": 151, "minLevel": 1, "maxLevel": 5 }
+    ]
+  }
+}

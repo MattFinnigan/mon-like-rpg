@@ -53,6 +53,7 @@ export class PreloadScene extends Phaser.Scene {
     this.load.json(DATA_ASSET_KEYS.ANIMATIONS, 'assets/data/animations.json')
     this.load.json(DATA_ASSET_KEYS.BASE_MONS, 'assets/data/base-mons.json')
     this.load.json(DATA_ASSET_KEYS.MONS, 'assets/data/mons.json')
+    this.load.json(DATA_ASSET_KEYS.ENCOUNTER_AREAS, 'assets/data/encounter_areas.json')
 
     // common
     this.load.image(SYSTEM_ASSET_KEYS.DIALOG_BACKGROUND, `/${backgroundAssetPath}/dialog.png`)

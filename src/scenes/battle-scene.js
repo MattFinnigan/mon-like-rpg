@@ -1,4 +1,3 @@
-import { DATA_ASSET_KEYS, MON_ASSET_KEYS, MON_BACK_ASSET_KEYS } from '../assets/asset-keys.js'
 import Phaser from '../lib/phaser.js'
 import { SCENE_KEYS } from './scene-keys.js'
 import { BattleMenu } from '../battle/ui/menu/battle-menu.js'
@@ -10,6 +9,7 @@ import { SKIP_BATTLE_ANIMATIONS } from '../../config.js'
 import { ATTACK_TARGET, AttackManager } from '../battle/attacks/attack-manager.js'
 import { Controls } from '../utils/controls.js'
 import { DataUtils } from '../utils/data-utils.js'
+import { OPPONENT_TYPE } from '../common/opponent_type.js'
 
 const BATTLE_STATES = Object.freeze({
   INTRO: 'INTRO',
@@ -38,6 +38,10 @@ export class BattleScene extends Phaser.Scene {
   #battleStateMachine
   /** @type {AttackManager} */
   #attackManager
+  /** @type {import('../types/typedef.js').Opponent} */
+  #opponent
+  /** @type {number} */
+  #currentOpponentMonIndex
 
   constructor () {
     super({
@@ -45,8 +49,15 @@ export class BattleScene extends Phaser.Scene {
     })
   }
   
-  init () {
+  /**
+   * 
+   * @param {object} data
+   * @param {import('../types/typedef.js').Opponent} data.opponent
+   */
+  init (data) {
     this.#activePlayerAttackIndex = -1
+    this.#opponent = data.opponent
+    this.#currentOpponentMonIndex = 0
   }
   
   preload () {
@@ -56,19 +67,28 @@ export class BattleScene extends Phaser.Scene {
   create () {
     this.cameras.main.setBackgroundColor('#fff')
     console.log(`[${BattleScene.name}:create] invoked`)
-    
-    const P1_MON = DataUtils.getMonDetails(this, 1)
-    const P2_MON = DataUtils.getMonDetails(this, 2)
 
-    const P1_BASE_MON = DataUtils.getBaseMonDetails(this, P1_MON.index)
-    const P2_BASE_MON = DataUtils.getBaseMonDetails(this, P2_MON.index)
+    const opponentsFirstMon = this.#opponent.mons[this.#currentOpponentMonIndex]
+
+    let p2Mon = null
+    if (this.#opponent.type !== OPPONENT_TYPE.WILD_MON) {
+      p2Mon = DataUtils.getMonDetails(this, opponentsFirstMon.id)
+    } else {
+      p2Mon = DataUtils.generateWildMon(this, this.#opponent.encounterArea)
+      this.#opponent.mons.push(p2Mon)
+    }
+
+    const P2_BASE_MON = DataUtils.getBaseMonDetails(this, p2Mon.monIndex)
 
     this.#activeEnemyMon = new EnemyBattleMon({
       scene: this,
-      monDetails: P2_MON,
+      monDetails: p2Mon,
       baseMonDetails: P2_BASE_MON,
       skipBattleAnimations: SKIP_BATTLE_ANIMATIONS
     })
+
+    const P1_MON = DataUtils.getMonDetails(this, 1)
+    const P1_BASE_MON = DataUtils.getBaseMonDetails(this, P1_MON.monIndex)
 
     this.#activePlayerMon = new PlayerBattleMon({
       scene: this,
@@ -81,6 +101,10 @@ export class BattleScene extends Phaser.Scene {
     this.#createBattleStateMachine()
     this.#attackManager = new AttackManager(this, SKIP_BATTLE_ANIMATIONS)
     this.#controls = new Controls(this)
+
+    this.events.on('player:attemptToRun', () => {
+      this.#battleStateMachine.setState(BATTLE_STATES.RUN_ATTEMPT)
+    })
   }
 
   update () {
@@ -275,9 +299,16 @@ export class BattleScene extends Phaser.Scene {
     this.#battleStateMachine.addState({
       name: BATTLE_STATES.RUN_ATTEMPT,
       onEnter: () => {
-        this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(['Got away safely!'], () => {
-          this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
-        }, SKIP_BATTLE_ANIMATIONS)
+        const runSucceeded = 1
+        if (runSucceeded) {
+          this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(['Got away safely...'], () => {
+            this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
+          }, SKIP_BATTLE_ANIMATIONS)
+        } else {
+          this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`Couldn't get away!`], () => {
+            this.#battleMenu.showMainBattleMenu()
+          }, SKIP_BATTLE_ANIMATIONS)
+        }
       }
     })
     

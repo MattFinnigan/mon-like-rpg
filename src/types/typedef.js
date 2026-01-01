@@ -1,3 +1,4 @@
+import { OPPONENT_TYPE } from "../common/opponent_type.js";
 import Phaser from "../lib/phaser.js";
 
 /**
@@ -23,8 +24,6 @@ import Phaser from "../lib/phaser.js";
  * @property {string} assetKey
  * @property {number} [assetFrame=0]
  * @property {number} maxHp
- * @property {number} currentHp
- * @property {number} currentLevel
  * @property {number} baseAttack
  * @property {number[]} teachableAttackIds
  */
@@ -32,13 +31,37 @@ import Phaser from "../lib/phaser.js";
 /**
  * @typedef Mon
  * @type {Object}
- * @property {number} index
+ * @property {number|undefined} [id]
+ * @property {number} monIndex
  * @property {number} maxHp
  * @property {number} currentHp
  * @property {number} currentLevel
  * @property {number[]} attackIds
  */
 
+/**
+ * @typedef EncounterAreaConfig
+ * @type {Object}
+ * @property {number} encounterRate
+ * @property {EncounterMon[]} mons
+ */
+
+/**
+ * @typedef EncounterMon
+ * @type {Object}
+ * @property {number} rate
+ * @property {number} monIndex
+ * @property {number} minLevel
+ * @property {number} maxLevel
+ */
+
+/**
+ * @typedef Opponent
+ * @type {Object}
+ * @property {OPPONENT_TYPE} type
+ * @property {Mon[]} mons
+ * @property {EncounterAreaConfig} [encounterArea]
+ */
 
 /**
  * @typedef Attack
