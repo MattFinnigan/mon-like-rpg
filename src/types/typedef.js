@@ -1,4 +1,4 @@
-import { OPPONENT_TYPE } from "../common/opponent_type.js";
+import { OPPONENT_TYPES } from "../common/opponent-types.js";
 import Phaser from "../lib/phaser.js";
 
 /**
@@ -56,11 +56,22 @@ import Phaser from "../lib/phaser.js";
  */
 
 /**
- * @typedef Opponent
+ * @typedef WildMon
  * @type {Object}
- * @property {OPPONENT_TYPE} type
+ * @property {OPPONENT_TYPES} type
+ * @property {EncounterAreaConfig} encounterArea
+ */
+
+/**
+ * @typedef Trainer
+ * @type {Object}
+ * @property {OPPONENT_TYPES} type
  * @property {Mon[]} mons
- * @property {EncounterAreaConfig} [encounterArea]
+ * @property {string} name
+ * @property {string} trainerType
+ * @property {string} assetKey
+ * @property {number} rewardOnVictory
+ * @property {number} payOutOnDefeat
  */
 
 /**

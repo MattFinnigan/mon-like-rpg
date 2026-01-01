@@ -179,7 +179,7 @@
         "map.tmx"
     ],
     "project": "pkmn.tiled-project",
-    "property.type": "int",
+    "property.type": "npc_action",
     "recentFiles": [
         "map.tmx",
         "untitled.tmx",

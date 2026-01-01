@@ -16,8 +16,8 @@ import { DIRECTION } from "../common/direction.js";
 const initalState = {
   player: {
     position: {
-      x: 15 * TILE_SIZE,
-      y: 30 * TILE_SIZE
+      x: 7 * TILE_SIZE,
+      y: 42 * TILE_SIZE
     },
     direction: DIRECTION.DOWN
   }

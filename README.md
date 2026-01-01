@@ -5,6 +5,6 @@ A Pokemon-like RPG project I'm building to brush up on my **Typescript**. Built 
 ### Running the project locally
 
 ```bash
-npx start .
+npx serve .
 ```
 Or run a web server with something like VSCode Live Server

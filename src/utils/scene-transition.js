@@ -1,3 +1,6 @@
+import { TILE_SIZE, WORLD_ZOOM } from "../../config.js"
+import { TRANSITION_TYPES } from "../common/transition-types.js"
+
 /**
  * 
  * @param {Phaser.Scene} scene 
@@ -5,6 +8,7 @@
  * @param {() => void} [options.callback] 
  * @param {Phaser.GameObjects.Sprite[]} [options.spritesToNotBeObscured=[]]
  * @param {boolean} [options.skipSceneTransition=false] 
+ * @param {TRANSITION_TYPES} [options.type='CLOSE_IN_Y_FAST']
  */
 export function createBattleSceneTransition (scene, options) {
   const skipSceneTransition = options?.skipSceneTransition || false
@@ -15,39 +19,74 @@ export function createBattleSceneTransition (scene, options) {
     return
   }
 
-  const { width, height } = scene.scale
-  const rectShape = new Phaser.Geom.Rectangle(0, 0, width, height)
-  const g = scene.add.graphics().fillRectShape(rectShape).setDepth(-1)
-  const mask = g.createGeometryMask()
-  scene.cameras.main.setMask(mask)
+  const type = TRANSITION_TYPES[options.type] || TRANSITION_TYPES.CLOSE_IN_Y_FAST
 
-  scene.tweens.add({
-    onUpdate: () => {
-      g.clear().fillRectShape(rectShape)
-    },
-    delay: 200,
-    duration: 800,
-    height: {
-      ease: Phaser.Math.Easing.Expo.InOut,
-      from: height,
-      start: height,
-      to: 0
-    },
-    y: {
-      ease: Phaser.Math.Easing.Expo.InOut,
-      from: 0,
-      start: 0,
-      to: height / 2
-    },
-    targets: rectShape,
-    onComplete: () => {
-      mask.destroy()
-      scene.cameras.main.clearMask()
-      if (options.callback) {
-        options.callback()
+  if (type == TRANSITION_TYPES.CLOSE_IN_Y_FAST) {
+    const { width, height } = scene.scale
+    const rectShape = new Phaser.Geom.Rectangle(0, 0, width, height)
+    const g = scene.add.graphics().fillRectShape(rectShape).setDepth(-1)
+    const mask = g.createGeometryMask()
+    scene.cameras.main.setMask(mask)
+
+    scene.tweens.add({
+      onUpdate: () => {
+        g.clear().fillRectShape(rectShape)
+      },
+      delay: 200,
+      duration: 800,
+      height: {
+        ease: Phaser.Math.Easing.Expo.InOut,
+        from: height,
+        start: height,
+        to: 0
+      },
+      y: {
+        ease: Phaser.Math.Easing.Expo.InOut,
+        from: 0,
+        start: 0,
+        to: height / 2
+      },
+      targets: rectShape,
+      onComplete: () => {
+        mask.destroy()
+        scene.cameras.main.clearMask()
+        if (options.callback) {
+          options.callback()
+        }
+      }
+    })
+  } else if (type === TRANSITION_TYPES.LEFT_RIGHT_DOWN_SLOW) {
+
+    const { width, height } = scene.scale
+    const zoomedWidth = width * 1.4
+    const zoomedHeight = height * 1.4
+    const worldView = scene.cameras.main.worldView
+
+    // array of all tile positions
+    const tilePositions = []
+    for (let y = 0; y < zoomedHeight / TILE_SIZE; y++) {
+      for (let x = 0; x < zoomedWidth / TILE_SIZE; x++) {
+        tilePositions.push({
+          x: worldView.x + x * TILE_SIZE + TILE_SIZE / 2,
+          y: worldView.y + y * TILE_SIZE + TILE_SIZE / 2
+        })
       }
     }
-  })
+
+    const totalDuration = 2500
+    const delayPerTile = totalDuration / tilePositions.length
+
+    tilePositions.forEach((tp, i) => {
+      scene.time.delayedCall(i * delayPerTile, () => {
+        const rect = scene.add.rectangle(tp.x, tp.y, TILE_SIZE + 1, TILE_SIZE + 1, 0x000000)
+        if (i === tilePositions.length - 1 && options?.callback) {
+          scene.time.delayedCall(400, () => {
+            options.callback()
+          })
+        }
+      })
+    })
+  }
 }
 
 /**
@@ -56,7 +95,7 @@ export function createBattleSceneTransition (scene, options) {
  * @param {object} [options] 
  * @param {() => void} [options.callback] 
  * @param {Phaser.GameObjects.Sprite[]} [options.spritesToNotBeObscured=[]]
- * @param {boolean} [options.skipSceneTransition=false] 
+ * @param {boolean} [options.skipSceneTransition=false]
  */
 export function createWildEncounterSceneTransition (scene, options) {
   const skipSceneTransition = options?.skipSceneTransition || false

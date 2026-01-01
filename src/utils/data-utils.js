@@ -22,7 +22,7 @@ export class DataUtils {
 
   static getMonDetails (scene, id) {
     /** @type {import("../types/typedef.js").Mon} */
-    return scene.cache.json.get(DATA_ASSET_KEYS.MONS)[id]
+    return { id, ...scene.cache.json.get(DATA_ASSET_KEYS.MONS)[id] }
   }
 
   /**
@@ -52,8 +52,6 @@ export class DataUtils {
    * @returns {import("../types/typedef.js").Mon}
    */
   static generateWildMon (scene, area) {
-    let index = 0
-    
     const chosenMon = this.chooseEncounterMon(area.mons)
 
     // TODO generate wild mon attacks, hp, base attk etc
@@ -63,11 +61,12 @@ export class DataUtils {
     return {
       monIndex: chosenMon.monIndex,
       currentLevel: level,
-      maxHp: 10,
-      currentHp: 10,
+      maxHp: 100,
+      currentHp: 100,
       attackIds: [1, 2]
     }
   }
+
   /**
    * @param {import("../types/typedef.js").EncounterMon[]} mons
    * @returns {import("../types/typedef.js").EncounterMon}
@@ -82,5 +81,17 @@ export class DataUtils {
     }
 
     return mons[mons.length - 1]
+  }
+
+  /**
+   * 
+   * @param {Phaser.Scene} scene 
+   * @param {number} id 
+   * @returns {import("../types/typedef.js").Trainer}
+   */
+  static getTrainerDetails (scene, id) {
+    const trainer = scene.cache.json.get(DATA_ASSET_KEYS.TRAINERS)[id]
+    const mons = trainer.mons.map(monId => this.getMonDetails(scene, monId))
+    return { ...trainer, mons }
   }
 }

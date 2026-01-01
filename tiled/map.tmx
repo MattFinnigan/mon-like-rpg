@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="26" height="74" tilewidth="64" tileheight="64" infinite="0" nextlayerid="22" nextobjectid="17">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="26" height="74" tilewidth="64" tileheight="64" infinite="0" nextlayerid="24" nextobjectid="25">
  <editorsettings>
   <export target="../assets/data/level.json" format="json"/>
  </editorsettings>
@@ -799,12 +799,23 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <group id="18" name="NPCS" locked="1">
+ <group id="18" name="NPCS">
+  <objectgroup id="23" name="NPC3" class="npc">
+   <object id="24" name="npc3" type="npc" gid="1145" x="320" y="2752" width="64" height="64">
+    <properties>
+     <property name="action" propertytype="npc_action" value="BATTLE"/>
+     <property name="action_id" type="int" value="1"/>
+     <property name="frame" type="int" value="1"/>
+     <property name="message" value="hello;;i like turtles"/>
+     <property name="sheet" type="int" value="3"/>
+    </properties>
+   </object>
+  </objectgroup>
   <objectgroup id="20" name="NPC1" class="npc">
    <properties>
     <property name="message" value="HOOD OOS"/>
    </properties>
-   <object id="9" name="npc1" type="npc" gid="1522" x="448" y="2880" width="64" height="64">
+   <object id="9" name="npc1" type="npc" gid="1145" x="448" y="2880" width="64" height="64">
     <properties>
      <property name="frame" type="int" value="10"/>
      <property name="message" value="HOODOOS;;Got 2 dollas for tha bus lad?"/>
@@ -818,7 +829,7 @@
     <property name="message" value="Hello"/>
     <property name="movement_pattern" propertytype="npc_movement" value="CLOCKWISE"/>
    </properties>
-   <object id="10" name="NPC2" type="npc" gid="1522" x="832" y="3264" width="64" height="64">
+   <object id="10" name="NPC2" type="npc" gid="1145" x="832" y="3264" width="64" height="64">
     <properties>
      <property name="frame" type="int" value="10"/>
      <property name="message" value="It's bloody hot!"/>
@@ -826,11 +837,11 @@
      <property name="sheet" type="int" value="3"/>
     </properties>
    </object>
-   <object id="11" name="1" type="npc_path" gid="1522" x="896" y="3264" width="64" height="64"/>
-   <object id="12" name="2" type="npc_path" gid="1522" x="960" y="3264" width="64" height="64"/>
-   <object id="14" name="3" type="npc_path" gid="1522" x="960" y="3328" width="64" height="64"/>
-   <object id="15" name="4" type="npc_path" gid="1522" x="896" y="3328" width="64" height="64"/>
-   <object id="16" name="5" type="npc_path" gid="1522" x="832" y="3328" width="64" height="64"/>
+   <object id="11" name="1" type="npc_path" gid="1145" x="896" y="3264" width="64" height="64"/>
+   <object id="12" name="2" type="npc_path" gid="1145" x="960" y="3264" width="64" height="64"/>
+   <object id="14" name="3" type="npc_path" gid="1145" x="960" y="3328" width="64" height="64"/>
+   <object id="15" name="4" type="npc_path" gid="1145" x="896" y="3328" width="64" height="64"/>
+   <object id="16" name="5" type="npc_path" gid="1145" x="832" y="3328" width="64" height="64"/>
   </objectgroup>
  </group>
  <objectgroup id="17" name="Signs" class="sign" locked="1">
@@ -938,7 +949,7 @@
 0,0,0,1521,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1521
 </data>
  </layer>
- <layer id="8" name="Encounter" width="26" height="74" opacity="0.54">
+ <layer id="8" name="Encounter" width="26" height="74" visible="0" opacity="0.54">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,

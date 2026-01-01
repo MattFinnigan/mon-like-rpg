@@ -1,7 +1,9 @@
-import { SKIP_BATTLE_ANIMATIONS, TILE_SIZE, TILED_COLLISION_ALPHA } from '../../config.js';
+import { SKIP_BATTLE_ANIMATIONS, TILE_SIZE, TILED_COLLISION_ALPHA, WORLD_ZOOM } from '../../config.js';
 import { BGM_ASSET_KEYS, CHARACTER_ASSET_KEYS, DATA_ASSET_KEYS, WORLD_ASSET_KEYS } from '../assets/asset-keys.js';
 import { DIRECTION } from '../common/direction.js';
-import { OPPONENT_TYPE } from '../common/opponent_type.js';
+import { EVENT_KEYS } from '../common/event-keys.js';
+import { OPPONENT_TYPES } from '../common/opponent-types.js';
+import { TRANSITION_TYPES } from '../common/transition-types.js';
 import Phaser from '../lib/phaser.js'
 import { AudioManager } from '../utils/audio-manager.js';
 import { Controls } from '../utils/controls.js';
@@ -18,7 +20,7 @@ import { SCENE_KEYS } from "./scene-keys.js";
 const CUSTOM_TILED_TYPES = Object.freeze({
   NPC: 'npc',
   NPC_PATH: 'npc_path',
-  ENCOUNTER: 'encounter',
+  ENCOUNTER: 'encounter'
 })
 
 const TILED_NPC_PROPERTY = Object.freeze({
@@ -26,7 +28,9 @@ const TILED_NPC_PROPERTY = Object.freeze({
   MOVEMENT_PATTERN: 'movement_pattern',
   FRAME: 'frame',
   SHEET: 'sheet',
-  MESSAGE: 'message'
+  MESSAGE: 'message',
+  ACTION: 'action',
+  ACTION_ID: 'action_id'
 })
 
 /**
@@ -114,7 +118,7 @@ export class WorldScene extends Phaser.Scene {
 
     this.#worldBackgroundImage = this.add.image(0, 0, WORLD_ASSET_KEYS.WORLD_BACKGROUND, 0).setOrigin(0)
     this.cameras.main.setBounds(0, 0, this.#worldBackgroundImage.width, this.#worldBackgroundImage.height)
-    this.cameras.main.setZoom(0.8)
+    this.cameras.main.setZoom(WORLD_ZOOM)
     this.cameras.main.centerOn(x, y)
 
     this.#createNPCs(map)
@@ -141,6 +145,27 @@ export class WorldScene extends Phaser.Scene {
     this.#npcs.forEach(npc => {
       npc.addCharacterToCheckForcollsionsWith(this.#player)
     })
+
+    
+    this.events.on(EVENT_KEYS.TRAINER_BATTLE_START, actionId => {
+      this.#audioManager.playBgm(BGM_ASSET_KEYS.TRAINER)
+      createBattleSceneTransition(this, {
+        skipSceneTransition: SKIP_BATTLE_ANIMATIONS,
+        spritesToNotBeObscured: [this.#player.sprite],
+        type: TRANSITION_TYPES.LEFT_RIGHT_DOWN_SLOW,
+        callback: () => {
+          /** @type {import("../types/typedef.js").Trainer} */
+          this.scene.start(SCENE_KEYS.BATTLE_SCENE, {
+            type: OPPONENT_TYPES.TRAINER,
+            trainer: {
+              type: OPPONENT_TYPES.TRAINER,
+              ...DataUtils.getTrainerDetails(this, actionId)
+            }
+          })
+        }
+      })
+    })
+
 
     this.#dialogUi = new DialogUi(this)
     this.#controls = new Controls(this)
@@ -253,7 +278,7 @@ export class WorldScene extends Phaser.Scene {
 
     this.#wildMonEncountered = encounterArea.encounterRate > Math.random() 
     if (this.#wildMonEncountered) {
-      this.#audioManager.playBgm(BGM_ASSET_KEYS.WILD_ENCOUNTER_BATTLE)
+      this.#audioManager.playBgm(BGM_ASSET_KEYS.WILD_ENCOUNTER)
       createWildEncounterSceneTransition(this, {
         skipSceneTransition: SKIP_BATTLE_ANIMATIONS,
         spritesToNotBeObscured: [this.#player.sprite],
@@ -262,13 +287,10 @@ export class WorldScene extends Phaser.Scene {
             skipSceneTransition: SKIP_BATTLE_ANIMATIONS,
             spritesToNotBeObscured: [this.#player.sprite],
             callback: () => {
-              /** @type {import('../types/typedef.js').Opponent} */
-              const opponent = {
-                type: OPPONENT_TYPE.WILD_MON,
-                mons: [],
-                encounterArea
-              }
-              this.scene.start(SCENE_KEYS.BATTLE_SCENE, { opponent })
+              this.scene.start(SCENE_KEYS.BATTLE_SCENE, {
+                type: OPPONENT_TYPES.WILD_ENCOUNTER,
+                wildMon: { encounterArea }
+              })
             }
           })
         }}
@@ -286,6 +308,7 @@ export class WorldScene extends Phaser.Scene {
    */
   #createNPCs (map) {
     this.#npcs = []
+    let index = 0
 
     const npcLayers = map.getObjectLayerNames().filter(layerName => layerName.includes('NPC'))
     npcLayers.forEach(layerName => {
@@ -309,12 +332,15 @@ export class WorldScene extends Phaser.Scene {
 
       const npcSheet = npcObject.properties.find(prop => prop.name === TILED_NPC_PROPERTY.SHEET)?.value || '1'
       const npcMessagesStr = npcObject.properties.find(prop => prop.name === TILED_NPC_PROPERTY.MESSAGE)?.value || ''
+
       const npcFrame = npcObject.properties.find(prop => prop.name === TILED_NPC_PROPERTY.FRAME)?.value || '0'
       const npcMessages = npcMessagesStr.split(';;')
-      
-      const npcMovement = npcObject.properties.find(prop => prop.name === TILED_NPC_PROPERTY.MOVEMENT_PATTERN)?.value || 'IDLE'
 
-      const npc = new NPC({
+      const npcMovement = npcObject.properties.find(prop => prop.name === TILED_NPC_PROPERTY.MOVEMENT_PATTERN)?.value || 'IDLE'
+      const npcAction = npcObject.properties.find(prop => prop.name === TILED_NPC_PROPERTY.ACTION)?.value || 'NONE'
+      const npcActionId = npcObject.properties.find(prop => prop.name === TILED_NPC_PROPERTY.ACTION_ID)?.value || undefined
+
+      const npc = new NPC(this, {
         scene: this,
         assetKey: CHARACTER_ASSET_KEYS['NPC_SHEET_' + npcSheet],
         position: { x: npcObject.x, y: npcObject.y - TILE_SIZE },
@@ -322,10 +348,12 @@ export class WorldScene extends Phaser.Scene {
         frame: parseInt(npcFrame, 10),
         messages: npcMessages,
         npcPath,
-        movementPattern: npcMovement
+        movementPattern: npcMovement,
+        action: npcAction,
+        actionId: npcActionId
       })
-
       this.#npcs.push(npc)
     })
+
   }
 }

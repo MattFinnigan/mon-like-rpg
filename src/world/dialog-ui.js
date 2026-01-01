@@ -77,7 +77,6 @@ export class DialogUi {
    * @returns {void}
    */
   showNextMessage () {
-    console.log(this.#messagesToShow)
     if (this.#messagesToShow.length === 0) {
       return
     }

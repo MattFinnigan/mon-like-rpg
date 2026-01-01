@@ -782,11 +782,62 @@
                 {
                  "class":"npc",
                  "draworder":"topdown",
+                 "id":23,
+                 "name":"NPC3",
+                 "objects":[
+                        {
+                         "gid":1145,
+                         "height":64,
+                         "id":24,
+                         "name":"npc3",
+                         "properties":[
+                                {
+                                 "name":"action",
+                                 "propertytype":"npc_action",
+                                 "type":"string",
+                                 "value":"BATTLE"
+                                }, 
+                                {
+                                 "name":"action_id",
+                                 "type":"int",
+                                 "value":1
+                                }, 
+                                {
+                                 "name":"frame",
+                                 "type":"int",
+                                 "value":1
+                                }, 
+                                {
+                                 "name":"message",
+                                 "type":"string",
+                                 "value":"hello;;i like turtles"
+                                }, 
+                                {
+                                 "name":"sheet",
+                                 "type":"int",
+                                 "value":3
+                                }],
+                         "rotation":0,
+                         "type":"npc",
+                         "visible":true,
+                         "width":64,
+                         "x":320,
+                         "y":2752
+                        }],
+                 "opacity":1,
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "class":"npc",
+                 "draworder":"topdown",
                  "id":20,
                  "name":"NPC1",
                  "objects":[
                         {
-                         "gid":1522,
+                         "gid":1145,
                          "height":64,
                          "id":9,
                          "name":"npc1",
@@ -832,7 +883,7 @@
                  "name":"NPC2",
                  "objects":[
                         {
-                         "gid":1522,
+                         "gid":1145,
                          "height":64,
                          "id":10,
                          "name":"NPC2",
@@ -866,7 +917,7 @@
                          "y":3264
                         }, 
                         {
-                         "gid":1522,
+                         "gid":1145,
                          "height":64,
                          "id":11,
                          "name":"1",
@@ -878,7 +929,7 @@
                          "y":3264
                         }, 
                         {
-                         "gid":1522,
+                         "gid":1145,
                          "height":64,
                          "id":12,
                          "name":"2",
@@ -890,7 +941,7 @@
                          "y":3264
                         }, 
                         {
-                         "gid":1522,
+                         "gid":1145,
                          "height":64,
                          "id":14,
                          "name":"3",
@@ -902,7 +953,7 @@
                          "y":3328
                         }, 
                         {
-                         "gid":1522,
+                         "gid":1145,
                          "height":64,
                          "id":15,
                          "name":"4",
@@ -914,7 +965,7 @@
                          "y":3328
                         }, 
                         {
-                         "gid":1522,
+                         "gid":1145,
                          "height":64,
                          "id":16,
                          "name":"5",
@@ -948,7 +999,6 @@
                  "x":0,
                  "y":0
                 }],
-         "locked":true,
          "name":"NPCS",
          "opacity":1,
          "type":"group",
@@ -1225,13 +1275,13 @@
          "name":"Encounter",
          "opacity":0.54,
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":26,
          "x":0,
          "y":0
         }],
- "nextlayerid":22,
- "nextobjectid":17,
+ "nextlayerid":24,
+ "nextobjectid":25,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

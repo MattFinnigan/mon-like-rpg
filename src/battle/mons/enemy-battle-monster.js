@@ -22,39 +22,73 @@ export class EnemyBattleMon extends BattleMon {
   /**
    * 
    * @param {() => void} callback
+   * @param {boolean} [isTrainer=false]
    * @returns {void}
    */
-  playMonAppearAnimation (callback) {
-    const startXPos = -30
-    const endXPos = ENEMY_IMAGE_POSITION.x
-    const assetKey = MON_ASSET_KEYS[this._phaserMonImageGameObject.texture.key]
-    this._phaserMonImageGameObject.setTexture(MON_GRAY_ASSET_KEYS[assetKey + '_GRAY']).setFlipX(true)
+  playMonAppearAnimation (callback, isTrainer) {
+    if (!isTrainer) {
+      const startXPos = -30
+      const endXPos = ENEMY_IMAGE_POSITION.x
+      const assetKey = MON_ASSET_KEYS[this._phaserMonImageGameObject.texture.key]
+      this._phaserMonImageGameObject.setTexture(MON_GRAY_ASSET_KEYS[assetKey + '_GRAY']).setFlipX(true)
 
-    this._phaserMonImageGameObject.setPosition(startXPos, ENEMY_IMAGE_POSITION.y)
-    this._phaserMonImageGameObject.setAlpha(1)
+      this._phaserMonImageGameObject.setPosition(startXPos, ENEMY_IMAGE_POSITION.y).setAlpha(1)
 
-    if (this._skipBattleAnimations) {
-      this._phaserMonImageGameObject.setTexture(MON_ASSET_KEYS[assetKey])
-      this._phaserMonImageGameObject.setX(endXPos)
-      callback()
-      return
-    }
-
-    this._scene.tweens.add({
-      delay: 0,
-      duration: 1000,
-      x: {
-        from: startXPos,
-        to: endXPos
-      },
-      targets: this._phaserMonImageGameObject,
-      onComplete: () => {
+      if (this._skipBattleAnimations) {
         this._phaserMonImageGameObject.setTexture(MON_ASSET_KEYS[assetKey])
-        super.playMonCry(() => {
-          callback()
-        })
+        this._phaserMonImageGameObject.setX(endXPos)
+        callback()
+        return
       }
-    })
+
+      this._scene.tweens.add({
+        delay: 0,
+        duration: 1500,
+        x: {
+          from: startXPos,
+          to: endXPos
+        },
+        targets: this._phaserMonImageGameObject,
+        onComplete: () => {
+          this._phaserMonImageGameObject.setTexture(MON_ASSET_KEYS[assetKey])
+          super.playMonCry(() => {
+            callback()
+          })
+        }
+      })
+    } else {     
+      if (this._skipBattleAnimations) {
+        this._phaserMonImageGameObject.setAlpha(1)
+        callback()
+        return
+      }
+  
+      const endY = this._phaserMonImageGameObject.y
+      const endX = this._phaserMonImageGameObject.x
+      const steps = 3
+
+      this._phaserMonImageGameObject.setAlpha(1).setScale(0.1).setX(ENEMY_IMAGE_POSITION.x)
+      this._phaserMonImageGameObject.y += (this._phaserMonImageGameObject.height - this._phaserMonImageGameObject.height / 4)
+      this._phaserMonImageGameObject.x += this._phaserMonImageGameObject.width / 2
+  
+      this._scene.tweens.add({
+        delay: 0,
+        duration: 300,
+        scale: 1,
+        y: endY,
+        x: endX,
+        targets: this._phaserMonImageGameObject,
+        ease: function (t) {
+          // convert t (0..1) to stepped value (0..1) with `steps` steps
+          return Math.round(t * steps) / steps
+        },
+        onComplete: () => {
+          super.playMonCry(() => {
+            callback()
+          })
+        }
+      })
+    }
   }
   /**
    * 

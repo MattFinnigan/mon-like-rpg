@@ -62,30 +62,6 @@
         {
             "color": "#ffa0a0a4",
             "drawFill": true,
-            "id": 3,
-            "members": [
-                {
-                    "name": "area",
-                    "type": "int",
-                    "value": 0
-                }
-            ],
-            "name": "encounter",
-            "type": "class",
-            "useAs": [
-                "property",
-                "map",
-                "layer",
-                "object",
-                "tile",
-                "tileset",
-                "wangcolor",
-                "wangset"
-            ]
-        },
-        {
-            "color": "#ffa0a0a4",
-            "drawFill": true,
             "id": 4,
             "members": [
                 {
@@ -151,6 +127,17 @@
             "drawFill": true,
             "id": 6,
             "members": [
+                {
+                    "name": "action",
+                    "propertyType": "npc_action",
+                    "type": "string",
+                    "value": "NONE"
+                },
+                {
+                    "name": "action_id",
+                    "type": "int",
+                    "value": 0
+                },
                 {
                     "name": "frame",
                     "type": "int",

@@ -1,0 +1,10 @@
+{
+  "1": {
+    "name": "Jeff",
+    "trainerType": "PSYCHIC",
+    "rewardOnVictory": 1500,
+    "payOutOnDefeat": 1000,
+    "assetKey": "PSYCHIC",
+    "mons": [2]
+  }
+}

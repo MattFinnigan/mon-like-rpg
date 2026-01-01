@@ -7,6 +7,7 @@ import { BattleMon } from '../../mons/battle-mon.js'
 import { animateText } from '../../../utils/text-utils.js'
 import { SKIP_BATTLE_ANIMATIONS } from '../../../../config.js'
 import { DIALOG_DETAILS } from '../../../assets/consts.js'
+import { EVENT_KEYS } from '../../../common/event-keys.js'
 
 const BATTLE_MENU_CURSOR_POS = Object.freeze({
   x: 30,
@@ -548,7 +549,7 @@ export class BattleMenu {
 
     if (this.#selectedBattleMenuOption === BATTLE_MENU_OPTIONS.RUN) {
       this.#activeBattleMenu = ACTIVE_BATTLE_MENU.BATTLE_RUN
-      this.#scene.events.emit('player:attemptToRun')
+      this.#scene.events.emit(EVENT_KEYS.BATTLE_RUN_ATTEMPT)
       return
     }
 

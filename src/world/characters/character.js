@@ -167,8 +167,7 @@ export class Character {
     }
     
     const targetPosition = { ...this._targetPosition }
-    const updatedPosition = getTargetPositionFromGameObjectPositionAndDirection(this._targetPosition, this._direction)
-
+    const updatedPosition = getTargetPositionFromGameObjectPositionAndDirection(targetPosition, this._direction)
 
     return this.#doesPositionCollideWithCollisionLayer(updatedPosition) || this.#doesPositionCollideWithOtherCharacter(updatedPosition)
   }

@@ -1,4 +1,4 @@
-import { ATTACK_ASSET_KEYS, BATTLE_ASSET_KEYS, BGM_ASSET_KEYS, CHARACTER_ASSET_KEYS, DATA_ASSET_KEYS, HEALTH_BAR_ASSET_KEYS, MON_ASSET_KEYS, MON_BACK_ASSET_KEYS, MON_GRAY_ASSET_KEYS, SYSTEM_ASSET_KEYS, UI_ASSET_KEYS, WORLD_ASSET_KEYS } from '../assets/asset-keys.js'
+import { ATTACK_ASSET_KEYS, BATTLE_ASSET_KEYS, BGM_ASSET_KEYS, CHARACTER_ASSET_KEYS, DATA_ASSET_KEYS, HEALTH_BAR_ASSET_KEYS, MON_ASSET_KEYS, MON_BACK_ASSET_KEYS, MON_GRAY_ASSET_KEYS, SYSTEM_ASSET_KEYS, TRAINER_GRAY_SPRITES, TRAINER_SPRITES, UI_ASSET_KEYS, WORLD_ASSET_KEYS } from '../assets/asset-keys.js'
 import Phaser from '../lib/phaser.js'
 import { AudioManager } from '../utils/audio-manager.js'
 import { DataUtils } from '../utils/data-utils.js'
@@ -24,6 +24,8 @@ export class PreloadScene extends Phaser.Scene {
     const bgmAssetPath = 'assets/audio/bgm'
     const monCryAssetKeys = 'assets/audio/mons/cries'
     const npcAssetPath = 'assets/images/npc'
+    const trainerAssetPath = 'assets/images/trainers'
+    const trainerGrayAssetPath = 'assets/images/trainers/gray'
 
     const attackAnimPath = 'assets/images/anims/pimen'
     const axulAssetPath = 'assets/images/character/axulart'
@@ -54,6 +56,7 @@ export class PreloadScene extends Phaser.Scene {
     this.load.json(DATA_ASSET_KEYS.BASE_MONS, 'assets/data/base-mons.json')
     this.load.json(DATA_ASSET_KEYS.MONS, 'assets/data/mons.json')
     this.load.json(DATA_ASSET_KEYS.ENCOUNTER_AREAS, 'assets/data/encounter_areas.json')
+    this.load.json(DATA_ASSET_KEYS.TRAINERS, 'assets/data/trainers.json')
 
     // common
     this.load.image(SYSTEM_ASSET_KEYS.DIALOG_BACKGROUND, `/${backgroundAssetPath}/dialog.png`)
@@ -129,6 +132,14 @@ export class PreloadScene extends Phaser.Scene {
       frameWidth: 72,
       frameHeight: 96
     })
+
+    // trainer sprites
+    const trainerKeys = Object.keys(TRAINER_SPRITES)
+    for (let i = 0; i < trainerKeys.length; i++) {
+      this.load.image(trainerKeys[i], `/${trainerAssetPath}/RBY Y${trainerKeys[i].toLowerCase()}.png`)
+      this.load.image(TRAINER_GRAY_SPRITES[trainerKeys[i] + '_GRAY'], `/${trainerGrayAssetPath}/RBY ${trainerKeys[i].toLowerCase()} BW.png`)
+    }
+    
     // this.load.spritesheet(CHARACTER_ASSET_KEYS.NPC, `${pbGamesAssetPath}/npcs.png`, {
     //   frameWidth: 16,
     //   frameHeight: 16

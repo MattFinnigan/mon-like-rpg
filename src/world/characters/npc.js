@@ -1,6 +1,23 @@
 import { Character } from "./character.js";
 import { DIRECTION } from "../../common/direction.js";
 import { exhaustiveGuard } from "../../utils/guard.js";
+import { SCENE_KEYS } from "../../scenes/scene-keys.js";
+import { OPPONENT_TYPES } from "../../common/opponent-types.js";
+import { DataUtils } from "../../utils/data-utils.js";
+import { EVENT_KEYS } from "../../common/event-keys.js";
+
+/**
+ * @typedef {keyof typeof NPC_ACTION_TYPES} NPCAction
+ */
+
+/** @enum {NPCAction} */
+const NPC_ACTION_TYPES = Object.freeze({
+  NONE: 'NONE',
+  TRADE: 'TRADE',
+  ITEM: 'ITEM',
+  HEAL: 'HEAL',
+  BATTLE: 'BATTLE'
+})
 
 /**
  * @typedef {keyof typeof NPC_MOVEMENT_PATTERN} NpcMovemntPattern
@@ -17,20 +34,24 @@ export const NPC_MOVEMENT_PATTERN = Object.freeze({
  * @type {Object.<number, import("../../types/typedef.js").Coordinate>}
  */
 
-export class NPC extends Character {
-  /**
-   * @typedef NPCConfigProps
-   * @type {object}
-   * @property {number} frame
-   * @property {string[]} messages
-   * @property {NPCPath} npcPath
-   * @property {NpcMovemntPattern} movementPattern
-   */
+/**
+ * @typedef NPCConfigProps
+ * @type {object}
+ * @property {number} frame
+ * @property {string[]} messages
+ * @property {NPCPath} npcPath
+ * @property {NpcMovemntPattern} movementPattern
+ * @property {NPCAction} action
+ * @property {number|undefined} [actionId]
+ */
 
-  /**
-   * @typedef {Omit<import("./character.js").CharacterConfig, 'idleFrameConfig'> & NPCConfigProps} NPCConfig
-   */
-  
+/**
+ * @typedef {Omit<import("./character.js").CharacterConfig, 'idleFrameConfig'> & NPCConfigProps} NPCConfig
+ */
+
+export class NPC extends Character {
+  /** @type {Phaser.Scene} */
+  #scene
   /** @type {string[]} */
   #messages
   /** @type {boolean} */
@@ -43,12 +64,18 @@ export class NPC extends Character {
   #movementPattern
   /** @type {number} */
   #lastMovementTime
-
+  /** @type {NPCAction} */
+  #action
+  /** @type {number|undefined} */
+  #actionId
+  /** @type {boolean} */
+  #actionPending
+  
   /**
    * 
    * @param {NPCConfig} config 
    */
-  constructor (config) {
+  constructor (scene, config) {
     super({
       ...config,
       origin: { x: 0.15, y: 0.5 },
@@ -61,12 +88,17 @@ export class NPC extends Character {
       }
     })
 
+    this.#scene = scene
     this.#messages = config.messages
     this.#isTalkingToPlayer = false
     this.#npcPath = config.npcPath
     this.#currentPathIndex = 0
     this.#movementPattern = config.movementPattern
     this.#lastMovementTime = Phaser.Math.Between(3500, 5000)
+
+    this.#action = config.action
+    this.#actionId = config.actionId
+    this.#actionPending = false
   }
 
   /** @returns {string[]} */
@@ -121,8 +153,17 @@ export class NPC extends Character {
       return
     }
     if (this.#isTalkingToPlayer) {
+      if (!this.#actionPending && this.#action !== NPC_ACTION_TYPES.NONE) {
+        this.#actionPending = true
+      }
       return
     }
+    
+    if (this.#actionPending) {
+      this.#doAction()
+      return
+    }
+
     super.update(time)
 
     if (this.#movementPattern === NPC_MOVEMENT_PATTERN.IDLE) {
@@ -192,5 +233,21 @@ export class NPC extends Character {
       default:
         exhaustiveGuard(this._direction)
     }
+  }
+
+  #doAction () {
+    switch (this.#action) {
+      case NPC_ACTION_TYPES.BATTLE:
+        this.#scene.events.emit(EVENT_KEYS.TRAINER_BATTLE_START, this.#actionId)
+        break
+      case NPC_ACTION_TYPES.HEAL:
+      case NPC_ACTION_TYPES.ITEM:
+      case NPC_ACTION_TYPES.TRADE:
+      case NPC_ACTION_TYPES.NONE:
+        break
+      default:
+        exhaustiveGuard(this.#action)
+    }
+    this.#actionPending = false
   }
 }
