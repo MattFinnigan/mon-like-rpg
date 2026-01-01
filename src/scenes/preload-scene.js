@@ -13,6 +13,20 @@ export class PreloadScene extends Phaser.Scene {
 
   preload () {
     console.log(`[${PreloadScene.name}:preload] invoked`)
+
+    const { width, height } = this.scale
+    const loadingText = this.add.text(width / 2, height / 2, 'Loading...', {
+      fontSize: '20px',
+      color: '#ffffff'
+    }).setOrigin(0.5)
+
+    this.load.on('complete', () => {
+      loadingText.setText('Loading Complete!')
+      this.scene.start(SCENE_KEYS.WORLD_SCENE)
+      this.#createAnimations()
+    })
+
+
     const backgroundAssetPath = 'assets/images/backgrounds'
     const monsAssetPath = 'assets/images/mons'
     const monsBackAssetPath = 'assets/images/mons/backs'
@@ -154,9 +168,6 @@ export class PreloadScene extends Phaser.Scene {
 
   create () {
     console.log(`[${PreloadScene.name}:create] invoked`)
-
-    this.scene.start(SCENE_KEYS.WORLD_SCENE)
-    this.#createAnimations()
   }
 
   #createAnimations () {
