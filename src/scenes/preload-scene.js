@@ -75,9 +75,9 @@ export class PreloadScene extends Phaser.Scene {
     // mon stuff
     const keys = Object.keys(MON_ASSET_KEYS)
     for (let i = 0; i < keys.length; i++) {
-      this.load.image(keys[i], `/${monsAssetPath}/${i + 1}.PNG`)
-      this.load.image(MON_BACK_ASSET_KEYS[keys[i] + '_BACK'], `/${monsBackAssetPath}/${i + 1}.PNG`)
-      this.load.image(MON_GRAY_ASSET_KEYS[keys[i] + '_GRAY'], `/${monsGrayAssetPath}/${i + 1}.PNG`)
+      this.load.image(keys[i], `/${monsAssetPath}/${i + 1}.png`)
+      this.load.image(MON_BACK_ASSET_KEYS[keys[i] + '_BACK'], `/${monsBackAssetPath}/${i + 1}.png`)
+      this.load.image(MON_GRAY_ASSET_KEYS[keys[i] + '_GRAY'], `/${monsGrayAssetPath}/${i + 1}.png`)
       this.load.audio(keys[i], [monCryAssetKeys + '/' + (i + 1) + '.ogg'])
     }
   

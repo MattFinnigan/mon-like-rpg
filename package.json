@@ -1,0 +1,25 @@
+{
+  "name": "pkmn",
+  "version": "1.0.0",
+  "description": "A Pokemon-like RPG project I'm building to brush up on my **Typescript**. Built with **Javascript** + **Phaser**",
+  "main": "config.js",
+  "scripts": {
+    "build": "rollup -c",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MattFinnigan/mon-like-rpg.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MattFinnigan/mon-like-rpg/issues"
+  },
+  "homepage": "https://github.com/MattFinnigan/mon-like-rpg#readme",
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^16.0.3",
+    "rollup": "^4.54.0"
+  }
+}
