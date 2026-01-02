@@ -53,12 +53,12 @@ export const CHARACTER_ASSET_KEYS = Object.freeze({
 })
 
 export const TRAINER_SPRITES = Object.freeze({
-  RED2: 'RED2',
+  RED: 'RED',
   PSYCHIC: 'PSYCHIC'
 })
 
 export const TRAINER_GRAY_SPRITES = Object.freeze({
-  RED2_GRAY: 'RED2_GRAY',
+  RED_GRAY: 'RED_GRAY',
   PSYCHIC_GRAY: 'PSYCHIC_GRAY'
 })
 

@@ -27,7 +27,7 @@ export class EnemyBattleMon extends BattleMon {
    */
   playMonAppearAnimation (callback, isTrainer) {
     if (!isTrainer) {
-      const startXPos = -30
+      const startXPos = -50
       const endXPos = ENEMY_IMAGE_POSITION.x
       const assetKey = MON_ASSET_KEYS[this._phaserMonImageGameObject.texture.key]
       this._phaserMonImageGameObject.setTexture(MON_GRAY_ASSET_KEYS[assetKey + '_GRAY']).setFlipX(true)

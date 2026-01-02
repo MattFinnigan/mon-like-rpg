@@ -13,9 +13,10 @@ import { BattleTrainer } from '../battle/battle-trainer.js'
 import { EVENT_KEYS } from '../common/event-keys.js'
 import { exhaustiveGuard } from '../utils/guard.js'
 import { AudioManager } from '../utils/audio-manager.js'
-import { BGM_ASSET_KEYS } from '../assets/asset-keys.js'
+import { BGM_ASSET_KEYS, TRAINER_SPRITES } from '../assets/asset-keys.js'
 import { OPPONENT_TYPES } from '../common/opponent-types.js'
 import { loadBattleAssets, loadMonAssets, loadTrainerSprites } from '../utils/load-assets.js'
+import { BattlePlayer } from '../battle/battle-player.js'
 
 const BATTLE_STATES = Object.freeze({
   INTRO: 'INTRO',
@@ -49,6 +50,8 @@ export class BattleScene extends Phaser.Scene {
   #attackManager
   /** @type {BattleTrainer} */
   #enemyBattleTrainer
+  /** @type {BattlePlayer} */
+  #battlePlayer
   /** @type {import('../types/typedef.js').Mon[]} */
   #opponentMons
   /** @type {number} */
@@ -128,8 +131,8 @@ export class BattleScene extends Phaser.Scene {
     if (this.#opponentType !== OPPONENT_TYPES.WILD_ENCOUNTER) {
       loadTrainerSprites(this, this.#enemyTrainer.assetKey)
     }
+    loadTrainerSprites(this, TRAINER_SPRITES.RED)
     loadBattleAssets(this)
-    console.log(this.#victoryBgmKey)
     this.load.audio(BGM_ASSET_KEYS[this.#victoryBgmKey], [`assets/audio/bgm/${this.#victoryBgmKey}.flac`])
   }
 
@@ -298,6 +301,7 @@ export class BattleScene extends Phaser.Scene {
         if (this.#opponentType !== OPPONENT_TYPES.WILD_ENCOUNTER) {
           this.#enemyBattleTrainer = new BattleTrainer(this, this.#enemyTrainer, SKIP_BATTLE_ANIMATIONS)
         }
+        this.#battlePlayer = new BattlePlayer(this, { assetKey: TRAINER_SPRITES.RED, skipBattleAnimations: SKIP_BATTLE_ANIMATIONS })
         this.#battleStateMachine.setState(BATTLE_STATES.PRE_BATTLE_INFO)
       }
     })
@@ -305,6 +309,7 @@ export class BattleScene extends Phaser.Scene {
     this.#battleStateMachine.addState({
       name: BATTLE_STATES.PRE_BATTLE_INFO,
       onEnter: () => {
+        this.#battlePlayer.playPlayerAppearAnimation()
         if (this.#opponentType === OPPONENT_TYPES.WILD_ENCOUNTER) {
           this.#battleStateMachine.setState(BATTLE_STATES.WILD_MON_OUT)
           return
@@ -361,21 +366,23 @@ export class BattleScene extends Phaser.Scene {
       name: BATTLE_STATES.PLAYER_MON_OUT,
       onEnter: () => {
         // wait for player mon to appear, notify player of mon
-        this.#battleMenu.updateInfoPanelMessagesNoInputRequired(`Go! ${this.#activePlayerMon.name}!`, () => {
-          // wait for txt anim
-          this.time.delayedCall(1000, () => {
-            this.#activePlayerMon.playMonAppearAnimation(() => {
-              // TODO wait for mon cry
-              this.time.delayedCall(500, () => {
-                this.#activePlayerMon.playMonHealthBarContainerAppearAnimation(() => {
-                  this.time.delayedCall(500, () => {
-                    this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_INPUT)
+        this.#battlePlayer.playTrainerDisappearAnimation(() => {
+          this.#battleMenu.updateInfoPanelMessagesNoInputRequired(`Go! ${this.#activePlayerMon.name}!`, () => {
+            // wait for txt anim
+            this.time.delayedCall(1000, () => {
+              this.#activePlayerMon.playMonAppearAnimation(() => {
+                // TODO wait for mon cry
+                this.time.delayedCall(500, () => {
+                  this.#activePlayerMon.playMonHealthBarContainerAppearAnimation(() => {
+                    this.time.delayedCall(500, () => {
+                      this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_INPUT)
+                    })
                   })
                 })
               })
             })
-          })
-        }, SKIP_BATTLE_ANIMATIONS)
+          }, SKIP_BATTLE_ANIMATIONS)
+        })
       }
     })
 
