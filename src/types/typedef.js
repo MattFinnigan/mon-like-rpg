@@ -20,6 +20,7 @@ import Phaser from "../lib/phaser.js";
 /**
  * @typedef BaseMon
  * @type {Object}
+ * @property {number} baseMonIndex
  * @property {string} name
  * @property {string} assetKey
  * @property {number} [assetFrame=0]
@@ -32,7 +33,7 @@ import Phaser from "../lib/phaser.js";
  * @typedef Mon
  * @type {Object}
  * @property {number|undefined} [id]
- * @property {number} monIndex
+ * @property {number} baseMonIndex
  * @property {number} maxHp
  * @property {number} currentHp
  * @property {number} currentLevel
@@ -50,7 +51,7 @@ import Phaser from "../lib/phaser.js";
  * @typedef EncounterMon
  * @type {Object}
  * @property {number} rate
- * @property {number} monIndex
+ * @property {number} baseMonIndex
  * @property {number} minLevel
  * @property {number} maxLevel
  */
@@ -75,6 +76,13 @@ import Phaser from "../lib/phaser.js";
  */
 
 /**
+ * @typedef Player
+ * @type {Object}
+ * @property {string} name
+ * @property {Mon[]} partyMons
+ */
+
+/**
  * @typedef Attack
  * @type {Object}
  * @property {number} id
@@ -93,3 +101,4 @@ import Phaser from "../lib/phaser.js";
  * @property {boolean} yoyo
  * @property {string} assetKey
  */
+

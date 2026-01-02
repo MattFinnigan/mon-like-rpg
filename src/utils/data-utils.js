@@ -49,22 +49,27 @@ export class DataUtils {
    * 
    * @param {Phaser.Scene} scene 
    * @param {import("../types/typedef.js").EncounterAreaConfig} area
-   * @returns {import("../types/typedef.js").Mon}
+   * @returns {{
+   *  mon: import("../types/typedef.js").Mon,
+   *  baseMon: import("../types/typedef.js").BaseMon
+   * }}
    */
   static generateWildMon (scene, area) {
     const chosenMon = this.chooseEncounterMon(area.mons)
 
     // TODO generate wild mon attacks, hp, base attk etc
-    // const baseDetails = this.getBaseMonDetails(scene, chosenMon.monIndex)
     const level = Phaser.Math.Between(chosenMon.minLevel, chosenMon.maxLevel)
-
-    return {
-      monIndex: chosenMon.monIndex,
+  
+    const mon = {
+      baseMonIndex: chosenMon.baseMonIndex,
       currentLevel: level,
       maxHp: 100,
       currentHp: 100,
       attackIds: [1, 2]
     }
+    const baseMon = this.getBaseMonDetails(scene, chosenMon.baseMonIndex)
+
+    return { mon, baseMon }
   }
 
   /**
@@ -93,5 +98,16 @@ export class DataUtils {
     const trainer = scene.cache.json.get(DATA_ASSET_KEYS.TRAINERS)[id]
     const mons = trainer.mons.map(monId => this.getMonDetails(scene, monId))
     return { ...trainer, mons }
+  }
+
+  /**
+   * 
+   * @param {Phaser.Scene} scene 
+   * @returns {import("../types/typedef.js").Player}
+   */
+  static getPlayerDetails (scene) {
+    const player = scene.cache.json.get(DATA_ASSET_KEYS.PLAYER)
+    const partyMons = player.partyMons.map(monId => this.getMonDetails(scene, monId))
+    return { ...player, partyMons }
   }
 }

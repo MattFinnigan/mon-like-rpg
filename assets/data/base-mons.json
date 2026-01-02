@@ -1,5 +1,6 @@
 {
   "0": {
+    "baseMonIndex": 0,
     "name": "BULBASAUR",
     "assetKey": "BULBASAUR",
     "assetFrame": 0,
@@ -7,6 +8,7 @@
     "teachableAttackIds": []
   },
   "1": {
+    "baseMonIndex": 1,
     "name": "IVYSAUR",
     "assetKey": "IVYSAUR",
     "assetFrame": 0,
@@ -14,6 +16,7 @@
     "teachableAttackIds": []
   },
   "2": {
+    "baseMonIndex": 2,
     "name": "VENUSAUR",
     "assetKey": "VENUSAUR",
     "assetFrame": 0,
@@ -21,6 +24,7 @@
     "teachableAttackIds": []
   },
   "3": {
+    "baseMonIndex": 3,
     "name": "CHARMANDER",
     "assetKey": "CHARMANDER",
     "assetFrame": 0,
@@ -28,6 +32,7 @@
     "teachableAttackIds": []
   },
   "4": {
+    "baseMonIndex": 4,
     "name": "CHARMELEON",
     "assetKey": "CHARMELEON",
     "assetFrame": 0,
@@ -35,6 +40,7 @@
     "teachableAttackIds": []
   },
   "5": {
+    "baseMonIndex": 5,
     "name": "CHARIZARD",
     "assetKey": "CHARIZARD",
     "assetFrame": 0,
@@ -42,6 +48,7 @@
     "teachableAttackIds": []
   },
   "6": {
+    "baseMonIndex": 6,
     "name": "SQUIRTLE",
     "assetKey": "SQUIRTLE",
     "assetFrame": 0,
@@ -49,6 +56,7 @@
     "teachableAttackIds": []
   },
   "7": {
+    "baseMonIndex": 7,
     "name": "WARTORTLE",
     "assetKey": "WARTORTLE",
     "assetFrame": 0,
@@ -56,6 +64,7 @@
     "teachableAttackIds": []
   },
   "8": {
+    "baseMonIndex": 8,
     "name": "BLASTOISE",
     "assetKey": "BLASTOISE",
     "assetFrame": 0,
@@ -63,6 +72,7 @@
     "teachableAttackIds": []
   },
   "9": {
+    "baseMonIndex": 9,
     "name": "CATERPIE",
     "assetKey": "CATERPIE",
     "assetFrame": 0,
@@ -70,6 +80,7 @@
     "teachableAttackIds": []
   },
   "10": {
+    "baseMonIndex": 10,
     "name": "METAPOD",
     "assetKey": "METAPOD",
     "assetFrame": 0,
@@ -77,6 +88,7 @@
     "teachableAttackIds": []
   },
   "11": {
+    "baseMonIndex": 11,
     "name": "BUTTERFREE",
     "assetKey": "BUTTERFREE",
     "assetFrame": 0,
@@ -84,6 +96,7 @@
     "teachableAttackIds": []
   },
   "12": {
+    "baseMonIndex": 12,
     "name": "WEEDLE",
     "assetKey": "WEEDLE",
     "assetFrame": 0,
@@ -91,6 +104,7 @@
     "teachableAttackIds": []
   },
   "13": {
+    "baseMonIndex": 13,
     "name": "KAKUNA",
     "assetKey": "KAKUNA",
     "assetFrame": 0,
@@ -98,6 +112,7 @@
     "teachableAttackIds": []
   },
   "14": {
+    "baseMonIndex": 14,
     "name": "BEEDRILL",
     "assetKey": "BEEDRILL",
     "assetFrame": 0,
@@ -105,6 +120,7 @@
     "teachableAttackIds": []
   },
   "15": {
+    "baseMonIndex": 15,
     "name": "PIDGEY",
     "assetKey": "PIDGEY",
     "assetFrame": 0,
@@ -112,6 +128,7 @@
     "teachableAttackIds": []
   },
   "16": {
+    "baseMonIndex": 16,
     "name": "PIDGEOTTO",
     "assetKey": "PIDGEOTTO",
     "assetFrame": 0,
@@ -119,6 +136,7 @@
     "teachableAttackIds": []
   },
   "17": {
+    "baseMonIndex": 17,
     "name": "PIDGEOT",
     "assetKey": "PIDGEOT",
     "assetFrame": 0,
@@ -126,6 +144,7 @@
     "teachableAttackIds": []
   },
   "18": {
+    "baseMonIndex": 18,
     "name": "RATTATA",
     "assetKey": "RATTATA",
     "assetFrame": 0,
@@ -133,6 +152,7 @@
     "teachableAttackIds": []
   },
   "19": {
+    "baseMonIndex": 19,
     "name": "RATICATE",
     "assetKey": "RATICATE",
     "assetFrame": 0,
@@ -140,6 +160,7 @@
     "teachableAttackIds": []
   },
   "20": {
+    "baseMonIndex": 20,
     "name": "SPEAROW",
     "assetKey": "SPEAROW",
     "assetFrame": 0,
@@ -147,6 +168,7 @@
     "teachableAttackIds": []
   },
   "21": {
+    "baseMonIndex": 21,
     "name": "FEAROW",
     "assetKey": "FEAROW",
     "assetFrame": 0,
@@ -154,6 +176,7 @@
     "teachableAttackIds": []
   },
   "22": {
+    "baseMonIndex": 22,
     "name": "EKANS",
     "assetKey": "EKANS",
     "assetFrame": 0,
@@ -161,6 +184,7 @@
     "teachableAttackIds": []
   },
   "23": {
+    "baseMonIndex": 23,
     "name": "ARBOK",
     "assetKey": "ARBOK",
     "assetFrame": 0,
@@ -168,6 +192,7 @@
     "teachableAttackIds": []
   },
   "24": {
+    "baseMonIndex": 24,
     "name": "PIKACHU",
     "assetKey": "PIKACHU",
     "assetFrame": 0,
@@ -175,6 +200,7 @@
     "teachableAttackIds": []
   },
   "25": {
+    "baseMonIndex": 25,
     "name": "RAICHU",
     "assetKey": "RAICHU",
     "assetFrame": 0,
@@ -182,6 +208,7 @@
     "teachableAttackIds": []
   },
   "26": {
+    "baseMonIndex": 26,
     "name": "SANDSHREW",
     "assetKey": "SANDSHREW",
     "assetFrame": 0,
@@ -189,6 +216,7 @@
     "teachableAttackIds": []
   },
   "27": {
+    "baseMonIndex": 27,
     "name": "SANDSLASH",
     "assetKey": "SANDSLASH",
     "assetFrame": 0,
@@ -196,6 +224,7 @@
     "teachableAttackIds": []
   },
   "28": {
+    "baseMonIndex": 28,
     "name": "NIDORAN_F",
     "assetKey": "NIDORAN_F",
     "assetFrame": 0,
@@ -203,6 +232,7 @@
     "teachableAttackIds": []
   },
   "29": {
+    "baseMonIndex": 29,
     "name": "NIDORINA",
     "assetKey": "NIDORINA",
     "assetFrame": 0,
@@ -210,6 +240,7 @@
     "teachableAttackIds": []
   },
   "30": {
+    "baseMonIndex": 30,
     "name": "NIDOQUEEN",
     "assetKey": "NIDOQUEEN",
     "assetFrame": 0,
@@ -217,6 +248,7 @@
     "teachableAttackIds": []
   },
   "31": {
+    "baseMonIndex": 31,
     "name": "NIDORAN_M",
     "assetKey": "NIDORAN_M",
     "assetFrame": 0,
@@ -224,6 +256,7 @@
     "teachableAttackIds": []
   },
   "32": {
+    "baseMonIndex": 32,
     "name": "NIDORINO",
     "assetKey": "NIDORINO",
     "assetFrame": 0,
@@ -231,6 +264,7 @@
     "teachableAttackIds": []
   },
   "33": {
+    "baseMonIndex": 33,
     "name": "NIDOKING",
     "assetKey": "NIDOKING",
     "assetFrame": 0,
@@ -238,6 +272,7 @@
     "teachableAttackIds": []
   },
   "34": {
+    "baseMonIndex": 34,
     "name": "CLEFAIRY",
     "assetKey": "CLEFAIRY",
     "assetFrame": 0,
@@ -245,6 +280,7 @@
     "teachableAttackIds": []
   },
   "35": {
+    "baseMonIndex": 35,
     "name": "CLEFABLE",
     "assetKey": "CLEFABLE",
     "assetFrame": 0,
@@ -252,6 +288,7 @@
     "teachableAttackIds": []
   },
   "36": {
+    "baseMonIndex": 36,
     "name": "VULPIX",
     "assetKey": "VULPIX",
     "assetFrame": 0,
@@ -259,6 +296,7 @@
     "teachableAttackIds": []
   },
   "37": {
+    "baseMonIndex": 37,
     "name": "NINETALES",
     "assetKey": "NINETALES",
     "assetFrame": 0,
@@ -266,6 +304,7 @@
     "teachableAttackIds": []
   },
   "38": {
+    "baseMonIndex": 38,
     "name": "JIGGLYPUFF",
     "assetKey": "JIGGLYPUFF",
     "assetFrame": 0,
@@ -273,6 +312,7 @@
     "teachableAttackIds": []
   },
   "39": {
+    "baseMonIndex": 39,
     "name": "WIGGLYTUFF",
     "assetKey": "WIGGLYTUFF",
     "assetFrame": 0,
@@ -280,6 +320,7 @@
     "teachableAttackIds": []
   },
   "40": {
+    "baseMonIndex": 40,
     "name": "ZUBAT",
     "assetKey": "ZUBAT",
     "assetFrame": 0,
@@ -287,6 +328,7 @@
     "teachableAttackIds": []
   },
   "41": {
+    "baseMonIndex": 41,
     "name": "GOLBAT",
     "assetKey": "GOLBAT",
     "assetFrame": 0,
@@ -294,6 +336,7 @@
     "teachableAttackIds": []
   },
   "42": {
+    "baseMonIndex": 42,
     "name": "ODDISH",
     "assetKey": "ODDISH",
     "assetFrame": 0,
@@ -301,6 +344,7 @@
     "teachableAttackIds": []
   },
   "43": {
+    "baseMonIndex": 43,
     "name": "GLOOM",
     "assetKey": "GLOOM",
     "assetFrame": 0,
@@ -308,6 +352,7 @@
     "teachableAttackIds": []
   },
   "44": {
+    "baseMonIndex": 44,
     "name": "VILEPLUME",
     "assetKey": "VILEPLUME",
     "assetFrame": 0,
@@ -315,6 +360,7 @@
     "teachableAttackIds": []
   },
   "45": {
+    "baseMonIndex": 45,
     "name": "PARAS",
     "assetKey": "PARAS",
     "assetFrame": 0,
@@ -322,6 +368,7 @@
     "teachableAttackIds": []
   },
   "46": {
+    "baseMonIndex": 46,
     "name": "PARASECT",
     "assetKey": "PARASECT",
     "assetFrame": 0,
@@ -329,6 +376,7 @@
     "teachableAttackIds": []
   },
   "47": {
+    "baseMonIndex": 47,
     "name": "VENONAT",
     "assetKey": "VENONAT",
     "assetFrame": 0,
@@ -336,6 +384,7 @@
     "teachableAttackIds": []
   },
   "48": {
+    "baseMonIndex": 48,
     "name": "VENOMOTH",
     "assetKey": "VENOMOTH",
     "assetFrame": 0,
@@ -343,6 +392,7 @@
     "teachableAttackIds": []
   },
   "49": {
+    "baseMonIndex": 49,
     "name": "DIGLETT",
     "assetKey": "DIGLETT",
     "assetFrame": 0,
@@ -350,6 +400,7 @@
     "teachableAttackIds": []
   },
   "50": {
+    "baseMonIndex": 50,
     "name": "DUGTRIO",
     "assetKey": "DUGTRIO",
     "assetFrame": 0,
@@ -357,6 +408,7 @@
     "teachableAttackIds": []
   },
   "51": {
+    "baseMonIndex": 51,
     "name": "MEOWTH",
     "assetKey": "MEOWTH",
     "assetFrame": 0,
@@ -364,6 +416,7 @@
     "teachableAttackIds": []
   },
   "52": {
+    "baseMonIndex": 52,
     "name": "PERSIAN",
     "assetKey": "PERSIAN",
     "assetFrame": 0,
@@ -371,6 +424,7 @@
     "teachableAttackIds": []
   },
   "53": {
+    "baseMonIndex": 53,
     "name": "PSYDUCK",
     "assetKey": "PSYDUCK",
     "assetFrame": 0,
@@ -378,6 +432,7 @@
     "teachableAttackIds": []
   },
   "54": {
+    "baseMonIndex": 54,
     "name": "GOLDUCK",
     "assetKey": "GOLDUCK",
     "assetFrame": 0,
@@ -385,6 +440,7 @@
     "teachableAttackIds": []
   },
   "55": {
+    "baseMonIndex": 55,
     "name": "MANKEY",
     "assetKey": "MANKEY",
     "assetFrame": 0,
@@ -392,6 +448,7 @@
     "teachableAttackIds": []
   },
   "56": {
+    "baseMonIndex": 56,
     "name": "PRIMEAPE",
     "assetKey": "PRIMEAPE",
     "assetFrame": 0,
@@ -399,6 +456,7 @@
     "teachableAttackIds": []
   },
   "57": {
+    "baseMonIndex": 57,
     "name": "GROWLITHE",
     "assetKey": "GROWLITHE",
     "assetFrame": 0,
@@ -406,6 +464,7 @@
     "teachableAttackIds": []
   },
   "58": {
+    "baseMonIndex": 58,
     "name": "ARCANINE",
     "assetKey": "ARCANINE",
     "assetFrame": 0,
@@ -413,6 +472,7 @@
     "teachableAttackIds": []
   },
   "59": {
+    "baseMonIndex": 59,
     "name": "POLIWAG",
     "assetKey": "POLIWAG",
     "assetFrame": 0,
@@ -420,6 +480,7 @@
     "teachableAttackIds": []
   },
   "60": {
+    "baseMonIndex": 60,
     "name": "POLIWHIRL",
     "assetKey": "POLIWHIRL",
     "assetFrame": 0,
@@ -427,6 +488,7 @@
     "teachableAttackIds": []
   },
   "61": {
+    "baseMonIndex": 61,
     "name": "POLIWRATH",
     "assetKey": "POLIWRATH",
     "assetFrame": 0,
@@ -434,6 +496,7 @@
     "teachableAttackIds": []
   },
   "62": {
+    "baseMonIndex": 62,
     "name": "ABRA",
     "assetKey": "ABRA",
     "assetFrame": 0,
@@ -441,6 +504,7 @@
     "teachableAttackIds": []
   },
   "63": {
+    "baseMonIndex": 63,
     "name": "KADABRA",
     "assetKey": "KADABRA",
     "assetFrame": 0,
@@ -448,6 +512,7 @@
     "teachableAttackIds": []
   },
   "64": {
+    "baseMonIndex": 64,
     "name": "ALAKAZAM",
     "assetKey": "ALAKAZAM",
     "assetFrame": 0,
@@ -455,6 +520,7 @@
     "teachableAttackIds": []
   },
   "65": {
+    "baseMonIndex": 65,
     "name": "MACHOP",
     "assetKey": "MACHOP",
     "assetFrame": 0,
@@ -462,6 +528,7 @@
     "teachableAttackIds": []
   },
   "66": {
+    "baseMonIndex": 66,
     "name": "MACHOKE",
     "assetKey": "MACHOKE",
     "assetFrame": 0,
@@ -469,6 +536,7 @@
     "teachableAttackIds": []
   },
   "67": {
+    "baseMonIndex": 67,
     "name": "MACHAMP",
     "assetKey": "MACHAMP",
     "assetFrame": 0,
@@ -476,6 +544,7 @@
     "teachableAttackIds": []
   },
   "68": {
+    "baseMonIndex": 68,
     "name": "BELLSPROUT",
     "assetKey": "BELLSPROUT",
     "assetFrame": 0,
@@ -483,6 +552,7 @@
     "teachableAttackIds": []
   },
   "69": {
+    "baseMonIndex": 69,
     "name": "WEEPINBELL",
     "assetKey": "WEEPINBELL",
     "assetFrame": 0,
@@ -490,6 +560,7 @@
     "teachableAttackIds": []
   },
   "70": {
+    "baseMonIndex": 70,
     "name": "VICTREEBEL",
     "assetKey": "VICTREEBEL",
     "assetFrame": 0,
@@ -497,6 +568,7 @@
     "teachableAttackIds": []
   },
   "71": {
+    "baseMonIndex": 71,
     "name": "TENTACOOL",
     "assetKey": "TENTACOOL",
     "assetFrame": 0,
@@ -504,6 +576,7 @@
     "teachableAttackIds": []
   },
   "72": {
+    "baseMonIndex": 72,
     "name": "TENTACRUEL",
     "assetKey": "TENTACRUEL",
     "assetFrame": 0,
@@ -511,6 +584,7 @@
     "teachableAttackIds": []
   },
   "73": {
+    "baseMonIndex": 73,
     "name": "GEODUDE",
     "assetKey": "GEODUDE",
     "assetFrame": 0,
@@ -518,6 +592,7 @@
     "teachableAttackIds": []
   },
   "74": {
+    "baseMonIndex": 74,
     "name": "GRAVELER",
     "assetKey": "GRAVELER",
     "assetFrame": 0,
@@ -525,6 +600,7 @@
     "teachableAttackIds": []
   },
   "75": {
+    "baseMonIndex": 75,
     "name": "GOLEM",
     "assetKey": "GOLEM",
     "assetFrame": 0,
@@ -532,6 +608,7 @@
     "teachableAttackIds": []
   },
   "76": {
+    "baseMonIndex": 76,
     "name": "PONYTA",
     "assetKey": "PONYTA",
     "assetFrame": 0,
@@ -539,6 +616,7 @@
     "teachableAttackIds": []
   },
   "77": {
+    "baseMonIndex": 77,
     "name": "RAPIDASH",
     "assetKey": "RAPIDASH",
     "assetFrame": 0,
@@ -546,6 +624,7 @@
     "teachableAttackIds": []
   },
   "78": {
+    "baseMonIndex": 78,
     "name": "SLOWPOKE",
     "assetKey": "SLOWPOKE",
     "assetFrame": 0,
@@ -553,6 +632,7 @@
     "teachableAttackIds": []
   },
   "79": {
+    "baseMonIndex": 79,
     "name": "SLOWBRO",
     "assetKey": "SLOWBRO",
     "assetFrame": 0,
@@ -560,6 +640,7 @@
     "teachableAttackIds": []
   },
   "80": {
+    "baseMonIndex": 80,
     "name": "MAGNEMITE",
     "assetKey": "MAGNEMITE",
     "assetFrame": 0,
@@ -567,6 +648,7 @@
     "teachableAttackIds": []
   },
   "81": {
+    "baseMonIndex": 81,
     "name": "MAGNETON",
     "assetKey": "MAGNETON",
     "assetFrame": 0,
@@ -574,6 +656,7 @@
     "teachableAttackIds": []
   },
   "82": {
+    "baseMonIndex": 82,
     "name": "FARFETCHD",
     "assetKey": "FARFETCHD",
     "assetFrame": 0,
@@ -581,6 +664,7 @@
     "teachableAttackIds": []
   },
   "83": {
+    "baseMonIndex": 83,
     "name": "DODUO",
     "assetKey": "DODUO",
     "assetFrame": 0,
@@ -588,6 +672,7 @@
     "teachableAttackIds": []
   },
   "84": {
+    "baseMonIndex": 84,
     "name": "DODRIO",
     "assetKey": "DODRIO",
     "assetFrame": 0,
@@ -595,6 +680,7 @@
     "teachableAttackIds": []
   },
   "85": {
+    "baseMonIndex": 85,
     "name": "SEEL",
     "assetKey": "SEEL",
     "assetFrame": 0,
@@ -602,6 +688,7 @@
     "teachableAttackIds": []
   },
   "86": {
+    "baseMonIndex": 86,
     "name": "DEWGONG",
     "assetKey": "DEWGONG",
     "assetFrame": 0,
@@ -609,6 +696,7 @@
     "teachableAttackIds": []
   },
   "87": {
+    "baseMonIndex": 87,
     "name": "GRIMER",
     "assetKey": "GRIMER",
     "assetFrame": 0,
@@ -616,6 +704,7 @@
     "teachableAttackIds": []
   },
   "88": {
+    "baseMonIndex": 88,
     "name": "MUK",
     "assetKey": "MUK",
     "assetFrame": 0,
@@ -623,6 +712,7 @@
     "teachableAttackIds": []
   },
   "89": {
+    "baseMonIndex": 89,
     "name": "SHELLDER",
     "assetKey": "SHELLDER",
     "assetFrame": 0,
@@ -630,6 +720,7 @@
     "teachableAttackIds": []
   },
   "90": {
+    "baseMonIndex": 90,
     "name": "CLOYSTER",
     "assetKey": "CLOYSTER",
     "assetFrame": 0,
@@ -637,6 +728,7 @@
     "teachableAttackIds": []
   },
   "91": {
+    "baseMonIndex": 91,
     "name": "GASTLY",
     "assetKey": "GASTLY",
     "assetFrame": 0,
@@ -644,6 +736,7 @@
     "teachableAttackIds": []
   },
   "92": {
+    "baseMonIndex": 92,
     "name": "HAUNTER",
     "assetKey": "HAUNTER",
     "assetFrame": 0,
@@ -651,6 +744,7 @@
     "teachableAttackIds": []
   },
   "93": {
+    "baseMonIndex": 93,
     "name": "GENGAR",
     "assetKey": "GENGAR",
     "assetFrame": 0,
@@ -658,6 +752,7 @@
     "teachableAttackIds": []
   },
   "94": {
+    "baseMonIndex": 94,
     "name": "ONIX",
     "assetKey": "ONIX",
     "assetFrame": 0,
@@ -665,6 +760,7 @@
     "teachableAttackIds": []
   },
   "95": {
+    "baseMonIndex": 95,
     "name": "DROWZEE",
     "assetKey": "DROWZEE",
     "assetFrame": 0,
@@ -672,6 +768,7 @@
     "teachableAttackIds": []
   },
   "96": {
+    "baseMonIndex": 96,
     "name": "HYPNO",
     "assetKey": "HYPNO",
     "assetFrame": 0,
@@ -679,6 +776,7 @@
     "teachableAttackIds": []
   },
   "97": {
+    "baseMonIndex": 97,
     "name": "KRABBY",
     "assetKey": "KRABBY",
     "assetFrame": 0,
@@ -686,6 +784,7 @@
     "teachableAttackIds": []
   },
   "98": {
+    "baseMonIndex": 98,
     "name": "KINGLER",
     "assetKey": "KINGLER",
     "assetFrame": 0,
@@ -693,6 +792,7 @@
     "teachableAttackIds": []
   },
   "99": {
+    "baseMonIndex": 99,
     "name": "VOLTORB",
     "assetKey": "VOLTORB",
     "assetFrame": 0,
@@ -700,6 +800,7 @@
     "teachableAttackIds": []
   },
   "100": {
+    "baseMonIndex": 100,
     "name": "ELECTRODE",
     "assetKey": "ELECTRODE",
     "assetFrame": 0,
@@ -707,6 +808,7 @@
     "teachableAttackIds": []
   },
   "101": {
+    "baseMonIndex": 101,
     "name": "EXEGGCUTE",
     "assetKey": "EXEGGCUTE",
     "assetFrame": 0,
@@ -714,6 +816,7 @@
     "teachableAttackIds": []
   },
   "102": {
+    "baseMonIndex": 102,
     "name": "EXEGGUTOR",
     "assetKey": "EXEGGUTOR",
     "assetFrame": 0,
@@ -721,6 +824,7 @@
     "teachableAttackIds": []
   },
   "103": {
+    "baseMonIndex": 103,
     "name": "CUBONE",
     "assetKey": "CUBONE",
     "assetFrame": 0,
@@ -728,6 +832,7 @@
     "teachableAttackIds": []
   },
   "104": {
+    "baseMonIndex": 104,
     "name": "MAROWAK",
     "assetKey": "MAROWAK",
     "assetFrame": 0,
@@ -735,6 +840,7 @@
     "teachableAttackIds": []
   },
   "105": {
+    "baseMonIndex": 105,
     "name": "HITMONLEE",
     "assetKey": "HITMONLEE",
     "assetFrame": 0,
@@ -742,6 +848,7 @@
     "teachableAttackIds": []
   },
   "106": {
+    "baseMonIndex": 106,
     "name": "HITMONCHAN",
     "assetKey": "HITMONCHAN",
     "assetFrame": 0,
@@ -749,6 +856,7 @@
     "teachableAttackIds": []
   },
   "107": {
+    "baseMonIndex": 107,
     "name": "LICKITUNG",
     "assetKey": "LICKITUNG",
     "assetFrame": 0,
@@ -756,6 +864,7 @@
     "teachableAttackIds": []
   },
   "108": {
+    "baseMonIndex": 108,
     "name": "KOFFING",
     "assetKey": "KOFFING",
     "assetFrame": 0,
@@ -763,6 +872,7 @@
     "teachableAttackIds": []
   },
   "109": {
+    "baseMonIndex": 109,
     "name": "WEEZING",
     "assetKey": "WEEZING",
     "assetFrame": 0,
@@ -770,6 +880,7 @@
     "teachableAttackIds": []
   },
   "110": {
+    "baseMonIndex": 110,
     "name": "RHYHORN",
     "assetKey": "RHYHORN",
     "assetFrame": 0,
@@ -777,6 +888,7 @@
     "teachableAttackIds": []
   },
   "111": {
+    "baseMonIndex": 111,
     "name": "RHYDON",
     "assetKey": "RHYDON",
     "assetFrame": 0,
@@ -784,6 +896,7 @@
     "teachableAttackIds": []
   },
   "112": {
+    "baseMonIndex": 112,
     "name": "CHANSEY",
     "assetKey": "CHANSEY",
     "assetFrame": 0,
@@ -791,6 +904,7 @@
     "teachableAttackIds": []
   },
   "113": {
+    "baseMonIndex": 113,
     "name": "TANGELA",
     "assetKey": "TANGELA",
     "assetFrame": 0,
@@ -798,6 +912,7 @@
     "teachableAttackIds": []
   },
   "114": {
+    "baseMonIndex": 114,
     "name": "KANGASKHAN",
     "assetKey": "KANGASKHAN",
     "assetFrame": 0,
@@ -805,6 +920,7 @@
     "teachableAttackIds": []
   },
   "115": {
+    "baseMonIndex": 115,
     "name": "HORSEA",
     "assetKey": "HORSEA",
     "assetFrame": 0,
@@ -812,6 +928,7 @@
     "teachableAttackIds": []
   },
   "116": {
+    "baseMonIndex": 116,
     "name": "SEADRA",
     "assetKey": "SEADRA",
     "assetFrame": 0,
@@ -819,6 +936,7 @@
     "teachableAttackIds": []
   },
   "117": {
+    "baseMonIndex": 117,
     "name": "GOLDEEN",
     "assetKey": "GOLDEEN",
     "assetFrame": 0,
@@ -826,6 +944,7 @@
     "teachableAttackIds": []
   },
   "118": {
+    "baseMonIndex": 118,
     "name": "SEAKING",
     "assetKey": "SEAKING",
     "assetFrame": 0,
@@ -833,6 +952,7 @@
     "teachableAttackIds": []
   },
   "119": {
+    "baseMonIndex": 119,
     "name": "STARYU",
     "assetKey": "STARYU",
     "assetFrame": 0,
@@ -840,6 +960,7 @@
     "teachableAttackIds": []
   },
   "120": {
+    "baseMonIndex": 120,
     "name": "STARMIE",
     "assetKey": "STARMIE",
     "assetFrame": 0,
@@ -847,6 +968,7 @@
     "teachableAttackIds": []
   },
   "121": {
+    "baseMonIndex": 121,
     "name": "MR_MIME",
     "assetKey": "MR_MIME",
     "assetFrame": 0,
@@ -854,6 +976,7 @@
     "teachableAttackIds": []
   },
   "122": {
+    "baseMonIndex": 122,
     "name": "SCYTHER",
     "assetKey": "SCYTHER",
     "assetFrame": 0,
@@ -861,6 +984,7 @@
     "teachableAttackIds": []
   },
   "123": {
+    "baseMonIndex": 123,
     "name": "JYNX",
     "assetKey": "JYNX",
     "assetFrame": 0,
@@ -868,6 +992,7 @@
     "teachableAttackIds": []
   },
   "124": {
+    "baseMonIndex": 124,
     "name": "ELECTABUZZ",
     "assetKey": "ELECTABUZZ",
     "assetFrame": 0,
@@ -875,6 +1000,7 @@
     "teachableAttackIds": []
   },
   "125": {
+    "baseMonIndex": 125,
     "name": "MAGMAR",
     "assetKey": "MAGMAR",
     "assetFrame": 0,
@@ -882,6 +1008,7 @@
     "teachableAttackIds": []
   },
   "126": {
+    "baseMonIndex": 126,
     "name": "PINSIR",
     "assetKey": "PINSIR",
     "assetFrame": 0,
@@ -889,6 +1016,7 @@
     "teachableAttackIds": []
   },
   "127": {
+    "baseMonIndex": 127,
     "name": "TAUROS",
     "assetKey": "TAUROS",
     "assetFrame": 0,
@@ -896,6 +1024,7 @@
     "teachableAttackIds": []
   },
   "128": {
+    "baseMonIndex": 128,
     "name": "MAGIKARP",
     "assetKey": "MAGIKARP",
     "assetFrame": 0,
@@ -903,6 +1032,7 @@
     "teachableAttackIds": []
   },
   "129": {
+    "baseMonIndex": 129,
     "name": "GYARADOS",
     "assetKey": "GYARADOS",
     "assetFrame": 0,
@@ -910,6 +1040,7 @@
     "teachableAttackIds": []
   },
   "130": {
+    "baseMonIndex": 130,
     "name": "LAPRAS",
     "assetKey": "LAPRAS",
     "assetFrame": 0,
@@ -917,6 +1048,7 @@
     "teachableAttackIds": []
   },
   "131": {
+    "baseMonIndex": 131,
     "name": "DITTO",
     "assetKey": "DITTO",
     "assetFrame": 0,
@@ -924,6 +1056,7 @@
     "teachableAttackIds": []
   },
   "132": {
+    "baseMonIndex": 132,
     "name": "EEVEE",
     "assetKey": "EEVEE",
     "assetFrame": 0,
@@ -931,6 +1064,7 @@
     "teachableAttackIds": []
   },
   "133": {
+    "baseMonIndex": 133,
     "name": "VAPOREON",
     "assetKey": "VAPOREON",
     "assetFrame": 0,
@@ -938,6 +1072,7 @@
     "teachableAttackIds": []
   },
   "134": {
+    "baseMonIndex": 134,
     "name": "JOLTEON",
     "assetKey": "JOLTEON",
     "assetFrame": 0,
@@ -945,6 +1080,7 @@
     "teachableAttackIds": []
   },
   "135": {
+    "baseMonIndex": 135,
     "name": "FLAREON",
     "assetKey": "FLAREON",
     "assetFrame": 0,
@@ -952,6 +1088,7 @@
     "teachableAttackIds": []
   },
   "136": {
+    "baseMonIndex": 136,
     "name": "PORYGON",
     "assetKey": "PORYGON",
     "assetFrame": 0,
@@ -959,6 +1096,7 @@
     "teachableAttackIds": []
   },
   "137": {
+    "baseMonIndex": 137,
     "name": "OMANYTE",
     "assetKey": "OMANYTE",
     "assetFrame": 0,
@@ -966,6 +1104,7 @@
     "teachableAttackIds": []
   },
   "138": {
+    "baseMonIndex": 138,
     "name": "OMASTAR",
     "assetKey": "OMASTAR",
     "assetFrame": 0,
@@ -973,6 +1112,7 @@
     "teachableAttackIds": []
   },
   "139": {
+    "baseMonIndex": 139,
     "name": "KABUTO",
     "assetKey": "KABUTO",
     "assetFrame": 0,
@@ -980,6 +1120,7 @@
     "teachableAttackIds": []
   },
   "140": {
+    "baseMonIndex": 140,
     "name": "KABUTOPS",
     "assetKey": "KABUTOPS",
     "assetFrame": 0,
@@ -987,6 +1128,7 @@
     "teachableAttackIds": []
   },
   "141": {
+    "baseMonIndex": 141,
     "name": "AERODACTYL",
     "assetKey": "AERODACTYL",
     "assetFrame": 0,
@@ -994,6 +1136,7 @@
     "teachableAttackIds": []
   },
   "142": {
+    "baseMonIndex": 142,
     "name": "SNORLAX",
     "assetKey": "SNORLAX",
     "assetFrame": 0,
@@ -1001,6 +1144,7 @@
     "teachableAttackIds": []
   },
   "143": {
+    "baseMonIndex": 143,
     "name": "ARTICUNO",
     "assetKey": "ARTICUNO",
     "assetFrame": 0,
@@ -1008,6 +1152,7 @@
     "teachableAttackIds": []
   },
   "144": {
+    "baseMonIndex": 144,
     "name": "ZAPDOS",
     "assetKey": "ZAPDOS",
     "assetFrame": 0,
@@ -1015,6 +1160,7 @@
     "teachableAttackIds": []
   },
   "145": {
+    "baseMonIndex": 145,
     "name": "MOLTRES",
     "assetKey": "MOLTRES",
     "assetFrame": 0,
@@ -1022,6 +1168,7 @@
     "teachableAttackIds": []
   },
   "146": {
+    "baseMonIndex": 146,
     "name": "DRATINI",
     "assetKey": "DRATINI",
     "assetFrame": 0,
@@ -1029,6 +1176,7 @@
     "teachableAttackIds": []
   },
   "147": {
+    "baseMonIndex": 147,
     "name": "DRAGONAIR",
     "assetKey": "DRAGONAIR",
     "assetFrame": 0,
@@ -1036,6 +1184,7 @@
     "teachableAttackIds": []
   },
   "148": {
+    "baseMonIndex": 148,
     "name": "DRAGONITE",
     "assetKey": "DRAGONITE",
     "assetFrame": 0,
@@ -1043,6 +1192,7 @@
     "teachableAttackIds": []
   },
   "149": {
+    "baseMonIndex": 149,
     "name": "MEWTWO",
     "assetKey": "MEWTWO",
     "assetFrame": 0,
@@ -1050,6 +1200,7 @@
     "teachableAttackIds": []
   },
   "150": {
+    "baseMonIndex": 150,
     "name": "MEW",
     "assetKey": "MEW",
     "assetFrame": 0,
@@ -1057,6 +1208,7 @@
     "teachableAttackIds": []
   },
   "151": {
+    "baseMonIndex": 151,
     "name": "BORRIS",
     "assetKey": "CUSTOM",
     "assetFrame": 0,

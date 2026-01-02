@@ -155,7 +155,7 @@ export class WorldScene extends Phaser.Scene {
         type: TRANSITION_TYPES.LEFT_RIGHT_DOWN_SLOW,
         callback: () => {
           /** @type {import("../types/typedef.js").Trainer} */
-          this.scene.start(SCENE_KEYS.BATTLE_SCENE, {
+          this.scene.start(SCENE_KEYS.PRELOAD_BATTLE_SCENE, {
             type: OPPONENT_TYPES.TRAINER,
             trainer: {
               type: OPPONENT_TYPES.TRAINER,
@@ -287,7 +287,7 @@ export class WorldScene extends Phaser.Scene {
             skipSceneTransition: SKIP_BATTLE_ANIMATIONS,
             spritesToNotBeObscured: [this.#player.sprite],
             callback: () => {
-              this.scene.start(SCENE_KEYS.BATTLE_SCENE, {
+              this.scene.start(SCENE_KEYS.PRELOAD_BATTLE_SCENE, {
                 type: OPPONENT_TYPES.WILD_ENCOUNTER,
                 wildMon: { encounterArea }
               })

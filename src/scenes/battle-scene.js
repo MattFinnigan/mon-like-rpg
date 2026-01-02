@@ -46,18 +46,24 @@ export class BattleScene extends Phaser.Scene {
   #battleStateMachine
   /** @type {AttackManager} */
   #attackManager
-  /** @type {number} */
-  #currentOpponentMonIndex
   /** @type {BattleTrainer} */
   #activeEnemyTrainer
   /** @type {import('../types/typedef.js').Mon[]} */
   #opponentMons
+  /** @type {number} */
+  #currentOpponentMonIndex
   /** @type {OPPONENT_TYPES} */
   #opponentType
   /** @type {import('../types/typedef.js').Trainer} */
   #opponentTrainer
   /** @type {AudioManager} */
   #audioManager
+  /** @type {import('../types/typedef.js').Player} */
+  #player
+  /** @type {import('../types/typedef.js').Mon[]} */
+  #playerMons
+  /** @type {number} */
+  #currentPlayerMonIndex
 
   constructor () {
     super({
@@ -65,20 +71,23 @@ export class BattleScene extends Phaser.Scene {
     })
     this.#activePlayerAttackIndex = -1
     this.#currentOpponentMonIndex = 0
+    this.#currentPlayerMonIndex = 0
+    this.#player = null
+    this.#playerMons = []
   }
   
   /**
    * 
    * @param {object} data
    * @param {OPPONENT_TYPES} data.type
-   * @param {import('../types/typedef.js').Trainer} data.trainer
-   * @param {import('../types/typedef.js').WildMon} data.wildMon
+   * @param {import('../types/typedef.js').Trainer} [data.trainer]
+   * @param {import('../types/typedef.js').Mon} [data.mon]
    */
   init (data) {
     this.#opponentType = data.type
     switch (this.#opponentType) {
       case OPPONENT_TYPES.WILD_ENCOUNTER:
-        this.#opponentMons = [DataUtils.generateWildMon(this, data.wildMon.encounterArea)]
+        this.#opponentMons = [data.mon]
         break
       case OPPONENT_TYPES.TRAINER:
         this.#opponentTrainer = data.trainer
@@ -100,8 +109,7 @@ export class BattleScene extends Phaser.Scene {
     console.log(`[${BattleScene.name}:create] invoked`)
 
     const P2_MON = this.#opponentMons[this.#currentOpponentMonIndex]
-
-    const P2_BASE_MON = DataUtils.getBaseMonDetails(this, P2_MON.monIndex)
+    const P2_BASE_MON = DataUtils.getBaseMonDetails(this, P2_MON.baseMonIndex)
 
     this.#activeEnemyMon = new EnemyBattleMon({
       scene: this,
@@ -110,8 +118,11 @@ export class BattleScene extends Phaser.Scene {
       skipBattleAnimations: SKIP_BATTLE_ANIMATIONS
     })
 
-    const P1_MON = DataUtils.getMonDetails(this, 1)
-    const P1_BASE_MON = DataUtils.getBaseMonDetails(this, P1_MON.monIndex)
+    this.#player = DataUtils.getPlayerDetails(this)
+    this.#playerMons = this.#player.partyMons
+
+    const P1_MON = this.#playerMons[this.#currentPlayerMonIndex]
+    const P1_BASE_MON = DataUtils.getBaseMonDetails(this, P1_MON.baseMonIndex)
 
     this.#activePlayerMon = new PlayerBattleMon({
       scene: this,
@@ -227,7 +238,6 @@ export class BattleScene extends Phaser.Scene {
           this.#audioManager.playBgm(victoryBgmKey)
           this.time.delayedCall(100, () => {
               this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`${this.#activePlayerMon.name} gained 32 experience points!`], () => {
-              console.log('???')
               this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
             })
           })

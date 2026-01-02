@@ -14,7 +14,8 @@ export const DATA_ASSET_KEYS = Object.freeze({
   MONS: 'MONS',
   BASE_MONS: 'BASE_MONS',
   ENCOUNTER_AREAS: 'ENCOUNTER_AREAS',
-  TRAINERS: 'TRAINERS'
+  TRAINERS: 'TRAINERS',
+  PLAYER: 'PLAYER'
 })
 
 export const HEALTH_BAR_ASSET_KEYS = Object.freeze({

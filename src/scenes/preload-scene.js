@@ -1,4 +1,4 @@
-import { ATTACK_ASSET_KEYS, BATTLE_ASSET_KEYS, BGM_ASSET_KEYS, CHARACTER_ASSET_KEYS, DATA_ASSET_KEYS, HEALTH_BAR_ASSET_KEYS, MON_ASSET_KEYS, MON_BACK_ASSET_KEYS, MON_GRAY_ASSET_KEYS, SYSTEM_ASSET_KEYS, TRAINER_GRAY_SPRITES, TRAINER_SPRITES, UI_ASSET_KEYS, WORLD_ASSET_KEYS } from '../assets/asset-keys.js'
+import { ATTACK_ASSET_KEYS, BATTLE_ASSET_KEYS, BGM_ASSET_KEYS, CHARACTER_ASSET_KEYS, DATA_ASSET_KEYS, HEALTH_BAR_ASSET_KEYS, SYSTEM_ASSET_KEYS, TRAINER_GRAY_SPRITES, TRAINER_SPRITES, UI_ASSET_KEYS, WORLD_ASSET_KEYS } from '../assets/asset-keys.js'
 import Phaser from '../lib/phaser.js'
 import { AudioManager } from '../utils/audio-manager.js'
 import { DataUtils } from '../utils/data-utils.js'
@@ -9,6 +9,10 @@ export class PreloadScene extends Phaser.Scene {
     super({
       key: SCENE_KEYS.PRELOAD_SCENE
     })
+  }
+
+  init () {
+    console.log(`[${PreloadScene.name}:init] invoked`)
   }
 
   preload () {
@@ -28,15 +32,11 @@ export class PreloadScene extends Phaser.Scene {
 
 
     const backgroundAssetPath = 'assets/images/backgrounds'
-    const monsAssetPath = 'assets/images/mons'
-    const monsBackAssetPath = 'assets/images/mons/backs'
-    const monsGrayAssetPath = 'assets/images/mons/gray'
     const battleAssetPath = 'assets/images/battle'
     const uiAssestPath = 'assets/images/ui'
     const charAssetPath = 'assets/images/character'
     const mapAssetPath = 'assets/images/map'
     const bgmAssetPath = 'assets/audio/bgm'
-    const monCryAssetKeys = 'assets/audio/mons/cries'
     const npcAssetPath = 'assets/images/npc'
     const trainerAssetPath = 'assets/images/trainers'
     const trainerGrayAssetPath = 'assets/images/trainers/gray'
@@ -71,6 +71,8 @@ export class PreloadScene extends Phaser.Scene {
     this.load.json(DATA_ASSET_KEYS.MONS, 'assets/data/mons.json')
     this.load.json(DATA_ASSET_KEYS.ENCOUNTER_AREAS, 'assets/data/encounter_areas.json')
     this.load.json(DATA_ASSET_KEYS.TRAINERS, 'assets/data/trainers.json')
+    // TODO move this to localstorage or api fetch
+    this.load.json(DATA_ASSET_KEYS.PLAYER, 'assets/data/player.json')
 
     // common
     this.load.image(SYSTEM_ASSET_KEYS.DIALOG_BACKGROUND, `/${backgroundAssetPath}/dialog.png`)
@@ -85,15 +87,6 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image(HEALTH_BAR_ASSET_KEYS.LEFT_CAP, `/${battleAssetPath}/hp_left_cap.png`)
     this.load.image(HEALTH_BAR_ASSET_KEYS.MIDDLE, `/${battleAssetPath}/hp_mid.png`)
     this.load.image(HEALTH_BAR_ASSET_KEYS.RIGHT_CAP, `/${battleAssetPath}/hp_right_cap.png`)
-
-    // mon stuff
-    const keys = Object.keys(MON_ASSET_KEYS)
-    for (let i = 0; i < keys.length; i++) {
-      this.load.image(keys[i], `/${monsAssetPath}/${i + 1}.png`)
-      this.load.image(MON_BACK_ASSET_KEYS[keys[i] + '_BACK'], `/${monsBackAssetPath}/${i + 1}.png`)
-      this.load.image(MON_GRAY_ASSET_KEYS[keys[i] + '_GRAY'], `/${monsGrayAssetPath}/${i + 1}.png`)
-      this.load.audio(keys[i], [monCryAssetKeys + '/' + (i + 1) + '.ogg'])
-    }
   
     // attack
     this.load.spritesheet(ATTACK_ASSET_KEYS.ICE_SHARD, `${attackAnimPath}/ice-attack/active.png`, {
@@ -153,7 +146,6 @@ export class PreloadScene extends Phaser.Scene {
       this.load.image(trainerKeys[i], `/${trainerAssetPath}/RBY Y${trainerKeys[i].toLowerCase()}.png`)
       this.load.image(TRAINER_GRAY_SPRITES[trainerKeys[i] + '_GRAY'], `/${trainerGrayAssetPath}/RBY ${trainerKeys[i].toLowerCase()} BW.png`)
     }
-    
     // this.load.spritesheet(CHARACTER_ASSET_KEYS.NPC, `${pbGamesAssetPath}/npcs.png`, {
     //   frameWidth: 16,
     //   frameHeight: 16
