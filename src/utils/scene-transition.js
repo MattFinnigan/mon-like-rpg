@@ -1,4 +1,4 @@
-import { TILE_SIZE, WORLD_ZOOM } from "../../config.js"
+import { TILE_SIZE } from "../../config.js"
 import { TRANSITION_TYPES } from "../common/transition-types.js"
 
 /**
@@ -58,14 +58,20 @@ export function createBattleSceneTransition (scene, options) {
   } else if (type === TRANSITION_TYPES.LEFT_RIGHT_DOWN_SLOW) {
 
     const { width, height } = scene.scale
-    const zoomedWidth = width * 1.4
-    const zoomedHeight = height * 1.4
     const worldView = scene.cameras.main.worldView
+
+    const ogDepths = []
+    if (options?.spritesToNotBeObscured) {
+      options.spritesToNotBeObscured.forEach(sprite => {
+        ogDepths.push(sprite.depth)
+        sprite.setDepth(99)
+      })
+    }
 
     // array of all tile positions
     const tilePositions = []
-    for (let y = 0; y < zoomedHeight / TILE_SIZE; y++) {
-      for (let x = 0; x < zoomedWidth / TILE_SIZE; x++) {
+    for (let y = 0; y < height / TILE_SIZE; y++) {
+      for (let x = 0; x < width / TILE_SIZE; x++) {
         tilePositions.push({
           x: worldView.x + x * TILE_SIZE + TILE_SIZE / 2,
           y: worldView.y + y * TILE_SIZE + TILE_SIZE / 2
@@ -78,9 +84,14 @@ export function createBattleSceneTransition (scene, options) {
 
     tilePositions.forEach((tp, i) => {
       scene.time.delayedCall(i * delayPerTile, () => {
-        const rect = scene.add.rectangle(tp.x, tp.y, TILE_SIZE + 1, TILE_SIZE + 1, 0x000000)
+        scene.add.rectangle(tp.x, tp.y, TILE_SIZE + 1, TILE_SIZE + 1, 0x000000)
         if (i === tilePositions.length - 1 && options?.callback) {
-          scene.time.delayedCall(400, () => {
+          if (options?.spritesToNotBeObscured) {
+            options.spritesToNotBeObscured.forEach((sprite, i) => {
+              sprite.setDepth(ogDepths[i])
+            })
+          }
+          scene.time.delayedCall(500, () => {
             options.callback()
           })
         }

@@ -78,7 +78,7 @@ export class NPC extends Character {
   constructor (scene, config) {
     super({
       ...config,
-      origin: { x: 0.15, y: 0.5 },
+      origin: { x: 0.15, y: 0.45 },
       idleFrameConfig: {
         DOWN: config.frame,
         LEFT: config.frame + 12,
@@ -238,7 +238,7 @@ export class NPC extends Character {
   #doAction () {
     switch (this.#action) {
       case NPC_ACTION_TYPES.BATTLE:
-        this.#scene.events.emit(EVENT_KEYS.TRAINER_BATTLE_START, this.#actionId)
+        this.#scene.events.emit(EVENT_KEYS.TRAINER_BATTLE_START, { npc: this, actionId: this.#actionId })
         break
       case NPC_ACTION_TYPES.HEAL:
       case NPC_ACTION_TYPES.ITEM:

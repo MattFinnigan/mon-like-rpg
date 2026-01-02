@@ -29,10 +29,9 @@ export class DialogUi {
     this.#textAnimationPlaying = false
     this.#messagesToShow = []
 
-    const panel =  this.#scene.add.image(0, 0, SYSTEM_ASSET_KEYS.DIALOG_BACKGROUND).setOrigin(0).setScale(1.25)
+    const panel =  this.#scene.add.image(0, 0, SYSTEM_ASSET_KEYS.DIALOG_BACKGROUND).setOrigin(0)
     this.#container = this.#scene.add.container(0, 0, [panel])
-    this.#uiText = this.#scene.add.bitmapText(DIALOG_DETAILS.paddingLeft * 2, DIALOG_DETAILS.paddingTop, 'gb-font', CANNOT_READ_SIGN_TEXT, 40)
-      .setMaxWidth(DIALOG_DETAILS.maxTextWidth(this.#scene.scale.width))
+    this.#uiText = this.#scene.add.bitmapText(DIALOG_DETAILS.paddingLeft * 2, DIALOG_DETAILS.paddingTop, 'gb-font', CANNOT_READ_SIGN_TEXT, 40).setMaxWidth(DIALOG_DETAILS.maxTextWidth(this.#scene.scale.width))
     this.#container.add(this.#uiText)
     this.#createPlayerInputCursor()
     this.hideDialogModal()
@@ -62,7 +61,7 @@ export class DialogUi {
     this.#messagesToShow = [...messages]
     const { x, bottom } = this.#scene.cameras.main.worldView
     const startX = x
-    const startY = bottom - (DIALOG_DETAILS.height * 1.5)
+    const startY = bottom - (DIALOG_DETAILS.height * 1.2)
 
     this.#container.setPosition(startX, startY)
     this.#container.setAlpha(1)
@@ -106,8 +105,8 @@ export class DialogUi {
    * @returns {void}
    */
   #createPlayerInputCursor () {
-    const y = DIALOG_DETAILS.height +   (DIALOG_DETAILS.paddingTop / 2)
-    const x = DIALOG_DETAILS.maxTextWidth(this.#scene.scale.width)
+    const y = this.#uiText.y + DIALOG_DETAILS.paddingTop * 2
+    const x = this.#scene.scale.width - (DIALOG_DETAILS.paddingLeft * 2)
     this.#userInputCursor = this.#scene.add.image(x, y, UI_ASSET_KEYS.CURSOR, 0).setAngle(90)
     this.#userInputCursorTween = this.#scene.add.tween({
       delay: 0,

@@ -77,6 +77,7 @@ export class PreloadScene extends Phaser.Scene {
     // common
     this.load.image(SYSTEM_ASSET_KEYS.DIALOG_BACKGROUND, `/${backgroundAssetPath}/dialog.png`)
     this.load.image(UI_ASSET_KEYS.CURSOR, `${uiAssestPath}/cursor.png`)
+    this.load.image(UI_ASSET_KEYS.ARROW, `${uiAssestPath}/arrow.png`)
 
     // battle
     this.load.image(BATTLE_ASSET_KEYS.BATTLE_MENU_OPTIONS_BACKGROUND, `/${backgroundAssetPath}/battle-menu-options.png`)

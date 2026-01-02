@@ -5,7 +5,8 @@ export const BATTLE_ASSET_KEYS = Object.freeze({
 })
 
 export const UI_ASSET_KEYS = Object.freeze({
-  CURSOR: 'CURSOR'
+  CURSOR: 'CURSOR',
+  ARROW: 'ARROW'
 })
 
 export const DATA_ASSET_KEYS = Object.freeze({

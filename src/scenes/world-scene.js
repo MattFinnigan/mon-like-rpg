@@ -118,8 +118,8 @@ export class WorldScene extends Phaser.Scene {
 
     this.#worldBackgroundImage = this.add.image(0, 0, WORLD_ASSET_KEYS.WORLD_BACKGROUND, 0).setOrigin(0)
     this.cameras.main.setBounds(0, 0, this.#worldBackgroundImage.width, this.#worldBackgroundImage.height)
-    this.cameras.main.setZoom(WORLD_ZOOM)
     this.cameras.main.centerOn(x, y)
+    this.cameras.main.setZoom(WORLD_ZOOM)
 
     this.#createNPCs(map)
   
@@ -147,11 +147,15 @@ export class WorldScene extends Phaser.Scene {
     })
 
     
-    this.events.on(EVENT_KEYS.TRAINER_BATTLE_START, actionId => {
+    this.events.on(EVENT_KEYS.TRAINER_BATTLE_START, data => {
+      /** @type {NPC} */
+      const npc = data.npc
+      /** @type {number} */
+      const actionId = data.actionId
       this.#audioManager.playBgm(BGM_ASSET_KEYS.TRAINER)
       createBattleSceneTransition(this, {
         skipSceneTransition: SKIP_BATTLE_ANIMATIONS,
-        spritesToNotBeObscured: [this.#player.sprite],
+        spritesToNotBeObscured: [this.#player.sprite, data.npc.sprite],
         type: TRANSITION_TYPES.LEFT_RIGHT_DOWN_SLOW,
         callback: () => {
           /** @type {import("../types/typedef.js").Trainer} */
@@ -165,7 +169,6 @@ export class WorldScene extends Phaser.Scene {
         }
       })
     })
-
 
     this.#dialogUi = new DialogUi(this)
     this.#controls = new Controls(this)
