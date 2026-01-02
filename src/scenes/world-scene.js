@@ -76,6 +76,13 @@ export class WorldScene extends Phaser.Scene {
     this.#npcPlayerIsInteractingWith = undefined
   }
 
+  preload () {
+    const bgmKey = 'CELADON_CITY'
+    this.load.audio(BGM_ASSET_KEYS[bgmKey], [`assets/audio/bgm/${bgmKey}.flac`])
+    this.load.audio(BGM_ASSET_KEYS.TRAINER, [`assets/audio/bgm/TRAINER.flac`])
+    this.load.audio(BGM_ASSET_KEYS.WILD_ENCOUNTER, [`assets/audio/bgm/WILD_ENCOUNTER.flac`])
+  }
+
   create () {
     console.log(`[${WorldScene.name}:create] invoked`)
 
@@ -159,7 +166,7 @@ export class WorldScene extends Phaser.Scene {
         type: TRANSITION_TYPES.LEFT_RIGHT_DOWN_SLOW,
         callback: () => {
           /** @type {import("../types/typedef.js").Trainer} */
-          this.scene.start(SCENE_KEYS.PRELOAD_BATTLE_SCENE, {
+          this.scene.start(SCENE_KEYS.BATTLE_SCENE, {
             type: OPPONENT_TYPES.TRAINER,
             trainer: {
               type: OPPONENT_TYPES.TRAINER,
@@ -290,7 +297,7 @@ export class WorldScene extends Phaser.Scene {
             skipSceneTransition: SKIP_BATTLE_ANIMATIONS,
             spritesToNotBeObscured: [this.#player.sprite],
             callback: () => {
-              this.scene.start(SCENE_KEYS.PRELOAD_BATTLE_SCENE, {
+              this.scene.start(SCENE_KEYS.BATTLE_SCENE, {
                 type: OPPONENT_TYPES.WILD_ENCOUNTER,
                 wildMon: { encounterArea }
               })

@@ -110,4 +110,8 @@ export class DataUtils {
     const partyMons = player.partyMons.map(monId => this.getMonDetails(scene, monId))
     return { ...player, partyMons }
   }
+
+  static loadTrainerSprites () {
+    
+  }
 }

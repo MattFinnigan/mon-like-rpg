@@ -1,6 +1,5 @@
 import { VOLUME } from "../../config.js"
 
-
 export class AudioManager {
   /** @type {Phaser.Scene} */
   #scene

@@ -16,7 +16,10 @@ export class BattleTrainer {
   #phaserTrainerImageGameObject
   /** @type {boolean} */
   #skipBattleAnimations
-
+  /** @type {string} */
+  #trainerType
+  /** @type {string} */
+  #name
   /**
    * 
    * @param {Phaser.Scene} scene 
@@ -25,8 +28,19 @@ export class BattleTrainer {
   constructor(scene, config, skipBattleAnimations) {
     this.#scene = scene
     this.#assetKey = config.assetKey
+    this.#trainerType = config.trainerType
+    this.#name = config.name
+        
     this.#skipBattleAnimations = skipBattleAnimations
     this.#phaserTrainerImageGameObject = this.#scene.add.image(ENEMY_IMAGE_POSITION.x, ENEMY_IMAGE_POSITION.y, TRAINER_GRAY_SPRITES[this.#assetKey + '_GRAY']).setOrigin(0).setAlpha(0)
+  }
+
+  get name () {
+    return this.#name
+  }
+
+  get trainerType () {
+    return this.#trainerType
   }
 
   /**

@@ -15,6 +15,7 @@ import { exhaustiveGuard } from '../utils/guard.js'
 import { AudioManager } from '../utils/audio-manager.js'
 import { BGM_ASSET_KEYS } from '../assets/asset-keys.js'
 import { OPPONENT_TYPES } from '../common/opponent-types.js'
+import { loadBattleAssets, loadMonAssets, loadTrainerSprites } from '../utils/load-assets.js'
 
 const BATTLE_STATES = Object.freeze({
   INTRO: 'INTRO',
@@ -47,7 +48,7 @@ export class BattleScene extends Phaser.Scene {
   /** @type {AttackManager} */
   #attackManager
   /** @type {BattleTrainer} */
-  #activeEnemyTrainer
+  #enemyBattleTrainer
   /** @type {import('../types/typedef.js').Mon[]} */
   #opponentMons
   /** @type {number} */
@@ -55,7 +56,7 @@ export class BattleScene extends Phaser.Scene {
   /** @type {OPPONENT_TYPES} */
   #opponentType
   /** @type {import('../types/typedef.js').Trainer} */
-  #opponentTrainer
+  #enemyTrainer
   /** @type {AudioManager} */
   #audioManager
   /** @type {import('../types/typedef.js').Player} */
@@ -64,6 +65,10 @@ export class BattleScene extends Phaser.Scene {
   #playerMons
   /** @type {number} */
   #currentPlayerMonIndex
+  /** @type {import('../types/typedef.js').BaseMon[]} */
+  #baseMonsToPreload
+  /** @type {string} */
+  #victoryBgmKey
 
   constructor () {
     super({
@@ -74,6 +79,7 @@ export class BattleScene extends Phaser.Scene {
     this.#currentPlayerMonIndex = 0
     this.#player = null
     this.#playerMons = []
+    this.#baseMonsToPreload = []
   }
   
   /**
@@ -81,19 +87,33 @@ export class BattleScene extends Phaser.Scene {
    * @param {object} data
    * @param {OPPONENT_TYPES} data.type
    * @param {import('../types/typedef.js').Trainer} [data.trainer]
-   * @param {import('../types/typedef.js').Mon} [data.mon]
+   * @param {import('../types/typedef.js').WildMon} [data.wildMon]
    */
   init (data) {
+    // load player mons
+    this.#player = DataUtils.getPlayerDetails(this)
+    this.#playerMons = this.#player.partyMons
+    this.#baseMonsToPreload = this.#baseMonsToPreload.concat(
+      this.#player.partyMons.map(mon => DataUtils.getBaseMonDetails(this, mon.baseMonIndex))
+    )
+
+    // load opponent's mons
     this.#opponentType = data.type
     switch (this.#opponentType) {
       case OPPONENT_TYPES.WILD_ENCOUNTER:
-        this.#opponentMons = [data.mon]
+        const generatedWildMon = DataUtils.generateWildMon(this, data.wildMon.encounterArea)
+        this.#baseMonsToPreload.push(generatedWildMon.baseMon)
+        this.#opponentMons = [generatedWildMon.mon]
+        this.#victoryBgmKey = BGM_ASSET_KEYS.WILD_ENCOUNTER_VICTORY
         break
       case OPPONENT_TYPES.TRAINER:
-        this.#opponentTrainer = data.trainer
-        this.#opponentMons = data.trainer.mons
-        break
       case OPPONENT_TYPES.GYM_LEADER:
+        this.#enemyTrainer = data.trainer
+        this.#opponentMons = data.trainer.mons
+        this.#baseMonsToPreload = this.#baseMonsToPreload.concat(
+          data.trainer.mons.map(mon => DataUtils.getBaseMonDetails(this, mon.baseMonIndex))
+        )
+        this.#victoryBgmKey = BGM_ASSET_KEYS.TRAINER_VICTORY
         break
       default:
         exhaustiveGuard(this.#opponentType)
@@ -102,6 +122,15 @@ export class BattleScene extends Phaser.Scene {
   
   preload () {
     console.log(`[${BattleScene.name}:preload] invoked`)
+    this.#baseMonsToPreload.forEach(baseMon => {
+      loadMonAssets(this, baseMon)
+    })
+    if (this.#opponentType !== OPPONENT_TYPES.WILD_ENCOUNTER) {
+      loadTrainerSprites(this, this.#enemyTrainer.assetKey)
+    }
+    loadBattleAssets(this)
+    console.log(this.#victoryBgmKey)
+    this.load.audio(BGM_ASSET_KEYS[this.#victoryBgmKey], [`assets/audio/bgm/${this.#victoryBgmKey}.flac`])
   }
 
   create () {
@@ -117,9 +146,6 @@ export class BattleScene extends Phaser.Scene {
       baseMonDetails: P2_BASE_MON,
       skipBattleAnimations: SKIP_BATTLE_ANIMATIONS
     })
-
-    this.#player = DataUtils.getPlayerDetails(this)
-    this.#playerMons = this.#player.partyMons
 
     const P1_MON = this.#playerMons[this.#currentPlayerMonIndex]
     const P1_BASE_MON = DataUtils.getBaseMonDetails(this, P1_MON.baseMonIndex)
@@ -225,7 +251,6 @@ export class BattleScene extends Phaser.Scene {
 
   #postBattleSequenceCheck() {
     let faintedMsg = `Wild ${this.#activeEnemyMon.name} fainted!`
-    let victoryBgmKey = BGM_ASSET_KEYS[this.#opponentType + '_VICTORY']
 
     if (this.#opponentType !== OPPONENT_TYPES.WILD_ENCOUNTER) {
       faintedMsg = `Foe ${this.#activeEnemyMon.name} fainted!`
@@ -235,7 +260,7 @@ export class BattleScene extends Phaser.Scene {
       this.#activeEnemyMon.playDeathAnimation(() => {
         this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([faintedMsg], () => {
           // TODO # of mon check change state etc etc
-          this.#audioManager.playBgm(victoryBgmKey)
+          this.#audioManager.playBgm(this.#victoryBgmKey)
           this.time.delayedCall(100, () => {
               this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`${this.#activePlayerMon.name} gained 32 experience points!`], () => {
               this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
@@ -271,7 +296,7 @@ export class BattleScene extends Phaser.Scene {
       name: BATTLE_STATES.INTRO,
       onEnter: () => {
         if (this.#opponentType !== OPPONENT_TYPES.WILD_ENCOUNTER) {
-          this.#activeEnemyTrainer = new BattleTrainer(this, this.#opponentTrainer, SKIP_BATTLE_ANIMATIONS)
+          this.#enemyBattleTrainer = new BattleTrainer(this, this.#enemyTrainer, SKIP_BATTLE_ANIMATIONS)
         }
         this.#battleStateMachine.setState(BATTLE_STATES.PRE_BATTLE_INFO)
       }
@@ -284,11 +309,11 @@ export class BattleScene extends Phaser.Scene {
           this.#battleStateMachine.setState(BATTLE_STATES.WILD_MON_OUT)
           return
         }
-        this.#activeEnemyTrainer.playTrainerAppearAnimation(() => {
-          this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`${this.#opponentTrainer.trainerType.toUpperCase()} ${this.#opponentTrainer.name.toUpperCase()} wants to fight!`], () => {
+        this.#enemyBattleTrainer.playTrainerAppearAnimation(() => {
+          this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`${this.#enemyBattleTrainer.trainerType.toUpperCase()} ${this.#enemyBattleTrainer.name.toUpperCase()} wants to fight!`], () => {
             // wait for txt anim
             this.time.delayedCall(500, () => {
-              this.#activeEnemyTrainer.playTrainerDisappearAnimation(() => {
+              this.#enemyBattleTrainer.playTrainerDisappearAnimation(() => {
                 this.#battleStateMachine.setState(BATTLE_STATES.ENEMY_MON_OUT)
               })
             })
@@ -300,7 +325,7 @@ export class BattleScene extends Phaser.Scene {
     this.#battleStateMachine.addState({
       name: BATTLE_STATES.ENEMY_MON_OUT,
       onEnter: () => {
-        this.#battleMenu.updateInfoPanelMessagesNoInputRequired(`${this.#opponentTrainer.name.toUpperCase()} sent out ${this.#activeEnemyMon.name}!`, () => {
+        this.#battleMenu.updateInfoPanelMessagesNoInputRequired(`${this.#enemyBattleTrainer.name.toUpperCase()} sent out ${this.#activeEnemyMon.name}!`, () => {
           // wait for txt anim
           this.time.delayedCall(500, () => {
             this.#activeEnemyMon.playMonAppearAnimation(() => {

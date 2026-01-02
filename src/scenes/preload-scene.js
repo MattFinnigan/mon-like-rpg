@@ -25,25 +25,21 @@ export class PreloadScene extends Phaser.Scene {
     }).setOrigin(0.5)
 
     this.load.on('complete', () => {
-      loadingText.setText('Loading Complete!')
+      console.log('done')
       this.scene.start(SCENE_KEYS.WORLD_SCENE)
       this.#createAnimations()
     })
 
 
     const backgroundAssetPath = 'assets/images/backgrounds'
-    const battleAssetPath = 'assets/images/battle'
+    
     const uiAssestPath = 'assets/images/ui'
     const charAssetPath = 'assets/images/character'
     const mapAssetPath = 'assets/images/map'
     const bgmAssetPath = 'assets/audio/bgm'
     const npcAssetPath = 'assets/images/npc'
-    const trainerAssetPath = 'assets/images/trainers'
-    const trainerGrayAssetPath = 'assets/images/trainers/gray'
 
     const attackAnimPath = 'assets/images/anims/pimen'
-    const axulAssetPath = 'assets/images/character/axulart'
-    const pbGamesAssetPath = 'assets/images/npc/parabellum-games'
 
     // fonts
     this.load.bitmapFont(
@@ -78,16 +74,6 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image(SYSTEM_ASSET_KEYS.DIALOG_BACKGROUND, `/${backgroundAssetPath}/dialog.png`)
     this.load.image(UI_ASSET_KEYS.CURSOR, `${uiAssestPath}/cursor.png`)
     this.load.image(UI_ASSET_KEYS.ARROW, `${uiAssestPath}/arrow.png`)
-
-    // battle
-    this.load.image(BATTLE_ASSET_KEYS.BATTLE_MENU_OPTIONS_BACKGROUND, `/${backgroundAssetPath}/battle-menu-options.png`)
-    this.load.image(BATTLE_ASSET_KEYS.PLAYER_BATTLE_DETAILS_BACKGROUND, `/${backgroundAssetPath}/player-battle-details.png`)
-    this.load.image(BATTLE_ASSET_KEYS.ENEMY_BATTLE_DETAILS_BACKGROUND, `/${backgroundAssetPath}/enemy-battle-details.png`)
-
-    // hp
-    this.load.image(HEALTH_BAR_ASSET_KEYS.LEFT_CAP, `/${battleAssetPath}/hp_left_cap.png`)
-    this.load.image(HEALTH_BAR_ASSET_KEYS.MIDDLE, `/${battleAssetPath}/hp_mid.png`)
-    this.load.image(HEALTH_BAR_ASSET_KEYS.RIGHT_CAP, `/${battleAssetPath}/hp_right_cap.png`)
   
     // attack
     this.load.spritesheet(ATTACK_ASSET_KEYS.ICE_SHARD, `${attackAnimPath}/ice-attack/active.png`, {
@@ -103,11 +89,6 @@ export class PreloadScene extends Phaser.Scene {
       frameHeight: 48
     })
 
-    // levels
-    // this.load.image(WORLD_ASSET_KEYS.WORLD_BACKGROUND, `/${mapAssetPath}/demo_background.png`)
-    // this.load.image(WORLD_ASSET_KEYS.WORLD_FOREGROUND, `/${mapAssetPath}/demo_foreground.png`)
-    // this.load.tilemapTiledJSON(WORLD_ASSET_KEYS.WORLD_MAIN_LEVEL, 'assets/data/demo_level.json')
-
     this.load.image(WORLD_ASSET_KEYS.WORLD_BACKGROUND, `/${mapAssetPath}/background.png`)
     this.load.image(WORLD_ASSET_KEYS.WORLD_FOREGROUND, `/${mapAssetPath}/foreground.png`)
     this.load.tilemapTiledJSON(WORLD_ASSET_KEYS.WORLD_MAIN_LEVEL, 'assets/data/level.json')
@@ -115,7 +96,7 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image(WORLD_ASSET_KEYS.WORLD_COLLISION, `/${mapAssetPath}/collision.png`)
     this.load.image(WORLD_ASSET_KEYS.WORLD_ENCOUNTER_ZONE, `/${mapAssetPath}/encounter.png`)
   
-    // character, npcs
+    // character, npcs world sprites
     this.load.spritesheet(CHARACTER_ASSET_KEYS.PLAYER, `${charAssetPath}/character.png`, {
       frameWidth: 72,
       frameHeight: 96
@@ -141,21 +122,6 @@ export class PreloadScene extends Phaser.Scene {
       frameHeight: 96
     })
 
-    // trainer sprites
-    const trainerKeys = Object.keys(TRAINER_SPRITES)
-    for (let i = 0; i < trainerKeys.length; i++) {
-      this.load.image(trainerKeys[i], `/${trainerAssetPath}/RBY Y${trainerKeys[i].toLowerCase()}.png`)
-      this.load.image(TRAINER_GRAY_SPRITES[trainerKeys[i] + '_GRAY'], `/${trainerGrayAssetPath}/RBY ${trainerKeys[i].toLowerCase()} BW.png`)
-    }
-    // this.load.spritesheet(CHARACTER_ASSET_KEYS.NPC, `${pbGamesAssetPath}/npcs.png`, {
-    //   frameWidth: 16,
-    //   frameHeight: 16
-    // })
-
-    // audio
-    Object.keys(BGM_ASSET_KEYS).forEach(key => {
-      this.load.audio(BGM_ASSET_KEYS[key], [bgmAssetPath + '/' + key + '.flac'])
-    })
     this.registry.set('audio', new AudioManager(this))
   }
 
