@@ -1,8 +1,9 @@
 import Phaser from "../../lib/phaser.js"
 import { HealthBar } from "../ui/health-bar.js"
-import { BATTLE_ASSET_KEYS, DATA_ASSET_KEYS, MON_ASSET_KEYS } from "../../assets/asset-keys.js"
+import { BATTLE_ASSET_KEYS, MON_ASSET_KEYS } from "../../assets/asset-keys.js"
 import { DataUtils } from "../../utils/data-utils.js"
 import { AudioManager } from "../../utils/audio-manager.js"
+import { getMonStats } from "../../utils/stats-utils.js"
 
 export class BattleMon {
   /** @protected @type {Phaser.Scene} */
@@ -39,6 +40,8 @@ export class BattleMon {
   _battleSpriteAssetKey
   /** @type {boolean} */
   #showHpNums
+  /** @protected @type {import("../../utils/stats-utils.js").MonStats} */
+  _monStats
 
   /**
    * 
@@ -51,11 +54,13 @@ export class BattleMon {
     this._monDetails = config.monDetails
     this._baseMonDetails = config.baseMonDetails
     this._currentHealth = this._monDetails.currentHp
-    this._maxHealth = this._monDetails.maxHp
     this._monAttacks = []
     this._skipBattleAnimations = config.skipBattleAnimations
     this._battleSpriteAssetKey = this._baseMonDetails.assetKey
     this.#showHpNums = showHpNums
+
+    this._monStats = getMonStats(this._baseMonDetails, this._monDetails)
+    this._maxHealth = this._monStats.hp
 
     this._phaserMonImageGameObject = this._scene.add.image(pos.x, pos.y, this._battleSpriteAssetKey, this._baseMonDetails.assetFrame).setOrigin(0).setAlpha(0)
     this._phaserMonDetailsBackgroundImageGameObject = this._scene.add.image(0, 0 , BATTLE_ASSET_KEYS.ENEMY_BATTLE_DETAILS_BACKGROUND).setOrigin(0)
@@ -67,6 +72,8 @@ export class BattleMon {
         this._monAttacks.push(monAttk)
       }
     })
+    console.log('--')
+    console.log(this._baseMonDetails)
 
     this.#audioManager = this._scene.registry.get('audio')
   }
@@ -165,6 +172,11 @@ export class BattleMon {
     this._monLvlGameText = this._scene.add.bitmapText(74, 44, 'gb-font-thick', `Lv${this.currentLevel}`, 30)
     this._monHpLabelGameText = this._scene.add.bitmapText(30, 76, 'gb-font-thick', `HP:`, 20)
     this._healthBar = new HealthBar(this._scene, 72, 42, this._currentHealth, this._maxHealth, this.#showHpNums)
+    
+    this._typeIndicators = this._scene.add.container(0, 0, [])
+    this._baseMonDetails.types.forEach(type => {
+      
+    })
 
     this._phaserHealthBarGameContainer = this._scene.add.container(20, 0, [
       this._phaserMonDetailsBackgroundImageGameObject,

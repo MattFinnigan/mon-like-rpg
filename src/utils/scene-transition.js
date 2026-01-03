@@ -48,11 +48,11 @@ export function createBattleSceneTransition (scene, options) {
       },
       targets: rectShape,
       onComplete: () => {
-        mask.destroy()
-        scene.cameras.main.clearMask()
         if (options.callback) {
           options.callback()
         }
+        // mask.destroy()
+        // scene.cameras.main.clearMask()
       }
     })
   } else if (type === TRANSITION_TYPES.LEFT_RIGHT_DOWN_SLOW) {

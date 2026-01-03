@@ -64,7 +64,8 @@ export class WorldScene extends Phaser.Scene {
   #npcs
   /** @type {NPC | undefined} */
   #npcPlayerIsInteractingWith
-
+  /** @type {string} */
+  #bgmKey
   constructor () {
     super({
       key: SCENE_KEYS.WORLD_SCENE
@@ -74,11 +75,11 @@ export class WorldScene extends Phaser.Scene {
   init () {
     this.#wildMonEncountered = false
     this.#npcPlayerIsInteractingWith = undefined
+    this.#bgmKey = BGM_ASSET_KEYS.PALLET_TOWN
   }
 
   preload () {
-    const bgmKey = 'CELADON_CITY'
-    this.load.audio(BGM_ASSET_KEYS[bgmKey], [`assets/audio/bgm/${bgmKey}.flac`])
+    this.load.audio(this.#bgmKey, [`assets/audio/bgm/${this.#bgmKey}.flac`])
     this.load.audio(BGM_ASSET_KEYS.TRAINER, [`assets/audio/bgm/TRAINER.flac`])
     this.load.audio(BGM_ASSET_KEYS.WILD_ENCOUNTER, [`assets/audio/bgm/WILD_ENCOUNTER.flac`])
   }
@@ -147,7 +148,7 @@ export class WorldScene extends Phaser.Scene {
     this.#worldForegroundImage = this.add.image(0, 0, WORLD_ASSET_KEYS.WORLD_FOREGROUND, 0).setOrigin(0)
 
     this.#audioManager = this.registry.get('audio')
-    this.#audioManager.playBgm(BGM_ASSET_KEYS.CELADON_CITY)
+    this.#audioManager.playBgm(this.#bgmKey)
 
     this.#npcs.forEach(npc => {
       npc.addCharacterToCheckForcollsionsWith(this.#player)

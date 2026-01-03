@@ -1,5 +1,5 @@
 import { SYSTEM_ASSET_KEYS, UI_ASSET_KEYS } from "../assets/asset-keys.js"
-import { DIALOG_DETAILS } from "../assets/consts.js"
+import { DIALOG_DETAILS } from "../utils/consts.js"
 import { animateText, CANNOT_READ_SIGN_TEXT } from "../utils/text-utils.js"
 
 export class DialogUi {

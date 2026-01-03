@@ -4,1215 +4,2127 @@
     "name": "BULBASAUR",
     "assetKey": "BULBASAUR",
     "assetFrame": 0,
+    "baseHp": 45,
     "baseAttack": 49,
-    "teachableAttackIds": []
+    "baseDefense": 49,
+    "baseSplAttack": 65,
+    "baseSplDefense": 65,
+    "baseSpeed": 45,
+    "learnSets": [],
+    "types": ["GRASS", "POISON"]
   },
   "1": {
     "baseMonIndex": 1,
     "name": "IVYSAUR",
     "assetKey": "IVYSAUR",
     "assetFrame": 0,
+    "baseHp": 60,
     "baseAttack": 62,
-    "teachableAttackIds": []
+    "baseDefense": 63,
+    "baseSplAttack": 80,
+    "baseSplDefense": 80,
+    "baseSpeed": 60,
+    "learnSets": [],
+    "types": ["GRASS", "POISON"]
   },
   "2": {
     "baseMonIndex": 2,
     "name": "VENUSAUR",
     "assetKey": "VENUSAUR",
     "assetFrame": 0,
+    "baseHp": 80,
     "baseAttack": 82,
-    "teachableAttackIds": []
+    "baseDefense": 83,
+    "baseSplAttack": 100,
+    "baseSplDefense": 100,
+    "baseSpeed": 80,
+    "learnSets": [],
+    "types": ["GRASS", "POISON"]
   },
   "3": {
     "baseMonIndex": 3,
     "name": "CHARMANDER",
     "assetKey": "CHARMANDER",
     "assetFrame": 0,
+    "baseHp": 39,
     "baseAttack": 52,
-    "teachableAttackIds": []
+    "baseDefense": 43,
+    "baseSplAttack": 60,
+    "baseSplDefense": 50,
+    "baseSpeed": 65,
+    "learnSets": [],
+    "types": ["FIRE"]
   },
   "4": {
     "baseMonIndex": 4,
     "name": "CHARMELEON",
     "assetKey": "CHARMELEON",
     "assetFrame": 0,
+    "baseHp": 58,
     "baseAttack": 64,
-    "teachableAttackIds": []
+    "baseDefense": 58,
+    "baseSplAttack": 80,
+    "baseSplDefense": 65,
+    "baseSpeed": 80,
+    "learnSets": [],
+    "types": ["FIRE"]
   },
   "5": {
     "baseMonIndex": 5,
     "name": "CHARIZARD",
     "assetKey": "CHARIZARD",
     "assetFrame": 0,
+    "baseHp": 78,
     "baseAttack": 84,
-    "teachableAttackIds": []
+    "baseDefense": 78,
+    "baseSplAttack": 109,
+    "baseSplDefense": 85,
+    "baseSpeed": 100,
+    "learnSets": [],
+    "types": ["FIRE", "FLYING"]
   },
   "6": {
     "baseMonIndex": 6,
     "name": "SQUIRTLE",
     "assetKey": "SQUIRTLE",
     "assetFrame": 0,
+    "baseHp": 44,
     "baseAttack": 48,
-    "teachableAttackIds": []
+    "baseDefense": 65,
+    "baseSplAttack": 50,
+    "baseSplDefense": 64,
+    "baseSpeed": 43,
+    "learnSets": [],
+    "types": ["WATER"]
   },
   "7": {
     "baseMonIndex": 7,
     "name": "WARTORTLE",
     "assetKey": "WARTORTLE",
     "assetFrame": 0,
+    "baseHp": 59,
     "baseAttack": 63,
-    "teachableAttackIds": []
+    "baseDefense": 80,
+    "baseSplAttack": 65,
+    "baseSplDefense": 80,
+    "baseSpeed": 58,
+    "learnSets": [],
+    "types": ["WATER"]
   },
   "8": {
     "baseMonIndex": 8,
     "name": "BLASTOISE",
     "assetKey": "BLASTOISE",
     "assetFrame": 0,
+    "baseHp": 79,
     "baseAttack": 83,
-    "teachableAttackIds": []
+    "baseDefense": 100,
+    "baseSplAttack": 85,
+    "baseSplDefense": 105,
+    "baseSpeed": 78,
+    "learnSets": [],
+    "types": ["WATER"]
   },
   "9": {
     "baseMonIndex": 9,
     "name": "CATERPIE",
     "assetKey": "CATERPIE",
     "assetFrame": 0,
+    "baseHp": 45,
     "baseAttack": 30,
-    "teachableAttackIds": []
+    "baseDefense": 35,
+    "baseSplAttack": 20,
+    "baseSplDefense": 20,
+    "baseSpeed": 45,
+    "learnSets": [],
+    "types": ["BUG"]
   },
   "10": {
     "baseMonIndex": 10,
     "name": "METAPOD",
     "assetKey": "METAPOD",
     "assetFrame": 0,
+    "baseHp": 50,
     "baseAttack": 20,
-    "teachableAttackIds": []
+    "baseDefense": 55,
+    "baseSplAttack": 25,
+    "baseSplDefense": 25,
+    "baseSpeed": 30,
+    "learnSets": [],
+    "types": ["BUG"]
   },
   "11": {
     "baseMonIndex": 11,
     "name": "BUTTERFREE",
     "assetKey": "BUTTERFREE",
     "assetFrame": 0,
+    "baseHp": 60,
     "baseAttack": 45,
-    "teachableAttackIds": []
+    "baseDefense": 50,
+    "baseSplAttack": 90,
+    "baseSplDefense": 80,
+    "baseSpeed": 70,
+    "learnSets": [],
+    "types": ["BUG", "FLYING"]
   },
   "12": {
     "baseMonIndex": 12,
     "name": "WEEDLE",
     "assetKey": "WEEDLE",
     "assetFrame": 0,
+    "baseHp": 40,
     "baseAttack": 35,
-    "teachableAttackIds": []
+    "baseDefense": 30,
+    "baseSplAttack": 20,
+    "baseSplDefense": 20,
+    "baseSpeed": 50,
+    "learnSets": [],
+    "types": ["BUG", "POISON"]
   },
   "13": {
     "baseMonIndex": 13,
     "name": "KAKUNA",
     "assetKey": "KAKUNA",
     "assetFrame": 0,
+    "baseHp": 45,
     "baseAttack": 25,
-    "teachableAttackIds": []
+    "baseDefense": 50,
+    "baseSplAttack": 25,
+    "baseSplDefense": 25,
+    "baseSpeed": 35,
+    "learnSets": [],
+    "types": ["BUG", "POISON"]
   },
   "14": {
     "baseMonIndex": 14,
     "name": "BEEDRILL",
     "assetKey": "BEEDRILL",
     "assetFrame": 0,
+    "baseHp": 65,
     "baseAttack": 90,
-    "teachableAttackIds": []
+    "baseDefense": 40,
+    "baseSplAttack": 45,
+    "baseSplDefense": 80,
+    "baseSpeed": 75,
+    "learnSets": [],
+    "types": ["BUG", "POISON"]
   },
   "15": {
     "baseMonIndex": 15,
     "name": "PIDGEY",
     "assetKey": "PIDGEY",
     "assetFrame": 0,
+    "baseHp": 40,
     "baseAttack": 45,
-    "teachableAttackIds": []
+    "baseDefense": 40,
+    "baseSplAttack": 35,
+    "baseSplDefense": 35,
+    "baseSpeed": 56,
+    "learnSets": [],
+    "types": ["NORMAL", "FLYING"]
   },
   "16": {
     "baseMonIndex": 16,
     "name": "PIDGEOTTO",
     "assetKey": "PIDGEOTTO",
     "assetFrame": 0,
+    "baseHp": 63,
     "baseAttack": 60,
-    "teachableAttackIds": []
+    "baseDefense": 55,
+    "baseSplAttack": 50,
+    "baseSplDefense": 50,
+    "baseSpeed": 71,
+    "learnSets": [],
+    "types": ["NORMAL", "FLYING"]
   },
   "17": {
     "baseMonIndex": 17,
     "name": "PIDGEOT",
     "assetKey": "PIDGEOT",
     "assetFrame": 0,
+    "baseHp": 83,
     "baseAttack": 80,
-    "teachableAttackIds": []
+    "baseDefense": 75,
+    "baseSplAttack": 70,
+    "baseSplDefense": 70,
+    "baseSpeed": 101,
+    "learnSets": [],
+    "types": ["NORMAL", "FLYING"]
   },
   "18": {
     "baseMonIndex": 18,
     "name": "RATTATA",
     "assetKey": "RATTATA",
     "assetFrame": 0,
+    "baseHp": 30,
     "baseAttack": 56,
-    "teachableAttackIds": []
+    "baseDefense": 35,
+    "baseSplAttack": 25,
+    "baseSplDefense": 35,
+    "baseSpeed": 72,
+    "learnSets": [],
+    "types": ["NORMAL"]
   },
   "19": {
     "baseMonIndex": 19,
     "name": "RATICATE",
     "assetKey": "RATICATE",
     "assetFrame": 0,
+    "baseHp": 55,
     "baseAttack": 81,
-    "teachableAttackIds": []
+    "baseDefense": 60,
+    "baseSplAttack": 50,
+    "baseSplDefense": 70,
+    "baseSpeed": 97,
+    "learnSets": [],
+    "types": ["NORMAL"]
   },
   "20": {
     "baseMonIndex": 20,
     "name": "SPEAROW",
     "assetKey": "SPEAROW",
     "assetFrame": 0,
+    "baseHp": 40,
     "baseAttack": 60,
-    "teachableAttackIds": []
+    "baseDefense": 30,
+    "baseSplAttack": 31,
+    "baseSplDefense": 31,
+    "baseSpeed": 70,
+    "learnSets": [],
+    "types": ["NORMAL", "FLYING"]
   },
   "21": {
     "baseMonIndex": 21,
     "name": "FEAROW",
     "assetKey": "FEAROW",
     "assetFrame": 0,
+    "baseHp": 65,
     "baseAttack": 90,
-    "teachableAttackIds": []
+    "baseDefense": 65,
+    "baseSplAttack": 61,
+    "baseSplDefense": 61,
+    "baseSpeed": 100,
+    "learnSets": [],
+    "types": ["NORMAL", "FLYING"]
   },
   "22": {
     "baseMonIndex": 22,
     "name": "EKANS",
     "assetKey": "EKANS",
     "assetFrame": 0,
+    "baseHp": 35,
     "baseAttack": 60,
-    "teachableAttackIds": []
+    "baseDefense": 44,
+    "baseSplAttack": 40,
+    "baseSplDefense": 54,
+    "baseSpeed": 55,
+    "learnSets": [],
+    "types": ["POISON"]
   },
   "23": {
     "baseMonIndex": 23,
     "name": "ARBOK",
     "assetKey": "ARBOK",
     "assetFrame": 0,
-    "baseAttack": 95,
-    "teachableAttackIds": []
+    "baseHp": 60,
+    "baseAttack": 85,
+    "baseDefense": 69,
+    "baseSplAttack": 65,
+    "baseSplDefense": 79,
+    "baseSpeed": 80,
+    "learnSets": [],
+    "types": ["POISON"]
   },
   "24": {
     "baseMonIndex": 24,
     "name": "PIKACHU",
     "assetKey": "PIKACHU",
     "assetFrame": 0,
+    "baseHp": 35,
     "baseAttack": 55,
-    "teachableAttackIds": []
+    "baseDefense": 40,
+    "baseSplAttack": 50,
+    "baseSplDefense": 50,
+    "baseSpeed": 90,
+    "learnSets": [],
+    "types": ["ELECTRIC"]
   },
   "25": {
     "baseMonIndex": 25,
     "name": "RAICHU",
     "assetKey": "RAICHU",
     "assetFrame": 0,
+    "baseHp": 60,
     "baseAttack": 90,
-    "teachableAttackIds": []
+    "baseDefense": 55,
+    "baseSplAttack": 90,
+    "baseSplDefense": 80,
+    "baseSpeed": 110,
+    "learnSets": [],
+    "types": ["ELECTRIC"]
   },
   "26": {
     "baseMonIndex": 26,
     "name": "SANDSHREW",
     "assetKey": "SANDSHREW",
     "assetFrame": 0,
+    "baseHp": 50,
     "baseAttack": 75,
-    "teachableAttackIds": []
+    "baseDefense": 85,
+    "baseSplAttack": 20,
+    "baseSplDefense": 30,
+    "baseSpeed": 40,
+    "learnSets": [],
+    "types": ["GROUND"]
   },
   "27": {
     "baseMonIndex": 27,
     "name": "SANDSLASH",
     "assetKey": "SANDSLASH",
     "assetFrame": 0,
+    "baseHp": 75,
     "baseAttack": 100,
-    "teachableAttackIds": []
+    "baseDefense": 110,
+    "baseSplAttack": 45,
+    "baseSplDefense": 55,
+    "baseSpeed": 65,
+    "learnSets": [],
+    "types": ["GROUND"]
   },
   "28": {
     "baseMonIndex": 28,
     "name": "NIDORAN_F",
     "assetKey": "NIDORAN_F",
     "assetFrame": 0,
+    "baseHp": 55,
     "baseAttack": 47,
-    "teachableAttackIds": []
+    "baseDefense": 52,
+    "baseSplAttack": 40,
+    "baseSplDefense": 40,
+    "baseSpeed": 41,
+    "learnSets": [],
+    "types": ["POISON"]
   },
   "29": {
     "baseMonIndex": 29,
     "name": "NIDORINA",
     "assetKey": "NIDORINA",
     "assetFrame": 0,
+    "baseHp": 70,
     "baseAttack": 62,
-    "teachableAttackIds": []
+    "baseDefense": 67,
+    "baseSplAttack": 55,
+    "baseSplDefense": 55,
+    "baseSpeed": 56,
+    "learnSets": [],
+    "types": ["POISON"]
   },
   "30": {
     "baseMonIndex": 30,
     "name": "NIDOQUEEN",
     "assetKey": "NIDOQUEEN",
     "assetFrame": 0,
+    "baseHp": 90,
     "baseAttack": 92,
-    "teachableAttackIds": []
+    "baseDefense": 87,
+    "baseSplAttack": 75,
+    "baseSplDefense": 85,
+    "baseSpeed": 76,
+    "learnSets": [],
+    "types": ["POISON", "GROUND"]
   },
   "31": {
     "baseMonIndex": 31,
     "name": "NIDORAN_M",
     "assetKey": "NIDORAN_M",
     "assetFrame": 0,
+    "baseHp": 46,
     "baseAttack": 57,
-    "teachableAttackIds": []
+    "baseDefense": 40,
+    "baseSplAttack": 40,
+    "baseSplDefense": 40,
+    "baseSpeed": 50,
+    "learnSets": [],
+    "types": ["POISON"]
   },
   "32": {
     "baseMonIndex": 32,
     "name": "NIDORINO",
     "assetKey": "NIDORINO",
     "assetFrame": 0,
+    "baseHp": 61,
     "baseAttack": 72,
-    "teachableAttackIds": []
+    "baseDefense": 57,
+    "baseSplAttack": 55,
+    "baseSplDefense": 55,
+    "baseSpeed": 65,
+    "learnSets": [],
+    "types": ["POISON"]
   },
   "33": {
     "baseMonIndex": 33,
     "name": "NIDOKING",
     "assetKey": "NIDOKING",
     "assetFrame": 0,
+    "baseHp": 81,
     "baseAttack": 102,
-    "teachableAttackIds": []
+    "baseDefense": 77,
+    "baseSplAttack": 85,
+    "baseSplDefense": 75,
+    "baseSpeed": 85,
+    "learnSets": [],
+    "types": ["POISON", "GROUND"]
   },
   "34": {
     "baseMonIndex": 34,
     "name": "CLEFAIRY",
     "assetKey": "CLEFAIRY",
     "assetFrame": 0,
+    "baseHp": 70,
     "baseAttack": 45,
-    "teachableAttackIds": []
+    "baseDefense": 48,
+    "baseSplAttack": 60,
+    "baseSplDefense": 65,
+    "baseSpeed": 35,
+    "learnSets": [],
+    "types": ["NORMAL"]
   },
   "35": {
     "baseMonIndex": 35,
     "name": "CLEFABLE",
     "assetKey": "CLEFABLE",
     "assetFrame": 0,
+    "baseHp": 95,
     "baseAttack": 70,
-    "teachableAttackIds": []
+    "baseDefense": 73,
+    "baseSplAttack": 95,
+    "baseSplDefense": 90,
+    "baseSpeed": 60,
+    "learnSets": [],
+    "types": ["NORMAL"]
   },
   "36": {
     "baseMonIndex": 36,
     "name": "VULPIX",
     "assetKey": "VULPIX",
     "assetFrame": 0,
+    "baseHp": 38,
     "baseAttack": 41,
-    "teachableAttackIds": []
+    "baseDefense": 40,
+    "baseSplAttack": 50,
+    "baseSplDefense": 65,
+    "baseSpeed": 65,
+    "learnSets": [],
+    "types": ["FIRE"]
   },
   "37": {
     "baseMonIndex": 37,
     "name": "NINETALES",
     "assetKey": "NINETALES",
     "assetFrame": 0,
+    "baseHp": 73,
     "baseAttack": 76,
-    "teachableAttackIds": []
+    "baseDefense": 75,
+    "baseSplAttack": 81,
+    "baseSplDefense": 100,
+    "baseSpeed": 100,
+    "learnSets": [],
+    "types": ["FIRE"]
   },
   "38": {
     "baseMonIndex": 38,
     "name": "JIGGLYPUFF",
     "assetKey": "JIGGLYPUFF",
     "assetFrame": 0,
+    "baseHp": 115,
     "baseAttack": 45,
-    "teachableAttackIds": []
+    "baseDefense": 20,
+    "baseSplAttack": 45,
+    "baseSplDefense": 25,
+    "baseSpeed": 20,
+    "learnSets": [],
+    "types": ["NORMAL"]
   },
   "39": {
     "baseMonIndex": 39,
     "name": "WIGGLYTUFF",
     "assetKey": "WIGGLYTUFF",
     "assetFrame": 0,
+    "baseHp": 140,
     "baseAttack": 70,
-    "teachableAttackIds": []
+    "baseDefense": 45,
+    "baseSplAttack": 85,
+    "baseSplDefense": 50,
+    "baseSpeed": 45,
+    "learnSets": [],
+    "types": ["NORMAL"]
   },
   "40": {
     "baseMonIndex": 40,
     "name": "ZUBAT",
     "assetKey": "ZUBAT",
     "assetFrame": 0,
+    "baseHp": 40,
     "baseAttack": 45,
-    "teachableAttackIds": []
+    "baseDefense": 35,
+    "baseSplAttack": 30,
+    "baseSplDefense": 40,
+    "baseSpeed": 55,
+    "learnSets": [],
+    "types": ["POISON", "FLYING"]
   },
   "41": {
     "baseMonIndex": 41,
     "name": "GOLBAT",
     "assetKey": "GOLBAT",
     "assetFrame": 0,
+    "baseHp": 75,
     "baseAttack": 80,
-    "teachableAttackIds": []
+    "baseDefense": 70,
+    "baseSplAttack": 65,
+    "baseSplDefense": 75,
+    "baseSpeed": 90,
+    "learnSets": [],
+    "types": ["POISON", "FLYING"]
   },
   "42": {
     "baseMonIndex": 42,
     "name": "ODDISH",
     "assetKey": "ODDISH",
     "assetFrame": 0,
+    "baseHp": 45,
     "baseAttack": 50,
-    "teachableAttackIds": []
+    "baseDefense": 55,
+    "baseSplAttack": 75,
+    "baseSplDefense": 65,
+    "baseSpeed": 30,
+    "learnSets": [],
+    "types": ["GRASS", "POISON"]
   },
   "43": {
     "baseMonIndex": 43,
     "name": "GLOOM",
     "assetKey": "GLOOM",
     "assetFrame": 0,
+    "baseHp": 60,
     "baseAttack": 65,
-    "teachableAttackIds": []
+    "baseDefense": 70,
+    "baseSplAttack": 85,
+    "baseSplDefense": 75,
+    "baseSpeed": 40,
+    "learnSets": [],
+    "types": ["GRASS", "POISON"]
   },
   "44": {
     "baseMonIndex": 44,
     "name": "VILEPLUME",
     "assetKey": "VILEPLUME",
     "assetFrame": 0,
+    "baseHp": 75,
     "baseAttack": 80,
-    "teachableAttackIds": []
+    "baseDefense": 85,
+    "baseSplAttack": 100,
+    "baseSplDefense": 90,
+    "baseSpeed": 50,
+    "learnSets": [],
+    "types": ["GRASS", "POISON"]
   },
   "45": {
     "baseMonIndex": 45,
     "name": "PARAS",
     "assetKey": "PARAS",
     "assetFrame": 0,
+    "baseHp": 35,
     "baseAttack": 70,
-    "teachableAttackIds": []
+    "baseDefense": 55,
+    "baseSplAttack": 45,
+    "baseSplDefense": 55,
+    "baseSpeed": 25,
+    "learnSets": [],
+    "types": ["BUG", "GRASS"]
   },
   "46": {
     "baseMonIndex": 46,
     "name": "PARASECT",
     "assetKey": "PARASECT",
     "assetFrame": 0,
+    "baseHp": 60,
     "baseAttack": 95,
-    "teachableAttackIds": []
+    "baseDefense": 80,
+    "baseSplAttack": 60,
+    "baseSplDefense": 80,
+    "baseSpeed": 30,
+    "learnSets": [],
+    "types": ["BUG", "GRASS"]
   },
   "47": {
     "baseMonIndex": 47,
     "name": "VENONAT",
     "assetKey": "VENONAT",
     "assetFrame": 0,
+    "baseHp": 60,
     "baseAttack": 55,
-    "teachableAttackIds": []
+    "baseDefense": 50,
+    "baseSplAttack": 40,
+    "baseSplDefense": 55,
+    "baseSpeed": 45,
+    "learnSets": [],
+    "types": ["BUG", "POISON"]
   },
   "48": {
     "baseMonIndex": 48,
     "name": "VENOMOTH",
     "assetKey": "VENOMOTH",
     "assetFrame": 0,
+    "baseHp": 70,
     "baseAttack": 65,
-    "teachableAttackIds": []
+    "baseDefense": 60,
+    "baseSplAttack": 90,
+    "baseSplDefense": 75,
+    "baseSpeed": 90,
+    "learnSets": [],
+    "types": ["BUG", "POISON"]
   },
   "49": {
     "baseMonIndex": 49,
     "name": "DIGLETT",
     "assetKey": "DIGLETT",
     "assetFrame": 0,
+    "baseHp": 10,
     "baseAttack": 55,
-    "teachableAttackIds": []
+    "baseDefense": 25,
+    "baseSplAttack": 35,
+    "baseSplDefense": 45,
+    "baseSpeed": 95,
+    "learnSets": [],
+    "types": ["GROUND"]
   },
   "50": {
     "baseMonIndex": 50,
     "name": "DUGTRIO",
     "assetKey": "DUGTRIO",
     "assetFrame": 0,
-    "baseAttack": 80,
-    "teachableAttackIds": []
+    "baseHp": 35,
+    "baseAttack": 100,
+    "baseDefense": 50,
+    "baseSplAttack": 50,
+    "baseSplDefense": 70,
+    "baseSpeed": 120,
+    "learnSets": [],
+    "types": ["GROUND"]
   },
   "51": {
     "baseMonIndex": 51,
     "name": "MEOWTH",
     "assetKey": "MEOWTH",
     "assetFrame": 0,
+    "baseHp": 40,
     "baseAttack": 45,
-    "teachableAttackIds": []
+    "baseDefense": 35,
+    "baseSplAttack": 40,
+    "baseSplDefense": 40,
+    "baseSpeed": 90,
+    "learnSets": [],
+    "types": ["NORMAL"]
   },
   "52": {
     "baseMonIndex": 52,
     "name": "PERSIAN",
     "assetKey": "PERSIAN",
     "assetFrame": 0,
+    "baseHp": 65,
     "baseAttack": 70,
-    "teachableAttackIds": []
+    "baseDefense": 60,
+    "baseSplAttack": 65,
+    "baseSplDefense": 65,
+    "baseSpeed": 115,
+    "learnSets": [],
+    "types": ["NORMAL"]
   },
   "53": {
     "baseMonIndex": 53,
     "name": "PSYDUCK",
     "assetKey": "PSYDUCK",
     "assetFrame": 0,
+    "baseHp": 50,
     "baseAttack": 52,
-    "teachableAttackIds": []
+    "baseDefense": 48,
+    "baseSplAttack": 65,
+    "baseSplDefense": 50,
+    "baseSpeed": 55,
+    "learnSets": [],
+    "types": ["WATER"]
   },
   "54": {
     "baseMonIndex": 54,
     "name": "GOLDUCK",
     "assetKey": "GOLDUCK",
     "assetFrame": 0,
+    "baseHp": 80,
     "baseAttack": 82,
-    "teachableAttackIds": []
+    "baseDefense": 78,
+    "baseSplAttack": 95,
+    "baseSplDefense": 80,
+    "baseSpeed": 85,
+    "learnSets": [],
+    "types": ["WATER"]
   },
   "55": {
     "baseMonIndex": 55,
     "name": "MANKEY",
     "assetKey": "MANKEY",
     "assetFrame": 0,
+    "baseHp": 40,
     "baseAttack": 80,
-    "teachableAttackIds": []
+    "baseDefense": 35,
+    "baseSplAttack": 35,
+    "baseSplDefense": 45,
+    "baseSpeed": 70,
+    "learnSets": [],
+    "types": ["FIGHTING"]
   },
   "56": {
     "baseMonIndex": 56,
     "name": "PRIMEAPE",
     "assetKey": "PRIMEAPE",
     "assetFrame": 0,
+    "baseHp": 65,
     "baseAttack": 105,
-    "teachableAttackIds": []
+    "baseDefense": 60,
+    "baseSplAttack": 60,
+    "baseSplDefense": 70,
+    "baseSpeed": 95,
+    "learnSets": [],
+    "types": ["FIGHTING"]
   },
   "57": {
     "baseMonIndex": 57,
     "name": "GROWLITHE",
     "assetKey": "GROWLITHE",
     "assetFrame": 0,
+    "baseHp": 55,
     "baseAttack": 70,
-    "teachableAttackIds": []
+    "baseDefense": 45,
+    "baseSplAttack": 70,
+    "baseSplDefense": 50,
+    "baseSpeed": 60,
+    "learnSets": [],
+    "types": ["FIRE"]
   },
   "58": {
     "baseMonIndex": 58,
     "name": "ARCANINE",
     "assetKey": "ARCANINE",
     "assetFrame": 0,
+    "baseHp": 90,
     "baseAttack": 110,
-    "teachableAttackIds": []
+    "baseDefense": 80,
+    "baseSplAttack": 100,
+    "baseSplDefense": 80,
+    "baseSpeed": 95,
+    "learnSets": [],
+    "types": ["FIRE"]
   },
   "59": {
     "baseMonIndex": 59,
     "name": "POLIWAG",
     "assetKey": "POLIWAG",
     "assetFrame": 0,
+    "baseHp": 40,
     "baseAttack": 50,
-    "teachableAttackIds": []
+    "baseDefense": 40,
+    "baseSplAttack": 40,
+    "baseSplDefense": 40,
+    "baseSpeed": 90,
+    "learnSets": [],
+    "types": ["WATER"]
   },
   "60": {
     "baseMonIndex": 60,
     "name": "POLIWHIRL",
     "assetKey": "POLIWHIRL",
     "assetFrame": 0,
+    "baseHp": 65,
     "baseAttack": 65,
-    "teachableAttackIds": []
+    "baseDefense": 65,
+    "baseSplAttack": 50,
+    "baseSplDefense": 50,
+    "baseSpeed": 90,
+    "learnSets": [],
+    "types": ["WATER"]
   },
   "61": {
     "baseMonIndex": 61,
     "name": "POLIWRATH",
     "assetKey": "POLIWRATH",
     "assetFrame": 0,
+    "baseHp": 90,
     "baseAttack": 95,
-    "teachableAttackIds": []
+    "baseDefense": 95,
+    "baseSplAttack": 70,
+    "baseSplDefense": 90,
+    "baseSpeed": 70,
+    "learnSets": [],
+    "types": ["WATER", "FIGHTING"]
   },
   "62": {
     "baseMonIndex": 62,
     "name": "ABRA",
     "assetKey": "ABRA",
     "assetFrame": 0,
+    "baseHp": 25,
     "baseAttack": 20,
-    "teachableAttackIds": []
+    "baseDefense": 15,
+    "baseSplAttack": 105,
+    "baseSplDefense": 55,
+    "baseSpeed": 90,
+    "learnSets": [],
+    "types": ["PSYCHIC"]
   },
   "63": {
     "baseMonIndex": 63,
     "name": "KADABRA",
     "assetKey": "KADABRA",
     "assetFrame": 0,
+    "baseHp": 40,
     "baseAttack": 35,
-    "teachableAttackIds": []
+    "baseDefense": 30,
+    "baseSplAttack": 120,
+    "baseSplDefense": 70,
+    "baseSpeed": 105,
+    "learnSets": [],
+    "types": ["PSYCHIC"]
   },
   "64": {
     "baseMonIndex": 64,
     "name": "ALAKAZAM",
     "assetKey": "ALAKAZAM",
     "assetFrame": 0,
+    "baseHp": 55,
     "baseAttack": 50,
-    "teachableAttackIds": []
+    "baseDefense": 45,
+    "baseSplAttack": 135,
+    "baseSplDefense": 95,
+    "baseSpeed": 120,
+    "learnSets": [],
+    "types": ["PSYCHIC"]
   },
   "65": {
     "baseMonIndex": 65,
     "name": "MACHOP",
     "assetKey": "MACHOP",
     "assetFrame": 0,
+    "baseHp": 70,
     "baseAttack": 80,
-    "teachableAttackIds": []
+    "baseDefense": 50,
+    "baseSplAttack": 35,
+    "baseSplDefense": 35,
+    "baseSpeed": 35,
+    "learnSets": [],
+    "types": ["FIGHTING"]
   },
   "66": {
     "baseMonIndex": 66,
     "name": "MACHOKE",
     "assetKey": "MACHOKE",
     "assetFrame": 0,
+    "baseHp": 80,
     "baseAttack": 100,
-    "teachableAttackIds": []
+    "baseDefense": 70,
+    "baseSplAttack": 50,
+    "baseSplDefense": 60,
+    "baseSpeed": 45,
+    "learnSets": [],
+    "types": ["FIGHTING"]
   },
   "67": {
     "baseMonIndex": 67,
     "name": "MACHAMP",
     "assetKey": "MACHAMP",
     "assetFrame": 0,
+    "baseHp": 90,
     "baseAttack": 130,
-    "teachableAttackIds": []
+    "baseDefense": 80,
+    "baseSplAttack": 65,
+    "baseSplDefense": 85,
+    "baseSpeed": 55,
+    "learnSets": [],
+    "types": ["FIGHTING"]
   },
   "68": {
     "baseMonIndex": 68,
     "name": "BELLSPROUT",
     "assetKey": "BELLSPROUT",
     "assetFrame": 0,
+    "baseHp": 50,
     "baseAttack": 75,
-    "teachableAttackIds": []
+    "baseDefense": 35,
+    "baseSplAttack": 70,
+    "baseSplDefense": 30,
+    "baseSpeed": 40,
+    "learnSets": [],
+    "types": ["GRASS", "POISON"]
   },
   "69": {
     "baseMonIndex": 69,
     "name": "WEEPINBELL",
     "assetKey": "WEEPINBELL",
     "assetFrame": 0,
+    "baseHp": 65,
     "baseAttack": 90,
-    "teachableAttackIds": []
+    "baseDefense": 50,
+    "baseSplAttack": 85,
+    "baseSplDefense": 45,
+    "baseSpeed": 55,
+    "learnSets": [],
+    "types": ["GRASS", "POISON"]
   },
   "70": {
     "baseMonIndex": 70,
     "name": "VICTREEBEL",
     "assetKey": "VICTREEBEL",
     "assetFrame": 0,
+    "baseHp": 80,
     "baseAttack": 105,
-    "teachableAttackIds": []
+    "baseDefense": 65,
+    "baseSplAttack": 100,
+    "baseSplDefense": 70,
+    "baseSpeed": 70,
+    "learnSets": [],
+    "types": ["GRASS", "POISON"]
   },
   "71": {
     "baseMonIndex": 71,
     "name": "TENTACOOL",
     "assetKey": "TENTACOOL",
     "assetFrame": 0,
+    "baseHp": 40,
     "baseAttack": 40,
-    "teachableAttackIds": []
+    "baseDefense": 35,
+    "baseSplAttack": 50,
+    "baseSplDefense": 100,
+    "baseSpeed": 70,
+    "learnSets": [],
+    "types": ["WATER", "POISON"]
   },
   "72": {
     "baseMonIndex": 72,
     "name": "TENTACRUEL",
     "assetKey": "TENTACRUEL",
     "assetFrame": 0,
+    "baseHp": 80,
     "baseAttack": 70,
-    "teachableAttackIds": []
+    "baseDefense": 65,
+    "baseSplAttack": 80,
+    "baseSplDefense": 120,
+    "baseSpeed": 100,
+    "learnSets": [],
+    "types": ["WATER", "POISON"]
   },
   "73": {
     "baseMonIndex": 73,
     "name": "GEODUDE",
     "assetKey": "GEODUDE",
     "assetFrame": 0,
+    "baseHp": 40,
     "baseAttack": 80,
-    "teachableAttackIds": []
+    "baseDefense": 100,
+    "baseSplAttack": 30,
+    "baseSplDefense": 30,
+    "baseSpeed": 20,
+    "learnSets": [],
+    "types": ["ROCK", "GROUND"]
   },
   "74": {
     "baseMonIndex": 74,
     "name": "GRAVELER",
     "assetKey": "GRAVELER",
     "assetFrame": 0,
+    "baseHp": 55,
     "baseAttack": 95,
-    "teachableAttackIds": []
+    "baseDefense": 115,
+    "baseSplAttack": 45,
+    "baseSplDefense": 45,
+    "baseSpeed": 35,
+    "learnSets": [],
+    "types": ["ROCK", "GROUND"]
   },
   "75": {
     "baseMonIndex": 75,
     "name": "GOLEM",
     "assetKey": "GOLEM",
     "assetFrame": 0,
+    "baseHp": 80,
     "baseAttack": 120,
-    "teachableAttackIds": []
+    "baseDefense": 130,
+    "baseSplAttack": 55,
+    "baseSplDefense": 65,
+    "baseSpeed": 45,
+    "learnSets": [],
+    "types": ["ROCK", "GROUND"]
   },
   "76": {
     "baseMonIndex": 76,
     "name": "PONYTA",
     "assetKey": "PONYTA",
     "assetFrame": 0,
+    "baseHp": 50,
     "baseAttack": 85,
-    "teachableAttackIds": []
+    "baseDefense": 55,
+    "baseSplAttack": 65,
+    "baseSplDefense": 65,
+    "baseSpeed": 90,
+    "learnSets": [],
+    "types": ["FIRE"]
   },
   "77": {
     "baseMonIndex": 77,
     "name": "RAPIDASH",
     "assetKey": "RAPIDASH",
     "assetFrame": 0,
+    "baseHp": 65,
     "baseAttack": 100,
-    "teachableAttackIds": []
+    "baseDefense": 70,
+    "baseSplAttack": 80,
+    "baseSplDefense": 80,
+    "baseSpeed": 105,
+    "learnSets": [],
+    "types": ["FIRE"]
   },
   "78": {
     "baseMonIndex": 78,
     "name": "SLOWPOKE",
     "assetKey": "SLOWPOKE",
     "assetFrame": 0,
+    "baseHp": 90,
     "baseAttack": 65,
-    "teachableAttackIds": []
+    "baseDefense": 65,
+    "baseSplAttack": 40,
+    "baseSplDefense": 40,
+    "baseSpeed": 15,
+    "learnSets": [],
+    "types": ["WATER", "PSYCHIC"]
   },
   "79": {
     "baseMonIndex": 79,
     "name": "SLOWBRO",
     "assetKey": "SLOWBRO",
     "assetFrame": 0,
+    "baseHp": 95,
     "baseAttack": 75,
-    "teachableAttackIds": []
+    "baseDefense": 110,
+    "baseSplAttack": 100,
+    "baseSplDefense": 80,
+    "baseSpeed": 30,
+    "learnSets": [],
+    "types": ["WATER", "PSYCHIC"]
   },
   "80": {
     "baseMonIndex": 80,
     "name": "MAGNEMITE",
     "assetKey": "MAGNEMITE",
     "assetFrame": 0,
+    "baseHp": 25,
     "baseAttack": 35,
-    "teachableAttackIds": []
+    "baseDefense": 70,
+    "baseSplAttack": 95,
+    "baseSplDefense": 55,
+    "baseSpeed": 45,
+    "learnSets": [],
+    "types": ["ELECTRIC"]
   },
   "81": {
     "baseMonIndex": 81,
     "name": "MAGNETON",
     "assetKey": "MAGNETON",
     "assetFrame": 0,
+    "baseHp": 50,
     "baseAttack": 60,
-    "teachableAttackIds": []
+    "baseDefense": 95,
+    "baseSplAttack": 120,
+    "baseSplDefense": 70,
+    "baseSpeed": 70,
+    "learnSets": [],
+    "types": ["ELECTRIC"]
   },
   "82": {
     "baseMonIndex": 82,
     "name": "FARFETCHD",
     "assetKey": "FARFETCHD",
     "assetFrame": 0,
+    "baseHp": 52,
     "baseAttack": 90,
-    "teachableAttackIds": []
+    "baseDefense": 55,
+    "baseSplAttack": 58,
+    "baseSplDefense": 62,
+    "baseSpeed": 60,
+    "learnSets": [],
+    "types": ["NORMAL", "FLYING"]
   },
   "83": {
     "baseMonIndex": 83,
     "name": "DODUO",
     "assetKey": "DODUO",
     "assetFrame": 0,
+    "baseHp": 35,
     "baseAttack": 85,
-    "teachableAttackIds": []
+    "baseDefense": 45,
+    "baseSplAttack": 35,
+    "baseSplDefense": 35,
+    "baseSpeed": 75,
+    "learnSets": [],
+    "types": ["NORMAL", "FLYING"]
   },
   "84": {
     "baseMonIndex": 84,
     "name": "DODRIO",
     "assetKey": "DODRIO",
     "assetFrame": 0,
+    "baseHp": 60,
     "baseAttack": 110,
-    "teachableAttackIds": []
+    "baseDefense": 70,
+    "baseSplAttack": 60,
+    "baseSplDefense": 60,
+    "baseSpeed": 100,
+    "learnSets": [],
+    "types": ["NORMAL", "FLYING"]
   },
   "85": {
     "baseMonIndex": 85,
     "name": "SEEL",
     "assetKey": "SEEL",
     "assetFrame": 0,
+    "baseHp": 65,
     "baseAttack": 45,
-    "teachableAttackIds": []
+    "baseDefense": 55,
+    "baseSplAttack": 45,
+    "baseSplDefense": 70,
+    "baseSpeed": 45,
+    "learnSets": [],
+    "types": ["WATER"]
   },
   "86": {
     "baseMonIndex": 86,
     "name": "DEWGONG",
     "assetKey": "DEWGONG",
     "assetFrame": 0,
+    "baseHp": 90,
     "baseAttack": 70,
-    "teachableAttackIds": []
+    "baseDefense": 80,
+    "baseSplAttack": 70,
+    "baseSplDefense": 95,
+    "baseSpeed": 70,
+    "learnSets": [],
+    "types": ["WATER", "ICE"]
   },
   "87": {
     "baseMonIndex": 87,
     "name": "GRIMER",
     "assetKey": "GRIMER",
     "assetFrame": 0,
+    "baseHp": 80,
     "baseAttack": 80,
-    "teachableAttackIds": []
+    "baseDefense": 50,
+    "baseSplAttack": 40,
+    "baseSplDefense": 50,
+    "baseSpeed": 25,
+    "learnSets": [],
+    "types": ["POISON"]
   },
   "88": {
     "baseMonIndex": 88,
     "name": "MUK",
     "assetKey": "MUK",
     "assetFrame": 0,
+    "baseHp": 105,
     "baseAttack": 105,
-    "teachableAttackIds": []
+    "baseDefense": 75,
+    "baseSplAttack": 65,
+    "baseSplDefense": 100,
+    "baseSpeed": 50,
+    "learnSets": [],
+    "types": ["POISON"]
   },
   "89": {
     "baseMonIndex": 89,
     "name": "SHELLDER",
     "assetKey": "SHELLDER",
     "assetFrame": 0,
+    "baseHp": 30,
     "baseAttack": 65,
-    "teachableAttackIds": []
+    "baseDefense": 100,
+    "baseSplAttack": 45,
+    "baseSplDefense": 25,
+    "baseSpeed": 40,
+    "learnSets": [],
+    "types": ["WATER"]
   },
   "90": {
     "baseMonIndex": 90,
     "name": "CLOYSTER",
     "assetKey": "CLOYSTER",
     "assetFrame": 0,
+    "baseHp": 50,
     "baseAttack": 95,
-    "teachableAttackIds": []
+    "baseDefense": 180,
+    "baseSplAttack": 85,
+    "baseSplDefense": 45,
+    "baseSpeed": 70,
+    "learnSets": [],
+    "types": ["WATER", "ICE"]
   },
   "91": {
     "baseMonIndex": 91,
     "name": "GASTLY",
     "assetKey": "GASTLY",
     "assetFrame": 0,
+    "baseHp": 30,
     "baseAttack": 35,
-    "teachableAttackIds": []
+    "baseDefense": 30,
+    "baseSplAttack": 100,
+    "baseSplDefense": 35,
+    "baseSpeed": 80,
+    "learnSets": [],
+    "types": ["GHOST", "POISON"]
   },
   "92": {
     "baseMonIndex": 92,
     "name": "HAUNTER",
     "assetKey": "HAUNTER",
     "assetFrame": 0,
+    "baseHp": 45,
     "baseAttack": 50,
-    "teachableAttackIds": []
+    "baseDefense": 45,
+    "baseSplAttack": 115,
+    "baseSplDefense": 55,
+    "baseSpeed": 95,
+    "learnSets": [],
+    "types": ["GHOST", "POISON"]
   },
   "93": {
     "baseMonIndex": 93,
     "name": "GENGAR",
     "assetKey": "GENGAR",
     "assetFrame": 0,
+    "baseHp": 60,
     "baseAttack": 65,
-    "teachableAttackIds": []
+    "baseDefense": 60,
+    "baseSplAttack": 130,
+    "baseSplDefense": 75,
+    "baseSpeed": 110,
+    "learnSets": [],
+    "types": ["GHOST", "POISON"]
   },
   "94": {
     "baseMonIndex": 94,
     "name": "ONIX",
     "assetKey": "ONIX",
     "assetFrame": 0,
+    "baseHp": 35,
     "baseAttack": 45,
-    "teachableAttackIds": []
+    "baseDefense": 160,
+    "baseSplAttack": 30,
+    "baseSplDefense": 45,
+    "baseSpeed": 70,
+    "learnSets": [],
+    "types": ["ROCK", "GROUND"]
   },
   "95": {
     "baseMonIndex": 95,
     "name": "DROWZEE",
     "assetKey": "DROWZEE",
     "assetFrame": 0,
+    "baseHp": 60,
     "baseAttack": 48,
-    "teachableAttackIds": []
+    "baseDefense": 45,
+    "baseSplAttack": 43,
+    "baseSplDefense": 90,
+    "baseSpeed": 42,
+    "learnSets": [],
+    "types": ["PSYCHIC"]
   },
   "96": {
     "baseMonIndex": 96,
     "name": "HYPNO",
     "assetKey": "HYPNO",
     "assetFrame": 0,
+    "baseHp": 85,
     "baseAttack": 73,
-    "teachableAttackIds": []
+    "baseDefense": 70,
+    "baseSplAttack": 73,
+    "baseSplDefense": 115,
+    "baseSpeed": 67,
+    "learnSets": [],
+    "types": ["PSYCHIC"]
   },
   "97": {
     "baseMonIndex": 97,
     "name": "KRABBY",
     "assetKey": "KRABBY",
     "assetFrame": 0,
+    "baseHp": 30,
     "baseAttack": 105,
-    "teachableAttackIds": []
+    "baseDefense": 90,
+    "baseSplAttack": 25,
+    "baseSplDefense": 25,
+    "baseSpeed": 50,
+    "learnSets": [],
+    "types": ["WATER"]
   },
   "98": {
     "baseMonIndex": 98,
     "name": "KINGLER",
     "assetKey": "KINGLER",
     "assetFrame": 0,
+    "baseHp": 55,
     "baseAttack": 130,
-    "teachableAttackIds": []
+    "baseDefense": 115,
+    "baseSplAttack": 50,
+    "baseSplDefense": 50,
+    "baseSpeed": 75,
+    "learnSets": [],
+    "types": ["WATER"]
   },
   "99": {
     "baseMonIndex": 99,
     "name": "VOLTORB",
     "assetKey": "VOLTORB",
     "assetFrame": 0,
+    "baseHp": 40,
     "baseAttack": 30,
-    "teachableAttackIds": []
+    "baseDefense": 50,
+    "baseSplAttack": 55,
+    "baseSplDefense": 55,
+    "baseSpeed": 100,
+    "learnSets": [],
+    "types": ["ELECTRIC"]
   },
   "100": {
     "baseMonIndex": 100,
     "name": "ELECTRODE",
     "assetKey": "ELECTRODE",
     "assetFrame": 0,
+    "baseHp": 60,
     "baseAttack": 50,
-    "teachableAttackIds": []
+    "baseDefense": 70,
+    "baseSplAttack": 80,
+    "baseSplDefense": 80,
+    "baseSpeed": 140,
+    "learnSets": [],
+    "types": ["ELECTRIC"]
   },
   "101": {
     "baseMonIndex": 101,
     "name": "EXEGGCUTE",
     "assetKey": "EXEGGCUTE",
     "assetFrame": 0,
+    "baseHp": 60,
     "baseAttack": 40,
-    "teachableAttackIds": []
+    "baseDefense": 80,
+    "baseSplAttack": 60,
+    "baseSplDefense": 45,
+    "baseSpeed": 40,
+    "learnSets": [],
+    "types": ["GRASS", "PSYCHIC"]
   },
   "102": {
     "baseMonIndex": 102,
     "name": "EXEGGUTOR",
     "assetKey": "EXEGGUTOR",
     "assetFrame": 0,
+    "baseHp": 95,
     "baseAttack": 95,
-    "teachableAttackIds": []
+    "baseDefense": 85,
+    "baseSplAttack": 125,
+    "baseSplDefense": 65,
+    "baseSpeed": 55,
+    "learnSets": [],
+    "types": ["GRASS", "PSYCHIC"]
   },
   "103": {
     "baseMonIndex": 103,
     "name": "CUBONE",
     "assetKey": "CUBONE",
     "assetFrame": 0,
+    "baseHp": 50,
     "baseAttack": 50,
-    "teachableAttackIds": []
+    "baseDefense": 95,
+    "baseSplAttack": 40,
+    "baseSplDefense": 50,
+    "baseSpeed": 35,
+    "learnSets": [],
+    "types": ["GROUND"]
   },
   "104": {
     "baseMonIndex": 104,
     "name": "MAROWAK",
     "assetKey": "MAROWAK",
     "assetFrame": 0,
+    "baseHp": 60,
     "baseAttack": 80,
-    "teachableAttackIds": []
+    "baseDefense": 110,
+    "baseSplAttack": 50,
+    "baseSplDefense": 80,
+    "baseSpeed": 45,
+    "learnSets": [],
+    "types": ["GROUND"]
   },
   "105": {
     "baseMonIndex": 105,
     "name": "HITMONLEE",
     "assetKey": "HITMONLEE",
     "assetFrame": 0,
+    "baseHp": 50,
     "baseAttack": 120,
-    "teachableAttackIds": []
+    "baseDefense": 53,
+    "baseSplAttack": 35,
+    "baseSplDefense": 110,
+    "baseSpeed": 87,
+    "learnSets": [],
+    "types": ["FIGHTING"]
   },
   "106": {
     "baseMonIndex": 106,
     "name": "HITMONCHAN",
     "assetKey": "HITMONCHAN",
     "assetFrame": 0,
+    "baseHp": 50,
     "baseAttack": 105,
-    "teachableAttackIds": []
+    "baseDefense": 79,
+    "baseSplAttack": 35,
+    "baseSplDefense": 110,
+    "baseSpeed": 76,
+    "learnSets": [],
+    "types": ["FIGHTING"]
   },
   "107": {
     "baseMonIndex": 107,
     "name": "LICKITUNG",
     "assetKey": "LICKITUNG",
     "assetFrame": 0,
+    "baseHp": 90,
     "baseAttack": 55,
-    "teachableAttackIds": []
+    "baseDefense": 75,
+    "baseSplAttack": 60,
+    "baseSplDefense": 75,
+    "baseSpeed": 30,
+    "learnSets": [],
+    "types": ["NORMAL"]
   },
   "108": {
     "baseMonIndex": 108,
     "name": "KOFFING",
     "assetKey": "KOFFING",
     "assetFrame": 0,
+    "baseHp": 40,
     "baseAttack": 65,
-    "teachableAttackIds": []
+    "baseDefense": 95,
+    "baseSplAttack": 60,
+    "baseSplDefense": 45,
+    "baseSpeed": 35,
+    "learnSets": [],
+    "types": ["POISON"]
   },
   "109": {
     "baseMonIndex": 109,
     "name": "WEEZING",
     "assetKey": "WEEZING",
     "assetFrame": 0,
+    "baseHp": 65,
     "baseAttack": 90,
-    "teachableAttackIds": []
+    "baseDefense": 120,
+    "baseSplAttack": 85,
+    "baseSplDefense": 70,
+    "baseSpeed": 60,
+    "learnSets": [],
+    "types": ["POISON"]
   },
   "110": {
     "baseMonIndex": 110,
     "name": "RHYHORN",
     "assetKey": "RHYHORN",
     "assetFrame": 0,
+    "baseHp": 80,
     "baseAttack": 85,
-    "teachableAttackIds": []
+    "baseDefense": 95,
+    "baseSplAttack": 30,
+    "baseSplDefense": 30,
+    "baseSpeed": 25,
+    "learnSets": [],
+    "types": ["GROUND", "ROCK"]
   },
   "111": {
     "baseMonIndex": 111,
     "name": "RHYDON",
     "assetKey": "RHYDON",
     "assetFrame": 0,
+    "baseHp": 105,
     "baseAttack": 130,
-    "teachableAttackIds": []
+    "baseDefense": 120,
+    "baseSplAttack": 45,
+    "baseSplDefense": 45,
+    "baseSpeed": 40,
+    "learnSets": [],
+    "types": ["GROUND", "ROCK"]
   },
   "112": {
     "baseMonIndex": 112,
     "name": "CHANSEY",
     "assetKey": "CHANSEY",
     "assetFrame": 0,
+    "baseHp": 250,
     "baseAttack": 5,
-    "teachableAttackIds": []
+    "baseDefense": 5,
+    "baseSplAttack": 35,
+    "baseSplDefense": 105,
+    "baseSpeed": 50,
+    "learnSets": [],
+    "types": ["NORMAL"]
   },
   "113": {
     "baseMonIndex": 113,
     "name": "TANGELA",
     "assetKey": "TANGELA",
     "assetFrame": 0,
+    "baseHp": 65,
     "baseAttack": 55,
-    "teachableAttackIds": []
+    "baseDefense": 115,
+    "baseSplAttack": 100,
+    "baseSplDefense": 40,
+    "baseSpeed": 60,
+    "learnSets": [],
+    "types": ["GRASS"]
   },
   "114": {
     "baseMonIndex": 114,
     "name": "KANGASKHAN",
     "assetKey": "KANGASKHAN",
     "assetFrame": 0,
+    "baseHp": 105,
     "baseAttack": 95,
-    "teachableAttackIds": []
+    "baseDefense": 80,
+    "baseSplAttack": 40,
+    "baseSplDefense": 80,
+    "baseSpeed": 90,
+    "learnSets": [],
+    "types": ["NORMAL"]
   },
   "115": {
     "baseMonIndex": 115,
     "name": "HORSEA",
     "assetKey": "HORSEA",
     "assetFrame": 0,
+    "baseHp": 30,
     "baseAttack": 40,
-    "teachableAttackIds": []
+    "baseDefense": 70,
+    "baseSplAttack": 70,
+    "baseSplDefense": 25,
+    "baseSpeed": 60,
+    "learnSets": [],
+    "types": ["WATER"]
   },
   "116": {
     "baseMonIndex": 116,
     "name": "SEADRA",
     "assetKey": "SEADRA",
     "assetFrame": 0,
+    "baseHp": 55,
     "baseAttack": 65,
-    "teachableAttackIds": []
+    "baseDefense": 95,
+    "baseSplAttack": 95,
+    "baseSplDefense": 45,
+    "baseSpeed": 85,
+    "learnSets": [],
+    "types": ["WATER"]
   },
   "117": {
     "baseMonIndex": 117,
     "name": "GOLDEEN",
     "assetKey": "GOLDEEN",
     "assetFrame": 0,
+    "baseHp": 45,
     "baseAttack": 67,
-    "teachableAttackIds": []
+    "baseDefense": 60,
+    "baseSplAttack": 35,
+    "baseSplDefense": 50,
+    "baseSpeed": 63,
+    "learnSets": [],
+    "types": ["WATER"]
   },
   "118": {
     "baseMonIndex": 118,
     "name": "SEAKING",
     "assetKey": "SEAKING",
     "assetFrame": 0,
+    "baseHp": 80,
     "baseAttack": 92,
-    "teachableAttackIds": []
+    "baseDefense": 65,
+    "baseSplAttack": 65,
+    "baseSplDefense": 80,
+    "baseSpeed": 68,
+    "learnSets": [],
+    "types": ["WATER"]
   },
   "119": {
     "baseMonIndex": 119,
     "name": "STARYU",
     "assetKey": "STARYU",
     "assetFrame": 0,
+    "baseHp": 30,
     "baseAttack": 45,
-    "teachableAttackIds": []
+    "baseDefense": 55,
+    "baseSplAttack": 70,
+    "baseSplDefense": 55,
+    "baseSpeed": 85,
+    "learnSets": [],
+    "types": ["WATER"]
   },
   "120": {
     "baseMonIndex": 120,
     "name": "STARMIE",
     "assetKey": "STARMIE",
     "assetFrame": 0,
+    "baseHp": 60,
     "baseAttack": 75,
-    "teachableAttackIds": []
+    "baseDefense": 85,
+    "baseSplAttack": 100,
+    "baseSplDefense": 85,
+    "baseSpeed": 115,
+    "learnSets": [],
+    "types": ["WATER", "PSYCHIC"]
   },
   "121": {
     "baseMonIndex": 121,
     "name": "MR_MIME",
     "assetKey": "MR_MIME",
     "assetFrame": 0,
+    "baseHp": 40,
     "baseAttack": 45,
-    "teachableAttackIds": []
+    "baseDefense": 65,
+    "baseSplAttack": 100,
+    "baseSplDefense": 120,
+    "baseSpeed": 90,
+    "learnSets": [],
+    "types": ["PSYCHIC"]
   },
   "122": {
     "baseMonIndex": 122,
     "name": "SCYTHER",
     "assetKey": "SCYTHER",
     "assetFrame": 0,
+    "baseHp": 70,
     "baseAttack": 110,
-    "teachableAttackIds": []
+    "baseDefense": 80,
+    "baseSplAttack": 55,
+    "baseSplDefense": 80,
+    "baseSpeed": 105,
+    "learnSets": [],
+    "types": ["BUG", "FLYING"]
   },
   "123": {
     "baseMonIndex": 123,
     "name": "JYNX",
     "assetKey": "JYNX",
     "assetFrame": 0,
+    "baseHp": 65,
     "baseAttack": 50,
-    "teachableAttackIds": []
+    "baseDefense": 35,
+    "baseSplAttack": 115,
+    "baseSplDefense": 95,
+    "baseSpeed": 95,
+    "learnSets": [],
+    "types": ["ICE", "PSYCHIC"]
   },
   "124": {
     "baseMonIndex": 124,
     "name": "ELECTABUZZ",
     "assetKey": "ELECTABUZZ",
     "assetFrame": 0,
+    "baseHp": 65,
     "baseAttack": 83,
-    "teachableAttackIds": []
+    "baseDefense": 57,
+    "baseSplAttack": 95,
+    "baseSplDefense": 85,
+    "baseSpeed": 105,
+    "learnSets": [],
+    "types": ["ELECTRIC"]
   },
   "125": {
     "baseMonIndex": 125,
     "name": "MAGMAR",
     "assetKey": "MAGMAR",
     "assetFrame": 0,
+    "baseHp": 65,
     "baseAttack": 95,
-    "teachableAttackIds": []
+    "baseDefense": 57,
+    "baseSplAttack": 100,
+    "baseSplDefense": 85,
+    "baseSpeed": 93,
+    "learnSets": [],
+    "types": ["FIRE"]
   },
   "126": {
     "baseMonIndex": 126,
     "name": "PINSIR",
     "assetKey": "PINSIR",
     "assetFrame": 0,
+    "baseHp": 65,
     "baseAttack": 125,
-    "teachableAttackIds": []
+    "baseDefense": 100,
+    "baseSplAttack": 55,
+    "baseSplDefense": 70,
+    "baseSpeed": 85,
+    "learnSets": [],
+    "types": ["BUG"]
   },
   "127": {
     "baseMonIndex": 127,
     "name": "TAUROS",
     "assetKey": "TAUROS",
     "assetFrame": 0,
+    "baseHp": 75,
     "baseAttack": 100,
-    "teachableAttackIds": []
+    "baseDefense": 95,
+    "baseSplAttack": 40,
+    "baseSplDefense": 70,
+    "baseSpeed": 110,
+    "learnSets": [],
+    "types": ["NORMAL"]
   },
   "128": {
     "baseMonIndex": 128,
     "name": "MAGIKARP",
     "assetKey": "MAGIKARP",
     "assetFrame": 0,
+    "baseHp": 20,
     "baseAttack": 10,
-    "teachableAttackIds": []
+    "baseDefense": 55,
+    "baseSplAttack": 15,
+    "baseSplDefense": 20,
+    "baseSpeed": 80,
+    "learnSets": [],
+    "types": ["WATER"]
   },
   "129": {
     "baseMonIndex": 129,
     "name": "GYARADOS",
     "assetKey": "GYARADOS",
     "assetFrame": 0,
+    "baseHp": 95,
     "baseAttack": 125,
-    "teachableAttackIds": []
+    "baseDefense": 79,
+    "baseSplAttack": 60,
+    "baseSplDefense": 100,
+    "baseSpeed": 81,
+    "learnSets": [],
+    "types": ["WATER", "FLYING"]
   },
   "130": {
     "baseMonIndex": 130,
     "name": "LAPRAS",
     "assetKey": "LAPRAS",
     "assetFrame": 0,
+    "baseHp": 130,
     "baseAttack": 85,
-    "teachableAttackIds": []
+    "baseDefense": 80,
+    "baseSplAttack": 85,
+    "baseSplDefense": 95,
+    "baseSpeed": 60,
+    "learnSets": [],
+    "types": ["WATER", "ICE"]
   },
   "131": {
     "baseMonIndex": 131,
     "name": "DITTO",
     "assetKey": "DITTO",
     "assetFrame": 0,
+    "baseHp": 48,
     "baseAttack": 48,
-    "teachableAttackIds": []
+    "baseDefense": 48,
+    "baseSplAttack": 48,
+    "baseSplDefense": 48,
+    "baseSpeed": 48,
+    "learnSets": [],
+    "types": ["NORMAL"]
   },
   "132": {
     "baseMonIndex": 132,
     "name": "EEVEE",
     "assetKey": "EEVEE",
     "assetFrame": 0,
+    "baseHp": 55,
     "baseAttack": 55,
-    "teachableAttackIds": []
+    "baseDefense": 50,
+    "baseSplAttack": 45,
+    "baseSplDefense": 65,
+    "baseSpeed": 55,
+    "learnSets": [],
+    "types": ["NORMAL"]
   },
   "133": {
     "baseMonIndex": 133,
     "name": "VAPOREON",
     "assetKey": "VAPOREON",
     "assetFrame": 0,
+    "baseHp": 130,
     "baseAttack": 65,
-    "teachableAttackIds": []
+    "baseDefense": 60,
+    "baseSplAttack": 110,
+    "baseSplDefense": 95,
+    "baseSpeed": 65,
+    "learnSets": [],
+    "types": ["WATER"]
   },
   "134": {
     "baseMonIndex": 134,
     "name": "JOLTEON",
     "assetKey": "JOLTEON",
     "assetFrame": 0,
+    "baseHp": 65,
     "baseAttack": 65,
-    "teachableAttackIds": []
+    "baseDefense": 60,
+    "baseSplAttack": 110,
+    "baseSplDefense": 95,
+    "baseSpeed": 130,
+    "learnSets": [],
+    "types": ["ELECTRIC"]
   },
   "135": {
     "baseMonIndex": 135,
     "name": "FLAREON",
     "assetKey": "FLAREON",
     "assetFrame": 0,
+    "baseHp": 65,
     "baseAttack": 130,
-    "teachableAttackIds": []
+    "baseDefense": 60,
+    "baseSplAttack": 95,
+    "baseSplDefense": 110,
+    "baseSpeed": 65,
+    "learnSets": [],
+    "types": ["FIRE"]
   },
   "136": {
     "baseMonIndex": 136,
     "name": "PORYGON",
     "assetKey": "PORYGON",
     "assetFrame": 0,
+    "baseHp": 65,
     "baseAttack": 60,
-    "teachableAttackIds": []
+    "baseDefense": 70,
+    "baseSplAttack": 85,
+    "baseSplDefense": 75,
+    "baseSpeed": 40,
+    "learnSets": [],
+    "types": ["NORMAL"]
   },
   "137": {
     "baseMonIndex": 137,
     "name": "OMANYTE",
     "assetKey": "OMANYTE",
     "assetFrame": 0,
+    "baseHp": 35,
     "baseAttack": 40,
-    "teachableAttackIds": []
+    "baseDefense": 100,
+    "baseSplAttack": 90,
+    "baseSplDefense": 55,
+    "baseSpeed": 35,
+    "learnSets": [],
+    "types": ["ROCK", "WATER"]
   },
   "138": {
     "baseMonIndex": 138,
     "name": "OMASTAR",
     "assetKey": "OMASTAR",
     "assetFrame": 0,
+    "baseHp": 70,
     "baseAttack": 60,
-    "teachableAttackIds": []
+    "baseDefense": 125,
+    "baseSplAttack": 115,
+    "baseSplDefense": 70,
+    "baseSpeed": 55,
+    "learnSets": [],
+    "types": ["ROCK", "WATER"]
   },
   "139": {
     "baseMonIndex": 139,
     "name": "KABUTO",
     "assetKey": "KABUTO",
     "assetFrame": 0,
+    "baseHp": 30,
     "baseAttack": 80,
-    "teachableAttackIds": []
+    "baseDefense": 90,
+    "baseSplAttack": 55,
+    "baseSplDefense": 45,
+    "baseSpeed": 55,
+    "learnSets": [],
+    "types": ["ROCK", "WATER"]
   },
   "140": {
     "baseMonIndex": 140,
     "name": "KABUTOPS",
     "assetKey": "KABUTOPS",
     "assetFrame": 0,
+    "baseHp": 60,
     "baseAttack": 115,
-    "teachableAttackIds": []
+    "baseDefense": 105,
+    "baseSplAttack": 65,
+    "baseSplDefense": 70,
+    "baseSpeed": 80,
+    "learnSets": [],
+    "types": ["ROCK", "WATER"]
   },
   "141": {
     "baseMonIndex": 141,
     "name": "AERODACTYL",
     "assetKey": "AERODACTYL",
     "assetFrame": 0,
+    "baseHp": 80,
     "baseAttack": 105,
-    "teachableAttackIds": []
+    "baseDefense": 65,
+    "baseSplAttack": 60,
+    "baseSplDefense": 75,
+    "baseSpeed": 130,
+    "learnSets": [],
+    "types": ["ROCK", "FLYING"]
   },
   "142": {
     "baseMonIndex": 142,
     "name": "SNORLAX",
     "assetKey": "SNORLAX",
     "assetFrame": 0,
+    "baseHp": 160,
     "baseAttack": 110,
-    "teachableAttackIds": []
+    "baseDefense": 65,
+    "baseSplAttack": 65,
+    "baseSplDefense": 110,
+    "baseSpeed": 30,
+    "learnSets": [],
+    "types": ["NORMAL"]
   },
   "143": {
     "baseMonIndex": 143,
     "name": "ARTICUNO",
     "assetKey": "ARTICUNO",
     "assetFrame": 0,
+    "baseHp": 90,
     "baseAttack": 85,
-    "teachableAttackIds": []
+    "baseDefense": 100,
+    "baseSplAttack": 95,
+    "baseSplDefense": 125,
+    "baseSpeed": 85,
+    "learnSets": [],
+    "types": ["ICE", "FLYING"]
   },
   "144": {
     "baseMonIndex": 144,
     "name": "ZAPDOS",
     "assetKey": "ZAPDOS",
     "assetFrame": 0,
+    "baseHp": 90,
     "baseAttack": 90,
-    "teachableAttackIds": []
+    "baseDefense": 85,
+    "baseSplAttack": 125,
+    "baseSplDefense": 90,
+    "baseSpeed": 100,
+    "learnSets": [],
+    "types": ["ELECTRIC", "FLYING"]
   },
   "145": {
     "baseMonIndex": 145,
     "name": "MOLTRES",
     "assetKey": "MOLTRES",
     "assetFrame": 0,
+    "baseHp": 90,
     "baseAttack": 100,
-    "teachableAttackIds": []
+    "baseDefense": 90,
+    "baseSplAttack": 125,
+    "baseSplDefense": 85,
+    "baseSpeed": 90,
+    "learnSets": [],
+    "types": ["FIRE", "FLYING"]
   },
   "146": {
     "baseMonIndex": 146,
     "name": "DRATINI",
     "assetKey": "DRATINI",
     "assetFrame": 0,
+    "baseHp": 41,
     "baseAttack": 64,
-    "teachableAttackIds": []
+    "baseDefense": 45,
+    "baseSplAttack": 50,
+    "baseSplDefense": 50,
+    "baseSpeed": 50,
+    "learnSets": [],
+    "types": ["DRAGON"]
   },
   "147": {
     "baseMonIndex": 147,
     "name": "DRAGONAIR",
     "assetKey": "DRAGONAIR",
     "assetFrame": 0,
+    "baseHp": 61,
     "baseAttack": 84,
-    "teachableAttackIds": []
+    "baseDefense": 65,
+    "baseSplAttack": 70,
+    "baseSplDefense": 70,
+    "baseSpeed": 70,
+    "learnSets": [],
+    "types": ["DRAGON"]
   },
   "148": {
     "baseMonIndex": 148,
     "name": "DRAGONITE",
     "assetKey": "DRAGONITE",
     "assetFrame": 0,
+    "baseHp": 91,
     "baseAttack": 134,
-    "teachableAttackIds": []
+    "baseDefense": 95,
+    "baseSplAttack": 100,
+    "baseSplDefense": 100,
+    "baseSpeed": 80,
+    "learnSets": [],
+    "types": ["DRAGON", "FLYING"]
   },
   "149": {
     "baseMonIndex": 149,
     "name": "MEWTWO",
     "assetKey": "MEWTWO",
     "assetFrame": 0,
+    "baseHp": 106,
     "baseAttack": 110,
-    "teachableAttackIds": []
+    "baseDefense": 90,
+    "baseSplAttack": 154,
+    "baseSplDefense": 90,
+    "baseSpeed": 130,
+    "learnSets": [],
+    "types": ["PSYCHIC"]
   },
   "150": {
     "baseMonIndex": 150,
     "name": "MEW",
     "assetKey": "MEW",
     "assetFrame": 0,
+    "baseHp": 100,
     "baseAttack": 100,
-    "teachableAttackIds": []
+    "baseDefense": 100,
+    "baseSplAttack": 100,
+    "baseSplDefense": 100,
+    "baseSpeed": 100,
+    "learnSets": [],
+    "types": ["PSYCHIC"]
   },
   "151": {
     "baseMonIndex": 151,
     "name": "BORRIS",
     "assetKey": "CUSTOM",
     "assetFrame": 0,
+    "baseHp": 50,
     "baseAttack": 49,
-    "teachableAttackIds": []
+    "baseDefense": 49,
+    "baseSplAttack": 65,
+    "baseSplDefense": 65,
+    "baseSpeed": 45,
+    "learnSets": [],
+    "types": ["GRASS", "POISON"]
   }
 }

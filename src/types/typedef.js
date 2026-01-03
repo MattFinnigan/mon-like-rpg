@@ -24,9 +24,14 @@ import Phaser from "../lib/phaser.js";
  * @property {string} name
  * @property {string} assetKey
  * @property {number} [assetFrame=0]
- * @property {number} maxHp
  * @property {number} baseAttack
- * @property {number[]} teachableAttackIds
+ * @property {number} baseDefense
+ * @property {number} baseSplAttack
+ * @property {number} baseSplDefense
+ * @property {number} baseSpeed
+ * @property {number} baseHp
+ * @property {Type[]} types
+ * @property {number[]} learnSet
  */
 
 /**
@@ -34,9 +39,14 @@ import Phaser from "../lib/phaser.js";
  * @type {Object}
  * @property {number|undefined} [id]
  * @property {number} baseMonIndex
- * @property {number} maxHp
  * @property {number} currentHp
  * @property {number} currentLevel
+ * @property {number} attackEV
+ * @property {number} defenseEV
+ * @property {number} splAttackEV
+ * @property {number} splDefenseEV
+ * @property {number} speedEV
+ * @property {number} hpEV
  * @property {number[]} attackIds
  */
 
@@ -102,3 +112,11 @@ import Phaser from "../lib/phaser.js";
  * @property {string} assetKey
  */
 
+/**
+ * @typedef Type
+ * @type {Object}
+ * @property {string} name
+ * @property {Type[]} weaknessTo
+ * @property {Type[]} strongAgainst
+ * @property {Type[]} ineffectiveAgainst
+ */

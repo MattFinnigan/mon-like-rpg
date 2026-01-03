@@ -2,73 +2,73 @@
   "1": {
     "encounterRate": 0.25,
     "mons": [
-      { "rate": 1, "baseMonIndex": 0, "minLevel": 1, "maxLevel": 100 },
-      { "rate": 1, "baseMonIndex": 1, "minLevel": 1, "maxLevel": 100 },
-      { "rate": 1, "baseMonIndex": 2, "minLevel": 1, "maxLevel": 100 },
-      { "rate": 1, "baseMonIndex": 151, "minLevel": 1, "maxLevel": 100 }
+      { "rate": 4, "baseMonIndex": 0, "minLevel": 1, "maxLevel": 20 },
+      { "rate": 3, "baseMonIndex": 1, "minLevel": 20, "maxLevel": 35 },
+      { "rate": 2, "baseMonIndex": 2, "minLevel": 40, "maxLevel": 60 },
+      { "rate": 1, "baseMonIndex": 151, "minLevel": 100, "maxLevel": 100 }
     ]
   },
   "2": {
     "encounterRate": 0.25,
     "mons": [
-      { "rate": 1, "baseMonIndex": 3, "minLevel": 1, "maxLevel": 100 },
-      { "rate": 1, "baseMonIndex": 4, "minLevel": 1, "maxLevel": 100 },
-      { "rate": 1, "baseMonIndex": 5, "minLevel": 1, "maxLevel": 100 },
-      { "rate": 1, "baseMonIndex": 151, "minLevel": 1, "maxLevel": 100 }
+      { "rate": 4, "baseMonIndex": 3, "minLevel": 1, "maxLevel": 20 },
+      { "rate": 3, "baseMonIndex": 4, "minLevel": 20, "maxLevel": 35 },
+      { "rate": 2, "baseMonIndex": 5, "minLevel": 40, "maxLevel": 60 },
+      { "rate": 1, "baseMonIndex": 151, "minLevel": 100, "maxLevel": 100 }
     ]
   },
   "3": {
     "encounterRate": 0.25,
     "mons": [
-      { "rate": 1, "baseMonIndex": 6, "minLevel": 1, "maxLevel": 100 },
-      { "rate": 1, "baseMonIndex": 7, "minLevel": 1, "maxLevel": 100 },
-      { "rate": 1, "baseMonIndex": 8, "minLevel": 1, "maxLevel": 100 },
-      { "rate": 1, "baseMonIndex": 151, "minLevel": 1, "maxLevel": 100 }
+      { "rate": 4, "baseMonIndex": 6, "minLevel": 1, "maxLevel": 20 },
+      { "rate": 3, "baseMonIndex": 7, "minLevel": 20, "maxLevel": 35 },
+      { "rate": 2, "baseMonIndex": 8, "minLevel": 40, "maxLevel": 60 },
+      { "rate": 1, "baseMonIndex": 151, "minLevel": 100, "maxLevel": 100 }
     ]
   },
   "4": {
     "encounterRate": 0.25,
     "mons": [
-      { "rate": 1, "baseMonIndex": 9, "minLevel": 1, "maxLevel": 100 },
-      { "rate": 1, "baseMonIndex": 10, "minLevel": 1, "maxLevel": 100 },
-      { "rate": 1, "baseMonIndex": 11, "minLevel": 1, "maxLevel": 100 },
-      { "rate": 1, "baseMonIndex": 151, "minLevel": 1, "maxLevel": 100 }
+      { "rate": 4, "baseMonIndex": 9, "minLevel": 1, "maxLevel": 20 },
+      { "rate": 3, "baseMonIndex": 10, "minLevel": 20, "maxLevel": 35 },
+      { "rate": 2, "baseMonIndex": 11, "minLevel": 40, "maxLevel": 60 },
+      { "rate": 1, "baseMonIndex": 151, "minLevel": 100, "maxLevel": 100 }
     ]
   },
   "5": {
     "encounterRate": 0.25,
     "mons": [
-      { "rate": 1, "baseMonIndex": 12, "minLevel": 1, "maxLevel": 100 },
-      { "rate": 1, "baseMonIndex": 13, "minLevel": 1, "maxLevel": 100 },
-      { "rate": 1, "baseMonIndex": 14, "minLevel": 1, "maxLevel": 100 },
-      { "rate": 1, "baseMonIndex": 151, "minLevel": 1, "maxLevel": 100 }
+      { "rate": 4, "baseMonIndex": 12, "minLevel": 1, "maxLevel": 20 },
+      { "rate": 3, "baseMonIndex": 13, "minLevel": 20, "maxLevel": 35 },
+      { "rate": 2, "baseMonIndex": 14, "minLevel": 40, "maxLevel": 60 },
+      { "rate": 1, "baseMonIndex": 151, "minLevel": 100, "maxLevel": 100 }
     ]
   },
   "6": {
     "encounterRate": 0.25,
     "mons": [
-      { "rate": 1, "baseMonIndex": 15, "minLevel": 1, "maxLevel": 100 },
-      { "rate": 1, "baseMonIndex": 16, "minLevel": 1, "maxLevel": 100 },
-      { "rate": 1, "baseMonIndex": 17, "minLevel": 1, "maxLevel": 100 },
-      { "rate": 1, "baseMonIndex": 151, "minLevel": 1, "maxLevel": 100 }
+      { "rate": 4, "baseMonIndex": 15, "minLevel": 1, "maxLevel": 20 },
+      { "rate": 3, "baseMonIndex": 16, "minLevel": 20, "maxLevel": 35 },
+      { "rate": 2, "baseMonIndex": 17, "minLevel": 40, "maxLevel": 60 },
+      { "rate": 1, "baseMonIndex": 151, "minLevel": 100, "maxLevel": 100 }
     ]
   },
   "7": {
     "encounterRate": 0.25,
     "mons": [
-      { "rate": 1, "baseMonIndex": 18, "minLevel": 1, "maxLevel": 100 },
-      { "rate": 1, "baseMonIndex": 19, "minLevel": 1, "maxLevel": 100 },
-      { "rate": 1, "baseMonIndex": 20, "minLevel": 1, "maxLevel": 100 },
-      { "rate": 1, "baseMonIndex": 151, "minLevel": 1, "maxLevel": 100 }
+      { "rate": 4, "baseMonIndex": 18, "minLevel": 1, "maxLevel": 20 },
+      { "rate": 3, "baseMonIndex": 19, "minLevel": 20, "maxLevel": 35 },
+      { "rate": 2, "baseMonIndex": 20, "minLevel": 40, "maxLevel": 60 },
+      { "rate": 1, "baseMonIndex": 151, "minLevel": 100, "maxLevel": 100 }
     ]
   },
   "8": {
     "encounterRate": 0.25,
     "mons": [
-      { "rate": 1, "baseMonIndex": 21, "minLevel": 1, "maxLevel": 100 },
-      { "rate": 1, "baseMonIndex": 22, "minLevel": 1, "maxLevel": 100 },
-      { "rate": 1, "baseMonIndex": 23, "minLevel": 1, "maxLevel": 100 },
-      { "rate": 1, "baseMonIndex": 151, "minLevel": 1, "maxLevel": 100 }
+      { "rate": 4, "baseMonIndex": 21, "minLevel": 1, "maxLevel": 20 },
+      { "rate": 3, "baseMonIndex": 22, "minLevel": 20, "maxLevel": 35 },
+      { "rate": 2, "baseMonIndex": 23, "minLevel": 40, "maxLevel": 60 },
+      { "rate": 1, "baseMonIndex": 151, "minLevel": 100, "maxLevel": 100 }
     ]
   }
 }

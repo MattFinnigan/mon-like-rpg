@@ -1,4 +1,5 @@
 import { DATA_ASSET_KEYS } from "../assets/asset-keys.js"
+import { MON_TYPES } from "../common/mon-types.js"
 
 export class DataUtils {
   static getMonAttack (scene, attackId) {
@@ -32,7 +33,9 @@ export class DataUtils {
    * @returns {import("../types/typedef.js").BaseMon}
    */
   static getBaseMonDetails (scene, index) {
-    return scene.cache.json.get(DATA_ASSET_KEYS.BASE_MONS)[index]
+    const data = scene.cache.json.get(DATA_ASSET_KEYS.BASE_MONS)[index]
+    const types = data.types.map(type => MON_TYPES[type])
+    return { ...data, types }
   }
 
   /**
@@ -56,16 +59,21 @@ export class DataUtils {
    */
   static generateWildMon (scene, area) {
     const chosenMon = this.chooseEncounterMon(area.mons)
-
-    // TODO generate wild mon attacks, hp, base attk etc
-    const level = Phaser.Math.Between(chosenMon.minLevel, chosenMon.maxLevel)
   
+    const level = Phaser.Math.Between(chosenMon.minLevel, chosenMon.maxLevel)
+    
+    /** @type {import("../types/typedef.js").Mon} */
     const mon = {
       baseMonIndex: chosenMon.baseMonIndex,
       currentLevel: level,
-      maxHp: 100,
       currentHp: 100,
-      attackIds: [1, 2]
+      attackIds: [1, 2],
+      attackEV: Phaser.Math.Between(0, 30),
+      defenseEV: Phaser.Math.Between(0, 30),
+      splAttackEV: Phaser.Math.Between(0, 30),
+      splDefenseEV: Phaser.Math.Between(0, 30),
+      speedEV: Phaser.Math.Between(0, 30),
+      hpEV: Phaser.Math.Between(0, 30),
     }
     const baseMon = this.getBaseMonDetails(scene, chosenMon.baseMonIndex)
 
@@ -111,7 +119,4 @@ export class DataUtils {
     return { ...player, partyMons }
   }
 
-  static loadTrainerSprites () {
-    
-  }
 }

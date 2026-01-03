@@ -6,7 +6,7 @@ import { ACTIVE_BATTLE_MENU, ATTACK_MOVE_OPTIONS, BATTLE_MENU_OPTIONS } from './
 import { BattleMon } from '../../mons/battle-mon.js'
 import { animateText } from '../../../utils/text-utils.js'
 import { SKIP_BATTLE_ANIMATIONS } from '../../../../config.js'
-import { DIALOG_DETAILS } from '../../../assets/consts.js'
+import { DIALOG_DETAILS } from '../../../utils/consts.js'
 import { EVENT_KEYS } from '../../../common/event-keys.js'
 
 const BATTLE_MENU_CURSOR_POS = Object.freeze({

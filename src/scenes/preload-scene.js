@@ -25,7 +25,6 @@ export class PreloadScene extends Phaser.Scene {
     }).setOrigin(0.5)
 
     this.load.on('complete', () => {
-      console.log('done')
       this.scene.start(SCENE_KEYS.WORLD_SCENE)
       this.#createAnimations()
     })
