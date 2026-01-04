@@ -4,7 +4,7 @@
   "description": "A Pokemon-like RPG project I'm building to brush up on my **Typescript**. Built with **Javascript** + **Phaser**",
   "main": "config.js",
   "scripts": {
-    "build": "rollup -c",
+    "build": "npx vite build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -20,6 +20,7 @@
   "homepage": "https://github.com/MattFinnigan/mon-like-rpg#readme",
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^16.0.3",
-    "rollup": "^4.54.0"
+    "rollup": "^4.54.0",
+    "vite": "^7.3.0"
   }
 }
