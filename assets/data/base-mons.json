@@ -2125,6 +2125,6 @@
     "baseSplDefense": 65,
     "baseSpeed": 45,
     "learnSets": [],
-    "types": ["GRASS", "POISON"]
+    "types": ["PSYCHIC", "GHOST"]
   }
 }

@@ -183,11 +183,13 @@ export class BattleMenu {
    * @param {boolean} [skipAnimation=false]
    */
   updateInfoPanelMessagesAndWaitForInput (messages, callback, skipAnimation = false) {
-    this.#queuedInfoPanelMessages = messages
-    this.#queuedInfoPanelCallback = callback
-    this.#queuedMessageSkipAnimation = skipAnimation
+    this.#scene.time.delayedCall(100, () => {
+      this.#queuedInfoPanelMessages = messages
+      this.#queuedInfoPanelCallback = callback
+      this.#queuedMessageSkipAnimation = skipAnimation
 
-    this.#updateInfoPaneWithMessage()
+      this.#updateInfoPaneWithMessage()
+    })
   }
 
   /**
@@ -197,11 +199,13 @@ export class BattleMenu {
    * @param {boolean} [skipAnimation=false]
    */
   updateInfoPanelMessagesNoInputRequired (message, callback, skipAnimation = false) {
+    this.#queuedMessageAnimationPlaying = true
     this.#battleTextGameObjectLine1.setText('').setAlpha(1)
   
     if (skipAnimation) {
       this.#battleTextGameObjectLine1.setText(message)
       this.#waitingForPlayerInput = false
+      this.#queuedMessageAnimationPlaying = false
       if (callback) {
         callback()
       }
@@ -212,6 +216,7 @@ export class BattleMenu {
       delay: 25,
       callback: () => {
         this.#waitingForPlayerInput = false
+        this.#queuedMessageAnimationPlaying = false
         if (callback) {
           callback()
         }
@@ -253,7 +258,6 @@ export class BattleMenu {
         this.playInputCursorAnimation()
       }
     })
-
   }
   
   #createMainBattleMenu () {

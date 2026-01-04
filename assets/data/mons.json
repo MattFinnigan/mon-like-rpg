@@ -1,8 +1,8 @@
 {
   "1": {
-    "baseMonIndex": 148,
-    "currentHp": 97,
-    "currentLevel": 50,
+    "baseMonIndex": 1,
+    "currentHp": null,
+    "currentLevel": 25,
     "attackEV": 14,
     "defenseEV": 3,
     "splAttackEV": 27,
@@ -12,9 +12,9 @@
     "attackIds": [1, 2]
   },
   "2": {
-    "baseMonIndex": 151,
-    "currentHp": 77,
-    "currentLevel": 45,
+    "baseMonIndex": 15,
+    "currentHp": null,
+    "currentLevel": 50,
     "attackEV": 5,
     "defenseEV": 29,
     "splAttackEV": 11,
@@ -22,5 +22,17 @@
     "speedEV": 2,
     "hpEV": 24,
     "attackIds": [2]
+  },
+  "3": {
+    "baseMonIndex": 73,
+    "currentHp": null,
+    "currentLevel": 50,
+    "attackEV": 5,
+    "defenseEV": 29,
+    "splAttackEV": 11,
+    "splDefenseEV": 16,
+    "speedEV": 2,
+    "hpEV": 24,
+    "attackIds": [1, 2]
   }
 }

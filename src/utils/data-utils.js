@@ -1,12 +1,14 @@
 import { DATA_ASSET_KEYS } from "../assets/asset-keys.js"
 import { MON_TYPES } from "../common/mon-types.js"
+import { getMonStats } from "./battle-utils.js"
 
 export class DataUtils {
   static getMonAttack (scene, attackId) {
-    /** @type {import("../types/typedef.js").Attack[]} */
     const data = scene.cache.json.get(DATA_ASSET_KEYS.ATTACKS)
-    return data.find(attk => attk.id === attackId)
+    const attk = data.find(attk => attk.id === attackId)
+    return attk
   }
+  
 
   static getAnimations (scene) {
     /** @type {import("../types/typedef.js").Animation[]} */
@@ -23,7 +25,11 @@ export class DataUtils {
 
   static getMonDetails (scene, id) {
     /** @type {import("../types/typedef.js").Mon} */
-    return { id, ...scene.cache.json.get(DATA_ASSET_KEYS.MONS)[id] }
+    const data = { id, ...scene.cache.json.get(DATA_ASSET_KEYS.MONS)[id] }
+    if (data.currentHp === null) {
+      data.currentHp = getMonStats(this.getBaseMonDetails(scene, data.baseMonIndex), data).hp
+    }
+    return data
   }
 
   /**
@@ -46,54 +52,6 @@ export class DataUtils {
    */
   static getEncoutnerConfig (scene, id) {
     return scene.cache.json.get(DATA_ASSET_KEYS.ENCOUNTER_AREAS)[id]
-  }
-
-  /**
-   * 
-   * @param {Phaser.Scene} scene 
-   * @param {import("../types/typedef.js").EncounterAreaConfig} area
-   * @returns {{
-   *  mon: import("../types/typedef.js").Mon,
-   *  baseMon: import("../types/typedef.js").BaseMon
-   * }}
-   */
-  static generateWildMon (scene, area) {
-    const chosenMon = this.chooseEncounterMon(area.mons)
-  
-    const level = Phaser.Math.Between(chosenMon.minLevel, chosenMon.maxLevel)
-    
-    /** @type {import("../types/typedef.js").Mon} */
-    const mon = {
-      baseMonIndex: chosenMon.baseMonIndex,
-      currentLevel: level,
-      currentHp: 100,
-      attackIds: [1, 2],
-      attackEV: Phaser.Math.Between(0, 30),
-      defenseEV: Phaser.Math.Between(0, 30),
-      splAttackEV: Phaser.Math.Between(0, 30),
-      splDefenseEV: Phaser.Math.Between(0, 30),
-      speedEV: Phaser.Math.Between(0, 30),
-      hpEV: Phaser.Math.Between(0, 30),
-    }
-    const baseMon = this.getBaseMonDetails(scene, chosenMon.baseMonIndex)
-
-    return { mon, baseMon }
-  }
-
-  /**
-   * @param {import("../types/typedef.js").EncounterMon[]} mons
-   * @returns {import("../types/typedef.js").EncounterMon}
-   */
-  static chooseEncounterMon (mons) {
-    const totalWeight = mons.reduce((sum, m) => sum + m.rate, 0)
-    let roll = Math.random() * totalWeight
-
-    for (const mon of mons) {
-      roll -= mon.rate
-      if (roll <= 0) return mon
-    }
-
-    return mons[mons.length - 1]
   }
 
   /**

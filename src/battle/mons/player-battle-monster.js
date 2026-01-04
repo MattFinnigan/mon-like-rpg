@@ -42,6 +42,7 @@ export class PlayerBattleMon extends BattleMon {
 
     if (this._skipBattleAnimations) {
       this._phaserMonImageGameObject.setX(endXPos)
+      this._phaserHealthBarGameContainer.setAlpha(1)
       callback()
       return
     }
@@ -56,19 +57,11 @@ export class PlayerBattleMon extends BattleMon {
       targets: this._phaserMonImageGameObject,
       onComplete: () => {
         super.playMonCry(() => {
+          this._phaserHealthBarGameContainer.setAlpha(1)
           callback()
         })
       }
     })
-  }
-  /**
-   * 
-   * @param {() => void} callback
-   * @returns {void}
-   */
-  playMonHealthBarContainerAppearAnimation (callback) {
-    this._phaserHealthBarGameContainer.setAlpha(1)
-    callback()
   }
 
   /**
@@ -87,7 +80,7 @@ export class PlayerBattleMon extends BattleMon {
     }
     super.playMonCry(() => {
       this._scene.tweens.add({
-        delay: 0,
+        delay: 300,
         duration: 300,
         y: {
           from: startYPos,
@@ -95,6 +88,7 @@ export class PlayerBattleMon extends BattleMon {
         },
         targets: this._phaserMonImageGameObject,
         onComplete: () => {
+          this._phaserHealthBarGameContainer.setAlpha(0)
           callback()
         }
       })

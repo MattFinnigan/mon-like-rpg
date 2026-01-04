@@ -30,7 +30,7 @@ export class HealthBar {
    * @param {Phaser.Scene} scene the Phaser 3 Scene the battle menu will be added to
    * @param {number} x
    * @param {number} y
-   * @param {number} currentHp
+   * @param {number|null} currentHp
    * @param {number} maxHp
    * @param {boolean} [showHpNums]
    */
@@ -39,12 +39,12 @@ export class HealthBar {
     this.#fullWidth = 190
     this.#scale = 1.35
     this.#showHpNums = showHpNums
-    this.#currentHp = currentHp
     this.#maxHp = maxHp
+    this.#currentHp = currentHp === null ? this.#maxHp : currentHp
     this.#healthBarContainer = this.#scene.add.container(x, y, [])
 
     this.#createHealthBarImages(x, y)
-    this.#setMeterPercentage(currentHp / maxHp)
+    this.#setMeterPercentage(this.#currentHp / this.#maxHp)
     if (this.#showHpNums) {
       this.#addHealthBarComponents()
       this.#setHealthBarText()

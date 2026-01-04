@@ -1,4 +1,4 @@
-import { BATTLE_ASSET_KEYS, HEALTH_BAR_ASSET_KEYS, MON_ASSET_KEYS, MON_BACK_ASSET_KEYS, MON_GRAY_ASSET_KEYS, TRAINER_GRAY_SPRITES, TRAINER_SPRITES } from "../assets/asset-keys.js"
+import { BATTLE_ASSET_KEYS, HEALTH_BAR_ASSET_KEYS, MON_ASSET_KEYS, MON_BACK_ASSET_KEYS, MON_GRAY_ASSET_KEYS, TRAINER_GRAY_SPRITES, TRAINER_SPRITES, TYPE_ASSET_KEYS } from "../assets/asset-keys.js"
 
 /**
  * 
@@ -13,6 +13,10 @@ export function loadMonAssets (scene, baseMon) {
   scene.load.image(MON_BACK_ASSET_KEYS[key + '_BACK'], `/assets/images/mons/backs/${monNum}.png`)
   scene.load.image(MON_GRAY_ASSET_KEYS[key + '_GRAY'], `/assets/images/mons/gray/${monNum}.png`)
   scene.load.audio(key, [`assets/audio/mons/cries/${monNum}.ogg`])
+  scene.load.image(TYPE_ASSET_KEYS.NORMAL, `/assets/images/types/NORMAL.png`)
+  // baseMon.types.forEach(t => {
+  //   scene.load.image(TYPE_ASSET_KEYS[t.name], `/assets/images/types/${t.name}.png`)
+  // })
 }
 
 /**

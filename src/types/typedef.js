@@ -98,6 +98,10 @@ import Phaser from "../lib/phaser.js";
  * @property {number} id
  * @property {string} name
  * @property {import("../battle/attacks/attack-keys.js").AttackKeys} animationName
+ * @property {string} typeKey
+ * @property {number} power
+ * @property {number} criticalHitModifier
+ * @property {number} usesMonSplStat flag to uses attack mon's special attack, defener's special defense
  */
 
 /**
@@ -116,7 +120,29 @@ import Phaser from "../lib/phaser.js";
  * @typedef Type
  * @type {Object}
  * @property {string} name
- * @property {Type[]} weaknessTo
- * @property {Type[]} strongAgainst
- * @property {Type[]} ineffectiveAgainst
+ * @property {number} colour
+ * @property {string[]} immuneTo
+ * @property {string[]} superEffectiveAgainst
+ * @property {string[]} resistantAgainst
+ */
+
+/**
+ * @typedef MonStats
+ * @type {object}
+ * @property {number} attack
+ * @property {number} defense
+ * @property {number} splAttack
+ * @property {number} splDefense
+ * @property {number} speed
+ * @property {number} hp
+ */
+
+/**
+ * @typedef PostAttackResult
+ * @type {object}
+ * @property {number} damageTaken
+ * @property {boolean} wasCriticalHit
+ * @property {boolean} wasSuperEffective
+ * @property {boolean} wasResistant
+ * @property {boolean} wasImmune
  */

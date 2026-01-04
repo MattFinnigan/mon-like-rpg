@@ -2,11 +2,19 @@
   {
     "id": 1,
     "name": "ICE SHARD",
-    "animationName": "ICE_SHARD"
+    "animationName": "ICE_SHARD",
+    "typeKey": "ICE",
+    "power": 100,
+    "criticalHitModifier": 1,
+    "usesMonSplStat": true
   },
   {
     "id": 2,
     "name": "SLASH",
-    "animationName": "SLASH"
+    "animationName": "SLASH",
+    "typeKey": "NORMAL",
+    "power": 90,
+    "criticalHitModifier": 4,
+    "usesMonSplStat": true
   }
 ]

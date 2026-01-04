@@ -17,7 +17,9 @@ import { BGM_ASSET_KEYS, TRAINER_SPRITES } from '../assets/asset-keys.js'
 import { OPPONENT_TYPES } from '../common/opponent-types.js'
 import { loadBattleAssets, loadMonAssets, loadTrainerSprites } from '../utils/load-assets.js'
 import { BattlePlayer } from '../battle/battle-player.js'
+import { generateWildMon } from '../utils/encounter-utils.js'
 
+/** @enum {object} */
 const BATTLE_STATES = Object.freeze({
   INTRO: 'INTRO',
   ENEMY_OUT: 'ENEMY_OUT',
@@ -31,6 +33,12 @@ const BATTLE_STATES = Object.freeze({
   POST_ATTACK: 'POST_ATTACK',
   FINISHED: 'FINISHED',
   RUN_ATTEMPT: 'RUN_ATTEMPT'
+})
+
+/** @enum {object} */
+const BATTLE_PLAYERS = Object.freeze({
+  PLAYER: 'PLAYER',
+  ENEMY: 'ENEMY'
 })
 
 export class BattleScene extends Phaser.Scene {
@@ -54,8 +62,6 @@ export class BattleScene extends Phaser.Scene {
   #battlePlayer
   /** @type {import('../types/typedef.js').Mon[]} */
   #opponentMons
-  /** @type {number} */
-  #currentOpponentMonIndex
   /** @type {OPPONENT_TYPES} */
   #opponentType
   /** @type {import('../types/typedef.js').Trainer} */
@@ -66,23 +72,21 @@ export class BattleScene extends Phaser.Scene {
   #player
   /** @type {import('../types/typedef.js').Mon[]} */
   #playerMons
-  /** @type {number} */
-  #currentPlayerMonIndex
   /** @type {import('../types/typedef.js').BaseMon[]} */
   #baseMonsToPreload
   /** @type {string} */
   #victoryBgmKey
+  /** @type {import('../types/typedef.js').PostAttackResult} */
+  #lastAttackResult
+  /** @type {BATTLE_PLAYERS[]} */
+  #playersThatHadATurn
 
   constructor () {
     super({
       key: SCENE_KEYS.BATTLE_SCENE
     })
     this.#activePlayerAttackIndex = -1
-    this.#currentOpponentMonIndex = 0
-    this.#currentPlayerMonIndex = 0
     this.#player = null
-    this.#playerMons = []
-    this.#baseMonsToPreload = []
   }
   
   /**
@@ -93,6 +97,9 @@ export class BattleScene extends Phaser.Scene {
    * @param {import('../types/typedef.js').WildMon} [data.wildMon]
    */
   init (data) {
+    this.#playerMons = []
+    this.#baseMonsToPreload = []
+    this.#playersThatHadATurn = []
     // load player mons
     this.#player = DataUtils.getPlayerDetails(this)
     this.#playerMons = this.#player.partyMons
@@ -104,7 +111,7 @@ export class BattleScene extends Phaser.Scene {
     this.#opponentType = data.type
     switch (this.#opponentType) {
       case OPPONENT_TYPES.WILD_ENCOUNTER:
-        const generatedWildMon = DataUtils.generateWildMon(this, data.wildMon.encounterArea)
+        const generatedWildMon = generateWildMon(this, data.wildMon.encounterArea)
         this.#baseMonsToPreload.push(generatedWildMon.baseMon)
         this.#opponentMons = [generatedWildMon.mon]
         this.#victoryBgmKey = BGM_ASSET_KEYS.WILD_ENCOUNTER_VICTORY
@@ -140,7 +147,7 @@ export class BattleScene extends Phaser.Scene {
     this.cameras.main.setBackgroundColor('#fff')
     console.log(`[${BattleScene.name}:create] invoked`)
 
-    const P2_MON = this.#opponentMons[this.#currentOpponentMonIndex]
+    const P2_MON = this.#opponentMons[0]
     const P2_BASE_MON = DataUtils.getBaseMonDetails(this, P2_MON.baseMonIndex)
 
     this.#activeEnemyMon = new EnemyBattleMon({
@@ -150,7 +157,7 @@ export class BattleScene extends Phaser.Scene {
       skipBattleAnimations: SKIP_BATTLE_ANIMATIONS
     })
 
-    const P1_MON = this.#playerMons[this.#currentPlayerMonIndex]
+    const P1_MON = this.#playerMons[0]
     const P1_BASE_MON = DataUtils.getBaseMonDetails(this, P1_MON.baseMonIndex)
 
     this.#activePlayerMon = new PlayerBattleMon({
@@ -159,6 +166,7 @@ export class BattleScene extends Phaser.Scene {
       baseMonDetails: P1_BASE_MON,
       skipBattleAnimations: SKIP_BATTLE_ANIMATIONS
     })
+
     this.#audioManager = this.registry.get('audio')
 
     this.#battleMenu = new BattleMenu(this, this.#activePlayerMon)
@@ -219,13 +227,17 @@ export class BattleScene extends Phaser.Scene {
 
 
   #playerAttack () {
+    if (this.#activePlayerMon.isFainted) {
+      return
+    }
     const attk = this.#activePlayerMon.attacks[this.#activePlayerAttackIndex]
     this.#battleMenu.updateInfoPanelMessagesNoInputRequired(`${this.#activePlayerMon.name} used ${attk.name}!`, () => {
+      this.#lastAttackResult = this.#activeEnemyMon.receiveAttackAndCalculateDamage(this.#activePlayerMon, attk)
       this.time.delayedCall(500, () => {
         this.#attackManager.playAttackAnimation(attk.animationName, ATTACK_TARGET.ENEMY, () => {
           this.#activeEnemyMon.playMonTakeDamageAnimation(() => {
-            this.#activeEnemyMon.takeDamage(this.#activePlayerMon.baseAttack, () => {
-              this.#enemyAttack()
+            this.#activeEnemyMon.takeDamage(this.#lastAttackResult.damageTaken, () => {
+              this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK)
             })
           })
         })
@@ -235,15 +247,15 @@ export class BattleScene extends Phaser.Scene {
 
   #enemyAttack() {
     if (this.#activeEnemyMon.isFainted) {
-      this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK)
       return
     }
     const attk = this.#activeEnemyMon.attacks[0]
-    this.#battleMenu.updateInfoPanelMessagesNoInputRequired(`Foe ${this.#activeEnemyMon.name} used ${attk.name}!`, () => {
+    this.#battleMenu.updateInfoPanelMessagesNoInputRequired(`Foe's ${this.#activeEnemyMon.name} used ${attk.name}!`, () => {
+      this.#lastAttackResult = this.#activePlayerMon.receiveAttackAndCalculateDamage(this.#activeEnemyMon, attk)
       this.time.delayedCall(500, () => {
         this.#attackManager.playAttackAnimation(attk.animationName, ATTACK_TARGET.PLAYER, () => {
           this.#activePlayerMon.playMonTakeDamageAnimation(() => {
-            this.#activePlayerMon.takeDamage(this.#activeEnemyMon.baseAttack, () => {
+            this.#activePlayerMon.takeDamage(this.#lastAttackResult.damageTaken, () => {
               this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK)
             })
           })
@@ -253,36 +265,65 @@ export class BattleScene extends Phaser.Scene {
   }
 
   #postBattleSequenceCheck() {
-    let faintedMsg = `Wild ${this.#activeEnemyMon.name} fainted!`
+    let postAttackMsgs = []
+    const {
+      wasCriticalHit,
+      wasSuperEffective,
+      wasImmune,
+      wasResistant
+    } = this.#lastAttackResult
 
-    if (this.#opponentType !== OPPONENT_TYPES.WILD_ENCOUNTER) {
-      faintedMsg = `Foe ${this.#activeEnemyMon.name} fainted!`
+    if (wasCriticalHit) {
+      postAttackMsgs.push('A critical hit!')
+    }
+    if (wasSuperEffective) {
+      postAttackMsgs.push(`It's super effective!`)
+    }
+    if (wasResistant) {
+      postAttackMsgs.push(`It's not very effective...`)
+    }
+    if (wasImmune) {
+      postAttackMsgs.push(`But nothing happened!`)
     }
 
-    if (this.#activeEnemyMon.isFainted) {
-      this.#activeEnemyMon.playDeathAnimation(() => {
-        this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([faintedMsg], () => {
-          // TODO # of mon check change state etc etc
-          this.#audioManager.playBgm(this.#victoryBgmKey)
-          this.time.delayedCall(100, () => {
-              this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`${this.#activePlayerMon.name} gained 32 experience points!`], () => {
+    this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(postAttackMsgs, () => {
+      if (this.#activeEnemyMon.isFainted) {
+        const postDeathMsgs = [`${this.#activePlayerMon.name} gained 32 experience points!`]
+        this.#activeEnemyMon.playDeathAnimation(() => {
+
+          if (this.#opponentType === OPPONENT_TYPES.WILD_ENCOUNTER ) {
+            postDeathMsgs.unshift(`Wild ${this.#activeEnemyMon.name} fainted!`)
+            this.#audioManager.playBgm(this.#victoryBgmKey)
+            this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(postDeathMsgs, () => {
               this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
-            })
+            }, SKIP_BATTLE_ANIMATIONS)
+            return
+          }
+
+          postDeathMsgs.unshift(`Foe's ${this.#activeEnemyMon.name} fainted!`)
+          this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(postDeathMsgs, () => {
+            // TODO # change stat to BATTLE_VICTORY
+            this.#audioManager.playBgm(this.#victoryBgmKey)
+            this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(['YOU WIN YIPEE'], () => {
+              this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
+            }, SKIP_BATTLE_ANIMATIONS)
+          }, SKIP_BATTLE_ANIMATIONS)
+        })
+        return
+      }
+
+      if (this.#activePlayerMon.isFainted) {
+        this.#activePlayerMon.playDeathAnimation(() => {
+          // TODO check remaining mons
+          const postDeathMsgs = [`${this.#activePlayerMon.name} fainted!`, `YOU have no usable Pokemon!`, `YOU whited out!`]
+          this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(postDeathMsgs, () => {
+            this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
           })
         })
-      })
-      return
-    }
-
-    if (this.#activePlayerMon.isFainted) {
-      this.#activePlayerMon.playDeathAnimation(() => {
-        this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`${this.#activePlayerMon.name} fainted!`, `YOU have no usable Pokemon!`, `YOU whited out!`], () => {
-          this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
-        }, SKIP_BATTLE_ANIMATIONS)
-      })
-      return
-    }
-    this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_INPUT)
+        return
+      }
+      this.#battleStateMachine.setState(BATTLE_STATES.BATTLE)
+    }, SKIP_BATTLE_ANIMATIONS)
   }
 
   #transitionToNextScene () {
@@ -316,11 +357,8 @@ export class BattleScene extends Phaser.Scene {
         }
         this.#enemyBattleTrainer.playTrainerAppearAnimation(() => {
           this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`${this.#enemyBattleTrainer.trainerType.toUpperCase()} ${this.#enemyBattleTrainer.name.toUpperCase()} wants to fight!`], () => {
-            // wait for txt anim
-            this.time.delayedCall(500, () => {
-              this.#enemyBattleTrainer.playTrainerDisappearAnimation(() => {
-                this.#battleStateMachine.setState(BATTLE_STATES.ENEMY_MON_OUT)
-              })
+            this.#enemyBattleTrainer.playTrainerDisappearAnimation(() => {
+              this.#battleStateMachine.setState(BATTLE_STATES.ENEMY_MON_OUT)
             })
           }, SKIP_BATTLE_ANIMATIONS)
         })
@@ -331,15 +369,9 @@ export class BattleScene extends Phaser.Scene {
       name: BATTLE_STATES.ENEMY_MON_OUT,
       onEnter: () => {
         this.#battleMenu.updateInfoPanelMessagesNoInputRequired(`${this.#enemyBattleTrainer.name.toUpperCase()} sent out ${this.#activeEnemyMon.name}!`, () => {
-          // wait for txt anim
           this.time.delayedCall(500, () => {
             this.#activeEnemyMon.playMonAppearAnimation(() => {
-              this.#activeEnemyMon.playMonHealthBarContainerAppearAnimation(() => {
-                // wait for txt anim
-                this.time.delayedCall(500, () => {
-                  this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_MON_OUT)
-                })
-              })
+              this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_MON_OUT)
             }, true)
           })
         }, SKIP_BATTLE_ANIMATIONS)
@@ -350,14 +382,9 @@ export class BattleScene extends Phaser.Scene {
       name: BATTLE_STATES.WILD_MON_OUT,
       onEnter: () => {
         this.#activeEnemyMon.playMonAppearAnimation(() => {
-          this.#activeEnemyMon.playMonHealthBarContainerAppearAnimation(() => {
-            this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`Wild ${this.#activeEnemyMon.name} appeared!`], () => {
-              // wait for txt anim
-              this.time.delayedCall(500, () => {
-                this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_MON_OUT)
-              })
-            }, SKIP_BATTLE_ANIMATIONS)
-          })
+          this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`Wild ${this.#activeEnemyMon.name} appeared!`], () => {
+            this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_MON_OUT)
+          }, SKIP_BATTLE_ANIMATIONS)
         })
       }
     })
@@ -368,24 +395,16 @@ export class BattleScene extends Phaser.Scene {
         // wait for player mon to appear, notify player of mon
         this.#battlePlayer.playTrainerDisappearAnimation(() => {
           this.#battleMenu.updateInfoPanelMessagesNoInputRequired(`Go! ${this.#activePlayerMon.name}!`, () => {
-            // wait for txt anim
-            this.time.delayedCall(1000, () => {
-              this.#activePlayerMon.playMonAppearAnimation(() => {
-                // TODO wait for mon cry
-                this.time.delayedCall(500, () => {
-                  this.#activePlayerMon.playMonHealthBarContainerAppearAnimation(() => {
-                    this.time.delayedCall(500, () => {
-                      this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_INPUT)
-                    })
-                  })
-                })
+            this.time.delayedCall(500, () => {
+                this.#activePlayerMon.playMonAppearAnimation(() => {
+                this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_INPUT)
               })
             })
           }, SKIP_BATTLE_ANIMATIONS)
         })
       }
     })
-
+    
     this.#battleStateMachine.addState({
       name: BATTLE_STATES.PLAYER_INPUT,
       onEnter: () => {
@@ -403,7 +422,34 @@ export class BattleScene extends Phaser.Scene {
     this.#battleStateMachine.addState({
       name: BATTLE_STATES.BATTLE,
       onEnter: () => {
-        this.#playerAttack()
+        if (this.#playersThatHadATurn.length === 2) {
+          this.#playersThatHadATurn = []
+          this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_INPUT)
+          return
+        }
+  
+        if (this.#playersThatHadATurn.length === 0) {
+          if (this.#activeEnemyMon.monStats.speed > this.#activePlayerMon.monStats.speed) {
+            this.#playersThatHadATurn.push(BATTLE_PLAYERS.ENEMY)
+            this.#enemyAttack()
+            return
+          }
+          this.#playersThatHadATurn.push(BATTLE_PLAYERS.PLAYER)
+          this.#playerAttack()
+          return
+        }
+        
+        if (this.#playersThatHadATurn[0] === BATTLE_PLAYERS.ENEMY) {
+          this.#playersThatHadATurn.push(BATTLE_PLAYERS.PLAYER)
+          this.#playerAttack()
+          return
+        }
+
+        if (this.#playersThatHadATurn[0] === BATTLE_PLAYERS.PLAYER) {
+          this.#playersThatHadATurn.push(BATTLE_PLAYERS.ENEMY)
+          this.#enemyAttack()
+          return
+        }
       }
     })
 
@@ -417,6 +463,7 @@ export class BattleScene extends Phaser.Scene {
     this.#battleStateMachine.addState({
       name: BATTLE_STATES.FINISHED,
       onEnter: () => {
+        this.#playersThatHadATurn = []
         this.#transitionToNextScene()
       }
     })

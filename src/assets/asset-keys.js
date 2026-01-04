@@ -57,6 +57,27 @@ export const TRAINER_SPRITES = Object.freeze({
   PSYCHIC: 'PSYCHIC'
 })
 
+export const TYPE_ASSET_KEYS = Object.freeze({
+  NORMAL: 'NORMAL',
+  FIRE: 'FIRE',
+  WATER: 'WATER',
+  ELECTRIC: 'ELECTRIC',
+  GRASS: 'GRASS',
+  ICE: 'ICE',
+  FIGHTING: 'FIGHTING',
+  POISON: 'POISON',
+  GROUND: 'GROUND',
+  FLYING: 'FLYING',
+  PSYCHIC: 'PSYCHIC',
+  BUG: 'BUG',
+  ROCK: 'ROCK',
+  GHOST: 'GHOST',
+  DRAGON: 'DRAGON',
+  DARK: 'DARK',
+  STEEL: 'STEEL',
+  FAIRY: 'FAIRY'
+})
+
 export const TRAINER_GRAY_SPRITES = Object.freeze({
   RED_GRAY: 'RED_GRAY',
   PSYCHIC_GRAY: 'PSYCHIC_GRAY'

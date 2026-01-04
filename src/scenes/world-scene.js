@@ -66,6 +66,9 @@ export class WorldScene extends Phaser.Scene {
   #npcPlayerIsInteractingWith
   /** @type {string} */
   #bgmKey
+  /** @type {boolean} */
+  #isTransitioning
+
   constructor () {
     super({
       key: SCENE_KEYS.WORLD_SCENE
@@ -76,6 +79,7 @@ export class WorldScene extends Phaser.Scene {
     this.#wildMonEncountered = false
     this.#npcPlayerIsInteractingWith = undefined
     this.#bgmKey = BGM_ASSET_KEYS.PALLET_TOWN
+    this.#isTransitioning = false
   }
 
   preload () {
@@ -156,6 +160,7 @@ export class WorldScene extends Phaser.Scene {
 
     
     this.events.on(EVENT_KEYS.TRAINER_BATTLE_START, data => {
+      this.#isTransitioning = true
       /** @type {NPC} */
       const npc = data.npc
       /** @type {number} */
@@ -166,6 +171,7 @@ export class WorldScene extends Phaser.Scene {
         spritesToNotBeObscured: [this.#player.sprite, data.npc.sprite],
         type: TRANSITION_TYPES.LEFT_RIGHT_DOWN_SLOW,
         callback: () => {
+          this.#isTransitioning = false
           /** @type {import("../types/typedef.js").Trainer} */
           this.scene.start(SCENE_KEYS.BATTLE_SCENE, {
             type: OPPONENT_TYPES.TRAINER,
@@ -289,6 +295,7 @@ export class WorldScene extends Phaser.Scene {
 
     this.#wildMonEncountered = encounterArea.encounterRate > Math.random() 
     if (this.#wildMonEncountered) {
+      this.#isTransitioning = true
       this.#audioManager.playBgm(BGM_ASSET_KEYS.WILD_ENCOUNTER)
       createWildEncounterSceneTransition(this, {
         skipSceneTransition: SKIP_BATTLE_ANIMATIONS,
@@ -298,6 +305,7 @@ export class WorldScene extends Phaser.Scene {
             skipSceneTransition: SKIP_BATTLE_ANIMATIONS,
             spritesToNotBeObscured: [this.#player.sprite],
             callback: () => {
+              this.#isTransitioning = false
               this.scene.start(SCENE_KEYS.BATTLE_SCENE, {
                 type: OPPONENT_TYPES.WILD_ENCOUNTER,
                 wildMon: { encounterArea }
@@ -310,7 +318,7 @@ export class WorldScene extends Phaser.Scene {
   }
 
   #isPlayerInputLocked () {
-    return this.#dialogUi.isVisible
+    return this.#dialogUi.isVisible || this.#isTransitioning
   }
   
   /**

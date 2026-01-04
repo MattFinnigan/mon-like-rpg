@@ -37,6 +37,7 @@ export class EnemyBattleMon extends BattleMon {
       if (this._skipBattleAnimations) {
         this._phaserMonImageGameObject.setTexture(MON_ASSET_KEYS[assetKey])
         this._phaserMonImageGameObject.setX(endXPos)
+        this._phaserHealthBarGameContainer.setAlpha(1)
         callback()
         return
       }
@@ -52,6 +53,7 @@ export class EnemyBattleMon extends BattleMon {
         onComplete: () => {
           this._phaserMonImageGameObject.setTexture(MON_ASSET_KEYS[assetKey])
           super.playMonCry(() => {
+            this._phaserHealthBarGameContainer.setAlpha(1)
             callback()
           })
         }
@@ -59,6 +61,7 @@ export class EnemyBattleMon extends BattleMon {
     } else {     
       if (this._skipBattleAnimations) {
         this._phaserMonImageGameObject.setAlpha(1)
+        this._phaserHealthBarGameContainer.setAlpha(1)
         callback()
         return
       }
@@ -79,26 +82,18 @@ export class EnemyBattleMon extends BattleMon {
         x: endX,
         targets: this._phaserMonImageGameObject,
         ease: function (t) {
-          // convert t (0..1) to stepped value (0..1) with `steps` steps
           return Math.round(t * steps) / steps
         },
         onComplete: () => {
           super.playMonCry(() => {
+            this._phaserHealthBarGameContainer.setAlpha(1)
             callback()
           })
         }
       })
     }
   }
-  /**
-   * 
-   * @param {() => void} callback
-   * @returns {void}
-   */
-  playMonHealthBarContainerAppearAnimation (callback) {
-    this._phaserHealthBarGameContainer.setAlpha(1)
-    callback()
-  }
+
   /**
    * 
    * @param {() => void} callback
@@ -115,7 +110,7 @@ export class EnemyBattleMon extends BattleMon {
     }
     super.playMonCry(() => {
       this._scene.tweens.add({
-        delay: 0,
+        delay: 300,
         duration: 350,
         y: {
           from: startYPos,
@@ -123,6 +118,7 @@ export class EnemyBattleMon extends BattleMon {
         },
         targets: this._phaserMonImageGameObject,
         onComplete: () => {
+          this._phaserHealthBarGameContainer.setAlpha(0)
           callback()
         }
       })

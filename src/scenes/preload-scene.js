@@ -48,6 +48,12 @@ export class PreloadScene extends Phaser.Scene {
     )
 
     this.load.bitmapFont(
+      'gb-font-light',
+      '/assets/fonts/minogram_6x10_light.png',
+      '/assets/fonts/minogram_6x10.xml'
+    )
+
+    this.load.bitmapFont(
       'gb-font-small',
       '/assets/fonts/round_6x6.png',
       '/assets/fonts/round_6x6.xml'
