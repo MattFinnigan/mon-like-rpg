@@ -32,12 +32,15 @@ import Phaser from "../lib/phaser.js";
  * @property {number} baseHp
  * @property {Type[]} types
  * @property {number[]} learnSet
+ * @property {number} partySpriteSheet
+ * @property {number} partySpriteAssetKey
  */
 
 /**
  * @typedef Mon
  * @type {Object}
  * @property {number|undefined} [id]
+ * @property {string} name
  * @property {number} baseMonIndex
  * @property {number} currentHp
  * @property {number} currentLevel

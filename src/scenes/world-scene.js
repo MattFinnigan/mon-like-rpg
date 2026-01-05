@@ -14,7 +14,7 @@ import { createBattleSceneTransition, createWildEncounterSceneTransition } from 
 import { CANNOT_READ_SIGN_TEXT, PLACEHOLDER_TEXT } from '../utils/text-utils.js';
 import { NPC } from '../world/characters/npc.js';
 import { Player } from '../world/characters/player.js';
-import { DialogUi } from '../world/dialog-ui.js';
+import { DialogUi } from '../common/dialog-ui.js';
 import { SCENE_KEYS } from "./scene-keys.js";
 
 const CUSTOM_TILED_TYPES = Object.freeze({
@@ -267,7 +267,10 @@ export class WorldScene extends Phaser.Scene {
       nearbyNpc.isTalkingToPlayer = true
       this.#npcPlayerIsInteractingWith = nearbyNpc
       this.#dialogUi.showDialogModal(nearbyNpc.messages)
+      return
     }
+
+    this.scene.start(SCENE_KEYS.PARTY_SCENE)
   }
 
   #handlePlayerMovementUpdate () {

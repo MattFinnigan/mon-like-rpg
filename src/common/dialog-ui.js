@@ -55,9 +55,10 @@ export class DialogUi {
   /**
    * 
    * @param {string[]} messages
+   * @param {boolean} [skipAnimation]
    * @returns {void}
    */
-  showDialogModal (messages) {
+  showDialogModal (messages, skipAnimation = false) {
     this.#messagesToShow = [...messages]
     const { x, bottom } = this.#scene.cameras.main.worldView
     const startX = x
@@ -68,18 +69,23 @@ export class DialogUi {
     this.#isVisible = true
     this.#userInputCursorTween.play()
 
-    this.showNextMessage()
+    this.showNextMessage(skipAnimation)
   }
 
   /**
-   * 
+   * @param {boolean} [skipAnimation]
    * @returns {void}
    */
-  showNextMessage () {
+  showNextMessage (skipAnimation = false) {
     if (this.#messagesToShow.length === 0) {
       return
     }
 
+    if (skipAnimation) {
+      this.#uiText.setText(this.#messagesToShow.shift()).setAlpha(1)
+      return
+    }
+  
     this.#uiText.setText('').setAlpha(1)
     animateText(this.#scene, this.#uiText, this.#messagesToShow.shift(), {
       delay: 25,

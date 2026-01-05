@@ -1,6 +1,7 @@
 {
   "1": {
-    "baseMonIndex": 1,
+    "baseMonIndex": 0,
+    "name": "BULBASAUR",
     "currentHp": null,
     "currentLevel": 25,
     "attackEV": 14,
@@ -13,6 +14,7 @@
   },
   "2": {
     "baseMonIndex": 15,
+    "name": "PIDGEY",
     "currentHp": null,
     "currentLevel": 50,
     "attackEV": 5,
@@ -25,6 +27,7 @@
   },
   "3": {
     "baseMonIndex": 73,
+    "name": "WHO KNOWS",
     "currentHp": null,
     "currentLevel": 50,
     "attackEV": 5,

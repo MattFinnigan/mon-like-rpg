@@ -1,5 +1,5 @@
-import { HEALTH_BAR_ASSET_KEYS } from '../../assets/asset-keys.js'
-import Phaser from '../../lib/phaser.js'
+import { HEALTH_BAR_ASSET_KEYS } from '../assets/asset-keys.js' 
+import Phaser from '../lib/phaser.js'
 
 export class HealthBar {
   /** @type {Phaser.Scene} */
@@ -33,11 +33,12 @@ export class HealthBar {
    * @param {number|null} currentHp
    * @param {number} maxHp
    * @param {boolean} [showHpNums]
+   * @param {number} [scale]
    */
-  constructor (scene, x, y, currentHp, maxHp, showHpNums) {
+  constructor (scene, x, y, currentHp, maxHp, showHpNums, scale = 1.35) {
     this.#scene = scene
     this.#fullWidth = 190
-    this.#scale = 1.35
+    this.#scale = scale
     this.#showHpNums = showHpNums
     this.#maxHp = maxHp
     this.#currentHp = currentHp === null ? this.#maxHp : currentHp

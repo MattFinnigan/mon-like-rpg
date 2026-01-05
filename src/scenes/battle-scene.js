@@ -144,8 +144,8 @@ export class BattleScene extends Phaser.Scene {
   }
 
   create () {
-    this.cameras.main.setBackgroundColor('#fff')
     console.log(`[${BattleScene.name}:create] invoked`)
+    this.cameras.main.setBackgroundColor('#fff')
 
     const P2_MON = this.#opponentMons[0]
     const P2_BASE_MON = DataUtils.getBaseMonDetails(this, P2_MON.baseMonIndex)

@@ -1,5 +1,5 @@
 import Phaser from "../../lib/phaser.js"
-import { HealthBar } from "../ui/health-bar.js"
+import { HealthBar } from "../../common/health-bar.js" 
 import { BATTLE_ASSET_KEYS, MON_ASSET_KEYS } from "../../assets/asset-keys.js"
 import { DataUtils } from "../../utils/data-utils.js"
 import { AudioManager } from "../../utils/audio-manager.js"
@@ -86,7 +86,7 @@ export class BattleMon {
 
   /** @type {string} */
   get name () {
-    return this._baseMonDetails.name
+    return this._monDetails.name
   }
 
   /** @type {number} */
