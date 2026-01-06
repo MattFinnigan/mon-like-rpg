@@ -86,6 +86,7 @@ import Phaser from "../lib/phaser.js";
  * @property {string} assetKey
  * @property {number} rewardOnVictory
  * @property {number} payOutOnDefeat
+ * @property {string} defeatedMsg
  */
 
 /**

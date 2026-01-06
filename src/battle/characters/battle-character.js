@@ -1,4 +1,5 @@
 import { BATTLE_ASSET_KEYS, MON_BALLS } from "../../assets/asset-keys.js"
+import { BattleMon } from "../mons/battle-mon.js"
 
 export class BattleCharacter {
   /** @protected @type {Phaser.Scene} */
@@ -9,40 +10,30 @@ export class BattleCharacter {
   _phaserMonDetailsBackgroundImageGameObject
   /** @protected @type {boolean} */
   _skipBattleAnimations
-  /** @protected @type {import("../../types/typedef.js").Mon[]} */
-  _partyMons
-  /** @protected @type {import("../../types/typedef.js").Mon[]} */
-  _remainingMons
+  /** @protected @type {BattleMon[]} */
+  _battleMons
   /** @protected @type {Phaser.GameObjects.Container} */
   _phaserRemainingMonsGameObject
   /** @protected @type {import("../../types/typedef").Coordinate} */
   _remainingMonGameObjectsPos
-  /** @protected @type {import("../../types/typedef.js").Mon[]} */
-  _faintedMons
 
   /**
    * 
    * @param {Phaser.Scene} scene 
    * @param {object} trainer
-   * @param {import("../../types/typedef").Mon[]} trainer.partyMons
+   * @param {BattleMon[]} battleMons
    * @param {object} config
    * @param {string} config.assetKey
    * @param {boolean} [config.skipBattleAnimations]
    * @param {import("../../types/typedef.js").Coordinate} [config.remainingMonsPos]
    */
-  constructor (scene, trainer, config) {
+  constructor (scene, trainer, battleMons, config) {
     this._scene = scene
-    this._partyMons = trainer.partyMons
-    this._remainingMons = trainer.partyMons
+    this._battleMons = battleMons
     this._assetKey = config.assetKey
     this._skipBattleAnimations = config.skipBattleAnimations
     this._remainingMonGameObjectsPos = config.remainingMonsPos || { x: 15, y: -10 }
-    this._faintedMons = trainer.partyMons.filter(mon => mon.currentHp === 0)
     this._createRemainingMonsGameObject()
-  }
-
-  get remainingMons () {
-    return this._remainingMons
   }
 
   /**
@@ -63,6 +54,14 @@ export class BattleCharacter {
     throw new Error('playCharacterDisappearAnimation is not implemented')
   }
 
+  remainingMons () {
+    return this._battleMons.filter(bm => !bm.isFainted)
+  }
+
+  faintedMons () {
+    return this._battleMons.filter(bm => bm.isFainted)
+  }
+
   /**
    * 
    * @returns {void}
@@ -71,9 +70,13 @@ export class BattleCharacter {
     throw new Error('showTrainer is not implemented')
   }
 
-  faintMon () {
-    this._faintedMons.push(this._remainingMons.pop())
+  /**
+   * 
+   * @param {boolean} [flipX] 
+   */
+  redrawRemainingMonsGameObject (flipX) {
     this._createRemainingMonsGameObject()
+    this._phaserMonDetailsBackgroundImageGameObject.setFlipX(flipX)
   }
 
   showRemainingMons () {
@@ -86,16 +89,17 @@ export class BattleCharacter {
 
   _createRemainingMonsGameObject () {
     let count = 0
-    const remainingMons = this._remainingMons.map(pm => {
+    const remainingMons = this.remainingMons().map(pm => {
       const offsetX = count * 35 + 60
       count++
       return this._scene.add.image(offsetX, 88, MON_BALLS.SHEET_1, 9).setScale(0.65)
     })
-    const faintedMons = this._faintedMons.map(fm => {
-        const offsetX = count * 35 + 60
-        count++
-        return this._scene.add.image(offsetX, 88, MON_BALLS.SHEET_1, 1).setScale(0.65)
-      })
+
+    const faintedMons = this.faintedMons().map(fm => {
+      const offsetX = count * 35 + 60
+      count++
+      return this._scene.add.image(offsetX, 88, MON_BALLS.SHEET_1, 1).setScale(0.65)
+    })
     
     this._phaserRemainingMonsGameObject = this._scene.add.container(this._remainingMonGameObjectsPos.x, this._remainingMonGameObjectsPos.y, [
       this._phaserMonDetailsBackgroundImageGameObject = this._scene.add.image(0, 0, BATTLE_ASSET_KEYS.ENEMY_BATTLE_DETAILS_BACKGROUND).setOrigin(0),

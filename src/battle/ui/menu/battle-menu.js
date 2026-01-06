@@ -239,6 +239,7 @@ export class BattleMenu {
     this.#waitingForPlayerInput = false
     this.#battleTextGameObjectLine1.setText('').setAlpha(1)
     this.hideInputCursor()
+
     // check if all msgs have been displayed from queue, call the callback
     if (this.#queuedInfoPanelMessages.length === 0) {
       if (this.#queuedInfoPanelCallback) {
@@ -248,7 +249,6 @@ export class BattleMenu {
       this.hideInputCursor()
       return
     }
-
     const messageToDisplay = this.#queuedInfoPanelMessages.shift()
 
     if (this.#queuedMessageSkipAnimation) {

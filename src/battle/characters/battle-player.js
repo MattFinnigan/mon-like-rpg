@@ -1,4 +1,5 @@
 import { TRAINER_GRAY_SPRITES, TRAINER_SPRITES } from "../../assets/asset-keys.js"
+import { BattleMon } from "../mons/battle-mon.js"
 import { BattleCharacter } from "./battle-character.js"
 /**
  * @type {import("../../types/typedef.js").Coordinate}
@@ -18,12 +19,13 @@ export class BattlePlayer extends BattleCharacter {
    * 
    * @param {Phaser.Scene} scene
    * @param {import("../../types/typedef.js").Player} player
+   * @param {BattleMon[]} battleMons
    * @param {object} config
    * @param {string} config.assetKey
-   * @param {boolean} [config.skipBattleAnimations ]
+   * @param {boolean} [config.skipBattleAnimations]
    */
-  constructor (scene, player, config) {
-    super(scene, player, {
+  constructor (scene, player, battleMons, config) {
+    super(scene, player, battleMons, {
       ...config,
       remainingMonsPos: { x: 340, y: 250 }
     })
@@ -31,6 +33,13 @@ export class BattlePlayer extends BattleCharacter {
     this.#phaserPlayerImageGameObject = this._scene.add.image(0, 0, TRAINER_GRAY_SPRITES[this._assetKey + '_GRAY']).setOrigin(0).setAlpha(0).setScale(2.25)
     this._phaserMonDetailsBackgroundImageGameObject.setFlipX(true)
     this.#characterSpriteShowing = false
+  }
+
+  /**
+   * @returns {boolean}
+   */
+  get characterSpriteShowing () {
+    return this.#characterSpriteShowing
   }
 
   /**
@@ -120,7 +129,17 @@ export class BattlePlayer extends BattleCharacter {
 
   showTrainer () {
     this.#characterSpriteShowing = true
-    this.#phaserPlayerImageGameObject.setPosition(PLAYER_IMAGE_POSITION.x, PLAYER_IMAGE_POSITION.y)
     this.#phaserPlayerImageGameObject.setAlpha(1)
+    this.#phaserPlayerImageGameObject.setPosition(-250, PLAYER_IMAGE_POSITION.y)
+
+    this._scene.tweens.add({
+      delay: 0,
+      duration: 400,
+      x: {
+        from: -250,
+        to: PLAYER_IMAGE_POSITION.x
+      },
+      targets: this.#phaserPlayerImageGameObject
+    })
   }
 }

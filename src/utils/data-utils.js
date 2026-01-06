@@ -39,7 +39,6 @@ export class DataUtils {
    * @returns {import("../types/typedef.js").BaseMon}
    */
   static getBaseMonDetails (scene, index) {
-    console.log(index)
     const data = scene.cache.json.get(DATA_ASSET_KEYS.BASE_MONS)[index]
     const types = data.types.map(type => MON_TYPES[type])
     return { ...data, types }

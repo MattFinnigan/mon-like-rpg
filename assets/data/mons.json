@@ -1,9 +1,9 @@
 {
   "1": {
-    "baseMonIndex": 0,
-    "name": "BULBASAUR",
-    "currentHp": null,
-    "currentLevel": 25,
+    "baseMonIndex": 149,
+    "name": "MEWTWO",
+    "currentHp": 193,
+    "currentLevel": 99,
     "attackEV": 14,
     "defenseEV": 3,
     "splAttackEV": 27,
@@ -41,7 +41,7 @@
   "4": {
     "baseMonIndex": 16,
     "name": "PIDGEY YO",
-    "currentHp": 0,
+    "currentHp": 81,
     "currentLevel": 50,
     "attackEV": 5,
     "defenseEV": 29,
@@ -54,8 +54,8 @@
   "5": {
     "baseMonIndex": 151,
     "name": "BORRIS",
-    "currentHp": 100,
-    "currentLevel": 50,
+    "currentHp": 157,
+    "currentLevel": 99,
     "attackEV": 5,
     "defenseEV": 29,
     "splAttackEV": 11,

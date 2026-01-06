@@ -28,7 +28,7 @@ export class PlayerBattleMon extends BattleMon {
     const assetKey = this._phaserMonImageGameObject.texture.key
     this._phaserMonImageGameObject.setTexture(MON_BACK_ASSET_KEYS[assetKey + '_BACK'])
   }
-
+  
   /**
    * 
    * @param {() => void} callback
@@ -72,6 +72,8 @@ export class PlayerBattleMon extends BattleMon {
   playDeathAnimation (callback) {
     const startYPos = PLAYER_IMAGE_POSITION.y
     const endYPos = startYPos + 400
+
+    this._phaserMonImageGameObject.setDepth(-1)
 
     if (this._skipBattleAnimations) {
       this._phaserMonImageGameObject.setY(endYPos)

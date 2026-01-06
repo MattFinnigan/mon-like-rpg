@@ -37,11 +37,12 @@ export class AttackManager {
    * 
    * @param {import("./attack-keys").AttackKeys} attack 
    * @param {string} target 
-   * @param {() => void} callback 
+   * @param {() => void} callback
+   * @param {boolean} noDamageTaken
    * @returns {void}
    */
-  playAttackAnimation (attack, target, callback) {
-    if (this.#skipBattleAnimations) {
+  playAttackAnimation (attack, target, callback, noDamageTaken) {
+    if (this.#skipBattleAnimations || noDamageTaken) {
       callback()
       return
     }

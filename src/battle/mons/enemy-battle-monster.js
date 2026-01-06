@@ -102,9 +102,11 @@ export class EnemyBattleMon extends BattleMon {
   playDeathAnimation (callback) {
     const startYPos = ENEMY_IMAGE_POSITION.y
     const endYPos = startYPos + 224
+    this._phaserMonImageGameObject.setDepth(-1)
 
     if (this._skipBattleAnimations) {
       this._phaserMonImageGameObject.setY(endYPos)
+      this._phaserMonImageGameObject.setAlpha(0)
       callback()
       return
     }
@@ -119,6 +121,7 @@ export class EnemyBattleMon extends BattleMon {
         targets: this._phaserMonImageGameObject,
         onComplete: () => {
           this._phaserHealthBarGameContainer.setAlpha(0)
+          this._phaserMonImageGameObject.setAlpha(0)
           callback()
         }
       })

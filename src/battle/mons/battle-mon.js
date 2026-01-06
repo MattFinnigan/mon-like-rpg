@@ -185,10 +185,11 @@ export class BattleMon {
   /**
    * 
    * @param {() => void} callback
+   * @param {boolean} noDamageTaken
    * @returns {void}
    */
-  playMonTakeDamageAnimation (callback) {
-    if (this._skipBattleAnimations) {
+  playMonTakeDamageAnimation (callback, noDamageTaken) {
+    if (this._skipBattleAnimations || noDamageTaken) {
       callback()
       return
     }
@@ -264,4 +265,7 @@ export class BattleMon {
     })
   }
   
+  hideBattleDetails () {
+    this._phaserHealthBarGameContainer.setAlpha(0)
+  }
 }
