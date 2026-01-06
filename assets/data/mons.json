@@ -15,7 +15,7 @@
   "2": {
     "baseMonIndex": 15,
     "name": "PIDGEY",
-    "currentHp": null,
+    "currentHp": 0,
     "currentLevel": 50,
     "attackEV": 5,
     "defenseEV": 29,
@@ -27,8 +27,8 @@
   },
   "3": {
     "baseMonIndex": 73,
-    "name": "WHO KNOWS",
-    "currentHp": null,
+    "name": "GEOBRO",
+    "currentHp": 0,
     "currentLevel": 50,
     "attackEV": 5,
     "defenseEV": 29,
@@ -37,5 +37,31 @@
     "speedEV": 2,
     "hpEV": 24,
     "attackIds": [1, 2]
+  },
+  "4": {
+    "baseMonIndex": 16,
+    "name": "PIDGEY YO",
+    "currentHp": 0,
+    "currentLevel": 50,
+    "attackEV": 5,
+    "defenseEV": 29,
+    "splAttackEV": 11,
+    "splDefenseEV": 16,
+    "speedEV": 2,
+    "hpEV": 24,
+    "attackIds": [2]
+  },
+  "5": {
+    "baseMonIndex": 151,
+    "name": "BORRIS",
+    "currentHp": 100,
+    "currentLevel": 50,
+    "attackEV": 5,
+    "defenseEV": 29,
+    "splAttackEV": 11,
+    "splDefenseEV": 16,
+    "speedEV": 2,
+    "hpEV": 24,
+    "attackIds": [2]
   }
 }

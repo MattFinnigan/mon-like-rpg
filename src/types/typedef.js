@@ -80,7 +80,7 @@ import Phaser from "../lib/phaser.js";
  * @typedef Trainer
  * @type {Object}
  * @property {OPPONENT_TYPES} type
- * @property {Mon[]} mons
+ * @property {Mon[]} partyMons
  * @property {string} name
  * @property {string} trainerType
  * @property {string} assetKey

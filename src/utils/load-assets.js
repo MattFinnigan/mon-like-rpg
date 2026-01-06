@@ -1,4 +1,4 @@
-import { BATTLE_ASSET_KEYS, HEALTH_BAR_ASSET_KEYS, MON_ASSET_KEYS, MON_BACK_ASSET_KEYS, MON_GRAY_ASSET_KEYS, TRAINER_GRAY_SPRITES, TRAINER_SPRITES, TYPE_ASSET_KEYS } from "../assets/asset-keys.js"
+import { BATTLE_ASSET_KEYS, HEALTH_BAR_ASSET_KEYS, MON_ASSET_KEYS, MON_BACK_ASSET_KEYS, MON_BALLS, MON_GRAY_ASSET_KEYS, TRAINER_GRAY_SPRITES, TRAINER_SPRITES, TYPE_ASSET_KEYS } from "../assets/asset-keys.js"
 
 /**
  * 
@@ -40,4 +40,9 @@ export function loadBattleAssets (scene) {
   scene.load.image(HEALTH_BAR_ASSET_KEYS.LEFT_CAP, `/${battleAssetPath}/hp_left_cap.png`)
   scene.load.image(HEALTH_BAR_ASSET_KEYS.MIDDLE, `/${battleAssetPath}/hp_mid.png`)
   scene.load.image(HEALTH_BAR_ASSET_KEYS.RIGHT_CAP, `/${battleAssetPath}/hp_right_cap.png`)
+
+  scene.load.spritesheet(MON_BALLS.SHEET_1, `/${battleAssetPath}/balls.png`, {
+    frameWidth: 48,
+    frameHeight: 48
+  })
 }

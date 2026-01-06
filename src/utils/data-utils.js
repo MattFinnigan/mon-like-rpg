@@ -39,6 +39,7 @@ export class DataUtils {
    * @returns {import("../types/typedef.js").BaseMon}
    */
   static getBaseMonDetails (scene, index) {
+    console.log(index)
     const data = scene.cache.json.get(DATA_ASSET_KEYS.BASE_MONS)[index]
     const types = data.types.map(type => MON_TYPES[type])
     return { ...data, types }
@@ -62,8 +63,8 @@ export class DataUtils {
    */
   static getTrainerDetails (scene, id) {
     const trainer = scene.cache.json.get(DATA_ASSET_KEYS.TRAINERS)[id]
-    const mons = trainer.mons.map(monId => this.getMonDetails(scene, monId))
-    return { ...trainer, mons }
+    const partyMons = trainer.partyMons.map(monId => this.getMonDetails(scene, monId))
+    return { ...trainer, partyMons }
   }
 
   /**

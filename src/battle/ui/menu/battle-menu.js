@@ -3,11 +3,11 @@ import { SYSTEM_ASSET_KEYS, BATTLE_ASSET_KEYS, UI_ASSET_KEYS } from '../../../as
 import { DIRECTION } from '../../../common/direction.js'
 import { exhaustiveGuard } from '../../../utils/guard.js'
 import { ACTIVE_BATTLE_MENU, ATTACK_MOVE_OPTIONS, BATTLE_MENU_OPTIONS } from './battle-menu-options.js'
-import { BattleMon } from '../../mons/battle-mon.js'
 import { animateText } from '../../../utils/text-utils.js'
 import { SKIP_BATTLE_ANIMATIONS } from '../../../../config.js'
 import { DIALOG_DETAILS } from '../../../utils/consts.js'
 import { EVENT_KEYS } from '../../../common/event-keys.js'
+import { PlayerBattleMon } from '../../mons/player-battle-monster.js'
 
 const BATTLE_MENU_CURSOR_POS = Object.freeze({
   x: 30,
@@ -52,7 +52,7 @@ export class BattleMenu {
   #waitingForPlayerInput
   /** @type {number | undefined} */
   #selectedAttackIndex
-  /** @type {BattleMon} */
+  /** @type {PlayerBattleMon} */
   #activePlayerMon
   /** @type {Phaser.GameObjects.Image} */
   #userInputCursorPhaserGameImageObject
@@ -66,7 +66,7 @@ export class BattleMenu {
   /**
    * 
    * @param {Phaser.Scene} scene the Phaser 3 Scene the battle menu will be added to
-   * @param {BattleMon} activePlayerMon
+   * @param {PlayerBattleMon} [activePlayerMon]
    */
   constructor (scene, activePlayerMon) {
     this.#scene = scene
@@ -82,9 +82,11 @@ export class BattleMenu {
     this.#queuedMessageSkipAnimation = false
     this.#queuedMessageAnimationPlaying = false
 
+    if (this.#activePlayerMon) {
+      this.#createMonAttackSubMenu()
+    }
     this.#createMainInfoPane()
     this.#createMainBattleMenu()
-    this.#createMonAttackSubMenu()
     this.#createPlayerInputCursor()
   }
 
@@ -94,6 +96,14 @@ export class BattleMenu {
       return this.#selectedAttackIndex
     }
     return undefined
+  }
+
+  /**
+   * @param {PlayerBattleMon} activePlayerMon
+   */
+  set activePlayerMon (activePlayerMon) {
+    this.#activePlayerMon = activePlayerMon
+    this.#createMonAttackSubMenu()
   }
 
   showMainBattleMenu () {
