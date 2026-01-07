@@ -11,13 +11,10 @@ import { Controls } from '../utils/controls.js'
 import { DataUtils } from '../utils/data-utils.js'
 import { BattleTrainer } from '../battle/characters/battle-trainer.js'
 import { EVENT_KEYS } from '../common/event-keys.js'
-import { exhaustiveGuard } from '../utils/guard.js'
 import { AudioManager } from '../utils/audio-manager.js'
 import { BGM_ASSET_KEYS, TRAINER_SPRITES } from '../assets/asset-keys.js'
 import { OPPONENT_TYPES } from '../common/opponent-types.js'
-import { loadBattleAssets, loadMonAssets, loadTrainerSprites } from '../utils/load-assets.js'
 import { BattlePlayer } from '../battle/characters/battle-player.js'
-import { generateWildMon } from '../utils/encounter-utils.js'
 
 /** @enum {object} */
 const BATTLE_STATES = Object.freeze({
@@ -44,6 +41,7 @@ const BATTLE_PLAYERS = Object.freeze({
   PLAYER: 'PLAYER',
   ENEMY: 'ENEMY'
 })
+
 
 export class BattleScene extends Phaser.Scene {
   /** @type {BattleMenu} */
@@ -72,7 +70,7 @@ export class BattleScene extends Phaser.Scene {
   #enemyTrainer
   /** @type {AudioManager} */
   #audioManager
-  /** @type {import('../types/typedef.js').Player} */
+  /** @type {import('../types/typedef.js').PlayerData} */
   #player
   /** @type {PlayerBattleMon[]} */
   #playerMons
@@ -89,15 +87,6 @@ export class BattleScene extends Phaser.Scene {
   */
   #generatedMon
 
-
-  /**
-   * @type {object}
-   * @param {OPPONENT_TYPES} type
-   * @param {import('../types/typedef.js').Trainer} [trainer]
-   * @param {import('../types/typedef.js').WildMon} [wildMon]
-  */
-  #preloadData
-
   constructor () {
     super({
       key: SCENE_KEYS.BATTLE_SCENE
@@ -110,56 +99,24 @@ export class BattleScene extends Phaser.Scene {
   
   /**
    * 
-   * @param {object} data
-   * @param {OPPONENT_TYPES} data.type
-   * @param {import('../types/typedef.js').Trainer} [data.trainer]
-   * @param {import('../types/typedef.js').WildMon} [data.wildMon]
+   * @param {import('../types/typedef.js').BattleSceneConfig} battleSceneConfig 
    */
-  init (data) {
+  init (battleSceneConfig) {
     console.log(`[${BattleScene.name}:init] invoked`)
-    this.#preloadData = data
+    this.#opponentType = battleSceneConfig.type
+    this.#enemyTrainer = battleSceneConfig.trainer
+    this.#player = DataUtils.getPlayerDetails(this)
+    this.#generatedMon = battleSceneConfig.generatedMon
   }
   
   preload () {
     console.log(`[${BattleScene.name}:preload] invoked`)
-    
-    let baseMonsToPreload = []
 
-    // get & load player mons
-    this.#player = DataUtils.getPlayerDetails(this)
-    const partyBaseMons = this.#player.partyMons.map(mon => DataUtils.getBaseMonDetails(this, mon.baseMonIndex))
-    baseMonsToPreload = baseMonsToPreload.concat(partyBaseMons)
-
-    // load opponent's mons
-    this.#opponentType = this.#preloadData.type
-    switch (this.#opponentType) {
-      case OPPONENT_TYPES.WILD_ENCOUNTER:
-        this.#generatedMon = generateWildMon(this, this.#preloadData.wildMon.encounterArea)
-        baseMonsToPreload.push(this.#generatedMon.baseMon)
-
-        this.#victoryBgmKey = BGM_ASSET_KEYS.WILD_ENCOUNTER_VICTORY
-        break
-      case OPPONENT_TYPES.TRAINER:
-      case OPPONENT_TYPES.GYM_LEADER:
-        const enemyBaseMons = this.#preloadData.trainer.partyMons.map(mon => DataUtils.getBaseMonDetails(this, mon.baseMonIndex))
-        baseMonsToPreload = baseMonsToPreload.concat(enemyBaseMons)
-
-        this.#victoryBgmKey = BGM_ASSET_KEYS.TRAINER_VICTORY
-        this.#enemyTrainer = this.#preloadData.trainer
-        break
-      default:
-        exhaustiveGuard(this.#opponentType)
-        break
-    }
-
-    baseMonsToPreload.forEach(baseMon => {
-      loadMonAssets(this, baseMon)
-    })
+    this.#victoryBgmKey = BGM_ASSET_KEYS.WILD_ENCOUNTER_VICTORY
     if (this.#opponentType !== OPPONENT_TYPES.WILD_ENCOUNTER) {
-      loadTrainerSprites(this, this.#enemyTrainer.assetKey)
+      this.#victoryBgmKey = BGM_ASSET_KEYS.TRAINER_VICTORY
     }
-    loadTrainerSprites(this, TRAINER_SPRITES.RED)
-    loadBattleAssets(this)
+  
     this.load.audio(BGM_ASSET_KEYS[this.#victoryBgmKey], [`assets/audio/bgm/${this.#victoryBgmKey}.flac`])
   }
 
@@ -293,7 +250,7 @@ export class BattleScene extends Phaser.Scene {
 
     this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(postAttackMsgs, () => {
       if (this.#activeEnemyMon.isFainted) {
-        this.#enemyBattleTrainer.redrawRemainingMonsGameObject()
+        
 
         const postDeathMsgs = [`${this.#activePlayerMon.name} gained 32 experience points!`]
         this.#activeEnemyMon.playDeathAnimation(() => {
@@ -306,6 +263,7 @@ export class BattleScene extends Phaser.Scene {
             return
           }
 
+          this.#enemyBattleTrainer.redrawRemainingMonsGameObject()
           postDeathMsgs.unshift(`Foe's ${this.#activeEnemyMon.name} fainted!`)
           this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(postDeathMsgs, () => {
             this.#battleStateMachine.setState(BATTLE_STATES.ENEMY_CHOOSE_MON)
@@ -597,9 +555,9 @@ export class BattleScene extends Phaser.Scene {
     })
 
     if (this.#opponentType !== OPPONENT_TYPES.WILD_ENCOUNTER) {
-      const enemyBaseMons = this.#preloadData.trainer.partyMons.map(mon => DataUtils.getBaseMonDetails(this, mon.baseMonIndex))
+      const enemyBaseMons = this.#enemyTrainer.partyMons.map(mon => DataUtils.getBaseMonDetails(this, mon.baseMonIndex))
     
-      this.#opponentMons = this.#preloadData.trainer.partyMons.map((pm, i) => {
+      this.#opponentMons = this.#enemyTrainer.partyMons.map((pm, i) => {
         return new EnemyBattleMon({
           scene: this,
           monDetails: pm,

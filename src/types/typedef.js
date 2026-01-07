@@ -72,7 +72,6 @@ import Phaser from "../lib/phaser.js";
 /**
  * @typedef WildMon
  * @type {Object}
- * @property {OPPONENT_TYPES} type
  * @property {EncounterAreaConfig} encounterArea
  */
 
@@ -90,7 +89,7 @@ import Phaser from "../lib/phaser.js";
  */
 
 /**
- * @typedef Player
+ * @typedef PlayerData
  * @type {Object}
  * @property {string} name
  * @property {Mon[]} partyMons
@@ -149,4 +148,15 @@ import Phaser from "../lib/phaser.js";
  * @property {boolean} wasSuperEffective
  * @property {boolean} wasResistant
  * @property {boolean} wasImmune
+ */
+
+/**
+ * @typedef BattleSceneConfig
+ * @type {object}
+ * @property {OPPONENT_TYPES} type
+ * @property {import('../types/typedef.js').Trainer} [trainer]
+ * @property {{
+ *  mon: import("../types/typedef.js").Mon,
+ *  baseMon: import("../types/typedef.js").BaseMon
+ * }} [generatedMon]
  */

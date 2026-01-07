@@ -1,5 +1,5 @@
 import { SKIP_BATTLE_ANIMATIONS, TILE_SIZE, TILED_COLLISION_ALPHA, WORLD_ZOOM } from '../../config.js';
-import { BGM_ASSET_KEYS, CHARACTER_ASSET_KEYS, DATA_ASSET_KEYS, WORLD_ASSET_KEYS } from '../assets/asset-keys.js';
+import { BGM_ASSET_KEYS, CHARACTER_ASSET_KEYS, DATA_ASSET_KEYS, TRAINER_SPRITES, WORLD_ASSET_KEYS } from '../assets/asset-keys.js';
 import { DIRECTION } from '../common/direction.js';
 import { EVENT_KEYS } from '../common/event-keys.js';
 import { OPPONENT_TYPES } from '../common/opponent-types.js';
@@ -16,6 +16,9 @@ import { NPC } from '../world/characters/npc.js';
 import { Player } from '../world/characters/player.js';
 import { DialogUi } from '../common/dialog-ui.js';
 import { SCENE_KEYS } from "./scene-keys.js";
+import { exhaustiveGuard } from '../utils/guard.js';
+import { loadBattleAssets, loadMonAssets, loadTrainerSprites } from '../utils/load-assets.js';
+import { generateWildMon } from '../utils/encounter-utils.js';
 
 const CUSTOM_TILED_TYPES = Object.freeze({
   NPC: 'npc',
@@ -158,30 +161,35 @@ export class WorldScene extends Phaser.Scene {
       npc.addCharacterToCheckForcollsionsWith(this.#player)
     })
 
-    
     this.events.on(EVENT_KEYS.TRAINER_BATTLE_START, data => {
       this.#isTransitioning = true
       /** @type {NPC} */
-      const npc = data.npc
-      /** @type {number} */
-      const actionId = data.actionId
+
       this.#audioManager.playBgm(BGM_ASSET_KEYS.TRAINER)
-      createBattleSceneTransition(this, {
-        skipSceneTransition: SKIP_BATTLE_ANIMATIONS,
-        spritesToNotBeObscured: [this.#player.sprite, data.npc.sprite],
-        type: TRANSITION_TYPES.LEFT_RIGHT_DOWN_SLOW,
-        callback: () => {
-          this.#isTransitioning = false
-          /** @type {import("../types/typedef.js").Trainer} */
-          this.scene.start(SCENE_KEYS.BATTLE_SCENE, {
+
+      const promises = [
+        this.#preloadBattleAssets({
+          type: OPPONENT_TYPES.TRAINER,
+          trainer: {
             type: OPPONENT_TYPES.TRAINER,
-            trainer: {
-              type: OPPONENT_TYPES.TRAINER,
-              ...DataUtils.getTrainerDetails(this, actionId)
-            }
-          })
-        }
+            ...DataUtils.getTrainerDetails(this, data.actionId)
+          }
+        }),
+        createBattleSceneTransition(this, {
+          skipSceneTransition: SKIP_BATTLE_ANIMATIONS,
+          spritesToNotBeObscured: [this.#player.sprite, data.npc.sprite],
+          type: TRANSITION_TYPES.LEFT_RIGHT_DOWN_SLOW
+        })
+      ]
+
+      Promise.all(promises).then(data => {
+        /** @type {import('../types/typedef.js').BattleSceneConfig} */
+        const config = data[0]
+
+        this.#isTransitioning = false
+        this.scene.start(SCENE_KEYS.BATTLE_SCENE, config)
       })
+
     })
 
     this.#dialogUi = new DialogUi(this)
@@ -296,27 +304,30 @@ export class WorldScene extends Phaser.Scene {
 
     const encounterArea = DataUtils.getEncoutnerConfig(this, areaId)
 
-    this.#wildMonEncountered = encounterArea.encounterRate > Math.random() 
+    this.#wildMonEncountered = encounterArea.encounterRate > Math.random()
     if (this.#wildMonEncountered) {
+
       this.#isTransitioning = true
-      this.#audioManager.playBgm(BGM_ASSET_KEYS.WILD_ENCOUNTER)
-      createWildEncounterSceneTransition(this, {
-        skipSceneTransition: SKIP_BATTLE_ANIMATIONS,
-        spritesToNotBeObscured: [this.#player.sprite],
-        callback: () => {
-          createBattleSceneTransition(this, {
-            skipSceneTransition: SKIP_BATTLE_ANIMATIONS,
-            spritesToNotBeObscured: [this.#player.sprite],
-            callback: () => {
-              this.#isTransitioning = false
-              this.scene.start(SCENE_KEYS.BATTLE_SCENE, {
-                type: OPPONENT_TYPES.WILD_ENCOUNTER,
-                wildMon: { encounterArea }
-              })
-            }
-          })
-        }}
-      )
+      this.#audioManager.playBgm(BGM_ASSET_KEYS.WILD_ENCOUNTER)    
+
+      const promises = [
+        this.#preloadBattleAssets({
+          type: OPPONENT_TYPES.WILD_ENCOUNTER,
+          encounterArea
+        }),
+        createWildEncounterSceneTransition(this, {
+          skipSceneTransition: SKIP_BATTLE_ANIMATIONS,
+          spritesToNotBeObscured: [this.#player.sprite]
+        })
+      ]
+
+      Promise.all(promises).then(data => {
+        /** @type {import('../types/typedef.js').BattleSceneConfig} */
+        const config = data[0]
+        
+        this.#isTransitioning = false
+        this.scene.start(SCENE_KEYS.BATTLE_SCENE, config)
+      })
     }
   }
 
@@ -377,5 +388,62 @@ export class WorldScene extends Phaser.Scene {
       this.#npcs.push(npc)
     })
 
+  }
+
+  /**
+   * @param {object} data
+   * @param {OPPONENT_TYPES} data.type
+   * @param {import('../types/typedef.js').Trainer} [data.trainer]
+   * @param {import('../types/typedef.js').EncounterAreaConfig} [data.encounterArea]
+   * @returns {Promise}
+   */
+  #preloadBattleAssets (data) {
+    return new Promise(resolve => {
+      const config = {
+        generatedMon: null,
+        trainer: data.trainer,
+        type: data.type
+      }
+
+      /** @type {import('../types/typedef.js').BaseMon[]} */
+      let baseMonsToPreload = []
+
+      const playerData = DataUtils.getPlayerDetails(this)
+      const partyBaseMons = playerData.partyMons.map(mon => DataUtils.getBaseMonDetails(this, mon.baseMonIndex))
+
+      baseMonsToPreload = baseMonsToPreload.concat(partyBaseMons)
+
+      switch (data.type) {
+        case OPPONENT_TYPES.WILD_ENCOUNTER:
+          config.generatedMon = generateWildMon(this, data.encounterArea)
+          baseMonsToPreload.push(config.generatedMon.baseMon)
+          break
+        case OPPONENT_TYPES.TRAINER:
+        case OPPONENT_TYPES.GYM_LEADER:
+          const enemyBaseMons = data.trainer.partyMons.map(mon => DataUtils.getBaseMonDetails(this, mon.baseMonIndex))
+          baseMonsToPreload = baseMonsToPreload.concat(enemyBaseMons)
+          break
+        default:
+          exhaustiveGuard(data.type)
+          break
+      }
+  
+      this.load.once('complete', () => {
+        console.log('done!')
+        resolve(config)
+      })
+
+      baseMonsToPreload.forEach(baseMon => {
+        loadMonAssets(this, baseMon)
+      })
+  
+      if (data.type !== OPPONENT_TYPES.WILD_ENCOUNTER) {
+        loadTrainerSprites(this, data.trainer.assetKey)
+      }
+      loadTrainerSprites(this, TRAINER_SPRITES.RED)
+      loadBattleAssets(this)
+
+      this.load.start()
+    })
   }
 }

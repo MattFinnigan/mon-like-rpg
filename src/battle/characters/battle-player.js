@@ -18,7 +18,7 @@ export class BattlePlayer extends BattleCharacter {
   /**
    * 
    * @param {Phaser.Scene} scene
-   * @param {import("../../types/typedef.js").Player} player
+   * @param {import("../../types/typedef.js").PlayerData} player
    * @param {BattleMon[]} battleMons
    * @param {object} config
    * @param {string} config.assetKey

@@ -69,7 +69,7 @@ export class DataUtils {
   /**
    * 
    * @param {Phaser.Scene} scene 
-   * @returns {import("../types/typedef.js").Player}
+   * @returns {import("../types/typedef.js").PlayerData}
    */
   static getPlayerDetails (scene) {
     const player = scene.cache.json.get(DATA_ASSET_KEYS.PLAYER)
