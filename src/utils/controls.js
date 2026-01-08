@@ -42,6 +42,8 @@ export class Controls {
   #virtualKeyDirections
   /** @type {VirtualKeyInteract} */
   #virtualKeyInteract
+  /** @type {Phaser.Input.Keyboard.Key | undefined} */
+  #enterKey
 
   /**
    * 
@@ -65,6 +67,8 @@ export class Controls {
       SHIFT: { isDown: false, justDown: false }
     }
 
+    this.#enterKey = this.#scene.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER)
+
     this.#createMobileButtonsIfNeeded()
   }
 
@@ -83,11 +87,17 @@ export class Controls {
     this.#lockPlayerInput = val
   }
 
+  wasEnterKeyPressed () {
+    if (this.#enterKey === undefined) {
+      return false
+    }
+    return Phaser.Input.Keyboard.JustDown(this.#enterKey)
+  }
+
   wasSpaceKeyPressed () {
     if (this.#cursorKeys === undefined) {
       return false
     }
-    // console.log(this.#virtualKeyInteract.SPACE)
     return this.#isMobile()
       ? this.#consumeJustDown(this.#virtualKeyInteract.SPACE)
       : Phaser.Input.Keyboard.JustDown(this.#cursorKeys.space)

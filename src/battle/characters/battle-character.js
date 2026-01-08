@@ -92,13 +92,13 @@ export class BattleCharacter {
     const remainingMons = this.remainingMons().map(pm => {
       const offsetX = count * 35 + 60
       count++
-      return this._scene.add.image(offsetX, 88, MON_BALLS.SHEET_1, 9).setScale(0.65)
+      return this._scene.add.image(offsetX, 88, MON_BALLS.MON_BALLS_SHEET_1, 9).setScale(0.65)
     })
 
     const faintedMons = this.faintedMons().map(fm => {
       const offsetX = count * 35 + 60
       count++
-      return this._scene.add.image(offsetX, 88, MON_BALLS.SHEET_1, 1).setScale(0.65)
+      return this._scene.add.image(offsetX, 88, MON_BALLS.MON_BALLS_SHEET_1, 1).setScale(0.65)
     })
     
     this._phaserRemainingMonsGameObject = this._scene.add.container(this._remainingMonGameObjectsPos.x, this._remainingMonGameObjectsPos.y, [

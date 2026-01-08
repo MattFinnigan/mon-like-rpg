@@ -41,7 +41,7 @@ export function loadBattleAssets (scene) {
   scene.load.image(HEALTH_BAR_ASSET_KEYS.MIDDLE, `/${battleAssetPath}/hp_mid.png`)
   scene.load.image(HEALTH_BAR_ASSET_KEYS.RIGHT_CAP, `/${battleAssetPath}/hp_right_cap.png`)
 
-  scene.load.spritesheet(MON_BALLS.SHEET_1, `/${battleAssetPath}/balls.png`, {
+  scene.load.spritesheet(MON_BALLS.MON_BALLS_SHEET_1, `/${battleAssetPath}/balls.png`, {
     frameWidth: 48,
     frameHeight: 48
   })

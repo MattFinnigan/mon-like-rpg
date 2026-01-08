@@ -9,6 +9,7 @@ import { Controls } from '../utils/controls.js'
 import { DataUtils } from '../utils/data-utils.js'
 import { StateMachine } from '../utils/state-machine.js'
 import { DialogUi } from '../common/dialog-ui.js'
+import { DATA_MANAGER_STORE_KEYS, dataManager } from '../utils/data-manager.js'
 
 /** @enum {object} */
 const PARTY_STATES = Object.freeze({
@@ -56,7 +57,7 @@ export class PartyScene extends Phaser.Scene {
     const battleAssetPath = 'assets/images/battle'
 
     // todo move this somewhere nicer
-    this.load.spritesheet(PARTY_MON_SPRITES.SHEET_1, `/assets/images/mons/party/sheet1.png`, {
+    this.load.spritesheet(PARTY_MON_SPRITES.PARTY_MON_SPRITES_SHEET_1, `/assets/images/mons/party/sheet1.png`, {
       frameWidth: 72,
       frameHeight: 96
     })
@@ -75,7 +76,7 @@ export class PartyScene extends Phaser.Scene {
     this.#partyMonHealthBars = []
     this.#phaserPartyMonGameObjects = []
 
-    this.#partyMons = DataUtils.getPlayerDetails(this).partyMons
+    this.#partyMons = dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS)
     
     this.#createPartyMonGameObjects()
     this.#createPlayerInputCursor()
@@ -150,24 +151,20 @@ export class PartyScene extends Phaser.Scene {
       }
 
       if (input === DIRECTION.UP) {
-        let newIndex = 0
-        if (this.#currentCursorMonIndex === 0) {
-          newIndex = this.#partyMons.length - 1
-        } else {
-          newIndex = this.#currentCursorMonIndex - 1
+        this.#currentCursorMonIndex--
+        if (this.#currentCursorMonIndex < 0) {
+          this.#currentCursorMonIndex = this.#partyMons.length - 1
         }
-        this.#movePlayerInputCursor(newIndex)
+        this.#movePlayerInputCursor(this.#currentCursorMonIndex)
         return
       }
 
       if (input === DIRECTION.DOWN) {
-        let newIndex = this.#partyMons.length - 1
-        if (this.#currentCursorMonIndex === this.#partyMons.length - 1) {
-          newIndex = 0
-        } else {
-          newIndex = this.#currentCursorMonIndex + 1
+        this.#currentCursorMonIndex++
+        if (this.#currentCursorMonIndex > this.#partyMons.length - 1) {
+          this.#currentCursorMonIndex = 0
         }
-        this.#movePlayerInputCursor(newIndex)
+        this.#movePlayerInputCursor(this.#currentCursorMonIndex)
         return
       }
     }
@@ -211,7 +208,7 @@ export class PartyScene extends Phaser.Scene {
           const mon1NewPosY = this.#currentCursorMonIndex * 65
           const mon2NewPosY = this.#currentMonIndex * 65
           
-          const tween = this.add.tween({
+          this.add.tween({
             delay: 0,
             duration: 300,
             y: {
@@ -221,7 +218,7 @@ export class PartyScene extends Phaser.Scene {
             targets: this.#phaserPartyMonGameObjects[this.#currentCursorMonIndex]
           })
 
-          const tween2 = this.add.tween({
+          this.add.tween({
             delay: 0,
             duration: 300,
             y: {
@@ -236,13 +233,15 @@ export class PartyScene extends Phaser.Scene {
           
           this.#partyMons[this.#currentCursorMonIndex] = mon1
           this.#partyMons[this.#currentMonIndex] = mon2
+          
+          dataManager.store.set(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS, this.#partyMons)
+          dataManager.saveData()
+
           this.time.delayedCall(500, () => {
             this.#phaserPartyMonGameObjects.forEach(d => {
               d.destroy()
             })
-            tween.destroy()
-            tween2.destroy()
-          
+
             this.#partyMonHealthBars = []
             this.#createPartyMonGameObjects()
             this.#partyStateMachine.setState(PARTY_STATES.SELECT_MON)
@@ -284,12 +283,12 @@ export class PartyScene extends Phaser.Scene {
       this.#partyMonHealthBars.push(hpBar)
 
       const partyMonContainer = this.add.container(0, offsetY, [
-        this.add.image(0, 0, PARTY_MON_SPRITES.SHEET_1, baseMon.partySpriteAssetKey).setScale(1.25),
+        this.add.image(0, 0, PARTY_MON_SPRITES.PARTY_MON_SPRITES_SHEET_1, baseMon.partySpriteAssetKey).setScale(1.25),
         this.add.bitmapText(40, -5, 'gb-font', mon.name, 40),
         this.add.bitmapText(70, 35, 'gb-font-thick', `HP:`, 20),
         hpBar.container,
         this.add.bitmapText(350, -5, 'gb-font-thick', `Lv${mon.currentLevel}`, 30),
-        this.add.bitmapText(380, 25, 'gb-font-thick', `${mon.currentHp}1 / ${monStats.hp}1`, 30)
+        this.add.bitmapText(380, 25, 'gb-font-thick', `${mon.currentHp} / ${monStats.hp}`, 30)
       ])
       container.add(partyMonContainer)
       this.#phaserPartyMonGameObjects.push(partyMonContainer)

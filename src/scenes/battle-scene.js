@@ -15,6 +15,7 @@ import { AudioManager } from '../utils/audio-manager.js'
 import { BGM_ASSET_KEYS, TRAINER_SPRITES } from '../assets/asset-keys.js'
 import { OPPONENT_TYPES } from '../common/opponent-types.js'
 import { BattlePlayer } from '../battle/characters/battle-player.js'
+import { DATA_MANAGER_STORE_KEYS, dataManager } from '../utils/data-manager.js'
 
 /** @enum {object} */
 const BATTLE_STATES = Object.freeze({
@@ -105,7 +106,10 @@ export class BattleScene extends Phaser.Scene {
     console.log(`[${BattleScene.name}:init] invoked`)
     this.#opponentType = battleSceneConfig.type
     this.#enemyTrainer = battleSceneConfig.trainer
-    this.#player = DataUtils.getPlayerDetails(this)
+    this.#player = {
+      name: dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_NAME),
+      partyMons: dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS)
+    }
     this.#generatedMon = battleSceneConfig.generatedMon
   }
   

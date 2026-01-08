@@ -1,6 +1,7 @@
 import { ATTACK_ASSET_KEYS, BATTLE_ASSET_KEYS, BGM_ASSET_KEYS, CHARACTER_ASSET_KEYS, DATA_ASSET_KEYS, SYSTEM_ASSET_KEYS, TRAINER_GRAY_SPRITES, TRAINER_SPRITES, UI_ASSET_KEYS, WORLD_ASSET_KEYS } from '../assets/asset-keys.js'
 import Phaser from '../lib/phaser.js'
 import { AudioManager } from '../utils/audio-manager.js'
+import { dataManager } from '../utils/data-manager.js'
 import { DataUtils } from '../utils/data-utils.js'
 import { SCENE_KEYS } from './scene-keys.js'
 
@@ -25,6 +26,7 @@ export class PreloadScene extends Phaser.Scene {
     }).setOrigin(0.5)
 
     this.load.on('complete', () => {
+      dataManager.loadData()
       this.scene.start(SCENE_KEYS.WORLD_SCENE)
       this.#createAnimations()
     })

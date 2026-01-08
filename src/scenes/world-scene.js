@@ -19,6 +19,7 @@ import { SCENE_KEYS } from "./scene-keys.js";
 import { exhaustiveGuard } from '../utils/guard.js';
 import { loadBattleAssets, loadMonAssets, loadTrainerSprites } from '../utils/load-assets.js';
 import { generateWildMon } from '../utils/encounter-utils.js';
+import { Menu } from '../world/menu/menu.js';
 
 const CUSTOM_TILED_TYPES = Object.freeze({
   NPC: 'npc',
@@ -71,6 +72,8 @@ export class WorldScene extends Phaser.Scene {
   #bgmKey
   /** @type {boolean} */
   #isTransitioning
+  /** @type {Menu} */
+  #menu
 
   constructor () {
     super({
@@ -192,6 +195,7 @@ export class WorldScene extends Phaser.Scene {
 
     })
 
+    this.#menu = new Menu(this)
     this.#dialogUi = new DialogUi(this)
     this.#controls = new Controls(this)
   }
@@ -203,13 +207,50 @@ export class WorldScene extends Phaser.Scene {
     }
   
     // process player input
-    const selectedDirection = this.#controls.getDirectionKeyPressedDown()
-    if (selectedDirection !== DIRECTION.NONE && !this.#isPlayerInputLocked()) {
-      this.#player.moveCharacter(selectedDirection)
+    const wasSpaceKeyPresed = this.#controls.wasSpaceKeyPressed()
+    const selectedDirectionHeldDown = this.#controls.getDirectionKeyPressedDown()
+    const selectedDirectionPressedOnce = this.#controls.getDirectionKeyJustPressed()
+    if (selectedDirectionHeldDown !== DIRECTION.NONE && !this.#isPlayerInputLocked()) {
+      this.#player.moveCharacter(selectedDirectionHeldDown)
     }
 
-    if (this.#controls.wasSpaceKeyPressed() && !this.#player.isMoving) {
+    if (wasSpaceKeyPresed && !this.#player.isMoving && !this.#menu.isVisible) {
       this.#handlePlayerInteraction()
+    }
+
+    if (this.#controls.wasEnterKeyPressed() && !this.#player.isMoving) {
+      if (this.#dialogUi.isVisible) {
+        return
+      }
+      if (this.#menu.isVisible) {
+        this.#menu.hide()
+        return
+      }
+      this.#menu.show()
+    }
+
+    if (this.#menu.isVisible) {
+      if (selectedDirectionPressedOnce !== DIRECTION.NONE) {
+        this.#menu.handlePlayerInput(selectedDirectionPressedOnce)
+      }
+
+      if (this.#controls.wasBackKeyPressed()) {
+        this.#menu.hide()
+      }
+
+      if (wasSpaceKeyPresed) {
+        this.#menu.handlePlayerInput('OK')
+
+        if (this.#menu.selectedMenuOption === 'SAVE') {
+          dataManager.saveData()
+          this.#dialogUi.showDialogModal(['Game saved!'])
+          this.#menu.hide()
+        } else if (this.#menu.selectedMenuOption === 'EXIT') {
+          this.#menu.hide()
+        } else if (this.#menu.selectedMenuOption === 'POKEMON') {
+          this.scene.start(SCENE_KEYS.PARTY_SCENE)
+        }
+      }
     }
 
     this.#player.update(time)
@@ -277,8 +318,6 @@ export class WorldScene extends Phaser.Scene {
       this.#dialogUi.showDialogModal(nearbyNpc.messages)
       return
     }
-
-    this.scene.start(SCENE_KEYS.PARTY_SCENE)
   }
 
   #handlePlayerMovementUpdate () {
@@ -332,7 +371,7 @@ export class WorldScene extends Phaser.Scene {
   }
 
   #isPlayerInputLocked () {
-    return this.#dialogUi.isVisible || this.#isTransitioning
+    return this.#dialogUi.isVisible || this.#isTransitioning || this.#menu.isVisible
   }
   
   /**
@@ -408,7 +447,10 @@ export class WorldScene extends Phaser.Scene {
       /** @type {import('../types/typedef.js').BaseMon[]} */
       let baseMonsToPreload = []
 
-      const playerData = DataUtils.getPlayerDetails(this)
+      const playerData = {
+        name: dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_NAME),
+        partyMons: dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS)
+      }
       const partyBaseMons = playerData.partyMons.map(mon => DataUtils.getBaseMonDetails(this, mon.baseMonIndex))
 
       baseMonsToPreload = baseMonsToPreload.concat(partyBaseMons)

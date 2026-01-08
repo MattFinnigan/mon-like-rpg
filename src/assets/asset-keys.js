@@ -98,11 +98,11 @@ export const BGM_ASSET_KEYS = Object.freeze({
 })
 
 export const PARTY_MON_SPRITES = Object.freeze({
-  SHEET_1: 'SHEET_1'
+  PARTY_MON_SPRITES_SHEET_1: 'PARTY_MON_SPRITES_SHEET_1'
 })
 
 export const MON_BALLS = Object.freeze({
-  SHEET_1: 'SHEET_1'
+  MON_BALLS_SHEET_1: 'MON_BALLS_SHEET_1'
 })
 
 export const MON_ASSET_KEYS = Object.freeze({

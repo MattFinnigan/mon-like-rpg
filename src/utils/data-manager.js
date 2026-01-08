@@ -2,6 +2,7 @@ import Phaser from "../lib/phaser.js";
 import { TILE_SIZE } from "../../config.js";
 import { DIRECTION } from "../common/direction.js";
 
+const LOCAL_STORAGE_KEY = 'MF_MON_DATA'
 /**
  * @typedef GlobalState
  * @type {object}
@@ -10,6 +11,8 @@ import { DIRECTION } from "../common/direction.js";
  * @property {number} player.position.x
  * @property {number} player.position.y
  * @property {import("../common/direction").Direction} player.direction
+ * @property {string} player.name
+ * @property {import("../types/typedef.js").Mon[]} player.partyMons
  */
 
 /** @type {GlobalState} */
@@ -19,13 +22,57 @@ const initalState = {
       x: 7 * TILE_SIZE,
       y: 42 * TILE_SIZE
     },
-    direction: DIRECTION.DOWN
+    direction: DIRECTION.DOWN,
+    name: 'SPONION',
+    partyMons: [
+      {
+        baseMonIndex: 149,
+        name: 'MEWTWO',
+        currentHp: 193,
+        currentLevel: 99,
+        attackEV: 14,
+        defenseEV: 3,
+        splAttackEV: 27,
+        splDefenseEV: 8,
+        speedEV: 19,
+        hpEV: 22,
+        attackIds: [1, 2]
+      },
+      {
+        baseMonIndex: 15,
+        name: 'PIDGEY',
+        currentHp: 85,
+        currentLevel: 50,
+        attackEV: 5,
+        defenseEV: 29,
+        splAttackEV: 11,
+        splDefenseEV: 16,
+        speedEV: 2,
+        hpEV: 35,
+        attackIds: [2]
+      },
+      {
+        baseMonIndex: 73,
+        name: 'GEOBRO',
+        currentHp: 80,
+        currentLevel: 50,
+        attackEV: 5,
+        defenseEV: 29,
+        splAttackEV: 11,
+        splDefenseEV: 16,
+        speedEV: 2,
+        hpEV: 21,
+        attackIds: [1, 2]
+      }
+    ]
   }
 }
 
 export const DATA_MANAGER_STORE_KEYS = Object.freeze({
   PLAYER_POSITION: 'PLAYER_POSITION',
-  PLAYER_DIRECTION: 'PLAYER_DIRECTION'
+  PLAYER_DIRECTION: 'PLAYER_DIRECTION',
+  PLAYER_NAME: 'PLAYER_NAME',
+  PLAYER_PARTY_MONS: 'PLAYER_PARTY_MONS'
 })
 
 class DataManager extends Phaser.Events.EventEmitter {
@@ -42,6 +89,35 @@ class DataManager extends Phaser.Events.EventEmitter {
     return this.#store
   }
 
+  loadData () {
+    if (typeof Storage === undefined) {
+      console.warn('Cannot get data - local storage not supported')
+      return
+    }
+    
+    const savedData = localStorage.getItem(LOCAL_STORAGE_KEY)
+    if (savedData === null) {
+      return
+    }
+
+    try {
+      const parsedData = JSON.parse(savedData)
+      this.#updateDataManager(parsedData)
+    } catch (error) {
+      console.warn('encounted an error attempting to load and parse saved data')
+    }
+  }
+
+  saveData () {
+    if (typeof Storage === undefined) {
+      console.warn('Cannot save data - local storage not supported')
+      return
+    }
+
+    const dataToSave = this.#updateDataManagerDataToGlobalStateObject()
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(dataToSave))
+  }
+
   /**
    * 
    * @param {GlobalState} data
@@ -51,8 +127,23 @@ class DataManager extends Phaser.Events.EventEmitter {
     this.#store.set({
       [DATA_MANAGER_STORE_KEYS.PLAYER_POSITION]: data.player.position,
       [DATA_MANAGER_STORE_KEYS.PLAYER_DIRECTION]: data.player.direction,
-      
+      [DATA_MANAGER_STORE_KEYS.PLAYER_NAME]: data.player.name,
+      [DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS]: data.player.partyMons,
     })
+  }
+
+  #updateDataManagerDataToGlobalStateObject () {
+    return {
+      player: {
+        position: {
+          x: this.#store.get(DATA_MANAGER_STORE_KEYS.PLAYER_POSITION).x,
+          y: this.#store.get(DATA_MANAGER_STORE_KEYS.PLAYER_POSITION).y
+        },
+        direction: this.#store.get(DATA_MANAGER_STORE_KEYS.PLAYER_DIRECTION),
+        name: this.#store.get(DATA_MANAGER_STORE_KEYS.PLAYER_NAME),
+        partyMons: this.#store.get(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS)
+      }
+    }
   }
 }
 

@@ -65,16 +65,4 @@ export class DataUtils {
     const partyMons = trainer.partyMons.map(monId => this.getMonDetails(scene, monId))
     return { ...trainer, partyMons }
   }
-
-  /**
-   * 
-   * @param {Phaser.Scene} scene 
-   * @returns {import("../types/typedef.js").PlayerData}
-   */
-  static getPlayerDetails (scene) {
-    const player = scene.cache.json.get(DATA_ASSET_KEYS.PLAYER)
-    const partyMons = player.partyMons.map(monId => this.getMonDetails(scene, monId))
-    return { ...player, partyMons }
-  }
-
 }

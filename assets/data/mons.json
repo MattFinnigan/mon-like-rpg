@@ -1,43 +1,4 @@
 {
-  "1": {
-    "baseMonIndex": 149,
-    "name": "MEWTWO",
-    "currentHp": 193,
-    "currentLevel": 99,
-    "attackEV": 14,
-    "defenseEV": 3,
-    "splAttackEV": 27,
-    "splDefenseEV": 8,
-    "speedEV": 19,
-    "hpEV": 22,
-    "attackIds": [1, 2]
-  },
-  "2": {
-    "baseMonIndex": 15,
-    "name": "PIDGEY",
-    "currentHp": 0,
-    "currentLevel": 50,
-    "attackEV": 5,
-    "defenseEV": 29,
-    "splAttackEV": 11,
-    "splDefenseEV": 16,
-    "speedEV": 2,
-    "hpEV": 24,
-    "attackIds": [2]
-  },
-  "3": {
-    "baseMonIndex": 73,
-    "name": "GEOBRO",
-    "currentHp": 0,
-    "currentLevel": 50,
-    "attackEV": 5,
-    "defenseEV": 29,
-    "splAttackEV": 11,
-    "splDefenseEV": 16,
-    "speedEV": 2,
-    "hpEV": 24,
-    "attackIds": [1, 2]
-  },
   "4": {
     "baseMonIndex": 16,
     "name": "PIDGEY YO",
