@@ -1,24 +1,11 @@
 import { UI_ASSET_KEYS } from "../../assets/asset-keys.js"
 import { DIRECTION } from "../../common/direction.js"
-import Phaser from "../../lib/phaser.js"
+import { DATA_MANAGER_STORE_KEYS, dataManager } from "../../utils/data-manager.js"
+import { DataUtils } from "../../utils/data-utils.js"
 import { exhaustiveGuard } from "../../utils/guard.js"
 
-/**
- * @typedef {keyof typeof MENU_OPTIONS} MenuOptions
- */
 
-/** @enum {MenuOptions} */
-export const MENU_OPTIONS = Object.freeze({
-  POKEDEX: 'POKEDEX',
-  POKEMON: 'POKEMON',
-  ITEM: 'ITEM',
-  SAVE: 'SAVE',
-  OPTIONS: 'OPTIONS',
-  EXIT: 'EXIT'
-})
-
-
-export class Menu {
+export class ItemMenu {
   /** @type {Phaser.Scene} */
   #scene
   /** @type {number} */
@@ -33,14 +20,14 @@ export class Menu {
   #container
   /** @type {boolean} */
   #isVisible
-  /** @type {MenuOptions[]} */
-  #availaleMenuOptions
+  /** @type {import("../../types/typedef").Item[]} */
+  #availableItems
   /** @type {Phaser.GameObjects.BitmapText[]} */
   #menuOptionsTextGameObjects
   /** @type {number} */
-  #selectedMenuOptionIndex
-  /** @type {MenuOptions} */
-  #selectedMenuOption
+  #selectedItemOptionIndex
+  /** @type {import("../../types/typedef").Item} */
+  #selectedItemOption
   /** @type {Phaser.GameObjects.Image} */
   #userInputCursor
 
@@ -52,17 +39,23 @@ export class Menu {
     this.#scene = scene
     this.#padding = 4
     this.#width = 275
-    this.#availaleMenuOptions = [MENU_OPTIONS.POKEMON, MENU_OPTIONS.ITEM, MENU_OPTIONS.SAVE, MENU_OPTIONS.EXIT]
-    this.#height = 10 + this.#padding * 2 + this.#availaleMenuOptions.length * 50
+    this.#height = 555
+
+    const itemDetails = DataUtils.getItemDetails(this.#scene)
+  
+    this.#availableItems = dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_INVENTORY).map(invItem => {
+      return itemDetails.find(itemDetail => itemDetail.key === invItem.itemKey )
+    })
+    
 
     this.#menuOptionsTextGameObjects = []
-    this.#selectedMenuOptionIndex = 0
+    this.#selectedItemOptionIndex = 0
     this.#graphics = this.#createGraphics()
     this.#container = this.#scene.add.container(0, 0, [this.#graphics])
 
-    for (let i = 0; i < this.#availaleMenuOptions.length; i++) {
+    for (let i = 0; i < this.#availableItems.length; i++) {
       const y = 10 + 50 * i + this.#padding
-      const textObject = this.#scene.add.bitmapText(40 + this.#padding, y, 'gb-font', this.#availaleMenuOptions[i], 40)
+      const textObject = this.#scene.add.bitmapText(40 + this.#padding, y, 'gb-font', this.#availableItems[i].name, 40)
       this.#menuOptionsTextGameObjects.push(textObject)
       this.#container.add(textObject)
     }
@@ -82,10 +75,10 @@ export class Menu {
   }
 
   /**
-   * @returns {MenuOptions}
+   * @returns {import("../../types/typedef").Item}
    */
-  get selectedMenuOption () {
-    return this.#selectedMenuOption
+  get selectedItemOption () {
+    return this.#selectedItemOption
   }
 
   show () {
@@ -100,7 +93,7 @@ export class Menu {
   hide () {
     this.#container.setAlpha(0)
     this.#isVisible = false
-    this.#selectedMenuOptionIndex = 0
+    this.#selectedItemOptionIndex = 0
     this.#moveMenuCursor(DIRECTION.NONE)
   }
 
@@ -109,13 +102,14 @@ export class Menu {
    * @param {import("../../common/direction").Direction|'OK'|'CANCEL'} input 
    */
   handlePlayerInput (input) {
+    console.log(input)
     if (input === 'CANCEL') {
       this.hide()
       return
     }
 
     if (input === 'OK') {
-      this.#handleSelectedMenuOption()
+      this.#handleselectedItemOption()
       return
     }
 
@@ -135,8 +129,8 @@ export class Menu {
   /**
    * @returns {void}
    */
-  #handleSelectedMenuOption () {
-    this.#selectedMenuOption = this.#availaleMenuOptions[this.#selectedMenuOptionIndex]
+  #handleselectedItemOption () {
+    this.#selectedItemOption = this.#availableItems[this.#selectedItemOptionIndex]
   }
 
   /**
@@ -148,15 +142,15 @@ export class Menu {
 
     switch (direction) {
       case DIRECTION.UP:
-        this.#selectedMenuOptionIndex -= 1
-        if (this.#selectedMenuOptionIndex < 0) {
-          this.#selectedMenuOptionIndex = this.#availaleMenuOptions.length - 1
+        this.#selectedItemOptionIndex -= 1
+        if (this.#selectedItemOptionIndex < 0) {
+          this.#selectedItemOptionIndex = this.#availableItems.length - 1
         }
         break
       case DIRECTION.DOWN:
-        this.#selectedMenuOptionIndex += 1
-        if (this.#selectedMenuOptionIndex > this.#availaleMenuOptions.length - 1) {
-          this.#selectedMenuOptionIndex = 0
+        this.#selectedItemOptionIndex += 1
+        if (this.#selectedItemOptionIndex > this.#availableItems.length - 1) {
+          this.#selectedItemOptionIndex = 0
         }
         break
       case DIRECTION.RIGHT:
@@ -170,7 +164,7 @@ export class Menu {
     }
 
     const x = 20 + this.#padding
-    const y = 28 + this.#padding + this.#selectedMenuOptionIndex * 50
+    const y = 28 + this.#padding + this.#selectedItemOptionIndex * 50
 
     this.#userInputCursor.setPosition(x, y)
   

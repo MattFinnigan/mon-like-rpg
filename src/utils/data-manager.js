@@ -1,6 +1,7 @@
 import Phaser from "../lib/phaser.js";
 import { TILE_SIZE } from "../../config.js";
 import { DIRECTION } from "../common/direction.js";
+import { ITEM_KEY } from "../common/items.js";
 
 const LOCAL_STORAGE_KEY = 'MF_MON_DATA'
 /**
@@ -13,6 +14,7 @@ const LOCAL_STORAGE_KEY = 'MF_MON_DATA'
  * @property {import("../common/direction").Direction} player.direction
  * @property {string} player.name
  * @property {import("../types/typedef.js").Mon[]} player.partyMons
+ * @property {import("../types/typedef.js").Inventory} player.inventory
  */
 
 /** @type {GlobalState} */
@@ -50,21 +52,9 @@ const initalState = {
         speedEV: 2,
         hpEV: 35,
         attackIds: [2]
-      },
-      {
-        baseMonIndex: 73,
-        name: 'GEOBRO',
-        currentHp: 80,
-        currentLevel: 50,
-        attackEV: 5,
-        defenseEV: 29,
-        splAttackEV: 11,
-        splDefenseEV: 16,
-        speedEV: 2,
-        hpEV: 21,
-        attackIds: [1, 2]
       }
-    ]
+    ],
+    inventory: [{ itemKey: ITEM_KEY.POKEBALL, qty: 5 }, { itemKey: ITEM_KEY.POTION, qty: 1 }]
   }
 }
 
@@ -72,7 +62,8 @@ export const DATA_MANAGER_STORE_KEYS = Object.freeze({
   PLAYER_POSITION: 'PLAYER_POSITION',
   PLAYER_DIRECTION: 'PLAYER_DIRECTION',
   PLAYER_NAME: 'PLAYER_NAME',
-  PLAYER_PARTY_MONS: 'PLAYER_PARTY_MONS'
+  PLAYER_PARTY_MONS: 'PLAYER_PARTY_MONS',
+  PLAYER_INVENTORY: 'PLAYER_INVENTORY',
 })
 
 class DataManager extends Phaser.Events.EventEmitter {
@@ -129,6 +120,7 @@ class DataManager extends Phaser.Events.EventEmitter {
       [DATA_MANAGER_STORE_KEYS.PLAYER_DIRECTION]: data.player.direction,
       [DATA_MANAGER_STORE_KEYS.PLAYER_NAME]: data.player.name,
       [DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS]: data.player.partyMons,
+      [DATA_MANAGER_STORE_KEYS.PLAYER_INVENTORY]: data.player.inventory,
     })
   }
 
@@ -141,7 +133,8 @@ class DataManager extends Phaser.Events.EventEmitter {
         },
         direction: this.#store.get(DATA_MANAGER_STORE_KEYS.PLAYER_DIRECTION),
         name: this.#store.get(DATA_MANAGER_STORE_KEYS.PLAYER_NAME),
-        partyMons: this.#store.get(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS)
+        partyMons: this.#store.get(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS),
+        inventory: this.#store.get(DATA_MANAGER_STORE_KEYS.PLAYER_INVENTORY)
       }
     }
   }

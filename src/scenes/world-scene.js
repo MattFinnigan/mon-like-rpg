@@ -20,6 +20,7 @@ import { exhaustiveGuard } from '../utils/guard.js';
 import { loadBattleAssets, loadMonAssets, loadTrainerSprites } from '../utils/load-assets.js';
 import { generateWildMon } from '../utils/encounter-utils.js';
 import { Menu } from '../world/menu/menu.js';
+import { ItemMenu } from '../world/menu/item-menu.js';
 
 const CUSTOM_TILED_TYPES = Object.freeze({
   NPC: 'npc',
@@ -74,6 +75,8 @@ export class WorldScene extends Phaser.Scene {
   #isTransitioning
   /** @type {Menu} */
   #menu
+  /** @type {ItemMenu} */
+  #itemMenu
 
   constructor () {
     super({
@@ -196,6 +199,7 @@ export class WorldScene extends Phaser.Scene {
     })
 
     this.#menu = new Menu(this)
+    this.#itemMenu = new ItemMenu(this)
     this.#dialogUi = new DialogUi(this)
     this.#controls = new Controls(this)
   }
@@ -229,7 +233,18 @@ export class WorldScene extends Phaser.Scene {
       this.#menu.show()
     }
 
-    if (this.#menu.isVisible) {
+    if (this.#itemMenu.isVisible) {
+      if (selectedDirectionPressedOnce !== DIRECTION.NONE) {
+        this.#itemMenu.handlePlayerInput(selectedDirectionPressedOnce)
+      }
+
+      if (this.#controls.wasBackKeyPressed()) {
+        this.#itemMenu.hide()
+      }
+      if (wasSpaceKeyPresed) {
+        this.#itemMenu.handlePlayerInput('OK')
+      }
+    } else if (this.#menu.isVisible) {
       if (selectedDirectionPressedOnce !== DIRECTION.NONE) {
         this.#menu.handlePlayerInput(selectedDirectionPressedOnce)
       }
@@ -249,6 +264,8 @@ export class WorldScene extends Phaser.Scene {
           this.#menu.hide()
         } else if (this.#menu.selectedMenuOption === 'POKEMON') {
           this.scene.start(SCENE_KEYS.PARTY_SCENE)
+        } else if (this.#menu.selectedMenuOption === 'ITEM') {
+          this.#itemMenu.show()
         }
       }
     }

@@ -547,9 +547,10 @@ export class BattleMenu {
 
     if (this.#selectedBattleMenuOption === BATTLE_MENU_OPTIONS.ITEM) {
       this.#activeBattleMenu = ACTIVE_BATTLE_MENU.BATTLE_ITEM
-      this.updateInfoPanelMessagesAndWaitForInput(['Your bag is empty...'], () => {
-        this.#switchToMainBattleMenu()
-      }, SKIP_BATTLE_ANIMATIONS)
+
+      // this.updateInfoPanelMessagesAndWaitForInput(['Your bag is empty...'], () => {
+      //   this.#switchToMainBattleMenu()
+      // }, SKIP_BATTLE_ANIMATIONS)
       return
     }
 

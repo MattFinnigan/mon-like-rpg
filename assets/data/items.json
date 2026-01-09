@@ -1,0 +1,14 @@
+[
+  {
+    "key": "POKEBALL",
+    "name": "POKEBALL",
+    "usableDuringScenes": ["BATTLE_SCENE"],
+    "value": 1
+  },
+  {
+    "key": "POTION",
+    "name": "POTION",
+    "usableDuringScenes": ["BATTLE_SCENE", "WORLD_SCENE"],
+    "value": 10
+  }
+]

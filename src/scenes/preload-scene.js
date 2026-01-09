@@ -74,8 +74,7 @@ export class PreloadScene extends Phaser.Scene {
     this.load.json(DATA_ASSET_KEYS.MONS, 'assets/data/mons.json')
     this.load.json(DATA_ASSET_KEYS.ENCOUNTER_AREAS, 'assets/data/encounter_areas.json')
     this.load.json(DATA_ASSET_KEYS.TRAINERS, 'assets/data/trainers.json')
-    // TODO move this to localstorage or api fetch
-    this.load.json(DATA_ASSET_KEYS.PLAYER, 'assets/data/player.json')
+    this.load.json(DATA_ASSET_KEYS.ITEMS, 'assets/data/items.json')
 
     // common
     this.load.image(SYSTEM_ASSET_KEYS.DIALOG_BACKGROUND, `/${backgroundAssetPath}/dialog.png`)

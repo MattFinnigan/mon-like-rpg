@@ -108,7 +108,8 @@ export class BattleScene extends Phaser.Scene {
     this.#enemyTrainer = battleSceneConfig.trainer
     this.#player = {
       name: dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_NAME),
-      partyMons: dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS)
+      partyMons: dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS),
+      inventory: dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_INVENTORY),
     }
     this.#generatedMon = battleSceneConfig.generatedMon
   }

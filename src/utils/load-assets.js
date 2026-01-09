@@ -32,6 +32,8 @@ export function loadTrainerSprites (scene, assetKey) {
 export function loadBattleAssets (scene) {
   const backgroundAssetPath = 'assets/images/backgrounds'
   const battleAssetPath = 'assets/images/battle'
+  const monBallAssetPath = 'assets/images/anims/ball'
+
   scene.load.image(BATTLE_ASSET_KEYS.BATTLE_MENU_OPTIONS_BACKGROUND, `/${backgroundAssetPath}/battle-menu-options.png`)
   scene.load.image(BATTLE_ASSET_KEYS.PLAYER_BATTLE_DETAILS_BACKGROUND, `/${backgroundAssetPath}/player-battle-details.png`)
   scene.load.image(BATTLE_ASSET_KEYS.ENEMY_BATTLE_DETAILS_BACKGROUND, `/${backgroundAssetPath}/enemy-battle-details.png`)
@@ -45,4 +47,12 @@ export function loadBattleAssets (scene) {
     frameWidth: 48,
     frameHeight: 48
   })
+
+  scene.load.image(MON_BALLS.MON_BALL_EXPAND_1, `/${monBallAssetPath}/expand_1.png`)
+  scene.load.image(MON_BALLS.MON_BALL_EXPAND_2, `/${monBallAssetPath}/expand_2.png`)
+  scene.load.image(MON_BALLS.MON_BALL_EXPAND_3, `/${monBallAssetPath}/expand_3.png`)
+
+  scene.load.image(MON_BALLS.MON_BALL_WIGGLE_1, `/${monBallAssetPath}/wiggle_1.png`)
+  scene.load.image(MON_BALLS.MON_BALL_WIGGLE_2, `/${monBallAssetPath}/wiggle_2.png`)
+  scene.load.image(MON_BALLS.MON_BALL_WIGGLE_3, `/${monBallAssetPath}/wiggle_3.png`)
 }

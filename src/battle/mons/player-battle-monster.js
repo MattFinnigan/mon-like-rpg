@@ -1,4 +1,5 @@
-import { BATTLE_ASSET_KEYS, MON_BACK_ASSET_KEYS } from "../../assets/asset-keys.js";
+import { BATTLE_ASSET_KEYS, MON_BACK_ASSET_KEYS, MON_BALLS } from "../../assets/asset-keys.js";
+import { createExpandBallAnimation } from "../../utils/animations.js";
 import { BattleMon } from "./battle-mon.js";
 
 /**
@@ -10,6 +11,9 @@ const PLAYER_IMAGE_POSITION = Object.freeze({
 })
 
 export class PlayerBattleMon extends BattleMon {
+  /** @type {Phaser.GameObjects.Sprite} */
+  #monBallExpandSpriteAnimation
+
   /**
    * 
    * @param {import("../../types/typedef.js").BattleMonConfig} config 
@@ -27,6 +31,7 @@ export class PlayerBattleMon extends BattleMon {
 
     const assetKey = this._phaserMonImageGameObject.texture.key
     this._phaserMonImageGameObject.setTexture(MON_BACK_ASSET_KEYS[assetKey + '_BACK'])
+    this.#monBallExpandSpriteAnimation = null
   }
   
   /**
@@ -35,33 +40,36 @@ export class PlayerBattleMon extends BattleMon {
    * @returns {void}
    */
   playMonAppearAnimation (callback) {
-    const startXPos = -30
-    const endXPos = PLAYER_IMAGE_POSITION.x
-    this._phaserMonImageGameObject.setPosition(startXPos, PLAYER_IMAGE_POSITION.y)
-    this._phaserMonImageGameObject.setAlpha(1)
+    this._phaserHealthBarGameContainer.setAlpha(0)
+    this._phaserMonImageGameObject.setAlpha(0)
 
     if (this._skipBattleAnimations) {
-      this._phaserMonImageGameObject.setX(endXPos)
       this._phaserHealthBarGameContainer.setAlpha(1)
       callback()
       return
     }
 
-    this._scene.tweens.add({
-      delay: 0,
-      duration: 100,
-      x: {
-        from: startXPos,
-        to: endXPos
-      },
-      targets: this._phaserMonImageGameObject,
-      onComplete: () => {
+    const coords = {
+      x: PLAYER_IMAGE_POSITION.x + (this._phaserMonImageGameObject.width / 2) + 10,
+      y: PLAYER_IMAGE_POSITION.y + (this._phaserMonImageGameObject.height / 2) + 10,
+    }
+
+    if (!this.#monBallExpandSpriteAnimation) {
+      this.#monBallExpandSpriteAnimation = createExpandBallAnimation(this._scene, coords).setScale(1.5)
+    }
+
+    this.#monBallExpandSpriteAnimation.play(MON_BALLS.MON_BALL_EXPAND_ANIMATION)
+    this.#monBallExpandSpriteAnimation.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
+      this.#monBallExpandSpriteAnimation.setAlpha(0)
+      this._scene.time.delayedCall(300, () => {
+        this._phaserMonImageGameObject.setAlpha(1)
         super.playMonCry(() => {
           this._phaserHealthBarGameContainer.setAlpha(1)
           callback()
         })
-      }
+      })
     })
+
   }
 
   /**

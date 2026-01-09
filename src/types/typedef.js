@@ -93,6 +93,7 @@ import Phaser from "../lib/phaser.js";
  * @type {Object}
  * @property {string} name
  * @property {Mon[]} partyMons
+ * @property {Inventory} inventory
  */
 
 /**
@@ -159,4 +160,25 @@ import Phaser from "../lib/phaser.js";
  *  mon: import("../types/typedef.js").Mon,
  *  baseMon: import("../types/typedef.js").BaseMon
  * }} [generatedMon]
+ */
+
+/**
+ * @typedef Item
+ * @type {object}
+ * @property {import("../common/items.js").ItemKey} key
+ * @property {string} name
+ * @property {import("../scenes/scene-keys.js").SceneKey[]} usableDuringScenes
+ * @property {number} value
+ */
+
+/**
+ * @typedef InventoryItem
+ * @type {object}
+ * @property {import("../common/items.js").ItemKey} itemKey
+ * @property {number} qty
+ */
+
+/**
+ * @typedef Inventory
+ * @type {InventoryItem[]}
  */
