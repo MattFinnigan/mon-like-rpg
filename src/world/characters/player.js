@@ -1,5 +1,5 @@
 import { CHARACTER_ASSET_KEYS } from "../../assets/asset-keys.js";
-import { DIRECTION } from "../../common/direction.js";
+import { DIRECTION } from "../../types/direction.js";
 import { exhaustiveGuard } from "../../utils/guard.js";
 import { Character } from "./character.js";
 
@@ -30,7 +30,7 @@ export class Player extends Character {
 
   /**
    * 
-   * @param {import("../../common/direction.js").Direction} direction
+   * @param {import("../../types/direction.js").Direction} direction
    * @return {void}
    */
   moveCharacter (direction) {

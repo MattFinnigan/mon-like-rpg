@@ -1,5 +1,5 @@
 export const MON_TYPES = (() => {
-/** @type {Record<string, import('../types/typedef').Type>} */
+/** @type {Record<string, import('./typedef').Type>} */
 const TYPES = {
   NORMAL: {
     name: 'NORMAL',

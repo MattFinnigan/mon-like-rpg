@@ -1,15 +1,15 @@
 import Phaser from '../../../lib/phaser.js'
 import { SYSTEM_ASSET_KEYS, BATTLE_ASSET_KEYS, UI_ASSET_KEYS } from '../../../assets/asset-keys.js'
-import { DIRECTION } from '../../../common/direction.js'
+import { DIRECTION } from '../../../types/direction.js'
 import { exhaustiveGuard } from '../../../utils/guard.js'
 import { ACTIVE_BATTLE_MENU, ATTACK_MOVE_OPTIONS, BATTLE_MENU_OPTIONS } from './battle-menu-options.js'
 import { animateText } from '../../../utils/text-utils.js'
 import { SKIP_BATTLE_ANIMATIONS } from '../../../../config.js'
-import { DIALOG_DETAILS } from '../../../utils/consts.js'
-import { EVENT_KEYS } from '../../../common/event-keys.js'
+import { DIALOG_DETAILS } from '../../../types/dialog-ui.js'
 import { PlayerBattleMon } from '../../mons/player-battle-monster.js'
 import { ItemMenu } from '../../../common/item-menu.js'
-import { ITEM_KEY } from '../../../common/items.js'
+import { EVENT_KEYS } from '../../../types/event-keys.js'
+
 
 const BATTLE_MENU_CURSOR_POS = Object.freeze({
   x: 30,
@@ -176,7 +176,7 @@ export class BattleMenu {
   
   /**
    * 
-   * @param {import('../../../common/direction.js').Direction | 'OK'|'CANCEL'} input
+   * @param {import('../../../types/direction.js').Direction | 'OK'|'CANCEL'} input
    */
   handlePlayerInput (input) {
     const state = this.#activeBattleMenu
@@ -362,7 +362,7 @@ export class BattleMenu {
 
   /**
    * 
-   * @param {import('../../../common/direction.js').Direction} direction
+   * @param {import('../../../types/direction.js').Direction} direction
    */
   #updateSelectedBattleMenuOptionFromInput (direction) {
     if (this.#activeBattleMenu !== ACTIVE_BATTLE_MENU.BATTLE_MAIN) {
@@ -465,7 +465,7 @@ export class BattleMenu {
   }
   /**
    * 
-   * @param {import('../../../common/direction.js').Direction} direction
+   * @param {import('../../../types/direction.js').Direction} direction
    */
   #updateSelectedMoveMenuOptionFromInput (direction) {
     if (this.#activeBattleMenu !== ACTIVE_BATTLE_MENU.BATTLE_MOVE_SELECT) {

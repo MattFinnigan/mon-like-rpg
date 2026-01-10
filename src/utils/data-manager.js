@@ -1,7 +1,7 @@
 import Phaser from "../lib/phaser.js";
 import { TILE_SIZE } from "../../config.js";
-import { DIRECTION } from "../common/direction.js";
-import { ITEM_KEY } from "../common/items.js";
+import { DIRECTION } from "../types/direction.js";
+import { ITEM_KEY } from "../types/items.js";
 
 const LOCAL_STORAGE_KEY = 'MF_MON_DATA'
 /**
@@ -11,7 +11,7 @@ const LOCAL_STORAGE_KEY = 'MF_MON_DATA'
  * @property {object} player.position
  * @property {number} player.position.x
  * @property {number} player.position.y
- * @property {import("../common/direction").Direction} player.direction
+ * @property {import("../types/direction").Direction} player.direction
  * @property {string} player.name
  * @property {import("../types/typedef.js").Mon[]} player.partyMons
  * @property {import("../types/typedef.js").Inventory} player.inventory

@@ -1,9 +1,9 @@
 import { SKIP_BATTLE_ANIMATIONS, TILE_SIZE, TILED_COLLISION_ALPHA, WORLD_ZOOM } from '../../config.js';
 import { BGM_ASSET_KEYS, CHARACTER_ASSET_KEYS, DATA_ASSET_KEYS, TRAINER_SPRITES, WORLD_ASSET_KEYS } from '../assets/asset-keys.js';
-import { DIRECTION } from '../common/direction.js';
-import { EVENT_KEYS } from '../common/event-keys.js';
-import { OPPONENT_TYPES } from '../common/opponent-types.js';
-import { TRANSITION_TYPES } from '../common/transition-types.js';
+import { DIRECTION } from '../types/direction.js';
+import { EVENT_KEYS } from '../types/event-keys.js';
+import { OPPONENT_TYPES } from '../types/opponent-types.js';
+import { TRANSITION_TYPES } from '../types/transition-types.js';
 import Phaser from '../lib/phaser.js'
 import { AudioManager } from '../utils/audio-manager.js';
 import { Controls } from '../utils/controls.js';
@@ -584,7 +584,7 @@ export class WorldScene extends Phaser.Scene {
 
   /**
    * 
-   * @param {import('../common/direction.js').Direction} direction 
+   * @param {import('../types/direction.js').Direction} direction 
    * @returns {boolean}
    */
   #playerCanMove (direction) {
@@ -604,7 +604,7 @@ export class WorldScene extends Phaser.Scene {
    * 
    * @param {object} keyPressed
    * @param {boolean} keyPressed.wasSpaceKeyPresed 
-   * @param {import('../common/direction.js').Direction} keyPressed.selectedDirectionPressedOnce 
+   * @param {import('../types/direction.js').Direction} keyPressed.selectedDirectionPressedOnce 
    * @param {boolean} keyPressed.wasBackKeyPressed 
    * @returns {void}
    */
@@ -632,7 +632,7 @@ export class WorldScene extends Phaser.Scene {
    * 
    * @param {object} keyPressed
    * @param {boolean} keyPressed.wasSpaceKeyPresed 
-   * @param {import('../common/direction.js').Direction} keyPressed.selectedDirectionPressedOnce 
+   * @param {import('../types/direction.js').Direction} keyPressed.selectedDirectionPressedOnce 
    * @param {boolean} keyPressed.wasBackKeyPressed 
    * @returns {void}
    */

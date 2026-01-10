@@ -4,7 +4,7 @@ import { BATTLE_ASSET_KEYS, MON_ASSET_KEYS } from "../../assets/asset-keys.js"
 import { DataUtils } from "../../utils/data-utils.js"
 import { AudioManager } from "../../utils/audio-manager.js"
 import { getMonStats } from "../../utils/battle-utils.js"
-import { MON_TYPES } from "../../common/mon-types.js"
+import { MON_TYPES } from "../../types/mon-types.js"
 
 export class BattleMon {
   /** @protected @type {Phaser.Scene} */

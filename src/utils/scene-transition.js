@@ -1,5 +1,5 @@
 import { TILE_SIZE } from "../../config.js"
-import { TRANSITION_TYPES } from "../common/transition-types.js"
+import { TRANSITION_TYPES } from "../types/transition-types.js"
 
 /**
  * 

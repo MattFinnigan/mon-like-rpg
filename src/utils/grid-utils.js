@@ -1,11 +1,11 @@
 import { TILE_SIZE } from "../../config.js"
-import { DIRECTION } from "../common/direction.js"
+import { DIRECTION } from "../types/direction.js"
 import { exhaustiveGuard } from "./guard.js"
 
 /**
  * 
  * @param {import("../types/typedef").Coordinate} currentPosition 
- * @param {import("../common/direction").Direction} direction
+ * @param {import("../types/direction").Direction} direction
  * @return {import("../types/typedef").Coordinate} 
  */
 export function getTargetPositionFromGameObjectPositionAndDirection (currentPosition, direction) {

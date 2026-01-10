@@ -1,6 +1,6 @@
 import { DATA_ASSET_KEYS } from "../assets/asset-keys.js"
-import { ITEM_TYPE_DATA, ITEM_TYPE_KEY } from "../common/items.js"
-import { MON_TYPES } from "../common/mon-types.js"
+import { ITEM_TYPE_DATA, ITEM_TYPE_KEY } from "../types/items.js"
+import { MON_TYPES } from "../types/mon-types.js"
 import { getMonStats } from "./battle-utils.js"
 
 export class DataUtils {

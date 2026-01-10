@@ -1,7 +1,7 @@
 import Phaser from '../lib/phaser.js'
 import { SCENE_KEYS } from './scene-keys.js'
 import { BattleMenu } from '../battle/ui/menu/battle-menu.js'
-import { DIRECTION } from '../common/direction.js'
+import { DIRECTION } from '../types/direction.js'
 import { EnemyBattleMon } from '../battle/mons/enemy-battle-monster.js'
 import { PlayerBattleMon } from '../battle/mons/player-battle-monster.js'
 import { StateMachine } from '../utils/state-machine.js'
@@ -10,17 +10,16 @@ import { ATTACK_TARGET, AttackManager } from '../battle/attacks/attack-manager.j
 import { Controls } from '../utils/controls.js'
 import { DataUtils } from '../utils/data-utils.js'
 import { BattleTrainer } from '../battle/characters/battle-trainer.js'
-import { EVENT_KEYS } from '../common/event-keys.js'
+import { EVENT_KEYS } from '../types/event-keys.js'
 import { AudioManager } from '../utils/audio-manager.js'
 import { BGM_ASSET_KEYS, TRAINER_SPRITES } from '../assets/asset-keys.js'
-import { OPPONENT_TYPES } from '../common/opponent-types.js'
 import { BattlePlayer } from '../battle/characters/battle-player.js'
 import { DATA_MANAGER_STORE_KEYS, dataManager } from '../utils/data-manager.js'
 import { BattleMon } from '../battle/mons/battle-mon.js'
-import { exhaustiveGuard } from '../utils/guard.js'
-import { Character } from '../world/characters/character.js'
 import { BattleCharacter } from '../battle/characters/battle-character.js'
-import { ITEM_TYPE_KEY } from '../common/items.js'
+import { ITEM_TYPE_KEY } from '../types/items.js'
+import { OPPONENT_TYPES } from '../types/opponent-types.js'
+
 
 /** @enum {object} */
 const BATTLE_STATES = Object.freeze({

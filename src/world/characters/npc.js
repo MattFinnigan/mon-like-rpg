@@ -1,10 +1,10 @@
 import { Character } from "./character.js";
-import { DIRECTION } from "../../common/direction.js";
+import { DIRECTION } from "../../types/direction.js";
 import { exhaustiveGuard } from "../../utils/guard.js";
 import { SCENE_KEYS } from "../../scenes/scene-keys.js";
-import { OPPONENT_TYPES } from "../../common/opponent-types.js";
+import { OPPONENT_TYPES } from "../../types/opponent-types.js";
 import { DataUtils } from "../../utils/data-utils.js";
-import { EVENT_KEYS } from "../../common/event-keys.js";
+import { EVENT_KEYS } from "../../types/event-keys.js";
 
 /**
  * @typedef {keyof typeof NPC_ACTION_TYPES} NPCAction
@@ -120,7 +120,7 @@ export class NPC extends Character {
 
   /**
    * 
-   * @param {import("../../common/direction.js").Direction} playerDirection 
+   * @param {import("../../types/direction.js").Direction} playerDirection 
    */
   facePlayer (playerDirection) {
     switch (playerDirection) {
@@ -170,7 +170,7 @@ export class NPC extends Character {
       return
     }
 
-    /** @type {import("../../common/direction.js").Direction} */
+    /** @type {import("../../types/direction.js").Direction} */
     let characterDirection = DIRECTION.NONE
 
     if (time > this.#lastMovementTime) {
@@ -214,7 +214,7 @@ export class NPC extends Character {
 
   /**
    * 
-   * @param {import("../../common/direction.js").Direction} direction
+   * @param {import("../../types/direction.js").Direction} direction
    * @return {void}
    */
   moveCharacter (direction) {

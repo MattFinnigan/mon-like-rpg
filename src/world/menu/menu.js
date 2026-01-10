@@ -1,5 +1,5 @@
 import { UI_ASSET_KEYS } from "../../assets/asset-keys.js"
-import { DIRECTION } from "../../common/direction.js"
+import { DIRECTION } from "../../types/direction.js"
 import Phaser from "../../lib/phaser.js"
 import { exhaustiveGuard } from "../../utils/guard.js"
 
@@ -106,7 +106,7 @@ export class Menu {
 
   /**
    * 
-   * @param {import("../../common/direction").Direction|'OK'|'CANCEL'} input 
+   * @param {import("../../types/direction").Direction|'OK'|'CANCEL'} input 
    */
   handlePlayerInput (input) {
     if (input === 'CANCEL') {
@@ -141,7 +141,7 @@ export class Menu {
 
   /**
    * 
-   * @param {import("../../common/direction").Direction} direction
+   * @param {import("../../types/direction").Direction} direction
    * @returns {void}
    */
   #moveMenuCursor (direction) {

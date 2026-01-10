@@ -1,6 +1,5 @@
 import { UI_ASSET_KEYS } from "../assets/asset-keys.js"
-import { DIRECTION } from "../common/direction.js"
-
+import { DIRECTION } from "../types/direction.js"
 /**
  * @typedef VirtualKey
  * @type {object}
@@ -116,7 +115,7 @@ export class Controls {
     if (this.#cursorKeys === undefined) {
       return DIRECTION.NONE
     }
-    /** @type {import('../common/direction.js').Direction} */
+    /** @type {import('../types/direction.js').Direction} */
     let selectedDirection = DIRECTION.NONE
 
     if (this.#isMobile()) {
@@ -148,7 +147,7 @@ export class Controls {
       return DIRECTION.NONE
     }
 
-    /** @type {import('../common/direction.js').Direction} */
+    /** @type {import('../types/direction.js').Direction} */
     let selectedDirection = DIRECTION.NONE
     
     if (this.#isMobile()) {
@@ -191,7 +190,7 @@ export class Controls {
    * @param {number} x 
    * @param {number} y 
    * @param {number} angle 
-   * @param {import("../common/direction.js").Direction} direction 
+   * @param {import("../types/direction.js").Direction} direction 
    * @returns 
    */
   #createArrow (x, y, angle, direction) {

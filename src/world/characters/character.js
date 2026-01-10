@@ -1,5 +1,5 @@
 import { PLAYER_SPEED } from "../../../config.js"
-import { DIRECTION } from "../../common/direction.js"
+import { DIRECTION } from "../../types/direction.js"
 import Phaser from "../../lib/phaser.js"
 import { getTargetPositionFromGameObjectPositionAndDirection } from "../../utils/grid-utils.js"
 import { exhaustiveGuard } from "../../utils/guard.js"
@@ -21,7 +21,7 @@ import { exhaustiveGuard } from "../../utils/guard.js"
  * @property {string} assetKey
  * @property {import("../../types/typedef").Coordinate} [origin={ x: 0, y: 0 }]
  * @property {import("../../types/typedef").Coordinate} position
- * @property {import("../../common/direction.js").Direction} direction
+ * @property {import("../../types/direction.js").Direction} direction
  * @property {() => void} [spriteGridMovementFinishedCallback]
  * @property {CharacterIdleFrameConfig} idleFrameConfig
  * @property {Phaser.Tilemaps.TilemapLayer} [collisionLayer]
@@ -33,7 +33,7 @@ export class Character {
   _scene
   /** @protected @type {Phaser.GameObjects.Sprite} */
   _phaserGameObject
-  /** @protected @type {import("../../common/direction.js").Direction} */
+  /** @protected @type {import("../../types/direction.js").Direction} */
   _direction
   /** @protected @type {boolean} */
   _isMoving
@@ -84,7 +84,7 @@ export class Character {
     return this._isMoving
   }
   
-  /** @type {import("../../common/direction.js").Direction} */
+  /** @type {import("../../types/direction.js").Direction} */
   get direction () {
     return this._direction
   }
@@ -133,7 +133,7 @@ export class Character {
 
   /**
    * 
-   * @param {import("../../common/direction.js").Direction} direction
+   * @param {import("../../types/direction.js").Direction} direction
    * @return {void}
    */
   moveCharacter (direction) {
@@ -145,7 +145,7 @@ export class Character {
 
   /**
    * 
-   * @param {import("../../common/direction.js").Direction} direction
+   * @param {import("../../types/direction.js").Direction} direction
    * @return {void}
    */
   _moveSprite (direction) {

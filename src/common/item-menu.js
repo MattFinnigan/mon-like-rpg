@@ -1,10 +1,10 @@
 import { UI_ASSET_KEYS } from "../assets/asset-keys.js"
-import { DIRECTION } from "./direction.js"
+import { DIRECTION } from "../types/direction.js"
 import { DATA_MANAGER_STORE_KEYS, dataManager } from "../utils/data-manager.js"
 import { DataUtils } from "../utils/data-utils.js"
 import { exhaustiveGuard } from "../utils/guard.js"
 import { SCENE_KEYS } from "../scenes/scene-keys.js"
-import { EVENT_KEYS } from "./event-keys.js"
+import { EVENT_KEYS } from "../types/event-keys.js"
 
 
 export class ItemMenu {
@@ -84,7 +84,7 @@ export class ItemMenu {
 
   /**
    * 
-   * @param {import("./direction.js").Direction|'OK'|'CANCEL'} input 
+   * @param {import("../types/direction.js").Direction|'OK'|'CANCEL'} input 
    */
   handlePlayerInput (input) {
     if (input === 'CANCEL') {
@@ -145,7 +145,7 @@ export class ItemMenu {
 
   /**
    * 
-   * @param {import("./direction.js").Direction} direction
+   * @param {import("../types/direction.js").Direction} direction
    * @returns {void}
    */
   #moveMenuCursor (direction) {

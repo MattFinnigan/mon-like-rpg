@@ -1,4 +1,4 @@
-import { OPPONENT_TYPES } from "../common/opponent-types.js";
+import { OPPONENT_TYPES } from "../types/opponent-types.js";
 import Phaser from "../lib/phaser.js";
 
 /**
@@ -171,8 +171,8 @@ import Phaser from "../lib/phaser.js";
  * @typedef Item
  * @type {object}
  * @property {ItemType} type
- * @property {import("../common/items.js").ItemTypeKey} typeKey
- * @property {import("../common/items.js").ItemKey} key
+ * @property {import("./items.js").ItemTypeKey} typeKey
+ * @property {import("./items.js").ItemKey} key
  * @property {string} name
  * @property {any} [value]
  */
@@ -180,7 +180,7 @@ import Phaser from "../lib/phaser.js";
 /**
  * @typedef InventoryItem
  * @type {object}
- * @property {import("../common/items.js").ItemKey} itemKey
+ * @property {import("./items.js").ItemKey} itemKey
  * @property {number} qty
  */
 
