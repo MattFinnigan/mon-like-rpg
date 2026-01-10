@@ -287,4 +287,18 @@ export class BattleMon {
       ]))
     }
   }
+
+  /**
+   * 
+   * @param {number} hp 
+   * @param {() => void} callback 
+   */
+  healHp (hp, callback) {
+    // update current hp, animate hp bar
+    this._currentHealth += hp
+    if (this._currentHealth > this._maxHealth) {
+      this._currentHealth = this._maxHealth
+    }
+    this._healthBar.setMeterPercentageAnimated(this._currentHealth, this._currentHealth / this._maxHealth, { callback })
+  }
 }

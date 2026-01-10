@@ -11,7 +11,7 @@ import { DATA_MANAGER_STORE_KEYS, dataManager } from '../utils/data-manager.js';
 import { DataUtils } from '../utils/data-utils.js';
 import { getTargetPositionFromGameObjectPositionAndDirection } from '../utils/grid-utils.js';
 import { createBattleSceneTransition, createWildEncounterSceneTransition } from '../utils/scene-transition.js';
-import { CANNOT_READ_SIGN_TEXT, PLACEHOLDER_TEXT } from '../utils/text-utils.js';
+import { PLACEHOLDER_TEXT } from '../utils/text-utils.js';
 import { NPC } from '../world/characters/npc.js';
 import { Player } from '../world/characters/player.js';
 import { DialogUi } from '../common/dialog-ui.js';
@@ -20,7 +20,7 @@ import { exhaustiveGuard } from '../utils/guard.js';
 import { loadBattleAssets, loadMonAssets, loadTrainerSprites } from '../utils/load-assets.js';
 import { generateWildMon } from '../utils/encounter-utils.js';
 import { Menu, MENU_OPTIONS } from '../world/menu/menu.js';
-import { ItemMenu } from '../world/menu/item-menu.js';
+import { ItemMenu } from '../common/item-menu.js';
 
 const CUSTOM_TILED_TYPES = Object.freeze({
   NPC: 'npc',
@@ -86,7 +86,7 @@ export class WorldScene extends Phaser.Scene {
 
   init () {
     this.#resetSceneChangingFlags()
-    this.#bgmKey = BGM_ASSET_KEYS.PALLET_TOWN
+    this.#bgmKey = BGM_ASSET_KEYS.SILPH_CO
   }
 
   preload () {
@@ -142,7 +142,7 @@ export class WorldScene extends Phaser.Scene {
       this.#checkForAndHandlePlayerInteraction()
     }
 
-    if (wasEnterPressed && !this.#isPlayerInputLocked()) {
+    if (wasEnterPressed && this.#canToggleMenu()) {
       this.#toggleMenu()
       return
     }
@@ -162,8 +162,16 @@ export class WorldScene extends Phaser.Scene {
    * 
    * @returns {boolean}
    */
+  #canToggleMenu () {
+    return !this.#isPlayerInputLocked() && !this.#player.isMoving && !this.#dialogUi.isVisible
+  }
+
+  /**
+   * 
+   * @returns {boolean}
+   */
   #playerCanInteract () {
-    return !this.#dialogUi.isAnimationPlaying && !this.#isPlayerInputLocked()
+    return !this.#dialogUi.isAnimationPlaying && !this.#isPlayerInputLocked() && !this.#menu.isVisible
   }
   
   #finishDialog () {
@@ -584,6 +592,7 @@ export class WorldScene extends Phaser.Scene {
   }
 
   #toggleMenu () {
+    this.#savePlayerPosition()
     if (this.#menu.isVisible) {
       this.#menu.hide()
       return

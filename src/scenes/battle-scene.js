@@ -17,6 +17,10 @@ import { OPPONENT_TYPES } from '../common/opponent-types.js'
 import { BattlePlayer } from '../battle/characters/battle-player.js'
 import { DATA_MANAGER_STORE_KEYS, dataManager } from '../utils/data-manager.js'
 import { BattleMon } from '../battle/mons/battle-mon.js'
+import { exhaustiveGuard } from '../utils/guard.js'
+import { Character } from '../world/characters/character.js'
+import { BattleCharacter } from '../battle/characters/battle-character.js'
+import { ITEM_TYPE_KEY } from '../common/items.js'
 
 /** @enum {object} */
 const BATTLE_STATES = Object.freeze({
@@ -26,8 +30,8 @@ const BATTLE_STATES = Object.freeze({
   WILD_MON_OUT: 'WILD_MON_OUT',
   ENEMY_MON_OUT: 'ENEMY_MON_OUT',
   PLAYER_MON_OUT: 'PLAYER_MON_OUT',
-  PLAYERS_TURN: 'PLAYERS_TURN',
-  ENEMYS_TURN: 'ENEMYS_TURN',
+  PLAYERS_PLAY: 'PLAYERS_PLAY',
+  ENEMYS_PLAY: 'ENEMYS_PLAY',
   BATTLE: 'BATTLE',
   POST_ATTACK: 'POST_ATTACK',
   FINISHED: 'FINISHED',
@@ -35,7 +39,9 @@ const BATTLE_STATES = Object.freeze({
   ENEMY_CHOOSE_MON: 'ENEMY_CHOOSE_MON',
   PLAYER_CHOOSE_MON: 'PLAYER_CHOOSE_MON',
   PLAYER_VICTORY: 'PLAYER_VICTORY',
-  PLAYER_DEFEATED: 'PLAYER_DEFEATED'
+  PLAYER_DEFEATED: 'PLAYER_DEFEATED',
+  ITEM_USED: 'ITEM_USED',
+  POST_ITEM_USED: 'POST_ITEM_USED'
 })
 
 /** @enum {object} */
@@ -82,6 +88,9 @@ export class BattleScene extends Phaser.Scene {
   #lastAttackResult
   /** @type {BATTLE_PLAYERS[]} */
   #playersThatHadATurn
+  /** @type {import('../types/typedef.js').Item} */
+  #activePlayerItem
+
   /**
    * @type {object}
    * @property {Mon} mon
@@ -94,6 +103,7 @@ export class BattleScene extends Phaser.Scene {
       key: SCENE_KEYS.BATTLE_SCENE
     })
     this.#activePlayerAttackIndex = -1
+    this.#activePlayerItem = null
     this.#player = null
     this.#playerMons = []
     this.#playersThatHadATurn = []
@@ -148,6 +158,7 @@ export class BattleScene extends Phaser.Scene {
       this.#battleMenu.handlePlayerInput('OK')
       return
     }
+
     if (!this.#waitingForPlayerToTakeTurn()) {
       return
     }
@@ -165,11 +176,11 @@ export class BattleScene extends Phaser.Scene {
     if (wasSpaceKeyPresed) {
       this.#battleMenu.handlePlayerInput('OK')
 
-      if (!this.#playerSelectedAnAttack()) {
+      if (!this.#playerJustSelectedAnAttack() && !this.#playerJustSelectedAnItem()) {
         return
       }
 
-      this.#changeToEnemysTurn()
+      this.#changeToEnemysTurnToPlay()
       return
     }
   }
@@ -233,15 +244,8 @@ export class BattleScene extends Phaser.Scene {
     }, result.damageTaken === 0 || SKIP_BATTLE_ANIMATIONS)
   }
 
-  /**
-   * 
-   * @returns {import('../types/typedef.js').Attack}
-   */
+
   #playerAttack () {
-    if (this.#activePlayerMon.isFainted) {
-      return
-    }
-  
     const attk = this.#getPlayerAttack()
     this.#announceAttack(this.#activePlayerMon, attk, () => {
       const result = this.#applyAttackToMon(this.#activePlayerMon, attk, this.#activeEnemyMon)
@@ -413,8 +417,8 @@ export class BattleScene extends Phaser.Scene {
     this.#battleStateMachine.addState({
       name: BATTLE_STATES.ENEMY_CHOOSE_MON,
       onEnter: () => {
-        this.#enemyChooseNextMon()
         this.#resetTurnTracker()
+        this.#enemyChooseNextMon()
 
         if (!this.#activeEnemyMon) {
           this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_VICTORY)
@@ -441,7 +445,7 @@ export class BattleScene extends Phaser.Scene {
               this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_CHOOSE_MON)
               return
             }
-            this.#battleStateMachine.setState(BATTLE_STATES.PLAYERS_TURN)
+            this.#battleStateMachine.setState(BATTLE_STATES.PLAYERS_PLAY)
           })
         })
       }
@@ -457,8 +461,8 @@ export class BattleScene extends Phaser.Scene {
     this.#battleStateMachine.addState({
       name: BATTLE_STATES.PLAYER_CHOOSE_MON,
       onEnter: () => {
-        this.#playerChooseNextMon()
         this.#resetTurnTracker()
+        this.#playerChooseNextMon()
 
         if (!this.#activePlayerMon) {
           this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_DEFEATED)
@@ -482,21 +486,21 @@ export class BattleScene extends Phaser.Scene {
       onEnter: () => {
         this.#hidePlayerTrainer(() => {
           this.#introducePlayerMon(() => {
-            this.#battleStateMachine.setState(BATTLE_STATES.PLAYERS_TURN)
+            this.#battleStateMachine.setState(BATTLE_STATES.PLAYERS_PLAY)
           })
         })
       }
     })
     
     this.#battleStateMachine.addState({
-      name: BATTLE_STATES.PLAYERS_TURN,
+      name: BATTLE_STATES.PLAYERS_PLAY,
       onEnter: () => {
         this.#battleMenu.showMainBattleMenu()
       }
     })
 
     this.#battleStateMachine.addState({
-      name: BATTLE_STATES.ENEMYS_TURN,
+      name: BATTLE_STATES.ENEMYS_PLAY,
       onEnter: () => {
         this.#battleStateMachine.setState(BATTLE_STATES.BATTLE)
       }
@@ -507,21 +511,18 @@ export class BattleScene extends Phaser.Scene {
       onEnter: () => {
         if (this.#allPlayersHadATurn()) {
           this.#resetTurnTracker()
-          this.#battleStateMachine.setState(BATTLE_STATES.PLAYERS_TURN)
+          this.#battleStateMachine.setState(BATTLE_STATES.PLAYERS_PLAY)
           return
         }
-  
         if (!this.#enemyHadATurn() && !this.#playerHadATurn()) {
           this.#determineAndTakeFirstTurn()
           return
         }
-        
         if (this.#enemyHadATurn()) {
           this.#playersThatHadATurn.push(BATTLE_PLAYERS.PLAYER)
-          this.#playerAttack()
+          this.#playPlayersTurnSequence()
           return
         }
-
         if (this.#playerHadATurn()) {
           this.#playersThatHadATurn.push(BATTLE_PLAYERS.ENEMY)
           this.#enemyAttack()
@@ -534,6 +535,17 @@ export class BattleScene extends Phaser.Scene {
       name: BATTLE_STATES.POST_ATTACK,
       onEnter: () => {
         this.#postBattleSequenceCheck()
+      }
+    })
+
+    this.#battleStateMachine.addState({
+      name: BATTLE_STATES.ITEM_USED
+    })
+
+    this.#battleStateMachine.addState({
+      name: BATTLE_STATES.POST_ITEM_USED,
+      onEnter: () => {
+        this.#battleStateMachine.setState(BATTLE_STATES.BATTLE)
       }
     })
 
@@ -584,6 +596,66 @@ export class BattleScene extends Phaser.Scene {
     this.#battleStateMachine.setState(BATTLE_STATES.INTRO)
   }
 
+  #playPlayersTurnSequence () {
+    if (this.#activePlayerMon.isFainted) {
+      return
+    }
+
+    if (this.#playerAttackWasSelected()) {
+      this.#playerAttack()
+      return
+    }
+    if (this.#playerItemWasSelected()) {
+      this.#playerUseItem()
+      return
+    }
+  }
+
+  #playerUseItem () {
+    this.#battleMenu.hideItemMenu()
+    this.#announceItemUsed(this.#battlePlayer, this.#activePlayerItem, () => {
+      this.#playItemEffect(this.#activePlayerMon, this.#activePlayerItem, () => {
+        this.#battleStateMachine.setState(BATTLE_STATES.POST_ITEM_USED)
+      })
+    })
+  }
+
+  /**
+   * 
+   * @param {BattleCharacter} character 
+   * @param {import('../types/typedef.js').Item} item 
+   * @param {() => void} callback 
+   */
+  #announceItemUsed (character, item, callback) {
+    this.#battleMenu.updateInfoPanelMessagesNoInputRequired(`${character.name} used ${item.name}.`, callback, SKIP_BATTLE_ANIMATIONS)
+  }
+
+  /**
+   * 
+   * @param {BattleMon} battleMon 
+   * @param {import('../types/typedef.js').Item} item 
+   * @param {() => void} callback 
+   */
+  #playItemEffect (battleMon, item, callback) {
+    // todo play animation
+    this.time.delayedCall(1000, () => {
+      switch (item.typeKey) {
+        case ITEM_TYPE_KEY.HEALING:
+          battleMon.healHp(item.value, () => {
+            this.#battleStateMachine.setState(BATTLE_STATES.ITEM_USED)
+            this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`${battleMon.name} was healed for ${item.value}`], callback, SKIP_BATTLE_ANIMATIONS)
+          })
+          break
+        case ITEM_TYPE_KEY.BALL:
+          this.#battleStateMachine.setState(BATTLE_STATES.ITEM_USED)
+          this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(['But it failed!'], callback, SKIP_BATTLE_ANIMATIONS)
+          break
+        default:
+          throw new Error('Non battle item used in battle!')
+      }
+    })
+  }
+      
   #setUpBattleMons () {
     const partyBaseMons = this.#player.partyMons.map(mon => DataUtils.getBaseMonDetails(this, mon.baseMonIndex))
     this.#playerMons = this.#player.partyMons.map((pm, i) => {
@@ -635,30 +707,53 @@ export class BattleScene extends Phaser.Scene {
       state === BATTLE_STATES.ENEMY_MON_OUT ||
       state === BATTLE_STATES.WILD_MON_OUT ||
       state === BATTLE_STATES.POST_ATTACK ||
+      state === BATTLE_STATES.ITEM_USED ||
       state === BATTLE_STATES.PLAYER_DEFEATED ||
       state === BATTLE_STATES.PLAYER_VICTORY ||
       state === BATTLE_STATES.RUN_ATTEMPT
   }
 
   #waitingForPlayerToTakeTurn () {
-    return this.#battleStateMachine.currentStateName === BATTLE_STATES.PLAYERS_TURN
+    return this.#battleStateMachine.currentStateName === BATTLE_STATES.PLAYERS_PLAY
   }
 
   /**
    * 
    * @returns {boolean}
    */
-  #playerSelectedAnAttack () {
-    if (this.#battleMenu.selectedAttack === undefined) {
-      return
-    }
+  #playerJustSelectedAnAttack () {
     this.#activePlayerAttackIndex = this.#battleMenu.selectedAttack
+    return this.#playerAttackWasSelected()
+  }
+
+  /**
+   * 
+   * @returns {boolean}
+   */
+  #playerAttackWasSelected () {
     return !!this.#activePlayerMon.attacks[this.#activePlayerAttackIndex]
   }
 
-  #changeToEnemysTurn () {
+  /**
+   * 
+   * @returns {boolean}
+   */
+  #playerJustSelectedAnItem () {
+    this.#activePlayerItem = this.#battleMenu.selectedItem
+    return this.#playerItemWasSelected()
+  }
+
+  /**
+   * 
+   * @returns {boolean}
+   */
+  #playerItemWasSelected () {
+    return !!this.#activePlayerItem
+  }
+
+  #changeToEnemysTurnToPlay () {
     this.#battleMenu.hideMonAttackSubMenu()
-    this.#battleStateMachine.setState(BATTLE_STATES.ENEMYS_TURN)
+    this.#battleStateMachine.setState(BATTLE_STATES.ENEMYS_PLAY)
   }
 
   /**
@@ -801,7 +896,7 @@ export class BattleScene extends Phaser.Scene {
       return
     }
     this.#playersThatHadATurn.push(BATTLE_PLAYERS.PLAYER)
-    this.#playerAttack()
+    this.#playPlayersTurnSequence()
     return
   }
 

@@ -54,7 +54,12 @@ const initalState = {
         attackIds: [2]
       }
     ],
-    inventory: [{ itemKey: ITEM_KEY.POKEBALL, qty: 5 }, { itemKey: ITEM_KEY.POTION, qty: 1 }]
+    inventory: [
+      { itemKey: ITEM_KEY.POKEBALL, qty: 5 },
+      { itemKey: ITEM_KEY.POTION, qty: 2 },
+      { itemKey: ITEM_KEY.REPEL, qty: 3 },
+      { itemKey: ITEM_KEY.KEY_CARD, qty: 1 }
+    ]
   }
 }
 

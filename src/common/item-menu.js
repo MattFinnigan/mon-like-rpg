@@ -1,8 +1,9 @@
-import { UI_ASSET_KEYS } from "../../assets/asset-keys.js"
-import { DIRECTION } from "../../common/direction.js"
-import { DATA_MANAGER_STORE_KEYS, dataManager } from "../../utils/data-manager.js"
-import { DataUtils } from "../../utils/data-utils.js"
-import { exhaustiveGuard } from "../../utils/guard.js"
+import { UI_ASSET_KEYS } from "../assets/asset-keys.js"
+import { DIRECTION } from "./direction.js"
+import { DATA_MANAGER_STORE_KEYS, dataManager } from "../utils/data-manager.js"
+import { DataUtils } from "../utils/data-utils.js"
+import { exhaustiveGuard } from "../utils/guard.js"
+import { SCENE_KEYS } from "../scenes/scene-keys.js"
 
 
 export class ItemMenu {
@@ -20,13 +21,13 @@ export class ItemMenu {
   #container
   /** @type {boolean} */
   #isVisible
-  /** @type {import("../../types/typedef").Item[]} */
+  /** @type {import("../types/typedef.js").Item[]} */
   #availableItems
   /** @type {Phaser.GameObjects.BitmapText[]} */
   #menuOptionsTextGameObjects
   /** @type {number} */
   #selectedItemOptionIndex
-  /** @type {import("../../types/typedef").Item} */
+  /** @type {import("../types/typedef.js").Item} */
   #selectedItemOption
   /** @type {Phaser.GameObjects.Image} */
   #userInputCursor
@@ -40,31 +41,10 @@ export class ItemMenu {
     this.#padding = 4
     this.#width = 275
     this.#height = 555
-
-    const itemDetails = DataUtils.getItemDetails(this.#scene)
-  
-    this.#availableItems = dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_INVENTORY).map(invItem => {
-      return itemDetails.find(itemDetail => itemDetail.key === invItem.itemKey )
-    })
-    
-
-    this.#menuOptionsTextGameObjects = []
     this.#selectedItemOptionIndex = 0
-    this.#graphics = this.#createGraphics()
-    this.#container = this.#scene.add.container(0, 0, [this.#graphics])
+    this.#menuOptionsTextGameObjects = []
 
-    for (let i = 0; i < this.#availableItems.length; i++) {
-      const y = 10 + 50 * i + this.#padding
-      const textObject = this.#scene.add.bitmapText(40 + this.#padding, y, 'gb-font', this.#availableItems[i].name, 40)
-      this.#menuOptionsTextGameObjects.push(textObject)
-      this.#container.add(textObject)
-    }
-
-    this.#userInputCursor = this.#scene.add.image(20 + this.#padding, 28 + this.#padding, UI_ASSET_KEYS.CURSOR)
-    this.#userInputCursor.setScale(1.25)
-    this.#container.add(this.#userInputCursor)
-
-    this.hide()
+    this.#createItemMenuGameObjects()
   }
 
   /**
@@ -75,7 +55,7 @@ export class ItemMenu {
   }
 
   /**
-   * @returns {import("../../types/typedef").Item}
+   * @returns {import("../types/typedef.js").Item}
    */
   get selectedItemOption () {
     return this.#selectedItemOption
@@ -99,7 +79,7 @@ export class ItemMenu {
 
   /**
    * 
-   * @param {import("../../common/direction").Direction|'OK'|'CANCEL'} input 
+   * @param {import("./direction.js").Direction|'OK'|'CANCEL'} input 
    */
   handlePlayerInput (input) {
     if (input === 'CANCEL') {
@@ -113,6 +93,28 @@ export class ItemMenu {
     }
 
     this.#moveMenuCursor(input)
+  }
+
+  /**
+   * 
+   * @returns {boolean}
+   */
+  selectedItemCanBeUsedInBattle () {
+    if (!this.#selectedItemOption) {
+      return false
+    }
+    return this.#selectedItemOption.type.usableDuringScenes.includes(SCENE_KEYS.BATTLE_SCENE)
+  }
+  
+  /**
+   * 
+   * @returns {boolean}
+   */
+  selectedItemCanBeUsedInWorld () {
+    if (!this.#selectedItemOption) {
+      return false
+    }
+    return this.#selectedItemOption.type.usableDuringScenes.includes(SCENE_KEYS.WORLD_SCENE)
   }
 
   #createGraphics () {
@@ -134,11 +136,10 @@ export class ItemMenu {
 
   /**
    * 
-   * @param {import("../../common/direction").Direction} direction
+   * @param {import("./direction.js").Direction} direction
    * @returns {void}
    */
   #moveMenuCursor (direction) {
-
     switch (direction) {
       case DIRECTION.UP:
         this.#selectedItemOptionIndex -= 1
@@ -166,6 +167,32 @@ export class ItemMenu {
     const y = 28 + this.#padding + this.#selectedItemOptionIndex * 50
 
     this.#userInputCursor.setPosition(x, y)
+  }
+
+  #createItemMenuGameObjects () {
+    const itemDetails = DataUtils.getItemDetails(this.#scene)
   
+    this.#availableItems = dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_INVENTORY).map(invItem => {
+      return itemDetails.find(itemDetail => itemDetail.key === invItem.itemKey )
+    })
+
+    this.#graphics = this.#createGraphics()
+    this.#container = this.#scene.add.container(0, 0, [this.#graphics]).setDepth(2)
+
+    for (let i = 0; i < this.#availableItems.length; i++) {
+      const y = 10 + 50 * i + this.#padding
+      const textObject = this.#scene.add.bitmapText(40 + this.#padding, y, 'gb-font', this.#availableItems[i].name, 40)
+      this.#menuOptionsTextGameObjects.push(textObject)
+      this.#container.add(textObject)
+    }
+    this.#createUserInputCursor()
+    this.#container.add(this.#userInputCursor)
+
+    this.hide()
+  }
+
+  #createUserInputCursor () {
+    this.#userInputCursor = this.#scene.add.image(20 + this.#padding, 28 + this.#padding, UI_ASSET_KEYS.CURSOR)
+    this.#userInputCursor.setScale(1.25)
   }
 }

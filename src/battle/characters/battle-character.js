@@ -16,11 +16,13 @@ export class BattleCharacter {
   _phaserRemainingMonsGameObject
   /** @protected @type {import("../../types/typedef").Coordinate} */
   _remainingMonGameObjectsPos
+  /** @type {import("../../types/typedef").PlayerData | import("../../types/typedef").Trainer} */
+  #trainer
 
   /**
    * 
    * @param {Phaser.Scene} scene 
-   * @param {object} trainer
+   * @param {import("../../types/typedef").PlayerData | import("../../types/typedef").Trainer} trainer
    * @param {BattleMon[]} battleMons
    * @param {object} config
    * @param {string} config.assetKey
@@ -33,7 +35,12 @@ export class BattleCharacter {
     this._assetKey = config.assetKey
     this._skipBattleAnimations = config.skipBattleAnimations
     this._remainingMonGameObjectsPos = config.remainingMonsPos || { x: 15, y: -10 }
+    this.#trainer = trainer
     this._createRemainingMonsGameObject()
+  }
+
+  get name () {
+    return this.#trainer.name
   }
 
   /**

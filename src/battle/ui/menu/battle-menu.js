@@ -8,6 +8,8 @@ import { SKIP_BATTLE_ANIMATIONS } from '../../../../config.js'
 import { DIALOG_DETAILS } from '../../../utils/consts.js'
 import { EVENT_KEYS } from '../../../common/event-keys.js'
 import { PlayerBattleMon } from '../../mons/player-battle-monster.js'
+import { ItemMenu } from '../../../common/item-menu.js'
+import { ITEM_KEY } from '../../../common/items.js'
 
 const BATTLE_MENU_CURSOR_POS = Object.freeze({
   x: 30,
@@ -62,6 +64,10 @@ export class BattleMenu {
   #queuedMessageSkipAnimation
   /** @type {boolean} */
   #queuedMessageAnimationPlaying
+  /** @type {ItemMenu} */
+  #battleItemMenu
+  /** @type {import('../../../types/typedef.js').Item} */
+  #selectedItem
 
   /**
    * 
@@ -79,7 +85,9 @@ export class BattleMenu {
     this.#waitingForPlayerInput = false
     this.#queuedMessageSkipAnimation = false
     this.#queuedMessageAnimationPlaying = false
+    this.#selectedItem = undefined
 
+    this.#battleItemMenu = new ItemMenu(this.#scene)
     if (this.#activePlayerMon) {
       this.#createMonAttackSubMenu()
     }
@@ -92,6 +100,13 @@ export class BattleMenu {
   get selectedAttack () {
     if (this.#activeBattleMenu === ACTIVE_BATTLE_MENU.BATTLE_MOVE_SELECT) {
       return this.#selectedAttackIndex
+    }
+    return undefined
+  }
+
+  get selectedItem () {
+    if (this.#activeBattleMenu === ACTIVE_BATTLE_MENU.BATTLE_ITEM) {
+      return this.#selectedItem
     }
     return undefined
   }
@@ -110,9 +125,8 @@ export class BattleMenu {
     this.#battleTextGameObjectLine1.setAlpha(1)
     this.#battleTextGameObjectLine2.setAlpha(1)
 
-    this.#selectedBattleMenuOption = BATTLE_MENU_OPTIONS.FIGHT
-    this.#mainBattleCursorPhaserImageGameObject.setPosition(BATTLE_MENU_CURSOR_POS.x, BATTLE_MENU_CURSOR_POS.y)
     this.#selectedAttackIndex = undefined
+    this.#selectedItem = undefined
     this.#battleTextGameObjectLine1.setText('')
     this.#battleTextGameObjectLine2.setText('')
   }
@@ -126,6 +140,15 @@ export class BattleMenu {
   showMonAttackSubMenu () {
     this.#activeBattleMenu = ACTIVE_BATTLE_MENU.BATTLE_MOVE_SELECT
     this.#moveSelectionSubBattleMenuPhaserContainerGameObject.setAlpha(1)
+  }
+
+  showItemMenu () {
+    this.#activeBattleMenu = ACTIVE_BATTLE_MENU.BATTLE_ITEM
+    this.#battleItemMenu.show()
+  }
+
+  hideItemMenu () {
+    this.#battleItemMenu.hide()
   }
 
   hideMonAttackSubMenu () {
@@ -156,6 +179,7 @@ export class BattleMenu {
    * @param {import('../../../common/direction.js').Direction | 'OK'|'CANCEL'} input
    */
   handlePlayerInput (input) {
+    const state = this.#activeBattleMenu
     if (this.#queuedMessageAnimationPlaying && input === 'OK') {
       return
     }
@@ -171,17 +195,32 @@ export class BattleMenu {
     }
 
     if (input === 'OK') {
-      if (this.#activeBattleMenu === ACTIVE_BATTLE_MENU.BATTLE_MAIN) {
-        this.#handlePlayerChooseMainBattleOption()
-        return
-      }
-      if (this.#activeBattleMenu === ACTIVE_BATTLE_MENU.BATTLE_MOVE_SELECT) {
-        this.#handlePlayerChooseAttack()
-        return
+      switch (state) {
+        case ACTIVE_BATTLE_MENU.BATTLE_MAIN:
+          this.#handlePlayerChooseMainBattleOption()
+          break
+        case ACTIVE_BATTLE_MENU.BATTLE_MOVE_SELECT:
+          this.#handlePlayerChooseAttack()
+          break
+        case ACTIVE_BATTLE_MENU.BATTLE_ITEM:
+          this.#battleItemMenu.handlePlayerInput('OK')
+          this.#handlePlayerChooseItem()
+          break
+        case ACTIVE_BATTLE_MENU.BATTLE_PKMN:
+        case ACTIVE_BATTLE_MENU.BATTLE_RUN:
+          break
+        default:
+          exhaustiveGuard(state)
+          break
       }
       return
     }
 
+    if (state === ACTIVE_BATTLE_MENU.BATTLE_ITEM) {
+      this.#battleItemMenu.handlePlayerInput(input)
+      return
+    }
+    
     this.#updateSelectedBattleMenuOptionFromInput(input)
     this.#moveMainBattleMenuCursor()
     this.#updateSelectedMoveMenuOptionFromInput(input)
@@ -533,6 +572,7 @@ export class BattleMenu {
     this.#waitingForPlayerInput = false
     this.hideInputCursor()
     this.hideMonAttackSubMenu()
+    this.hideItemMenu()
     this.showMainBattleMenu()
   }
 
@@ -545,10 +585,7 @@ export class BattleMenu {
 
     if (this.#selectedBattleMenuOption === BATTLE_MENU_OPTIONS.ITEM) {
       this.#activeBattleMenu = ACTIVE_BATTLE_MENU.BATTLE_ITEM
-
-      // this.updateInfoPanelMessagesAndWaitForInput(['Your bag is empty...'], () => {
-      //   this.#switchToMainBattleMenu()
-      // }, SKIP_BATTLE_ANIMATIONS)
+      this.showItemMenu()
       return
     }
 
@@ -588,6 +625,22 @@ export class BattleMenu {
         exhaustiveGuard(this.#selectedAttackMenuOption)
     }
     this.#selectedAttackIndex = selectedMoveIndex
+  }
+
+  handleItemCannotBeUsed () {
+    this.hideItemMenu()
+    this.updateInfoPanelMessagesAndWaitForInput(['You can\'t use that right now!'], () => {
+      this.#switchToMainBattleMenu()
+    }, SKIP_BATTLE_ANIMATIONS)
+  }
+
+  #handlePlayerChooseItem () {
+    if (!this.#battleItemMenu.selectedItemCanBeUsedInBattle()) {
+      this.handleItemCannotBeUsed()
+      return
+    }
+
+    this.#selectedItem = this.#battleItemMenu.selectedItemOption
   }
 
   #createPlayerInputCursor () {

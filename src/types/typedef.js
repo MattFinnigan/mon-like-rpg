@@ -163,12 +163,18 @@ import Phaser from "../lib/phaser.js";
  */
 
 /**
+ * @typedef ItemType
+ * @type {object}
+ * @property {import("../scenes/scene-keys.js").SceneKey[]} usableDuringScenes
+ */
+/**
  * @typedef Item
  * @type {object}
+ * @property {ItemType} type
+ * @property {import("../common/items.js").ItemTypeKey} typeKey
  * @property {import("../common/items.js").ItemKey} key
  * @property {string} name
- * @property {import("../scenes/scene-keys.js").SceneKey[]} usableDuringScenes
- * @property {number} value
+ * @property {any} [value]
  */
 
 /**
