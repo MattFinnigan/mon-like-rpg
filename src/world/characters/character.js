@@ -94,7 +94,7 @@ export class Character {
    * @param {Character} character 
    * @returns {void}
    */
-  addCharacterToCheckForcollsionsWith (character) {
+  addCharacterToCheckForCollsionsWith (character) {
     this._otherCharactersToCheckForCollisionsWith.push(character)
   }
 

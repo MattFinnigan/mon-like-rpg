@@ -265,7 +265,6 @@ export class Controls {
       key.justDown = true
     }
     key.isDown = true
-    console.log('stroke down??')
   }
 
   /**

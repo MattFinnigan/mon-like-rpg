@@ -31,8 +31,8 @@ export class BattleTrainer extends BattleCharacter {
     super(scene, trainer, battleMons, config)
     this.#trainerType = trainer.trainerType
     this.#name = trainer.name
-    this.#phaserTrainerImageGameObject = this._scene.add.image(ENEMY_IMAGE_POSITION.x, ENEMY_IMAGE_POSITION.y, TRAINER_GRAY_SPRITES[this._assetKey + '_GRAY']).setOrigin(0).setAlpha(0)
     this.#characterSpriteShowing = false
+    this.#createTrainerGameObject()
   }
 
   get name () {
@@ -132,12 +132,18 @@ export class BattleTrainer extends BattleCharacter {
 
     this._scene.tweens.add({
       delay: 0,
-      duration: 400,
+      duration: 500,
       x: {
         from: ENEMY_IMAGE_POSITION.x + 400,
         to: ENEMY_IMAGE_POSITION.x
       },
       targets: this.#phaserTrainerImageGameObject
     })
+  }
+
+  #createTrainerGameObject () {
+    this.#phaserTrainerImageGameObject = this._scene.add.image(ENEMY_IMAGE_POSITION.x, ENEMY_IMAGE_POSITION.y, TRAINER_GRAY_SPRITES[this._assetKey + '_GRAY'])
+      .setOrigin(0)
+      .setAlpha(0)
   }
 }

@@ -1,3 +1,4 @@
+import { SKIP_BATTLE_ANIMATIONS } from '../../config.js'
 import { HEALTH_BAR_ASSET_KEYS } from '../assets/asset-keys.js' 
 import Phaser from '../lib/phaser.js'
 
@@ -91,6 +92,15 @@ export class HealthBar {
     const duration = options?.duration || 1000
     const width = this.#fullWidth * percent
 
+    // if (SKIP_BATTLE_ANIMATIONS) {
+    //   // this.#setHealthBarText(targetHp)
+    //   this.#middle.displayWidth = width
+    //   if (options?.callback) {
+    //     options.callback()
+    //   }
+    //   return
+    // }
+    
     if (this.#showHpNums) {
       const hpTween = this.#scene.tweens.addCounter({
         from: this.#currentHp,

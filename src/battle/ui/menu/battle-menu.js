@@ -71,8 +71,6 @@ export class BattleMenu {
   constructor (scene, activePlayerMon) {
     this.#scene = scene
     this.#activePlayerMon = activePlayerMon
-    this.#battleTextGameObjectLine1 = this.#scene.add.bitmapText(DIALOG_DETAILS.paddingLeft, DIALOG_DETAILS.y + DIALOG_DETAILS.paddingTop, 'gb-font', '', 40)
-      .setMaxWidth(DIALOG_DETAILS.maxTextWidth(this.#scene.scale.width))
     this.#selectedBattleMenuOption = BATTLE_MENU_OPTIONS.FIGHT
     this.#selectedAttackMenuOption = ATTACK_MOVE_OPTIONS.MOVE_1
     this.#activeBattleMenu = ACTIVE_BATTLE_MENU.BATTLE_MAIN
@@ -131,6 +129,10 @@ export class BattleMenu {
   }
 
   hideMonAttackSubMenu () {
+    // reset attack move tracking
+    this.#selectedAttackMenuOption = ATTACK_MOVE_OPTIONS.MOVE_1
+    this.#moveMoveSelectBattleMenuCursor()
+
     this.#activeBattleMenu = ACTIVE_BATTLE_MENU.BATTLE_MAIN
     this.#moveSelectionSubBattleMenuPhaserContainerGameObject.setAlpha(0)
   }
@@ -272,12 +274,8 @@ export class BattleMenu {
   
   #createMainBattleMenu () {
     const MENU_POS_Y = 300
-    const maxTextWidth = DIALOG_DETAILS.maxTextWidth(this.#scene.scale.width)
-    this.#battleTextGameObjectLine1 = this.#scene.add.bitmapText(DIALOG_DETAILS.paddingLeft, DIALOG_DETAILS.y + DIALOG_DETAILS.paddingTop, 'gb-font', '', 30).setMaxWidth(maxTextWidth)
-    this.#battleTextGameObjectLine2 = this.#scene.add.bitmapText(DIALOG_DETAILS.paddingLeft, DIALOG_DETAILS.y + 100, 'gb-font', '', 30).setMaxWidth(maxTextWidth)
-      
+    this.#createBattleDialogTextGameObjects()
     this.#mainBattleCursorPhaserImageGameObject = this.#scene.add.image(BATTLE_MENU_CURSOR_POS.x, BATTLE_MENU_CURSOR_POS.y, UI_ASSET_KEYS.CURSOR, 0).setOrigin(0).setScale(1.35)
-
     this.#mainBattleMenuPhaserContainerGameObject = this.#scene.add.container(MENU_POS_Y, DIALOG_DETAILS.y, [
         this.#createMainInfoSubPane(),
         this.#scene.add.bitmapText(55, DIALOG_DETAILS.paddingTop, 'gb-font', BATTLE_MENU_OPTIONS.FIGHT, 40),
@@ -589,7 +587,6 @@ export class BattleMenu {
       default:
         exhaustiveGuard(this.#selectedAttackMenuOption)
     }
-
     this.#selectedAttackIndex = selectedMoveIndex
   }
 
@@ -608,5 +605,11 @@ export class BattleMenu {
       targets: this.#userInputCursorPhaserGameImageObject
     })
     this.#userInputCursorPhaserTween.pause()
+  }
+
+  #createBattleDialogTextGameObjects () {
+    const maxTextWidth = DIALOG_DETAILS.maxTextWidth(this.#scene.scale.width)
+    this.#battleTextGameObjectLine1 = this.#scene.add.bitmapText(DIALOG_DETAILS.paddingLeft, DIALOG_DETAILS.y + DIALOG_DETAILS.paddingTop, 'gb-font', '', 30).setMaxWidth(maxTextWidth)
+    this.#battleTextGameObjectLine2 = this.#scene.add.bitmapText(DIALOG_DETAILS.paddingLeft, DIALOG_DETAILS.y + 100, 'gb-font', '', 30).setMaxWidth(maxTextWidth)
   }
 }

@@ -19,7 +19,7 @@ import { SCENE_KEYS } from "./scene-keys.js";
 import { exhaustiveGuard } from '../utils/guard.js';
 import { loadBattleAssets, loadMonAssets, loadTrainerSprites } from '../utils/load-assets.js';
 import { generateWildMon } from '../utils/encounter-utils.js';
-import { Menu } from '../world/menu/menu.js';
+import { Menu, MENU_OPTIONS } from '../world/menu/menu.js';
 import { ItemMenu } from '../world/menu/item-menu.js';
 
 const CUSTOM_TILED_TYPES = Object.freeze({
@@ -57,8 +57,6 @@ export class WorldScene extends Phaser.Scene {
   #wildMonEncountered
   /** @type {Phaser.GameObjects.Image} */
   #worldBackgroundImage
-  /** @type {Phaser.GameObjects.Image} */
-  #worldForegroundImage
   /** @type {Phaser.Tilemaps.ObjectLayer} */
   #signLayer
   /** @type {DialogUi} */
@@ -77,6 +75,8 @@ export class WorldScene extends Phaser.Scene {
   #menu
   /** @type {ItemMenu} */
   #itemMenu
+  /** @type {Phaser.Tilemaps.TilemapLayer} */
+  #collisionLayer
 
   constructor () {
     super({
@@ -85,10 +85,8 @@ export class WorldScene extends Phaser.Scene {
   }
 
   init () {
-    this.#wildMonEncountered = false
-    this.#npcPlayerIsInteractingWith = undefined
+    this.#resetSceneChangingFlags()
     this.#bgmKey = BGM_ASSET_KEYS.PALLET_TOWN
-    this.#isTransitioning = false
   }
 
   preload () {
@@ -100,108 +98,28 @@ export class WorldScene extends Phaser.Scene {
   create () {
     console.log(`[${WorldScene.name}:create] invoked`)
 
-    const x = 6 * TILE_SIZE
-    const y = 22 * TILE_SIZE
     const map = this.make.tilemap({ key: WORLD_ASSET_KEYS.WORLD_MAIN_LEVEL })
   
-    // collision
-    const collisonTiles = map.addTilesetImage('collision', WORLD_ASSET_KEYS.WORLD_COLLISION)
-    if (!collisonTiles) {
-      console.log(`[${WorldScene.name}:create] encounted error while creating collision TILESET using data from tiled`)
-      return
-    }
-    const collisionLayer = map.createLayer('Collision', collisonTiles, 0, 0)
-    if (!collisionLayer) {
-      console.log(`[${WorldScene.name}:create] encounted error while creating collision LAYER using data from tiled`)
-      return
-    }
-    collisionLayer.setAlpha(TILED_COLLISION_ALPHA).setDepth(2)
-
-    // encounter
-    const encounterTiles = map.addTilesetImage('encounter', WORLD_ASSET_KEYS.WORLD_ENCOUNTER_ZONE)
-    if (!encounterTiles) {
-      console.log(`[${WorldScene.name}:create] encounted error while creating Encounter TILESET using data from tiled`)
-      return
-    }
-    this.#encounterLayer = map.createLayer('Encounter', encounterTiles, 0, 0)
-    if (!this.#encounterLayer) {
-      console.log(`[${WorldScene.name}:create] encounted error while creating Encounter LAYER using data from tiled`)
-      return
-    }
-    this.#encounterLayer.setAlpha(TILED_COLLISION_ALPHA).setDepth(2)
-
-    // interactives
-    this.#signLayer = map.getObjectLayer('Signs')
-    if (!this.#signLayer) {
-      console.log(`[${WorldScene.name}:create] encounted error while creating Signs LAYER using data from tiled`)
-      return
-    }
-
-    this.#worldBackgroundImage = this.add.image(0, 0, WORLD_ASSET_KEYS.WORLD_BACKGROUND, 0).setOrigin(0)
-    this.cameras.main.setBounds(0, 0, this.#worldBackgroundImage.width, this.#worldBackgroundImage.height)
-    this.cameras.main.centerOn(x, y)
-    this.cameras.main.setZoom(WORLD_ZOOM)
-
+    this.#createWorldLayers(map)
+    this.#createBackgroundSetCamera()
     this.#createNPCs(map)
-  
-    this.#player = new Player({
-      scene: this,
-      position: dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_POSITION),
-      direction: dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_DIRECTION),
-      collisionLayer,
-      spriteGridMovementFinishedCallback: () => {
-        this.#handlePlayerMovementUpdate()
-      },
-      otherCharactersToChckecForCollisionsWith: this.#npcs
-    })
-  
-    this.cameras.main.startFollow(this.#player.sprite)
+    this.#createPlayer()
+    this.#createForeground()
     
-    this.cameras.main.fadeIn(500, 255, 255, 255)
-    this.#worldForegroundImage = this.add.image(0, 0, WORLD_ASSET_KEYS.WORLD_FOREGROUND, 0).setOrigin(0)
+    this.#npcs.forEach(npc => {
+      npc.addCharacterToCheckForCollsionsWith(this.#player)
+    })
 
+    this.cameras.main.fadeIn(500, 255, 255, 255)
     this.#audioManager = this.registry.get('audio')
     this.#audioManager.playBgm(this.#bgmKey)
-
-    this.#npcs.forEach(npc => {
-      npc.addCharacterToCheckForcollsionsWith(this.#player)
-    })
-
-    this.events.on(EVENT_KEYS.TRAINER_BATTLE_START, data => {
-      this.#isTransitioning = true
-      /** @type {NPC} */
-
-      this.#audioManager.playBgm(BGM_ASSET_KEYS.TRAINER)
-
-      const promises = [
-        this.#preloadBattleAssets({
-          type: OPPONENT_TYPES.TRAINER,
-          trainer: {
-            type: OPPONENT_TYPES.TRAINER,
-            ...DataUtils.getTrainerDetails(this, data.actionId)
-          }
-        }),
-        createBattleSceneTransition(this, {
-          skipSceneTransition: SKIP_BATTLE_ANIMATIONS,
-          spritesToNotBeObscured: [this.#player.sprite, data.npc.sprite],
-          type: TRANSITION_TYPES.LEFT_RIGHT_DOWN_SLOW
-        })
-      ]
-
-      Promise.all(promises).then(data => {
-        /** @type {import('../types/typedef.js').BattleSceneConfig} */
-        const config = data[0]
-
-        this.#isTransitioning = false
-        this.scene.start(SCENE_KEYS.BATTLE_SCENE, config)
-      })
-
-    })
 
     this.#menu = new Menu(this)
     this.#itemMenu = new ItemMenu(this)
     this.#dialogUi = new DialogUi(this)
     this.#controls = new Controls(this)
+
+    this.#setUpEventListeners()
   }
 
   update (time) {
@@ -210,64 +128,28 @@ export class WorldScene extends Phaser.Scene {
       return
     }
   
-    // process player input
     const wasSpaceKeyPresed = this.#controls.wasSpaceKeyPressed()
     const selectedDirectionHeldDown = this.#controls.getDirectionKeyPressedDown()
     const selectedDirectionPressedOnce = this.#controls.getDirectionKeyJustPressed()
-    if (selectedDirectionHeldDown !== DIRECTION.NONE && !this.#isPlayerInputLocked()) {
+    const wasBackKeyPressed = this.#controls.wasBackKeyPressed()
+    const wasEnterPressed = this.#controls.wasEnterKeyPressed()
+
+    if (this.#playerCanMove(selectedDirectionHeldDown)) {
       this.#player.moveCharacter(selectedDirectionHeldDown)
     }
 
-    if (wasSpaceKeyPresed && !this.#player.isMoving && !this.#menu.isVisible) {
-      this.#handlePlayerInteraction()
+    if (wasSpaceKeyPresed && this.#playerCanInteract()) {
+      this.#checkForAndHandlePlayerInteraction()
     }
 
-    if (this.#controls.wasEnterKeyPressed() && !this.#player.isMoving) {
-      if (this.#dialogUi.isVisible) {
-        return
-      }
-      if (this.#menu.isVisible) {
-        this.#menu.hide()
-        return
-      }
-      this.#menu.show()
+    if (wasEnterPressed && !this.#isPlayerInputLocked()) {
+      this.#toggleMenu()
+      return
     }
 
-    if (this.#itemMenu.isVisible) {
-      if (selectedDirectionPressedOnce !== DIRECTION.NONE) {
-        this.#itemMenu.handlePlayerInput(selectedDirectionPressedOnce)
-      }
-
-      if (this.#controls.wasBackKeyPressed()) {
-        this.#itemMenu.hide()
-      }
-      if (wasSpaceKeyPresed) {
-        this.#itemMenu.handlePlayerInput('OK')
-      }
-    } else if (this.#menu.isVisible) {
-      if (selectedDirectionPressedOnce !== DIRECTION.NONE) {
-        this.#menu.handlePlayerInput(selectedDirectionPressedOnce)
-      }
-
-      if (this.#controls.wasBackKeyPressed()) {
-        this.#menu.hide()
-      }
-
-      if (wasSpaceKeyPresed) {
-        this.#menu.handlePlayerInput('OK')
-
-        if (this.#menu.selectedMenuOption === 'SAVE') {
-          dataManager.saveData()
-          this.#dialogUi.showDialogModal(['Game saved!'])
-          this.#menu.hide()
-        } else if (this.#menu.selectedMenuOption === 'EXIT') {
-          this.#menu.hide()
-        } else if (this.#menu.selectedMenuOption === 'POKEMON') {
-          this.scene.start(SCENE_KEYS.PARTY_SCENE)
-        } else if (this.#menu.selectedMenuOption === 'ITEM') {
-          this.#itemMenu.show()
-        }
-      }
+    if (this.#menu.isVisible) {
+      this.#handleMenuInteraction({ wasSpaceKeyPresed, selectedDirectionPressedOnce, wasBackKeyPressed })
+      return
     }
 
     this.#player.update(time)
@@ -276,28 +158,28 @@ export class WorldScene extends Phaser.Scene {
     })
   }
 
-  #handlePlayerInteraction () {
-    if (this.#dialogUi.isAnimationPlaying) {
-      return
+  /**
+   * 
+   * @returns {boolean}
+   */
+  #playerCanInteract () {
+    return !this.#dialogUi.isAnimationPlaying && !this.#isPlayerInputLocked()
+  }
+  
+  #finishDialog () {
+    this.#dialogUi.hideDialogModal()
+    if (this.#npcPlayerIsInteractingWith) {
+      this.#npcPlayerIsInteractingWith.isTalkingToPlayer = false
+      this.#npcPlayerIsInteractingWith = undefined
     }
+  }
 
-    if (this.#dialogUi.isVisible && !this.#dialogUi.moreMessagesToShow) {
-      this.#dialogUi.hideDialogModal()
-      if (this.#npcPlayerIsInteractingWith) {
-        this.#npcPlayerIsInteractingWith.isTalkingToPlayer = false
-        this.#npcPlayerIsInteractingWith = undefined
-      }
-      return
-    }
-
-    if (this.#dialogUi.isVisible && this.#dialogUi.moreMessagesToShow) {
-      this.#dialogUi.showNextMessage()
-      return
-    }
-
-    const { x, y } = this.#player.sprite
-    const targetPosition = getTargetPositionFromGameObjectPositionAndDirection({ x, y }, this.#player.direction)
-
+  /**
+   * 
+   * @param {import('../types/typedef.js').Coordinate} targetPosition 
+   * @returns {void}
+   */
+  #checkForAndHandleSignInteraction (targetPosition) {
     const nearbySign = this.#signLayer.objects.find(object => {
       if (!object.x || !object.y) {
         return
@@ -310,17 +192,19 @@ export class WorldScene extends Phaser.Scene {
       const props = nearbySign.properties
       /** @type {string} */
       const msg = props.find(p => p.name === 'message')?.value
-      
-      const usePlaceholderText = this.#player.direction !== DIRECTION.UP
-      let textToShow = CANNOT_READ_SIGN_TEXT
-
-      if (!usePlaceholderText) {
-        textToShow = msg || PLACEHOLDER_TEXT
-      }
+      const textToShow = msg || PLACEHOLDER_TEXT
+  
       this.#dialogUi.showDialogModal([textToShow.toUpperCase()])
       return
     }
+  }
 
+  /**
+   * 
+   * @param {import('../types/typedef.js').Coordinate} targetPosition 
+   * @returns {void}
+   */
+  #checkForAndHandleNpcInteraction (targetPosition) {
     const nearbyNpc = this.#npcs.find(npc => {
       if (!npc.sprite.x || !npc.sprite.y) {
         return
@@ -337,58 +221,99 @@ export class WorldScene extends Phaser.Scene {
     }
   }
 
-  #handlePlayerMovementUpdate () {
+  #checkForAndHandlePlayerInteraction () {
+    if (this.#dialogUi.isVisible && !this.#dialogUi.moreMessagesToShow) {
+      this.#finishDialog()
+      return
+    }
+
+    if (this.#dialogUi.isVisible && this.#dialogUi.moreMessagesToShow) {
+      this.#dialogUi.showNextMessage()
+      return
+    }
+
+    const { x, y } = this.#player.sprite
+    const targetPosition = getTargetPositionFromGameObjectPositionAndDirection({ x, y }, this.#player.direction)
+
+    this.#checkForAndHandleSignInteraction(targetPosition)
+    this.#checkForAndHandleNpcInteraction(targetPosition)
+  }
+
+  #savePlayerPosition () {
     dataManager.store.set(DATA_MANAGER_STORE_KEYS.PLAYER_POSITION, {
       x: this.#player.sprite.x,
       y: this.#player.sprite.y
     })
     dataManager.store.set(DATA_MANAGER_STORE_KEYS.PLAYER_DIRECTION, this.#player.direction)
-    if (!this.#encounterLayer) {
-      return
-    }
+  }
+
+  /**
+   * 
+   * @returns {number|undefined}
+   */
+  #getEncounterAreaId () {
     /** @type {Phaser.Tilemaps.Tile} */
     const tileLandedOn = this.#encounterLayer.getTileAtWorldXY(this.#player.sprite.x, this.#player.sprite.y, true)
     const isInEncounterZone = tileLandedOn.index !== -1
     if (!isInEncounterZone) {
+      return undefined
+    }
+  
+    return tileLandedOn.properties.area
+  }
+  
+  /**
+   * 
+   * @param {import('../types/typedef.js').EncounterAreaConfig} config
+   * @returns {boolean}
+   */
+  #determineWildMonEncountered (config) {
+    return config.encounterRate > Math.random()
+  }
+
+  #handlePlayerMovementUpdate () {
+    this.#savePlayerPosition()
+
+    if (!this.#encounterLayer) {
       return
     }
-    /** @type {number} */
-    const areaId = tileLandedOn.properties.area
-    if (!areaId) {
-      return
-    }
 
-    const encounterArea = DataUtils.getEncoutnerConfig(this, areaId)
-
-    this.#wildMonEncountered = encounterArea.encounterRate > Math.random()
-    if (this.#wildMonEncountered) {
-
-      this.#isTransitioning = true
-      this.#audioManager.playBgm(BGM_ASSET_KEYS.WILD_ENCOUNTER)    
-
-      const promises = [
-        this.#preloadBattleAssets({
-          type: OPPONENT_TYPES.WILD_ENCOUNTER,
-          encounterArea
-        }),
-        createWildEncounterSceneTransition(this, {
-          skipSceneTransition: SKIP_BATTLE_ANIMATIONS,
-          spritesToNotBeObscured: [this.#player.sprite]
-        })
-      ]
-
-      Promise.all(promises).then(data => {
-        /** @type {import('../types/typedef.js').BattleSceneConfig} */
-        const config = data[0]
-        
-        this.#isTransitioning = false
-        this.scene.start(SCENE_KEYS.BATTLE_SCENE, config)
-      })
+    const areaId = this.#getEncounterAreaId()
+    if (areaId) {
+      const encounterArea = DataUtils.getEncoutnerConfig(this, areaId)
+      this.#wildMonEncountered = this.#determineWildMonEncountered(encounterArea)
+      if (this.#wildMonEncountered) {
+        this.#playWildMonEncounteredSequence(encounterArea)
+      }
     }
   }
 
+  /**
+   * 
+   * @param {import('../types/typedef.js').EncounterAreaConfig} encounterArea 
+   */
+  #playWildMonEncounteredSequence (encounterArea) {
+    this.#isTransitioning = true
+    this.#audioManager.playBgm(BGM_ASSET_KEYS.WILD_ENCOUNTER)    
+
+    const promises = [
+      this.#prepareForBattleScene({
+        type: OPPONENT_TYPES.WILD_ENCOUNTER,
+        encounterArea
+      }),
+      createWildEncounterSceneTransition(this, {
+        skipSceneTransition: SKIP_BATTLE_ANIMATIONS,
+        spritesToNotBeObscured: [this.#player.sprite]
+      })
+    ]
+
+    Promise.all(promises).then(responses => {
+      this.#startBattleScene(responses[0])
+    })
+  }
+
   #isPlayerInputLocked () {
-    return this.#dialogUi.isVisible || this.#isTransitioning || this.#menu.isVisible
+    return this.#isTransitioning
   }
   
   /**
@@ -397,7 +322,6 @@ export class WorldScene extends Phaser.Scene {
    */
   #createNPCs (map) {
     this.#npcs = []
-    let index = 0
 
     const npcLayers = map.getObjectLayerNames().filter(layerName => layerName.includes('NPC'))
     npcLayers.forEach(layerName => {
@@ -453,56 +377,312 @@ export class WorldScene extends Phaser.Scene {
    * @param {import('../types/typedef.js').EncounterAreaConfig} [data.encounterArea]
    * @returns {Promise}
    */
-  #preloadBattleAssets (data) {
+  #prepareForBattleScene (data) {
     return new Promise(resolve => {
-      const config = {
+      this.#savePlayerPosition()
+
+      const battleConfig = {
         generatedMon: null,
         trainer: data.trainer,
         type: data.type
       }
+      const playerData = this.#getPlayerDataFromStore()
 
-      /** @type {import('../types/typedef.js').BaseMon[]} */
-      let baseMonsToPreload = []
-
-      const playerData = {
-        name: dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_NAME),
-        partyMons: dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS)
-      }
       const partyBaseMons = playerData.partyMons.map(mon => DataUtils.getBaseMonDetails(this, mon.baseMonIndex))
-
-      baseMonsToPreload = baseMonsToPreload.concat(partyBaseMons)
+      let baseMonsToPreload = partyBaseMons
+      let enemyTrainerAssetKey = null
 
       switch (data.type) {
         case OPPONENT_TYPES.WILD_ENCOUNTER:
-          config.generatedMon = generateWildMon(this, data.encounterArea)
-          baseMonsToPreload.push(config.generatedMon.baseMon)
+          battleConfig.generatedMon = generateWildMon(this, data.encounterArea)
+          baseMonsToPreload.push(battleConfig.generatedMon.baseMon)
           break
         case OPPONENT_TYPES.TRAINER:
         case OPPONENT_TYPES.GYM_LEADER:
           const enemyBaseMons = data.trainer.partyMons.map(mon => DataUtils.getBaseMonDetails(this, mon.baseMonIndex))
           baseMonsToPreload = baseMonsToPreload.concat(enemyBaseMons)
+          enemyTrainerAssetKey = data.trainer.assetKey
           break
         default:
           exhaustiveGuard(data.type)
           break
       }
-  
+
+      this.#preloadBattleSceneAssets(baseMonsToPreload, enemyTrainerAssetKey).then(() => {
+        resolve(battleConfig)
+      })
+    })
+  }
+
+  /**
+   * 
+   * @returns {{
+   *   name: string,
+   *   partyMons: import('../types/typedef.js').Mon[]
+   * }}
+   */
+  #getPlayerDataFromStore () {
+    return {
+      name: dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_NAME),
+      partyMons: dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS)
+    }
+  }
+
+  /**
+   * 
+   * @param {import('../types/typedef.js').BaseMon[]} baseMons 
+   * @param {string} enemyTrainerAssetKey 
+   * @returns {Promise}
+   */
+  #preloadBattleSceneAssets (baseMons, enemyTrainerAssetKey = null) {
+    return new Promise(resolve => {
       this.load.once('complete', () => {
-        console.log('done!')
-        resolve(config)
+        resolve()
       })
 
-      baseMonsToPreload.forEach(baseMon => {
+      baseMons.forEach(baseMon => {
         loadMonAssets(this, baseMon)
       })
   
-      if (data.type !== OPPONENT_TYPES.WILD_ENCOUNTER) {
-        loadTrainerSprites(this, data.trainer.assetKey)
+      if (enemyTrainerAssetKey) {
+        loadTrainerSprites(this, enemyTrainerAssetKey)
       }
+
       loadTrainerSprites(this, TRAINER_SPRITES.RED)
       loadBattleAssets(this)
 
       this.load.start()
     })
+  }
+
+  #resetSceneChangingFlags () {
+    this.#wildMonEncountered = false
+    this.#npcPlayerIsInteractingWith = undefined
+    this.#isTransitioning = false
+  }
+
+  /**
+   * 
+   * @param {Phaser.Tilemaps.Tilemap} map 
+   */
+  #createWorldLayers (map) {
+    // collision
+    const collisonTiles = map.addTilesetImage('collision', WORLD_ASSET_KEYS.WORLD_COLLISION)
+    if (!collisonTiles) {
+      console.log(`[${WorldScene.name}:create] encounted error while creating collision TILESET using data from tiled`)
+      return
+    }
+    this.#collisionLayer = map.createLayer('Collision', collisonTiles, 0, 0)
+    if (!this.#collisionLayer) {
+      console.log(`[${WorldScene.name}:create] encounted error while creating collision LAYER using data from tiled`)
+      return
+    }
+    this.#collisionLayer.setAlpha(TILED_COLLISION_ALPHA).setDepth(2)
+
+    // encounter
+    const encounterTiles = map.addTilesetImage('encounter', WORLD_ASSET_KEYS.WORLD_ENCOUNTER_ZONE)
+    if (!encounterTiles) {
+      console.log(`[${WorldScene.name}:create] encounted error while creating Encounter TILESET using data from tiled`)
+      return
+    }
+    this.#encounterLayer = map.createLayer('Encounter', encounterTiles, 0, 0)
+    if (!this.#encounterLayer) {
+      console.log(`[${WorldScene.name}:create] encounted error while creating Encounter LAYER using data from tiled`)
+      return
+    }
+    this.#encounterLayer.setAlpha(TILED_COLLISION_ALPHA).setDepth(2)
+
+    // interactives
+    this.#signLayer = map.getObjectLayer('Signs')
+    if (!this.#signLayer) {
+      console.log(`[${WorldScene.name}:create] encounted error while creating Signs LAYER using data from tiled`)
+      return
+    }
+  }
+
+  #createBackgroundSetCamera () {
+    const x = 6 * TILE_SIZE
+    const y = 22 * TILE_SIZE
+  
+    this.#worldBackgroundImage = this.add.image(0, 0, WORLD_ASSET_KEYS.WORLD_BACKGROUND, 0).setOrigin(0)
+    this.cameras.main.setBounds(0, 0, this.#worldBackgroundImage.width, this.#worldBackgroundImage.height)
+    this.cameras.main.centerOn(x, y)
+    this.cameras.main.setZoom(WORLD_ZOOM)
+  }
+
+  #createForeground () {
+    this.add.image(0, 0, WORLD_ASSET_KEYS.WORLD_FOREGROUND, 0).setOrigin(0)
+  }
+
+  #createPlayer () {
+    this.#player = new Player({
+      scene: this,
+      position: dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_POSITION),
+      direction: dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_DIRECTION),
+      collisionLayer: this.#collisionLayer,
+      spriteGridMovementFinishedCallback: () => {
+        this.#handlePlayerMovementUpdate()
+      },
+      otherCharactersToChckecForCollisionsWith: this.#npcs
+    })
+
+    this.cameras.main.startFollow(this.#player.sprite)
+  }
+
+  #setUpEventListeners () {
+    this.events.on(EVENT_KEYS.TRAINER_BATTLE_START, data => {
+      this.#startTrainerBattle(data)
+    })
+  }
+  
+  /**
+   * 
+   * @param {object} data 
+   * @param {NPC} data.npc
+   * @param {number} data.actionId
+   */
+  #startTrainerBattle (data) {
+    this.#isTransitioning = true
+    this.#audioManager.playBgm(BGM_ASSET_KEYS.TRAINER)
+
+    const promises = [
+      this.#prepareForBattleScene({
+        type: OPPONENT_TYPES.TRAINER,
+        trainer: {
+          type: OPPONENT_TYPES.TRAINER,
+          ...DataUtils.getTrainerDetails(this, data.actionId)
+        }
+      }),
+      createBattleSceneTransition(this, {
+        skipSceneTransition: SKIP_BATTLE_ANIMATIONS,
+        spritesToNotBeObscured: [this.#player.sprite, data.npc.sprite],
+        type: TRANSITION_TYPES.LEFT_RIGHT_DOWN_SLOW
+      })
+    ]
+
+    Promise.all(promises).then(responses => {
+      this.#startBattleScene(responses[0])
+    })
+  }
+
+  /**
+   * 
+   * @param {import('../types/typedef.js').BattleSceneConfig} config 
+   */
+  #startBattleScene (config) {
+    this.#isTransitioning = false
+    this.scene.start(SCENE_KEYS.BATTLE_SCENE, config)
+  }
+
+  /**
+   * 
+   * @param {import('../common/direction.js').Direction} direction 
+   * @returns {boolean}
+   */
+  #playerCanMove (direction) {
+    return direction !== DIRECTION.NONE && !this.#isPlayerInputLocked() && !this.#dialogUi.isVisible && !this.#menu.isVisible
+  }
+
+  #toggleMenu () {
+    if (this.#menu.isVisible) {
+      this.#menu.hide()
+      return
+    }
+    this.#menu.show()
+  }
+
+  /**
+   * 
+   * @param {object} keyPressed
+   * @param {boolean} keyPressed.wasSpaceKeyPresed 
+   * @param {import('../common/direction.js').Direction} keyPressed.selectedDirectionPressedOnce 
+   * @param {boolean} keyPressed.wasBackKeyPressed 
+   * @returns {void}
+   */
+  #handleItemMenuInteraction (keyPressed) {
+    const {
+      wasSpaceKeyPresed,
+      selectedDirectionPressedOnce,
+      wasBackKeyPressed
+    } = keyPressed
+
+    if (wasBackKeyPressed) {
+      this.#itemMenu.hide()
+      return
+    }
+
+    if (wasSpaceKeyPresed) {
+      this.#itemMenu.handlePlayerInput('OK')
+      return
+    }
+    this.#itemMenu.handlePlayerInput(selectedDirectionPressedOnce)
+    return
+  }
+  
+  /**
+   * 
+   * @param {object} keyPressed
+   * @param {boolean} keyPressed.wasSpaceKeyPresed 
+   * @param {import('../common/direction.js').Direction} keyPressed.selectedDirectionPressedOnce 
+   * @param {boolean} keyPressed.wasBackKeyPressed 
+   * @returns {void}
+   */
+  #handleMenuInteraction (keyPressed) {
+    const {
+      wasSpaceKeyPresed,
+      selectedDirectionPressedOnce,
+      wasBackKeyPressed
+    } = keyPressed
+
+    if (selectedDirectionPressedOnce === DIRECTION.NONE && !wasBackKeyPressed && !wasSpaceKeyPresed) {
+      return
+    }
+
+    if (this.#itemMenu.isVisible) {
+      this.#handleItemMenuInteraction(keyPressed)
+      return
+    }
+
+    if (this.#menu.isVisible) {
+      if (wasBackKeyPressed) {
+        this.#menu.hide()
+        return
+      }
+
+      if (wasSpaceKeyPresed) { 
+        this.#menu.handlePlayerInput('OK')
+        const selected = this.#menu.selectedMenuOption
+
+        switch (selected) {
+          case MENU_OPTIONS.SAVE:
+            this.#saveGame()
+            this.#menu.hide()
+            break
+          case MENU_OPTIONS.ITEM:
+            this.#itemMenu.show()
+            break
+          case MENU_OPTIONS.POKEMON:
+            this.scene.start(SCENE_KEYS.PARTY_SCENE)
+            break
+          case MENU_OPTIONS.EXIT:
+            this.#menu.hide()
+            break  
+          case MENU_OPTIONS.POKEDEX:
+          case MENU_OPTIONS.OPTIONS:
+            break
+          default:
+            exhaustiveGuard(selected)
+            break
+        }
+      }
+  
+      this.#menu.handlePlayerInput(selectedDirectionPressedOnce)
+      return
+    }
+  }
+
+  #saveGame () {
+    dataManager.saveData()
+    this.#dialogUi.showDialogModal(['Game saved!'])
   }
 }

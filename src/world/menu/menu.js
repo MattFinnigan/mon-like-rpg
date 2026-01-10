@@ -145,7 +145,6 @@ export class Menu {
    * @returns {void}
    */
   #moveMenuCursor (direction) {
-
     switch (direction) {
       case DIRECTION.UP:
         this.#selectedMenuOptionIndex -= 1

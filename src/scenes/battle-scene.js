@@ -16,6 +16,7 @@ import { BGM_ASSET_KEYS, TRAINER_SPRITES } from '../assets/asset-keys.js'
 import { OPPONENT_TYPES } from '../common/opponent-types.js'
 import { BattlePlayer } from '../battle/characters/battle-player.js'
 import { DATA_MANAGER_STORE_KEYS, dataManager } from '../utils/data-manager.js'
+import { BattleMon } from '../battle/mons/battle-mon.js'
 
 /** @enum {object} */
 const BATTLE_STATES = Object.freeze({
@@ -25,8 +26,8 @@ const BATTLE_STATES = Object.freeze({
   WILD_MON_OUT: 'WILD_MON_OUT',
   ENEMY_MON_OUT: 'ENEMY_MON_OUT',
   PLAYER_MON_OUT: 'PLAYER_MON_OUT',
-  PLAYER_INPUT: 'PLAYER_INPUT',
-  ENEMY_INPUT: 'ENEMY_INPUT',
+  PLAYERS_TURN: 'PLAYERS_TURN',
+  ENEMYS_TURN: 'ENEMYS_TURN',
   BATTLE: 'BATTLE',
   POST_ATTACK: 'POST_ATTACK',
   FINISHED: 'FINISHED',
@@ -106,19 +107,16 @@ export class BattleScene extends Phaser.Scene {
     console.log(`[${BattleScene.name}:init] invoked`)
     this.#opponentType = battleSceneConfig.type
     this.#enemyTrainer = battleSceneConfig.trainer
-    this.#player = {
-      name: dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_NAME),
-      partyMons: dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS),
-      inventory: dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_INVENTORY),
-    }
     this.#generatedMon = battleSceneConfig.generatedMon
+
+    this.#getPlayerDataFromStore()
   }
   
   preload () {
     console.log(`[${BattleScene.name}:preload] invoked`)
 
     this.#victoryBgmKey = BGM_ASSET_KEYS.WILD_ENCOUNTER_VICTORY
-    if (this.#opponentType !== OPPONENT_TYPES.WILD_ENCOUNTER) {
+    if (!this.#opponentIsWildMon()) {
       this.#victoryBgmKey = BGM_ASSET_KEYS.TRAINER_VICTORY
     }
   
@@ -128,14 +126,14 @@ export class BattleScene extends Phaser.Scene {
   create () {
     console.log(`[${BattleScene.name}:create] invoked`)
     this.cameras.main.setBackgroundColor('#fff')
+
     this.#audioManager = this.registry.get('audio')
-
-    this.#setUpBattleMons()
     this.#battleMenu = new BattleMenu(this)
-    this.#createBattleStateMachine()
-
     this.#attackManager = new AttackManager(this, SKIP_BATTLE_ANIMATIONS)
     this.#controls = new Controls(this)
+
+    this.#setUpBattleMons()
+    this.#createBattleStateMachine()
 
     this.events.on(EVENT_KEYS.BATTLE_RUN_ATTEMPT, () => {
       this.#battleStateMachine.setState(BATTLE_STATES.RUN_ATTEMPT)
@@ -145,38 +143,13 @@ export class BattleScene extends Phaser.Scene {
   update () {
     this.#battleStateMachine.update()
     const wasSpaceKeyPresed = this.#controls.wasSpaceKeyPressed()
-    if (wasSpaceKeyPresed &&
-        (this.#battleStateMachine.currentStateName === BATTLE_STATES.PRE_BATTLE_INFO ||
-          this.#battleStateMachine.currentStateName === BATTLE_STATES.ENEMY_OUT ||
-          this.#battleStateMachine.currentStateName === BATTLE_STATES.ENEMY_MON_OUT ||
-          this.#battleStateMachine.currentStateName === BATTLE_STATES.WILD_MON_OUT ||
-          this.#battleStateMachine.currentStateName === BATTLE_STATES.POST_ATTACK ||
-          this.#battleStateMachine.currentStateName === BATTLE_STATES.PLAYER_DEFEATED ||
-          this.#battleStateMachine.currentStateName === BATTLE_STATES.PLAYER_VICTORY ||
-          this.#battleStateMachine.currentStateName === BATTLE_STATES.RUN_ATTEMPT)
-      ) {
+  
+    if (wasSpaceKeyPresed && this.#needsOkInputToContinue()) {
       this.#battleMenu.handlePlayerInput('OK')
       return
     }
-    if (this.#battleStateMachine.currentStateName !== BATTLE_STATES.PLAYER_INPUT) {
+    if (!this.#waitingForPlayerToTakeTurn()) {
       return
-    }
-
-    if (wasSpaceKeyPresed) {
-      this.#battleMenu.handlePlayerInput('OK')
-
-      // check if player selected an attack, update display text
-      if (this.#battleMenu.selectedAttack === undefined) {
-        return
-      }
-      this.#activePlayerAttackIndex = this.#battleMenu.selectedAttack
-
-      if (!this.#activePlayerMon.attacks[this.#activePlayerAttackIndex]) {
-        return
-      }
-
-      this.#battleMenu.hideMonAttackSubMenu()
-      this.#battleStateMachine.setState(BATTLE_STATES.ENEMY_INPUT)
     }
 
     if (this.#controls.wasBackKeyPressed()) {
@@ -188,50 +161,145 @@ export class BattleScene extends Phaser.Scene {
     if (selectedDirection !== DIRECTION.NONE) {
       this.#battleMenu.handlePlayerInput(selectedDirection)
     }
+
+    if (wasSpaceKeyPresed) {
+      this.#battleMenu.handlePlayerInput('OK')
+
+      if (!this.#playerSelectedAnAttack()) {
+        return
+      }
+
+      this.#changeToEnemysTurn()
+      return
+    }
   }
 
+  /**
+   * 
+   * @param {BattleMon} mon 
+   * @param {import('../types/typedef.js').Attack} attk
+   * @param {() => void} callback
+   */
+  #announceAttack (mon, attk, callback) {
+    this.#battleMenu.updateInfoPanelMessagesNoInputRequired(`${mon.name} used ${attk.name}!`, callback, SKIP_BATTLE_ANIMATIONS)
+  }
 
+  /**
+   * 
+   * @returns {import('../types/typedef.js').Attack}
+   */
+  #getPlayerAttack () {
+    return this.#activePlayerMon.attacks[this.#activePlayerAttackIndex]
+  }
+
+  /**
+   * @param {BattleMon} attacker 
+   * @param {import('../types/typedef.js').Attack} attk 
+   * @param {BattleMon} defender 
+   */
+  #applyAttackToMon (attacker, attk, defender) {
+    const res = defender.receiveAttackAndCalculateDamage(attacker, attk)
+    this.#lastAttackResult = res
+    return res
+  }
+
+  /**
+   * 
+   * @param {import('../types/typedef.js').Attack} attk
+   * @param {import('../types/typedef.js').PostAttackResult} result
+   */
+  #playPlayerAttackSequence (attk, result) {
+    const waitTime = result.damageTaken > 0 ? 500 : 0
+
+    this.time.delayedCall(waitTime, () => {
+      this.#attackManager.playAttackAnimation(
+        attk.animationName,
+        ATTACK_TARGET.ENEMY,
+        () => this.#playEnemyDamageTakenAnimation(result),
+        result.damageTaken === 0 || SKIP_BATTLE_ANIMATIONS
+      )
+    })
+  }
+
+  /**
+   * 
+   * @param {import('../types/typedef.js').PostAttackResult} result 
+   */
+  #playEnemyDamageTakenAnimation (result) {
+    this.#activeEnemyMon.playMonTakeDamageAnimation(() => {
+      this.#activeEnemyMon.takeDamage(result.damageTaken, () => {
+        this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK)
+      })
+    }, result.damageTaken === 0 || SKIP_BATTLE_ANIMATIONS)
+  }
+
+  /**
+   * 
+   * @returns {import('../types/typedef.js').Attack}
+   */
   #playerAttack () {
     if (this.#activePlayerMon.isFainted) {
       return
     }
-    const attk = this.#activePlayerMon.attacks[this.#activePlayerAttackIndex]
-    this.#battleMenu.updateInfoPanelMessagesNoInputRequired(`${this.#activePlayerMon.name} used ${attk.name}!`, () => {
-      this.#lastAttackResult = this.#activeEnemyMon.receiveAttackAndCalculateDamage(this.#activePlayerMon, attk)
-      const waitForAnims = this.#lastAttackResult.damageTaken > 0 ? 500 : 0
-      this.time.delayedCall(waitForAnims, () => {
-        this.#attackManager.playAttackAnimation(attk.animationName, ATTACK_TARGET.ENEMY, () => {
-          this.#activeEnemyMon.playMonTakeDamageAnimation(() => {
-            this.#activeEnemyMon.takeDamage(this.#lastAttackResult.damageTaken, () => {
-              this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK)
-            })
-          }, this.#lastAttackResult.damageTaken === 0)
-        }, this.#lastAttackResult.damageTaken === 0)
+  
+    const attk = this.#getPlayerAttack()
+    this.#announceAttack(this.#activePlayerMon, attk, () => {
+      const result = this.#applyAttackToMon(this.#activePlayerMon, attk, this.#activeEnemyMon)
+      this.#playPlayerAttackSequence(attk, result)
+    })
+  }
+
+  /**
+   * 
+   * @returns {import('../types/typedef.js').Attack}
+   */
+  #getEnemyAttack () {
+    return this.#activeEnemyMon.attacks[0]
+  }
+
+  /**
+   * 
+   * @param {import('../types/typedef.js').Attack} attk
+   * @param {import('../types/typedef.js').PostAttackResult} result
+   */
+  #playEnemyAttackSequence (attk, result) {
+    this.#attackManager.playAttackAnimation(
+      attk.animationName,
+      ATTACK_TARGET.PLAYER,
+      () => this.#playPlayerDamageTakenAnimation(result),
+      result.damageTaken === 0
+    )
+  }
+
+  /**
+   * 
+   * @param {import('../types/typedef.js').PostAttackResult} result 
+   */
+  #playPlayerDamageTakenAnimation (result) {
+    this.#activePlayerMon.playMonTakeDamageAnimation(() => {
+      this.#activePlayerMon.takeDamage(result.damageTaken, () => {
+        this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK)
       })
-    }, SKIP_BATTLE_ANIMATIONS)
+    }, result.damageTaken === 0)
   }
 
   #enemyAttack() {
     if (this.#activeEnemyMon.isFainted) {
       return
     }
-    const attk = this.#activeEnemyMon.attacks[0]
-    this.#battleMenu.updateInfoPanelMessagesNoInputRequired(`Foe's ${this.#activeEnemyMon.name} used ${attk.name}!`, () => {
-      this.#lastAttackResult = this.#activePlayerMon.receiveAttackAndCalculateDamage(this.#activeEnemyMon, attk)
-      const waitForAnims = this.#lastAttackResult.damageTaken > 0 ? 500 : 0
-      this.time.delayedCall(waitForAnims, () => {
-        this.#attackManager.playAttackAnimation(attk.animationName, ATTACK_TARGET.PLAYER, () => {
-          this.#activePlayerMon.playMonTakeDamageAnimation(() => {
-            this.#activePlayerMon.takeDamage(this.#lastAttackResult.damageTaken, () => {
-              this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK)
-            })
-          }, this.#lastAttackResult.damageTaken === 0)
-        }, this.#lastAttackResult.damageTaken === 0)
-      })
-    }, SKIP_BATTLE_ANIMATIONS)
+
+    const attk = this.#getEnemyAttack()
+    this.#announceAttack(this.#activeEnemyMon, attk, () => {
+      const result = this.#applyAttackToMon(this.#activeEnemyMon, attk, this.#activePlayerMon)
+      this.#playEnemyAttackSequence(attk, result)
+    })
   }
 
-  #postBattleSequenceCheck() {
+  /**
+   * 
+   * @param {() => void} callback 
+   */
+  #announceAttackEffects (callback) {
     let postAttackMsgs = []
     const {
       wasCriticalHit,
@@ -253,41 +321,61 @@ export class BattleScene extends Phaser.Scene {
       postAttackMsgs.push(`But nothing happened!`)
     }
 
-    this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(postAttackMsgs, () => {
+    this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(postAttackMsgs, callback, SKIP_BATTLE_ANIMATIONS)
+  }
+
+  #playEnemyFaintedSequence () {
+    const postDeathMsgs = [this.#calculateExperienceEarned()]
+    this.#activeEnemyMon.playDeathAnimation(() => {
+  
+      if (this.#opponentIsWildMon()) {
+        postDeathMsgs.unshift(`Wild ${this.#activeEnemyMon.name} fainted!`)
+        this.#audioManager.playBgm(this.#victoryBgmKey)
+        this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(postDeathMsgs, () => {
+          this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
+        }, SKIP_BATTLE_ANIMATIONS)
+        return
+      }
+
+      this.#enemyBattleTrainer.redrawRemainingMonsGameObject()
+      postDeathMsgs.unshift(`Foe's ${this.#activeEnemyMon.name} fainted!`)
+      this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(postDeathMsgs, () => {
+        this.#battleStateMachine.setState(BATTLE_STATES.ENEMY_CHOOSE_MON)
+      }, SKIP_BATTLE_ANIMATIONS)
+    })
+  }
+
+  /**
+   * 
+   * @returns {string}
+   */
+  #calculateExperienceEarned () {
+    return `${this.#activePlayerMon.name} gained 32 experience points!`
+  }
+
+  #playPlayerFaintedSequence () {
+    this.#battlePlayer.redrawRemainingMonsGameObject(true)
+    this.#activePlayerMon.playDeathAnimation(() => {
+      this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`${this.#activePlayerMon.name} fainted!`], () => {
+        this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_CHOOSE_MON)
+      }, SKIP_BATTLE_ANIMATIONS)
+    })
+  }
+
+  #postBattleSequenceCheck() {
+    this.#announceAttackEffects(() => {
       if (this.#activeEnemyMon.isFainted) {
-        
-
-        const postDeathMsgs = [`${this.#activePlayerMon.name} gained 32 experience points!`]
-        this.#activeEnemyMon.playDeathAnimation(() => {
-          if (this.#opponentType === OPPONENT_TYPES.WILD_ENCOUNTER ) {
-            postDeathMsgs.unshift(`Wild ${this.#activeEnemyMon.name} fainted!`)
-            this.#audioManager.playBgm(this.#victoryBgmKey)
-            this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(postDeathMsgs, () => {
-              this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
-            }, SKIP_BATTLE_ANIMATIONS)
-            return
-          }
-
-          this.#enemyBattleTrainer.redrawRemainingMonsGameObject()
-          postDeathMsgs.unshift(`Foe's ${this.#activeEnemyMon.name} fainted!`)
-          this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(postDeathMsgs, () => {
-            this.#battleStateMachine.setState(BATTLE_STATES.ENEMY_CHOOSE_MON)
-          }, SKIP_BATTLE_ANIMATIONS)
-        })
+        this.#playEnemyFaintedSequence()
         return
       }
 
       if (this.#activePlayerMon.isFainted) {
-        this.#battlePlayer.redrawRemainingMonsGameObject(true)
-        this.#activePlayerMon.playDeathAnimation(() => {
-          this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`${this.#activePlayerMon.name} fainted!`], () => {
-            this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_CHOOSE_MON)
-          }, SKIP_BATTLE_ANIMATIONS)
-        })
+        this.#playPlayerFaintedSequence()
         return
       }
+  
       this.#battleStateMachine.setState(BATTLE_STATES.BATTLE)
-    }, SKIP_BATTLE_ANIMATIONS)
+    })
   }
 
   #transitionToNextScene () {
@@ -303,16 +391,7 @@ export class BattleScene extends Phaser.Scene {
     this.#battleStateMachine.addState({
       name: BATTLE_STATES.INTRO,
       onEnter: () => {
-        if (this.#opponentType !== OPPONENT_TYPES.WILD_ENCOUNTER) {
-          this.#enemyBattleTrainer = new BattleTrainer(this, this.#enemyTrainer, this.#opponentMons, {
-            skipBattleAnimations: SKIP_BATTLE_ANIMATIONS,
-            assetKey: this.#enemyTrainer.assetKey
-          })
-        }
-        this.#battlePlayer = new BattlePlayer(this, this.#player, this.#playerMons, {
-          assetKey: TRAINER_SPRITES.RED,
-          skipBattleAnimations: SKIP_BATTLE_ANIMATIONS
-        })
+        this.#createBattleTrainers()
         this.#battleStateMachine.setState(BATTLE_STATES.PRE_BATTLE_INFO)
       }
     })
@@ -320,42 +399,34 @@ export class BattleScene extends Phaser.Scene {
     this.#battleStateMachine.addState({
       name: BATTLE_STATES.PRE_BATTLE_INFO,
       onEnter: () => {
-        this.#battlePlayer.playCharacterAppearAnimation()
-        if (this.#opponentType === OPPONENT_TYPES.WILD_ENCOUNTER) {
+        this.#bringOutPlayerTrainer()
+
+        if (this.#opponentIsWildMon()) {
           this.#battleStateMachine.setState(BATTLE_STATES.WILD_MON_OUT)
           return
         }
-        this.#enemyBattleTrainer.playCharacterAppearAnimation(() => {
-          this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`${this.#enemyBattleTrainer.trainerType.toUpperCase()} ${this.#enemyBattleTrainer.name.toUpperCase()} wants to fight!`], () => {
-            this.#enemyBattleTrainer.playCharacterDisappearAnimation(() => {
-              this.#battleStateMachine.setState(BATTLE_STATES.ENEMY_CHOOSE_MON)
-            })
-          }, SKIP_BATTLE_ANIMATIONS)
-        })
+
+        this.#introduceEnemyTrainer()
       }
     })
 
     this.#battleStateMachine.addState({
       name: BATTLE_STATES.ENEMY_CHOOSE_MON,
       onEnter: () => {
-        let delayMonOut = 100
-
-        if (this.#activeEnemyMon) {
-          this.#activeEnemyMon.hideBattleDetails()
-          delayMonOut = SKIP_BATTLE_ANIMATIONS ? delayMonOut : 1000
-        }
-
-        this.#enemyBattleTrainer.showRemainingMons()
-        this.#activeEnemyMon = this.#opponentMons.find(mon => !mon.isFainted)
-        this.#playersThatHadATurn = []
+        this.#enemyChooseNextMon()
+        this.#resetTurnTracker()
 
         if (!this.#activeEnemyMon) {
-          this.#enemyBattleTrainer.showTrainer()
           this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_VICTORY)
           return
         }
+
+        let simulateTimeToChoose = 750
+        if (this.#battleJustStarted()) {
+          simulateTimeToChoose = 100
+        }
         
-        this.time.delayedCall(delayMonOut, () => {
+        this.time.delayedCall(simulateTimeToChoose, () => {
           this.#battleStateMachine.setState(BATTLE_STATES.ENEMY_MON_OUT)
         })
       }
@@ -364,19 +435,14 @@ export class BattleScene extends Phaser.Scene {
     this.#battleStateMachine.addState({
       name: BATTLE_STATES.ENEMY_MON_OUT,
       onEnter: () => {
-        this.#enemyBattleTrainer.hideRemainingMons()
-        this.#enemyBattleTrainer.playCharacterDisappearAnimation(() => {
-          this.#battleMenu.updateInfoPanelMessagesNoInputRequired(`${this.#enemyBattleTrainer.name.toUpperCase()} sent out ${this.#activeEnemyMon.name}!`, () => {
-            this.time.delayedCall(500, () => {
-              this.#activeEnemyMon.playMonAppearAnimation(() => {
-                if (this.#battlePlayer.characterSpriteShowing) {
-                  this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_CHOOSE_MON)
-                  return
-                }
-                this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_INPUT)
-              }, true)
-            })
-          }, SKIP_BATTLE_ANIMATIONS)
+        this.#hideEnemyTrainer(() => {
+          this.#introduceEnemyMon(() => {
+            if (!this.#activePlayerMon) {
+              this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_CHOOSE_MON)
+              return
+            }
+            this.#battleStateMachine.setState(BATTLE_STATES.PLAYERS_TURN)
+          })
         })
       }
     })
@@ -384,65 +450,53 @@ export class BattleScene extends Phaser.Scene {
     this.#battleStateMachine.addState({
       name: BATTLE_STATES.WILD_MON_OUT,
       onEnter: () => {
-        this.#activeEnemyMon.playMonAppearAnimation(() => {
-          this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`Wild ${this.#activeEnemyMon.name} appeared!`], () => {
-            this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_CHOOSE_MON)
-          }, SKIP_BATTLE_ANIMATIONS)
-        })
+        this.#announceWildMon()
       }
     })
 
     this.#battleStateMachine.addState({
       name: BATTLE_STATES.PLAYER_CHOOSE_MON,
       onEnter: () => {
-        let delayMonOut = 100
-
-        if (this.#activePlayerMon) {
-          this.#activePlayerMon.hideBattleDetails()
-          delayMonOut = SKIP_BATTLE_ANIMATIONS ? delayMonOut : 1000
-        }
-  
-        this.#battlePlayer.showRemainingMons()
-        this.#activePlayerMon = this.#playerMons.find(mon => !mon.isFainted)
-        this.#playersThatHadATurn = []
+        this.#playerChooseNextMon()
+        this.#resetTurnTracker()
 
         if (!this.#activePlayerMon) {
           this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_DEFEATED)
           return
         }
-        this.time.delayedCall(delayMonOut, () => {
-          this.#battleMenu.activePlayerMon = this.#activePlayerMon
+        
+        let simulateTimeToChoose = 750
+        if (this.#battleJustStarted()) {
+          simulateTimeToChoose = 100
+        }
+        
+        this.time.delayedCall(simulateTimeToChoose, () => {
+          this.#setPlayerMonToBattleMenu()
           this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_MON_OUT)
         })
-
       }
     })
 
     this.#battleStateMachine.addState({
       name: BATTLE_STATES.PLAYER_MON_OUT,
       onEnter: () => {
-        this.#battlePlayer.hideRemainingMons()
-        this.#battlePlayer.playCharacterDisappearAnimation(() => {
-          this.#battleMenu.updateInfoPanelMessagesNoInputRequired(`Go! ${this.#activePlayerMon.name}!`, () => {
-            this.time.delayedCall(500, () => {
-                this.#activePlayerMon.playMonAppearAnimation(() => {
-                this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_INPUT)
-              })
-            })
-          }, SKIP_BATTLE_ANIMATIONS)
+        this.#hidePlayerTrainer(() => {
+          this.#introducePlayerMon(() => {
+            this.#battleStateMachine.setState(BATTLE_STATES.PLAYERS_TURN)
+          })
         })
       }
     })
     
     this.#battleStateMachine.addState({
-      name: BATTLE_STATES.PLAYER_INPUT,
+      name: BATTLE_STATES.PLAYERS_TURN,
       onEnter: () => {
         this.#battleMenu.showMainBattleMenu()
       }
     })
 
     this.#battleStateMachine.addState({
-      name: BATTLE_STATES.ENEMY_INPUT,
+      name: BATTLE_STATES.ENEMYS_TURN,
       onEnter: () => {
         this.#battleStateMachine.setState(BATTLE_STATES.BATTLE)
       }
@@ -451,30 +505,24 @@ export class BattleScene extends Phaser.Scene {
     this.#battleStateMachine.addState({
       name: BATTLE_STATES.BATTLE,
       onEnter: () => {
-        if (this.#playersThatHadATurn.length === 2) {
-          this.#playersThatHadATurn = []
-          this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_INPUT)
+        if (this.#allPlayersHadATurn()) {
+          this.#resetTurnTracker()
+          this.#battleStateMachine.setState(BATTLE_STATES.PLAYERS_TURN)
           return
         }
   
-        if (this.#playersThatHadATurn.length === 0) {
-          if (this.#activeEnemyMon.monStats.speed > this.#activePlayerMon.monStats.speed) {
-            this.#playersThatHadATurn.push(BATTLE_PLAYERS.ENEMY)
-            this.#enemyAttack()
-            return
-          }
-          this.#playersThatHadATurn.push(BATTLE_PLAYERS.PLAYER)
-          this.#playerAttack()
+        if (!this.#enemyHadATurn() && !this.#playerHadATurn()) {
+          this.#determineAndTakeFirstTurn()
           return
         }
         
-        if (this.#playersThatHadATurn[0] === BATTLE_PLAYERS.ENEMY) {
+        if (this.#enemyHadATurn()) {
           this.#playersThatHadATurn.push(BATTLE_PLAYERS.PLAYER)
           this.#playerAttack()
           return
         }
 
-        if (this.#playersThatHadATurn[0] === BATTLE_PLAYERS.PLAYER) {
+        if (this.#playerHadATurn()) {
           this.#playersThatHadATurn.push(BATTLE_PLAYERS.ENEMY)
           this.#enemyAttack()
           return
@@ -492,48 +540,27 @@ export class BattleScene extends Phaser.Scene {
     this.#battleStateMachine.addState({
       name: BATTLE_STATES.PLAYER_VICTORY,
       onEnter: () => {
-        const msgs = []
-        if (this.#opponentType !== OPPONENT_TYPES.WILD_ENCOUNTER) {
-          msgs.push(`${this.#enemyBattleTrainer.trainerType.toUpperCase()} ${this.#enemyBattleTrainer.name.toUpperCase()} was defeated!`)
-          msgs.push(`"${this.#enemyTrainer.defeatedMsg}"`)
-          msgs.push(`You were paid $${this.#enemyTrainer.rewardOnVictory} as winnings!`)
-        }
         this.#audioManager.playBgm(this.#victoryBgmKey)
-        this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(msgs, () => {
+        this.#announcePlayerVictory(() => {
           this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
-        }, SKIP_BATTLE_ANIMATIONS)
+        })
       }
     })
 
     this.#battleStateMachine.addState({
       name: BATTLE_STATES.PLAYER_DEFEATED,
       onEnter: () => {
-        this.#battlePlayer.showTrainer()
-        const msgs = [`YOU have no more usable Pokemon!`]
-        if (this.#opponentType !== OPPONENT_TYPES.WILD_ENCOUNTER) {
-          msgs.push(`You paid out $${this.#enemyTrainer.payOutOnDefeat}...`)
-        }
-        msgs.push(`YOU whited out!`)
-        this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(msgs, () => {
+        this.#annoucePlayerDefeat(() => {
           this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
-        }, SKIP_BATTLE_ANIMATIONS)
+        })
         return
-      }
-    })
-
-    this.#battleStateMachine.addState({
-      name: BATTLE_STATES.FINISHED,
-      onEnter: () => {
-        this.#playersThatHadATurn = []
-        this.#transitionToNextScene()
       }
     })
 
     this.#battleStateMachine.addState({
       name: BATTLE_STATES.RUN_ATTEMPT,
       onEnter: () => {
-        const runSucceeded = 1
-        if (runSucceeded) {
+        if (this.#runAttemptSucceeded()) {
           this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(['Got away safely...'], () => {
             this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
           }, SKIP_BATTLE_ANIMATIONS)
@@ -544,7 +571,16 @@ export class BattleScene extends Phaser.Scene {
         }
       }
     })
-    
+
+    this.#battleStateMachine.addState({
+      name: BATTLE_STATES.FINISHED,
+      onEnter: () => {
+        this.#resetTurnTracker()
+        this.#resetBattleMons()
+        this.#transitionToNextScene()
+      }
+    })
+
     this.#battleStateMachine.setState(BATTLE_STATES.INTRO)
   }
 
@@ -559,7 +595,7 @@ export class BattleScene extends Phaser.Scene {
       })
     })
 
-    if (this.#opponentType !== OPPONENT_TYPES.WILD_ENCOUNTER) {
+    if (!this.#opponentIsWildMon()) {
       const enemyBaseMons = this.#enemyTrainer.partyMons.map(mon => DataUtils.getBaseMonDetails(this, mon.baseMonIndex))
     
       this.#opponentMons = this.#enemyTrainer.partyMons.map((pm, i) => {
@@ -582,5 +618,245 @@ export class BattleScene extends Phaser.Scene {
       })
     ]
     this.#activeEnemyMon = this.#opponentMons[0]
+  }
+
+  #getPlayerDataFromStore () {
+    this.#player = {
+      name: dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_NAME),
+      partyMons: dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS),
+      inventory: dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_INVENTORY),
+    }
+  }
+
+  #needsOkInputToContinue () {
+    const state = this.#battleStateMachine.currentStateName
+    return state === BATTLE_STATES.PRE_BATTLE_INFO ||
+      state === BATTLE_STATES.ENEMY_OUT ||
+      state === BATTLE_STATES.ENEMY_MON_OUT ||
+      state === BATTLE_STATES.WILD_MON_OUT ||
+      state === BATTLE_STATES.POST_ATTACK ||
+      state === BATTLE_STATES.PLAYER_DEFEATED ||
+      state === BATTLE_STATES.PLAYER_VICTORY ||
+      state === BATTLE_STATES.RUN_ATTEMPT
+  }
+
+  #waitingForPlayerToTakeTurn () {
+    return this.#battleStateMachine.currentStateName === BATTLE_STATES.PLAYERS_TURN
+  }
+
+  /**
+   * 
+   * @returns {boolean}
+   */
+  #playerSelectedAnAttack () {
+    if (this.#battleMenu.selectedAttack === undefined) {
+      return
+    }
+    this.#activePlayerAttackIndex = this.#battleMenu.selectedAttack
+    return !!this.#activePlayerMon.attacks[this.#activePlayerAttackIndex]
+  }
+
+  #changeToEnemysTurn () {
+    this.#battleMenu.hideMonAttackSubMenu()
+    this.#battleStateMachine.setState(BATTLE_STATES.ENEMYS_TURN)
+  }
+
+  /**
+   * 
+   * @returns {boolean}
+   */
+  #opponentIsWildMon () {
+    return this.#opponentType === OPPONENT_TYPES.WILD_ENCOUNTER
+  }
+
+  #createBattleTrainers () {
+    if (!this.#opponentIsWildMon()) {
+      this.#enemyBattleTrainer = new BattleTrainer(this, this.#enemyTrainer, this.#opponentMons, {
+        skipBattleAnimations: SKIP_BATTLE_ANIMATIONS,
+        assetKey: this.#enemyTrainer.assetKey
+      })
+    }
+    this.#battlePlayer = new BattlePlayer(this, this.#player, this.#playerMons, {
+      assetKey: TRAINER_SPRITES.RED,
+      skipBattleAnimations: SKIP_BATTLE_ANIMATIONS
+    })
+  }
+
+  #bringOutPlayerTrainer () {
+    this.#battlePlayer.playCharacterAppearAnimation()
+  }
+
+  #introduceEnemyTrainer () {
+    this.#enemyBattleTrainer.playCharacterAppearAnimation(() => {
+      this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`${this.#enemyBattleTrainer.trainerType.toUpperCase()} ${this.#enemyBattleTrainer.name.toUpperCase()} wants to fight!`], () => {
+        this.#enemyBattleTrainer.playCharacterDisappearAnimation(() => {
+          this.#battleStateMachine.setState(BATTLE_STATES.ENEMY_CHOOSE_MON)
+        })
+      }, SKIP_BATTLE_ANIMATIONS)
+    })
+  }
+
+  #enemyChooseNextMon () {
+    if (this.#activeEnemyMon) {
+      this.#activeEnemyMon.hideBattleDetails()
+    }
+
+    this.#activeEnemyMon = null
+    this.#enemyBattleTrainer.showRemainingMons()
+    this.#activeEnemyMon = this.#opponentMons.find(mon => !mon.isFainted)
+  }
+
+  #resetTurnTracker () {
+    this.#playersThatHadATurn = []
+  }
+
+  /**
+   * 
+   * @param {() => void} callback 
+   */
+  #hideEnemyTrainer (callback) {
+    this.#enemyBattleTrainer.hideRemainingMons()
+    this.#enemyBattleTrainer.playCharacterDisappearAnimation(callback)
+  }
+
+  /**
+   * 
+   * @param {() => void} callback 
+   */
+  #introduceEnemyMon (callback) {
+    this.#battleMenu.updateInfoPanelMessagesNoInputRequired(`${this.#enemyBattleTrainer.name.toUpperCase()} sent out ${this.#activeEnemyMon.name}!`, () => {
+      this.time.delayedCall(500, () => {
+        this.#activeEnemyMon.playMonAppearAnimation(callback, true)
+      })
+    }, SKIP_BATTLE_ANIMATIONS)          
+  }
+
+  #announceWildMon () {
+    this.#activeEnemyMon.playMonAppearAnimation(() => {
+      this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`Wild ${this.#activeEnemyMon.name} appeared!`], () => {
+        this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_CHOOSE_MON)
+      }, SKIP_BATTLE_ANIMATIONS)
+    })
+  }
+
+  #playerChooseNextMon () {
+    if (this.#activePlayerMon) {
+      this.#activePlayerMon.hideBattleDetails()
+    }
+
+    this.#activePlayerMon = null
+    this.#battlePlayer.showRemainingMons()
+    this.#activePlayerMon = this.#playerMons.find(mon => !mon.isFainted)
+  }
+
+  #setPlayerMonToBattleMenu () {
+    this.#battleMenu.activePlayerMon = this.#activePlayerMon
+  }
+
+  /**
+   * 
+   * @param {() => void} callback 
+   */
+  #hidePlayerTrainer (callback) {
+    this.#battlePlayer.hideRemainingMons()
+    this.#battlePlayer.playCharacterDisappearAnimation(callback)
+  }
+
+  /**
+   * 
+   * @param {() => void} callback 
+   */
+  #introducePlayerMon (callback) {
+    this.#battleMenu.updateInfoPanelMessagesNoInputRequired(`Go! ${this.#activePlayerMon.name}!`, () => {
+      this.time.delayedCall(500, () => {
+        this.#activePlayerMon.playMonAppearAnimation(callback)
+      })
+    }, SKIP_BATTLE_ANIMATIONS)
+  }
+
+  #battleJustStarted () {
+    return this.#battlePlayer.characterSpriteShowing
+  }
+
+  /**
+   * 
+   * @returns {boolean}
+   */
+  #allPlayersHadATurn () {
+    return this.#enemyHadATurn() && this.#playerHadATurn()
+  }
+
+  /**
+   * 
+   * @returns {boolean}
+   */
+  #enemyWonFirstTurn () {
+    return this.#activeEnemyMon.monStats.speed > this.#activePlayerMon.monStats.speed
+  }
+
+  #determineAndTakeFirstTurn () {
+    if (this.#enemyWonFirstTurn()) {
+      this.#playersThatHadATurn.push(BATTLE_PLAYERS.ENEMY)
+      this.#enemyAttack()
+      return
+    }
+    this.#playersThatHadATurn.push(BATTLE_PLAYERS.PLAYER)
+    this.#playerAttack()
+    return
+  }
+
+  #enemyHadATurn () {
+    return this.#playersThatHadATurn.includes(BATTLE_PLAYERS.ENEMY)
+  }
+
+  #playerHadATurn () {
+    return this.#playersThatHadATurn.includes(BATTLE_PLAYERS.PLAYER)
+  }
+
+  /**
+   * 
+   * @param {() => void} callback 
+   */
+  #announcePlayerVictory (callback) {
+    if (this.#opponentIsWildMon()) {
+      callback()
+      return
+    }
+
+    const msgs = [
+      `${this.#enemyBattleTrainer.trainerType.toUpperCase()} ${this.#enemyBattleTrainer.name.toUpperCase()} was defeated!`,
+      `"${this.#enemyTrainer.defeatedMsg}"`,
+      `You were paid $${this.#enemyTrainer.rewardOnVictory} as winnings!`
+    ]
+
+    this.#enemyBattleTrainer.showTrainer()
+    this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(msgs, callback, SKIP_BATTLE_ANIMATIONS)
+  }
+
+  /**
+   * 
+   * @param {() => void} callback 
+   */
+  #annoucePlayerDefeat (callback) {
+    this.#battlePlayer.showTrainer()
+    const msgs = [`YOU have no more usable Pokemon!`]
+    if (!this.#opponentIsWildMon()) {
+      msgs.push(`You paid out $${this.#enemyTrainer.payOutOnDefeat}...`)
+    }
+    msgs.push(`YOU whited out!`)
+    this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(msgs, callback, SKIP_BATTLE_ANIMATIONS)
+  }
+
+  #resetBattleMons () {
+    this.#activeEnemyMon = null
+    this.#activePlayerMon = null
+  }
+
+  /**
+   * 
+   * @returns {boolean}
+   */
+  #runAttemptSucceeded () {
+    return true
   }
 }

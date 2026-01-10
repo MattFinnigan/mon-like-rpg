@@ -26,72 +26,90 @@ export class EnemyBattleMon extends BattleMon {
    * @returns {void}
    */
   playMonAppearAnimation (callback, isTrainer) {
-    if (!isTrainer) {
-      const startXPos = -50
-      const endXPos = ENEMY_IMAGE_POSITION.x
-      const assetKey = MON_ASSET_KEYS[this._phaserMonImageGameObject.texture.key]
-      this._phaserMonImageGameObject.setTexture(MON_GRAY_ASSET_KEYS[assetKey + '_GRAY']).setFlipX(true)
-
-      this._phaserMonImageGameObject.setPosition(startXPos, ENEMY_IMAGE_POSITION.y).setAlpha(1)
-
-      if (this._skipBattleAnimations) {
-        this._phaserMonImageGameObject.setTexture(MON_ASSET_KEYS[assetKey])
-        this._phaserMonImageGameObject.setX(endXPos)
-        this._phaserHealthBarGameContainer.setAlpha(1)
-        callback()
-        return
-      }
-
-      this._scene.tweens.add({
-        delay: 0,
-        duration: 1500,
-        x: {
-          from: startXPos,
-          to: endXPos
-        },
-        targets: this._phaserMonImageGameObject,
-        onComplete: () => {
-          this._phaserMonImageGameObject.setTexture(MON_ASSET_KEYS[assetKey])
-          super.playMonCry(() => {
-            this._phaserHealthBarGameContainer.setAlpha(1)
-            callback()
-          })
-        }
-      })
-    } else {     
-      if (this._skipBattleAnimations) {
-        this._phaserMonImageGameObject.setAlpha(1)
-        this._phaserHealthBarGameContainer.setAlpha(1)
-        callback()
-        return
-      }
-  
-      const endY = this._phaserMonImageGameObject.y
-      const endX = this._phaserMonImageGameObject.x
-      const steps = 3
-
-      this._phaserMonImageGameObject.setAlpha(1).setScale(0.1).setX(ENEMY_IMAGE_POSITION.x)
-      this._phaserMonImageGameObject.y += (this._phaserMonImageGameObject.height - this._phaserMonImageGameObject.height / 4)
-      this._phaserMonImageGameObject.x += this._phaserMonImageGameObject.width / 2
-  
-      this._scene.tweens.add({
-        delay: 0,
-        duration: 300,
-        scale: 1,
-        y: endY,
-        x: endX,
-        targets: this._phaserMonImageGameObject,
-        ease: function (t) {
-          return Math.round(t * steps) / steps
-        },
-        onComplete: () => {
-          super.playMonCry(() => {
-            this._phaserHealthBarGameContainer.setAlpha(1)
-            callback()
-          })
-        }
-      })
+    if (isTrainer) {
+      this.#playTrainerMonAppearAnimation(callback)
+      return
     }
+    this.#playWildMonAppearAnimation(callback)
+  }
+
+  /**
+   * 
+   * @param {() => void} callback 
+   * @returns 
+   */
+  #playWildMonAppearAnimation (callback) {
+    const startXPos = -50
+    const endXPos = ENEMY_IMAGE_POSITION.x
+    const assetKey = MON_ASSET_KEYS[this._phaserMonImageGameObject.texture.key]
+    this._phaserMonImageGameObject.setTexture(MON_GRAY_ASSET_KEYS[assetKey + '_GRAY']).setFlipX(true)
+
+    this._phaserMonImageGameObject.setPosition(startXPos, ENEMY_IMAGE_POSITION.y).setAlpha(1)
+
+    if (this._skipBattleAnimations) {
+      this._phaserMonImageGameObject.setTexture(MON_ASSET_KEYS[assetKey])
+      this._phaserMonImageGameObject.setX(endXPos)
+      this._phaserHealthBarGameContainer.setAlpha(1)
+      callback()
+      return
+    }
+
+    this._scene.tweens.add({
+      delay: 0,
+      duration: 1500,
+      x: {
+        from: startXPos,
+        to: endXPos
+      },
+      targets: this._phaserMonImageGameObject,
+      onComplete: () => {
+        this._phaserMonImageGameObject.setTexture(MON_ASSET_KEYS[assetKey])
+        super.playMonCry(() => {
+          this._phaserHealthBarGameContainer.setAlpha(1)
+          callback()
+        })
+      }
+    })
+  }
+
+  /**
+   * 
+   * @param {() => void} callback 
+   * @returns 
+   */
+  #playTrainerMonAppearAnimation (callback) {
+    if (this._skipBattleAnimations) {
+      this._phaserMonImageGameObject.setAlpha(1)
+      this._phaserHealthBarGameContainer.setAlpha(1)
+      callback()
+      return
+    }
+
+    const endY = this._phaserMonImageGameObject.y
+    const endX = this._phaserMonImageGameObject.x
+    const steps = 3
+
+    this._phaserMonImageGameObject.setAlpha(1).setScale(0.1).setX(ENEMY_IMAGE_POSITION.x)
+    this._phaserMonImageGameObject.y += (this._phaserMonImageGameObject.height - this._phaserMonImageGameObject.height / 4)
+    this._phaserMonImageGameObject.x += this._phaserMonImageGameObject.width / 2
+
+    this._scene.tweens.add({
+      delay: 0,
+      duration: 300,
+      scale: 1,
+      y: endY,
+      x: endX,
+      targets: this._phaserMonImageGameObject,
+      ease: function (t) {
+        return Math.round(t * steps) / steps
+      },
+      onComplete: () => {
+        super.playMonCry(() => {
+          this._phaserHealthBarGameContainer.setAlpha(1)
+          callback()
+        })
+      }
+    })
   }
 
   /**

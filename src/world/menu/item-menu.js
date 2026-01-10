@@ -102,7 +102,6 @@ export class ItemMenu {
    * @param {import("../../common/direction").Direction|'OK'|'CANCEL'} input 
    */
   handlePlayerInput (input) {
-    console.log(input)
     if (input === 'CANCEL') {
       this.hide()
       return

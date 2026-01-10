@@ -30,9 +30,8 @@ export class BattlePlayer extends BattleCharacter {
       remainingMonsPos: { x: 340, y: 250 }
     })
     this._skipBattleAnimations = config.skipBattleAnimations
-    this.#phaserPlayerImageGameObject = this._scene.add.image(0, 0, TRAINER_GRAY_SPRITES[this._assetKey + '_GRAY']).setOrigin(0).setAlpha(0).setScale(2.25)
-    this._phaserMonDetailsBackgroundImageGameObject.setFlipX(true)
     this.#characterSpriteShowing = false
+    this.#createTrainerGameObject()
   }
 
   /**
@@ -141,5 +140,10 @@ export class BattlePlayer extends BattleCharacter {
       },
       targets: this.#phaserPlayerImageGameObject
     })
+  }
+
+  #createTrainerGameObject () {
+    this.#phaserPlayerImageGameObject = this._scene.add.image(0, 0, TRAINER_GRAY_SPRITES[this._assetKey + '_GRAY']).setOrigin(0).setAlpha(0).setScale(2.25)
+    this._phaserMonDetailsBackgroundImageGameObject.setFlipX(true)
   }
 }

@@ -65,16 +65,10 @@ export class BattleMon {
     this._monStats = getMonStats(this._baseMonDetails, this._monDetails)
     this._maxHealth = this._monStats.hp
 
-    this._phaserMonImageGameObject = this._scene.add.image(pos.x, pos.y, this._battleSpriteAssetKey, this._baseMonDetails.assetFrame).setOrigin(0).setAlpha(0)
-    this._phaserMonDetailsBackgroundImageGameObject = this._scene.add.image(0, 0 , BATTLE_ASSET_KEYS.ENEMY_BATTLE_DETAILS_BACKGROUND).setOrigin(0)
+    this.#createMonGameObject(pos)
+    this.#createMonDetailsGameObject()
     this.#createHealthBarComponents()
-
-    this._monDetails.attackIds.forEach(attkId => {
-      const monAttk = DataUtils.getMonAttack(this._scene, attkId)
-      if (monAttk !== undefined) {
-        this._monAttacks.push(monAttk)
-      }
-    })
+    this.#getMonAttacks()
 
     this.#audioManager = this._scene.registry.get('audio')
   }
@@ -222,28 +216,7 @@ export class BattleMon {
     this._monLvlGameText = this._scene.add.bitmapText(144, 44, 'gb-font-thick', `Lv${this.currentLevel}`, 30)
     this._monHpLabelGameText = this._scene.add.bitmapText(30, 76, 'gb-font-thick', `HP:`, 20)
     this._healthBar = new HealthBar(this._scene, 72, 42, this._currentHealth, this._maxHealth, this.#showHpNums)
-    this._typeContainers = this._scene.add.container(0, 0, [])
-
-    const typeOne = this._baseMonDetails.types[0]
-    const typeOneBg = this._scene.add.graphics()
-    typeOneBg.fillStyle(typeOne.colour, 1)
-    typeOneBg.fillRoundedRect(0, 0, 45, 22, 5)
-
-    this._typeContainers.add(this._scene.add.container(30, 45, [
-      typeOneBg,
-      this._scene.add.bitmapText(5, 2, 'gb-font-light', typeOne.name.substring(0, 3), 20)
-    ]))
-
-    if (this._baseMonDetails.types.length === 2) {
-      const typeTwo = this._baseMonDetails.types[1]
-      const typeTwoBg = this._scene.add.graphics()
-      typeTwoBg.fillStyle(typeTwo.colour, 1)
-      typeTwoBg.fillRoundedRect(0, 0, 45, 22, 5)
-      this._typeContainers.add(this._scene.add.container(80, 45, [
-        typeTwoBg,
-        this._scene.add.bitmapText(5, 2, 'gb-font-light', typeTwo.name.substring(0, 3), 20)
-      ]))
-    }
+    this.#createMonsTypeGameObjectContainer()
 
     this._phaserHealthBarGameContainer = this._scene.add.container(20, 0, [
       this._phaserMonDetailsBackgroundImageGameObject,
@@ -267,5 +240,51 @@ export class BattleMon {
   
   hideBattleDetails () {
     this._phaserHealthBarGameContainer.setAlpha(0)
+  }
+
+  #getMonAttacks () {
+    this._monDetails.attackIds.forEach(attkId => {
+      const monAttk = DataUtils.getMonAttack(this._scene, attkId)
+      if (monAttk !== undefined) {
+        this._monAttacks.push(monAttk)
+      }
+    })
+  }
+
+  /**
+   * 
+   * @param {import("../../types/typedef.js").Coordinate} pos 
+   */
+  #createMonGameObject (pos) {
+    this._phaserMonImageGameObject = this._scene.add.image(pos.x, pos.y, this._battleSpriteAssetKey, this._baseMonDetails.assetFrame).setOrigin(0).setAlpha(0)
+  }
+
+  #createMonDetailsGameObject () {
+    this._phaserMonDetailsBackgroundImageGameObject = this._scene.add.image(0, 0 , BATTLE_ASSET_KEYS.ENEMY_BATTLE_DETAILS_BACKGROUND).setOrigin(0)
+  }
+
+  #createMonsTypeGameObjectContainer () {
+    this._typeContainers = this._scene.add.container(0, 0, [])
+
+    const typeOne = this._baseMonDetails.types[0]
+    const typeOneBg = this._scene.add.graphics()
+    typeOneBg.fillStyle(typeOne.colour, 1)
+    typeOneBg.fillRoundedRect(0, 0, 45, 22, 5)
+
+    this._typeContainers.add(this._scene.add.container(30, 45, [
+      typeOneBg,
+      this._scene.add.bitmapText(5, 2, 'gb-font-light', typeOne.name.substring(0, 3), 20)
+    ]))
+
+    if (this._baseMonDetails.types.length === 2) {
+      const typeTwo = this._baseMonDetails.types[1]
+      const typeTwoBg = this._scene.add.graphics()
+      typeTwoBg.fillStyle(typeTwo.colour, 1)
+      typeTwoBg.fillRoundedRect(0, 0, 45, 22, 5)
+      this._typeContainers.add(this._scene.add.container(80, 45, [
+        typeTwoBg,
+        this._scene.add.bitmapText(5, 2, 'gb-font-light', typeTwo.name.substring(0, 3), 20)
+      ]))
+    }
   }
 }

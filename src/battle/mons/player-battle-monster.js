@@ -22,15 +22,13 @@ export class PlayerBattleMon extends BattleMon {
     super(config, PLAYER_IMAGE_POSITION, true)
 
     this._phaserHealthBarGameContainer.setPosition(330, 224)
-    this._phaserMonImageGameObject.setPosition(PLAYER_IMAGE_POSITION.x, PLAYER_IMAGE_POSITION.y)
-    this._phaserMonDetailsBackgroundImageGameObject.setTexture(BATTLE_ASSET_KEYS.PLAYER_BATTLE_DETAILS_BACKGROUND)
     this._monNameGameText.setPosition(30, 2)
     this._monLvlGameText.setPosition(150, 44)
     this._monHpLabelGameText.setPosition(35, 76)
     this._healthBar.container.setPosition(82, 42)
 
-    const assetKey = this._phaserMonImageGameObject.texture.key
-    this._phaserMonImageGameObject.setTexture(MON_BACK_ASSET_KEYS[assetKey + '_BACK'])
+    this.#createMonGameObject()
+    this.#createMonDetailsGameObject()
     this.#monBallExpandSpriteAnimation = null
   }
   
@@ -45,6 +43,7 @@ export class PlayerBattleMon extends BattleMon {
 
     if (this._skipBattleAnimations) {
       this._phaserHealthBarGameContainer.setAlpha(1)
+      this._phaserMonImageGameObject.setAlpha(1)
       callback()
       return
     }
@@ -103,5 +102,15 @@ export class PlayerBattleMon extends BattleMon {
         }
       })
     })
+  }
+
+  #createMonGameObject () {
+    this._phaserMonImageGameObject.setPosition(PLAYER_IMAGE_POSITION.x, PLAYER_IMAGE_POSITION.y)
+    const assetKey = this._phaserMonImageGameObject.texture.key
+    this._phaserMonImageGameObject.setTexture(MON_BACK_ASSET_KEYS[assetKey + '_BACK'])
+  }
+
+  #createMonDetailsGameObject () {
+    this._phaserMonDetailsBackgroundImageGameObject.setTexture(BATTLE_ASSET_KEYS.PLAYER_BATTLE_DETAILS_BACKGROUND)
   }
 }

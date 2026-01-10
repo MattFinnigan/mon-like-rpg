@@ -13,9 +13,9 @@ import { DATA_MANAGER_STORE_KEYS, dataManager } from '../utils/data-manager.js'
 
 /** @enum {object} */
 const PARTY_STATES = Object.freeze({
-  SELECT_MON: 'SELECT_MON',
-  SWITCH_MON_2_SELECT: 'SWITCH_MON_2_SELECT',
-  SWITCHING_MONS: 'SWITCHING_MONS'
+  WAIT_FOR_MON_SELECT: 'WAIT_FOR_MON_SELECT',
+  SWITCHING_WAIT_FOR_MON_2_SELECT: 'SWITCHING_WAIT_FOR_MON_2_SELECT',
+  SWITCHING_MONS_IN_PROGRESS: 'SWITCHING_MONS_IN_PROGRESS'
 })
 
 export class PartyScene extends Phaser.Scene {
@@ -54,9 +54,9 @@ export class PartyScene extends Phaser.Scene {
 
   preload () {
     console.log(`[${PartyScene.name}:preload] invoked`)
+  
     const battleAssetPath = 'assets/images/battle'
 
-    // todo move this somewhere nicer
     this.load.spritesheet(PARTY_MON_SPRITES.PARTY_MON_SPRITES_SHEET_1, `/assets/images/mons/party/sheet1.png`, {
       frameWidth: 72,
       frameHeight: 96
@@ -75,9 +75,8 @@ export class PartyScene extends Phaser.Scene {
     this.#currentMonIndex = 0
     this.#partyMonHealthBars = []
     this.#phaserPartyMonGameObjects = []
-
-    this.#partyMons = dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS)
     
+    this.#getPartyMonsDetailsFromStore()
     this.#createPartyMonGameObjects()
     this.#createPlayerInputCursor()
     this.#createCurrentMonCursor()
@@ -85,15 +84,15 @@ export class PartyScene extends Phaser.Scene {
     this.#dialogUi = new DialogUi(this)
     this.#controls = new Controls(this)
 
-    this.#partyStateMachine.setState(PARTY_STATES.SELECT_MON)
+    this.#partyStateMachine.setState(PARTY_STATES.WAIT_FOR_MON_SELECT)
   }
 
   update () {
-    if (this.#partyStateMachine.currentStateName === PARTY_STATES.SWITCHING_MONS) {
+    if (this.#switchingInProgress()) {
       return
     }
-
     const selectedDirection = this.#controls.getDirectionKeyJustPressed()
+
     if (selectedDirection !== DIRECTION.NONE) {
       this.#handlePlayerInput(selectedDirection)
       return
@@ -112,141 +111,206 @@ export class PartyScene extends Phaser.Scene {
 
   /**
    * 
-   * @param {import('../common/direction.js').Direction | 'OK'|'CANCEL'} input
+   * @param {import('../common/direction.js').Direction | 'OK' | 'CANCEL'} input
    */
   #handlePlayerInput (input) {
-    if (this.#partyStateMachine.currentStateName === PARTY_STATES.SELECT_MON) {
-      if (input === 'OK') {
-        this.#partyStateMachine.setState(PARTY_STATES.SWITCH_MON_2_SELECT)
-        return
-      }
-      if (input === 'CANCEL') {
-        this.scene.start(SCENE_KEYS.WORLD_SCENE)
-        return
-      }
+    if (this.#unsupportedInput(input)) {
+      return
     }
 
-    if (
-        this.#partyStateMachine.currentStateName === PARTY_STATES.SELECT_MON ||
-        this.#partyStateMachine.currentStateName === PARTY_STATES.SWITCH_MON_2_SELECT
-    ) {
-      if (input === 'CANCEL') {
-        this.#partyStateMachine.setState(PARTY_STATES.SELECT_MON)
-        return
-      }
-
-      if (input === 'OK') {
-        if (this.#currentCursorMonIndex === this.#currentMonIndex) {
-          this.#partyStateMachine.setState(PARTY_STATES.SELECT_MON)
-          return
-        }
-        if (this.#partyStateMachine.currentStateName === PARTY_STATES.SWITCH_MON_2_SELECT) {
-          this.#partyStateMachine.setState(PARTY_STATES.SWITCHING_MONS)
-        }
-        return
-      }
-
-      if (this.#partyMons.length === 1) {
-        return
-      }
-
-      if (input === DIRECTION.UP) {
-        this.#currentCursorMonIndex--
-        if (this.#currentCursorMonIndex < 0) {
-          this.#currentCursorMonIndex = this.#partyMons.length - 1
-        }
-        this.#movePlayerInputCursor(this.#currentCursorMonIndex)
-        return
-      }
-
-      if (input === DIRECTION.DOWN) {
-        this.#currentCursorMonIndex++
-        if (this.#currentCursorMonIndex > this.#partyMons.length - 1) {
-          this.#currentCursorMonIndex = 0
-        }
-        this.#movePlayerInputCursor(this.#currentCursorMonIndex)
-        return
-      }
+    if (input === DIRECTION.UP) {
+      this.#moveCursorUp()
+      return
     }
+
+    if (input === DIRECTION.DOWN) {
+      this.#moveCursorDown()
+      return
+    }
+
+    if (this.#isWaitingForMonSelect()) {
+      this.#handleFirstMonInput(input)
+      return
+    }
+
+    if (this.#hasSelectedMonToSwitch()) {
+      this.#handleSecondMonInput(input)
+      return
+    }
+  }
+
+  /**
+   * 
+   * @param {import('../common/direction.js').Direction | 'OK' | 'CANCEL'} input
+   */
+  #handleFirstMonInput (input) {
+    if (input === 'OK') {
+      // TODO replace when other mon interactions are added - open menu
+      this.#partyStateMachine.setState(PARTY_STATES.SWITCHING_WAIT_FOR_MON_2_SELECT)
+      return
+    }
+    if (input === 'CANCEL') {
+      this.scene.start(SCENE_KEYS.WORLD_SCENE)
+      return
+    }
+  }
+
+  /**
+   * 
+   * @param {import('../common/direction.js').Direction | 'OK' | 'CANCEL'} input
+   */
+  #handleSecondMonInput (input) {
+    if (input === 'OK') {
+      if (this.#isSelectingSameMon()) {
+        this.#partyStateMachine.setState(PARTY_STATES.WAIT_FOR_MON_SELECT)
+        return
+      }
+
+      this.#partyStateMachine.setState(PARTY_STATES.SWITCHING_MONS_IN_PROGRESS)
+      return
+    }
+
+    if (input === 'CANCEL') {
+      this.#partyStateMachine.setState(PARTY_STATES.WAIT_FOR_MON_SELECT)
+      return
+    }
+  }
+
+  /**
+   * 
+   * @returns {boolean}
+   */
+  #isSelectingSameMon () {
+    return this.#currentCursorMonIndex === this.#currentMonIndex
+  }
+
+  /**
+   * 
+   * @returns {boolean}
+   */
+  #hasSelectedMonToSwitch () {
+    return this.#partyStateMachine.currentStateName === PARTY_STATES.SWITCHING_WAIT_FOR_MON_2_SELECT
+  }
+
+  /**
+   * 
+   * @returns {boolean}
+   */
+  #switchingInProgress () {
+    return this.#partyStateMachine.currentStateName === PARTY_STATES.SWITCHING_MONS_IN_PROGRESS
+  }
+
+  /**
+   * 
+   * @returns {boolean}
+   */
+  #isWaitingForMonSelect () {
+    return this.#partyStateMachine.currentStateName === PARTY_STATES.WAIT_FOR_MON_SELECT
+  }
+
+  /**
+   * 
+   * @param {import('../common/direction.js').Direction | 'OK' | 'CANCEL'} input
+   */
+  #unsupportedInput (input) {
+    return input === DIRECTION.NONE || input === DIRECTION.LEFT || input === DIRECTION.RIGHT
+  }
+
+  #resetMonSelectionState () {
+    this.#currentMon = null
+    this.#currentMonIndex = 0
+    this.time.delayedCall(100, () => { this.#dialogUi.showDialogModal(['Choose a POKEMON.']) })
+  }
+
+  #resetUserInputCursorObjects () {
+    this.#phaserCurrentMonCursorGameObject.setAlpha(0)
+    this.#phaserUserInputCursorGameObject.setAlpha(1)
+    this.#phaserUserInputCursorTween.restart()
+  }
+
+  #selectFirstMonForSwitching () {
+    this.#currentMon = this.#partyMons[this.#currentCursorMonIndex]
+    this.#currentMonIndex = this.#currentCursorMonIndex
+
+    this.#phaserCurrentMonCursorGameObject.setPosition(21, this.#phaserUserInputCursorGameObject.y)
+    this.#phaserCurrentMonCursorGameObject.setAlpha(0.5)
+
+    this.#dialogUi.showDialogModal(['Now choose a POKEMON to switch.'])
+  }
+
+  #playMonSwitchAnimation () {
+    this.time.delayedCall(100, () => {
+      const firstMonGameObject = this.#phaserPartyMonGameObjects[this.#currentCursorMonIndex]
+      const secondMonGameObject = this.#phaserPartyMonGameObjects[this.#currentMonIndex]
+  
+      const firstMonPositionY = this.#currentCursorMonIndex * 65
+      const secondMonPositionY = this.#currentMonIndex * 65
+      
+      this.add.tween({
+        delay: 0,
+        duration: 300,
+        y: {
+          from: firstMonGameObject.y,
+          to: secondMonPositionY
+        },
+        targets: firstMonGameObject
+      })
+
+      this.add.tween({
+        delay: 0,
+        duration: 300,
+        y: {
+          from: secondMonGameObject.y,
+          to: firstMonPositionY
+        },
+        targets: secondMonGameObject
+      })
+
+      this.#switchAndSaveMons()
+    })
+  }
+
+  #switchAndSaveMons () {
+    const firstMonGameObject = this.#phaserPartyMonGameObjects[this.#currentCursorMonIndex]
+    const secondMonGameObject = this.#phaserPartyMonGameObjects[this.#currentMonIndex]
+
+    const mon1 = this.#partyMons[this.#currentMonIndex]
+    const mon2 = this.#partyMons[this.#currentCursorMonIndex]
     
+    this.#phaserPartyMonGameObjects[this.#currentCursorMonIndex] = secondMonGameObject
+    this.#phaserPartyMonGameObjects[this.#currentMonIndex] = firstMonGameObject
+    
+    this.#partyMons[this.#currentCursorMonIndex] = mon1
+    this.#partyMons[this.#currentMonIndex] = mon2
+    
+    dataManager.store.set(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS, this.#partyMons)
+    dataManager.saveData()
+
+    this.#partyStateMachine.setState(PARTY_STATES.WAIT_FOR_MON_SELECT)
   }
 
   #createPartyStateMachine () {
     this.#partyStateMachine = new StateMachine('party', this)
 
     this.#partyStateMachine.addState({
-      name: PARTY_STATES.SELECT_MON,
+      name: PARTY_STATES.WAIT_FOR_MON_SELECT,
       onEnter: () => {
-        this.#phaserCurrentMonCursorGameObject.setAlpha(0)
-        this.#currentMon = null
-        this.#currentMonIndex = 0
-  
-        this.#phaserUserInputCursorGameObject.setAlpha(1)
-        this.#phaserUserInputCursorTween.restart()
-        this.time.delayedCall(100, () => { this.#dialogUi.showDialogModal(['Choose a POKEMON.']) })
+        this.#resetUserInputCursorObjects()
+        this.#resetMonSelectionState()
       }
     })
 
     this.#partyStateMachine.addState({
-      name: PARTY_STATES.SWITCH_MON_2_SELECT,
+      name: PARTY_STATES.SWITCHING_WAIT_FOR_MON_2_SELECT,
       onEnter: () => {
-        this.#currentMon = this.#partyMons[this.#currentCursorMonIndex]
-        this.#currentMonIndex = this.#currentCursorMonIndex
-        this.#phaserCurrentMonCursorGameObject.setPosition(
-          21,
-          this.#phaserUserInputCursorGameObject.y
-        )
-        this.#phaserCurrentMonCursorGameObject.setAlpha(0.5)
-        this.#dialogUi.showDialogModal(['Now choose a POKEMON to switch.'])
+        this.#selectFirstMonForSwitching()
       }
     })
 
     this.#partyStateMachine.addState({
-      name: PARTY_STATES.SWITCHING_MONS,
+      name: PARTY_STATES.SWITCHING_MONS_IN_PROGRESS,
       onEnter: () => {
-        this.time.delayedCall(100, () => {
-          const mon1NewPosY = this.#currentCursorMonIndex * 65
-          const mon2NewPosY = this.#currentMonIndex * 65
-          
-          this.add.tween({
-            delay: 0,
-            duration: 300,
-            y: {
-              from: this.#phaserPartyMonGameObjects[this.#currentCursorMonIndex].y,
-              to: mon2NewPosY
-            },
-            targets: this.#phaserPartyMonGameObjects[this.#currentCursorMonIndex]
-          })
-
-          this.add.tween({
-            delay: 0,
-            duration: 300,
-            y: {
-              from: this.#phaserPartyMonGameObjects[this.#currentMonIndex].y,
-              to: mon1NewPosY
-            },
-            targets: this.#phaserPartyMonGameObjects[this.#currentMonIndex]
-          })
-          
-          const mon1 = structuredClone(this.#partyMons[this.#currentMonIndex])
-          const mon2 = structuredClone(this.#partyMons[this.#currentCursorMonIndex])
-          
-          this.#partyMons[this.#currentCursorMonIndex] = mon1
-          this.#partyMons[this.#currentMonIndex] = mon2
-          
-          dataManager.store.set(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS, this.#partyMons)
-          dataManager.saveData()
-
-          this.time.delayedCall(500, () => {
-            this.#phaserPartyMonGameObjects.forEach(d => {
-              d.destroy()
-            })
-
-            this.#partyMonHealthBars = []
-            this.#createPartyMonGameObjects()
-            this.#partyStateMachine.setState(PARTY_STATES.SELECT_MON)
-          })
-        })
+        this.#playMonSwitchAnimation()
       }
     })
   }
@@ -294,18 +358,35 @@ export class PartyScene extends Phaser.Scene {
       this.#phaserPartyMonGameObjects.push(partyMonContainer)
     })
   }
-  
-  /**
-   * 
-   * @param {number} newIndex 
-   */
-  #movePlayerInputCursor (newIndex) {
-    const newY = (newIndex * 65) + 35
-    this.#currentCursorMonIndex = newIndex
-    
+
+  #moveCursorUp () {
+    this.#currentCursorMonIndex += 1
+
+    if (this.#currentCursorMonIndex > this.#partyMons.length - 1) {
+      this.#currentCursorMonIndex = 0
+    }
+    this.#movePlayerInputCursor()
+  }
+
+  #moveCursorDown () {
+    this.#currentCursorMonIndex -= 1
+
+    if (this.#currentCursorMonIndex < 0) {
+      this.#currentCursorMonIndex = this.#partyMons.length - 1
+    }
+    this.#movePlayerInputCursor()
+  }
+
+
+  #movePlayerInputCursor () {
+    const newY = (this.#currentCursorMonIndex * 65) + 35
     this.#phaserUserInputCursorGameObject.setPosition(
       this.#phaserUserInputCursorGameObject.x,
       newY
     )
+  }
+
+  #getPartyMonsDetailsFromStore () {
+    this.#partyMons = dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS)
   }
 }
