@@ -539,7 +539,10 @@ export class BattleScene extends Phaser.Scene {
     })
 
     this.#battleStateMachine.addState({
-      name: BATTLE_STATES.ITEM_USED
+      name: BATTLE_STATES.ITEM_USED,
+      onEnter: () => {
+        this.events.emit(EVENT_KEYS.CONSUME_ITEM)
+      }
     })
 
     this.#battleStateMachine.addState({
@@ -643,7 +646,7 @@ export class BattleScene extends Phaser.Scene {
         case ITEM_TYPE_KEY.HEALING:
           battleMon.healHp(item.value, () => {
             this.#battleStateMachine.setState(BATTLE_STATES.ITEM_USED)
-            this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`${battleMon.name} was healed for ${item.value}`], callback, SKIP_BATTLE_ANIMATIONS)
+            this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`${battleMon.name} was healed for ${item.value} hitpoints`], callback, SKIP_BATTLE_ANIMATIONS)
           })
           break
         case ITEM_TYPE_KEY.BALL:

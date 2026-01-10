@@ -4,6 +4,7 @@ import { DATA_MANAGER_STORE_KEYS, dataManager } from "../utils/data-manager.js"
 import { DataUtils } from "../utils/data-utils.js"
 import { exhaustiveGuard } from "../utils/guard.js"
 import { SCENE_KEYS } from "../scenes/scene-keys.js"
+import { EVENT_KEYS } from "./event-keys.js"
 
 
 export class ItemMenu {
@@ -21,8 +22,8 @@ export class ItemMenu {
   #container
   /** @type {boolean} */
   #isVisible
-  /** @type {import("../types/typedef.js").Item[]} */
-  #availableItems
+  /** @type {import("../types/typedef.js").Inventory} */
+  #inventory
   /** @type {Phaser.GameObjects.BitmapText[]} */
   #menuOptionsTextGameObjects
   /** @type {number} */
@@ -31,6 +32,8 @@ export class ItemMenu {
   #selectedItemOption
   /** @type {Phaser.GameObjects.Image} */
   #userInputCursor
+  /** @type {import("../types/typedef.js").Item[]} */
+  #itemDetails
 
   /**
    * 
@@ -43,7 +46,9 @@ export class ItemMenu {
     this.#height = 555
     this.#selectedItemOptionIndex = 0
     this.#menuOptionsTextGameObjects = []
+    this.#itemDetails = DataUtils.getItemDetails(this.#scene)
 
+    this.#scene.events.on(EVENT_KEYS.CONSUME_ITEM, () => this.#consumeItem())
     this.#createItemMenuGameObjects()
   }
 
@@ -131,7 +136,11 @@ export class ItemMenu {
    * @returns {void}
    */
   #handleselectedItemOption () {
-    this.#selectedItemOption = this.#availableItems[this.#selectedItemOptionIndex]
+    const detail = this.#itemDetails.find(details => {
+      return details.key === this.#inventory[this.#selectedItemOptionIndex].itemKey
+    })
+    console.log(detail)
+    this.#selectedItemOption = detail
   }
 
   /**
@@ -144,12 +153,12 @@ export class ItemMenu {
       case DIRECTION.UP:
         this.#selectedItemOptionIndex -= 1
         if (this.#selectedItemOptionIndex < 0) {
-          this.#selectedItemOptionIndex = this.#availableItems.length - 1
+          this.#selectedItemOptionIndex = this.#inventory.length - 1
         }
         break
       case DIRECTION.DOWN:
         this.#selectedItemOptionIndex += 1
-        if (this.#selectedItemOptionIndex > this.#availableItems.length - 1) {
+        if (this.#selectedItemOptionIndex > this.#inventory.length - 1) {
           this.#selectedItemOptionIndex = 0
         }
         break
@@ -164,26 +173,34 @@ export class ItemMenu {
     }
 
     const x = 20 + this.#padding
-    const y = 28 + this.#padding + this.#selectedItemOptionIndex * 50
+    const y = 28 + this.#padding + this.#selectedItemOptionIndex * 60
 
     this.#userInputCursor.setPosition(x, y)
   }
 
-  #createItemMenuGameObjects () {
-    const itemDetails = DataUtils.getItemDetails(this.#scene)
-  
-    this.#availableItems = dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_INVENTORY).map(invItem => {
-      return itemDetails.find(itemDetail => itemDetail.key === invItem.itemKey )
+  #getPlayerInvetory () {
+    this.#inventory = dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_INVENTORY)
+  }
+
+  #createItemMenuGameObjects () {    
+    this.#getPlayerInvetory()
+    
+    const inventoryItems = this.#inventory.map(invItem => {
+      return this.#itemDetails.find(itemDetail => itemDetail.key === invItem.itemKey)
     })
+
 
     this.#graphics = this.#createGraphics()
     this.#container = this.#scene.add.container(0, 0, [this.#graphics]).setDepth(2)
 
-    for (let i = 0; i < this.#availableItems.length; i++) {
-      const y = 10 + 50 * i + this.#padding
-      const textObject = this.#scene.add.bitmapText(40 + this.#padding, y, 'gb-font', this.#availableItems[i].name, 40)
+    for (let i = 0; i < this.#inventory.length; i++) {
+      const y = 10 + 60 * i + this.#padding
+      const textObject = this.#scene.add.bitmapText(40 + this.#padding, y, 'gb-font', inventoryItems[i].name, 40)
+      const quantityObject = this.#scene.add.bitmapText(this.#width - 80 - this.#padding, y + 33, 'gb-font', `x${this.#inventory[i].qty}`, 30)
       this.#menuOptionsTextGameObjects.push(textObject)
+      this.#menuOptionsTextGameObjects.push(quantityObject)
       this.#container.add(textObject)
+      this.#container.add(quantityObject)
     }
     this.#createUserInputCursor()
     this.#container.add(this.#userInputCursor)
@@ -194,5 +211,18 @@ export class ItemMenu {
   #createUserInputCursor () {
     this.#userInputCursor = this.#scene.add.image(20 + this.#padding, 28 + this.#padding, UI_ASSET_KEYS.CURSOR)
     this.#userInputCursor.setScale(1.25)
+  }
+
+  #consumeItem () {
+    const newInv = this.#inventory.filter(invItem => {
+      if (invItem.itemKey === this.#selectedItemOption.key) {
+        invItem.qty--
+      }
+      return invItem.qty > 0
+    })
+
+    dataManager.store.set(DATA_MANAGER_STORE_KEYS.PLAYER_INVENTORY, newInv)
+    dataManager.saveData()
+    this.#createItemMenuGameObjects()
   }
 }
