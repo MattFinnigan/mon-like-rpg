@@ -18,6 +18,7 @@ export function generateWildMon (scene, area) {
 
   /** @type {import("../types/typedef.js").Mon} */
   const mon = {
+    id: undefined,
     baseMonIndex: chosenMon.baseMonIndex,
     currentLevel: level,
     currentHp: 123,
