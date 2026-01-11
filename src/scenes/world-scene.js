@@ -21,6 +21,7 @@ import { loadBattleAssets, loadMonAssets, loadTrainerSprites } from '../utils/lo
 import { generateWildMon } from '../utils/encounter-utils.js';
 import { Menu, MENU_OPTIONS } from '../world/menu/menu.js';
 import { ItemMenu } from '../common/item-menu.js';
+import { PartyMenu } from '../common/party-menu.js';
 
 const CUSTOM_TILED_TYPES = Object.freeze({
   NPC: 'npc',
@@ -77,6 +78,8 @@ export class WorldScene extends Phaser.Scene {
   #itemMenu
   /** @type {Phaser.Tilemaps.TilemapLayer} */
   #collisionLayer
+  /** @type {PartyMenu} */
+  #partyMenu
 
   constructor () {
     super({
@@ -115,6 +118,7 @@ export class WorldScene extends Phaser.Scene {
     this.#audioManager.playBgm(this.#bgmKey)
 
     this.#menu = new Menu(this)
+    this.#partyMenu = new PartyMenu(this)
     this.#itemMenu = new ItemMenu(this)
     this.#dialogUi = new DialogUi(this)
     this.#controls = new Controls(this)
@@ -636,6 +640,34 @@ export class WorldScene extends Phaser.Scene {
    * @param {boolean} keyPressed.wasBackKeyPressed 
    * @returns {void}
    */
+  #handlePartyMenuInteraction (keyPressed) {
+    const {
+      wasSpaceKeyPresed,
+      selectedDirectionPressedOnce,
+      wasBackKeyPressed
+    } = keyPressed
+
+    if (wasBackKeyPressed) {
+      this.#partyMenu.hide()
+      return
+    }
+
+    if (wasSpaceKeyPresed) {
+      this.#partyMenu.handlePlayerInput('OK')
+      return
+    }
+    this.#partyMenu.handlePlayerInput(selectedDirectionPressedOnce)
+    return
+  }
+
+  /**
+   * 
+   * @param {object} keyPressed
+   * @param {boolean} keyPressed.wasSpaceKeyPresed 
+   * @param {import('../types/direction.js').Direction} keyPressed.selectedDirectionPressedOnce 
+   * @param {boolean} keyPressed.wasBackKeyPressed 
+   * @returns {void}
+   */
   #handleMenuInteraction (keyPressed) {
     const {
       wasSpaceKeyPresed,
@@ -649,6 +681,11 @@ export class WorldScene extends Phaser.Scene {
 
     if (this.#itemMenu.isVisible) {
       this.#handleItemMenuInteraction(keyPressed)
+      return
+    }
+
+    if (this.#partyMenu.isVisible) {
+      this.#handlePartyMenuInteraction(keyPressed)
       return
     }
 
@@ -671,7 +708,7 @@ export class WorldScene extends Phaser.Scene {
             this.#itemMenu.show()
             break
           case MENU_OPTIONS.POKEMON:
-            this.scene.start(SCENE_KEYS.PARTY_SCENE)
+            this.#partyMenu.show()
             break
           case MENU_OPTIONS.EXIT:
             this.#menu.hide()
@@ -691,7 +728,7 @@ export class WorldScene extends Phaser.Scene {
   }
 
   #saveGame () {
-    dataManager.saveData()
+    dataManager.saveGame()
     this.#dialogUi.showDialogModal(['Game saved!'])
   }
 }

@@ -1,4 +1,4 @@
-import { ATTACK_ASSET_KEYS, BATTLE_ASSET_KEYS, BGM_ASSET_KEYS, CHARACTER_ASSET_KEYS, DATA_ASSET_KEYS, SYSTEM_ASSET_KEYS, TRAINER_GRAY_SPRITES, TRAINER_SPRITES, UI_ASSET_KEYS, WORLD_ASSET_KEYS } from '../assets/asset-keys.js'
+import { ATTACK_ASSET_KEYS, BATTLE_ASSET_KEYS, BGM_ASSET_KEYS, CHARACTER_ASSET_KEYS, DATA_ASSET_KEYS, HEALTH_BAR_ASSET_KEYS, PARTY_MON_SPRITES, SYSTEM_ASSET_KEYS, TRAINER_GRAY_SPRITES, TRAINER_SPRITES, UI_ASSET_KEYS, WORLD_ASSET_KEYS } from '../assets/asset-keys.js'
 import Phaser from '../lib/phaser.js'
 import { AudioManager } from '../utils/audio-manager.js'
 import { dataManager } from '../utils/data-manager.js'
@@ -39,7 +39,7 @@ export class PreloadScene extends Phaser.Scene {
     const mapAssetPath = 'assets/images/map'
     const bgmAssetPath = 'assets/audio/bgm'
     const npcAssetPath = 'assets/images/npc'
-
+    const battleAssetPath = 'assets/images/battle'
     const attackAnimPath = 'assets/images/anims/pimen'
 
     // fonts
@@ -102,6 +102,10 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image(WORLD_ASSET_KEYS.WORLD_COLLISION, `/${mapAssetPath}/collision.png`)
     this.load.image(WORLD_ASSET_KEYS.WORLD_ENCOUNTER_ZONE, `/${mapAssetPath}/encounter.png`)
   
+    this.load.image(HEALTH_BAR_ASSET_KEYS.LEFT_CAP, `/${battleAssetPath}/hp_left_cap.png`)
+    this.load.image(HEALTH_BAR_ASSET_KEYS.MIDDLE, `/${battleAssetPath}/hp_mid.png`)
+    this.load.image(HEALTH_BAR_ASSET_KEYS.RIGHT_CAP, `/${battleAssetPath}/hp_right_cap.png`)
+    
     // character, npcs world sprites
     this.load.spritesheet(CHARACTER_ASSET_KEYS.PLAYER, `${charAssetPath}/character.png`, {
       frameWidth: 72,
@@ -124,6 +128,10 @@ export class PreloadScene extends Phaser.Scene {
       frameHeight: 96
     })
     this.load.spritesheet(CHARACTER_ASSET_KEYS.NPC_SHEET_5, `${npcAssetPath}/npc5.png`, {
+      frameWidth: 72,
+      frameHeight: 96
+    })
+    this.load.spritesheet(PARTY_MON_SPRITES.PARTY_MON_SPRITES_SHEET_1, `/assets/images/mons/party/sheet1.png`, {
       frameWidth: 72,
       frameHeight: 96
     })

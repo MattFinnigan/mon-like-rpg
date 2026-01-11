@@ -12,12 +12,12 @@ import Phaser from "../lib/phaser.js"
  * @param {Phaser.GameObjects.BitmapText|Phaser.GameObjects.Text} target 
  * @param {string} text 
  * @param {AnimateTextConfig} [config] 
- * @returns {void}
+ * @returns {Phaser.Time.TimerEvent}
  */
 export function animateText (scene, target, text, config) {
   const length = text.length
   let i = 0
-  scene.time.addEvent({
+  return scene.time.addEvent({
     callback: () => {
       target.text += text[i]
       ++i

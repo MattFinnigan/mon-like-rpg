@@ -19,6 +19,8 @@ export class DialogUi {
   #textAnimationPlaying
   /** @type {string[]} */
   #messagesToShow
+  /** @type {Phaser.Time.TimerEvent} */
+  #currentTextEvent
   
   /**
    * 
@@ -86,11 +88,16 @@ export class DialogUi {
       return
     }
   
+    if (this.#currentTextEvent) {
+      this.#scene.time.removeEvent(this.#currentTextEvent)
+    }
+
     this.#uiText.setText('').setAlpha(1)
-    animateText(this.#scene, this.#uiText, this.#messagesToShow.shift(), {
+    this.#currentTextEvent = animateText(this.#scene, this.#uiText, this.#messagesToShow.shift(), {
       delay: 25,
       callback: () => {
         this.#textAnimationPlaying = false
+        this.#scene.time.removeEvent(this.#currentTextEvent)
       }
     })
     this.#textAnimationPlaying = true

@@ -104,7 +104,7 @@ class DataManager extends Phaser.Events.EventEmitter {
     }
   }
 
-  saveData () {
+  saveGame () {
     if (typeof Storage === undefined) {
       console.warn('Cannot save data - local storage not supported')
       return
@@ -112,6 +112,10 @@ class DataManager extends Phaser.Events.EventEmitter {
 
     const dataToSave = this.#updateDataManagerDataToGlobalStateObject()
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(dataToSave))
+  }
+
+  saveData () {
+    this.#updateDataManagerDataToGlobalStateObject()
   }
 
   /**
