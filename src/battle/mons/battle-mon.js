@@ -215,7 +215,7 @@ export class BattleMon {
     this._monNameGameText = this._scene.add.bitmapText(0, 2, 'gb-font', this.name, 40)
     this._monLvlGameText = this._scene.add.bitmapText(144, 44, 'gb-font-thick', `Lv${this.currentLevel}`, 30)
     this._monHpLabelGameText = this._scene.add.bitmapText(30, 76, 'gb-font-thick', `HP:`, 20)
-    this._healthBar = new HealthBar(this._scene, 72, 42, this._currentHealth, this._maxHealth, this.#showHpNums)
+    this._healthBar = new HealthBar(this._scene, 72, 42, this._currentHealth, this._maxHealth, { showHpNums: this.#showHpNums })
     this.#createMonsTypeGameObjectContainer()
 
     this._phaserHealthBarGameContainer = this._scene.add.container(20, 0, [

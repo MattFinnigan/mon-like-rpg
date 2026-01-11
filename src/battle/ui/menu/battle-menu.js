@@ -204,7 +204,7 @@ export class BattleMenu {
           break
         case ACTIVE_BATTLE_MENU.BATTLE_ITEM:
           this.#battleItemMenu.handlePlayerInput('OK')
-          this.#handlePlayerChooseItem()
+            this.#selectedItem = this.#battleItemMenu.selectedItemOption
           break
         case ACTIVE_BATTLE_MENU.BATTLE_PKMN:
         case ACTIVE_BATTLE_MENU.BATTLE_RUN:
@@ -627,21 +627,6 @@ export class BattleMenu {
     this.#selectedAttackIndex = selectedMoveIndex
   }
 
-  handleItemCannotBeUsed () {
-    this.hideItemMenu()
-    this.updateInfoPanelMessagesAndWaitForInput(['You can\'t use that right now!'], () => {
-      this.#switchToMainBattleMenu()
-    }, SKIP_BATTLE_ANIMATIONS)
-  }
-
-  #handlePlayerChooseItem () {
-    if (!this.#battleItemMenu.selectedItemCanBeUsedInBattle()) {
-      this.handleItemCannotBeUsed()
-      return
-    }
-
-    this.#selectedItem = this.#battleItemMenu.selectedItemOption
-  }
 
   #createPlayerInputCursor () {
     this.#userInputCursorPhaserGameImageObject = this.#scene.add.image(0, 0, UI_ASSET_KEYS.CURSOR, 0).setOrigin(0).setAngle(90)

@@ -25,6 +25,8 @@ export class HealthBar {
   #showHpNums
   /** @type {Phaser.GameObjects.BitmapText} */
   #healthbarTextGameObject
+  /** @type {number} */
+  #monId
 
   /**
    * 
@@ -33,17 +35,20 @@ export class HealthBar {
    * @param {number} y
    * @param {number|null} currentHp
    * @param {number} maxHp
-   * @param {boolean} [showHpNums]
-   * @param {number} [scale]
+   * @param {object} [config]
+   * @param {boolean} [config.showHpNums=false]
+   * @param {number} [config.scale=1.35]
+   * @param {number} [config.monId=undefined]
    */
-  constructor (scene, x, y, currentHp, maxHp, showHpNums, scale = 1.35) {
+  constructor (scene, x, y, currentHp, maxHp, config = { showHpNums: false, scale: 1.35, monId: undefined }) {
     this.#scene = scene
     this.#fullWidth = 190
-    this.#scale = scale
-    this.#showHpNums = showHpNums
+    this.#scale = config.scale
+    this.#showHpNums = config.showHpNums
     this.#maxHp = maxHp
     this.#currentHp = currentHp === null ? this.#maxHp : currentHp
     this.#healthBarContainer = this.#scene.add.container(x, y, [])
+    this.#monId = config.monId
 
     this.#createHealthBarImages(x, y)
     this.#setMeterPercentage(this.#currentHp / this.#maxHp)
@@ -55,6 +60,14 @@ export class HealthBar {
 
   get container () {
     return this.#healthBarContainer
+  }
+
+  get monId () {
+    return this.#monId
+  }
+
+  get maxHp () {
+    return this.#maxHp
   }
 
   /**

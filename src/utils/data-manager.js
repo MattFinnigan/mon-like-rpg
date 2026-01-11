@@ -28,9 +28,10 @@ const initalState = {
     name: 'SPONION',
     partyMons: [
       {
+        id: 1,
         baseMonIndex: 149,
         name: 'MEWTWO',
-        currentHp: 193,
+        currentHp: 50,
         currentLevel: 99,
         attackEV: 14,
         defenseEV: 3,
@@ -41,6 +42,7 @@ const initalState = {
         attackIds: [1, 2]
       },
       {
+        id: 2,
         baseMonIndex: 15,
         name: 'PIDGEY',
         currentHp: 85,
@@ -56,7 +58,7 @@ const initalState = {
     ],
     inventory: [
       { itemKey: ITEM_KEY.POKEBALL, qty: 5 },
-      { itemKey: ITEM_KEY.POTION, qty: 2 },
+      { itemKey: ITEM_KEY.POTION, qty: 20 },
       { itemKey: ITEM_KEY.REPEL, qty: 3 },
       { itemKey: ITEM_KEY.KEY_CARD, qty: 1 }
     ]

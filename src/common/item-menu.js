@@ -48,7 +48,7 @@ export class ItemMenu {
     this.#menuOptionsTextGameObjects = []
     this.#itemDetails = DataUtils.getItemDetails(this.#scene)
 
-    this.#scene.events.on(EVENT_KEYS.CONSUME_ITEM, () => this.#consumeItem())
+    this.#scene.events.on(EVENT_KEYS.CONSUME_ITEM, (item) => this.consumeItem(item))
     this.#createItemMenuGameObjects()
   }
 
@@ -93,33 +93,11 @@ export class ItemMenu {
     }
 
     if (input === 'OK') {
-      this.#handleselectedItemOption()
+      this.#handleSelectedItemOption()
       return
     }
 
     this.#moveMenuCursor(input)
-  }
-
-  /**
-   * 
-   * @returns {boolean}
-   */
-  selectedItemCanBeUsedInBattle () {
-    if (!this.#selectedItemOption) {
-      return false
-    }
-    return this.#selectedItemOption.type.usableDuringScenes.includes(SCENE_KEYS.BATTLE_SCENE)
-  }
-  
-  /**
-   * 
-   * @returns {boolean}
-   */
-  selectedItemCanBeUsedInWorld () {
-    if (!this.#selectedItemOption) {
-      return false
-    }
-    return this.#selectedItemOption.type.usableDuringScenes.includes(SCENE_KEYS.WORLD_SCENE)
   }
 
   #createGraphics () {
@@ -135,11 +113,10 @@ export class ItemMenu {
   /**
    * @returns {void}
    */
-  #handleselectedItemOption () {
+  #handleSelectedItemOption () {
     const detail = this.#itemDetails.find(details => {
       return details.key === this.#inventory[this.#selectedItemOptionIndex].itemKey
     })
-    console.log(detail)
     this.#selectedItemOption = detail
   }
 
@@ -149,6 +126,7 @@ export class ItemMenu {
    * @returns {void}
    */
   #moveMenuCursor (direction) {
+    this.#selectedItemOption = null
     switch (direction) {
       case DIRECTION.UP:
         this.#selectedItemOptionIndex -= 1
@@ -213,9 +191,13 @@ export class ItemMenu {
     this.#userInputCursor.setScale(1.25)
   }
 
-  #consumeItem () {
+  /**
+   * 
+   * @param {import("../types/typedef.js").Item} item 
+   */
+  consumeItem (item) {
     const newInv = this.#inventory.filter(invItem => {
-      if (invItem.itemKey === this.#selectedItemOption.key) {
+      if (invItem.itemKey === item.key) {
         invItem.qty--
       }
       return invItem.qty > 0

@@ -39,7 +39,7 @@ import Phaser from "../lib/phaser.js";
 /**
  * @typedef Mon
  * @type {Object}
- * @property {number|undefined} [id]
+ * @property {number|undefined} id
  * @property {string} name
  * @property {number} baseMonIndex
  * @property {number} currentHp

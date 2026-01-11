@@ -167,7 +167,7 @@ export class WorldScene extends Phaser.Scene {
    * @returns {boolean}
    */
   #canToggleMenu () {
-    return !this.#isPlayerInputLocked() && !this.#player.isMoving && !this.#dialogUi.isVisible
+    return !this.#isPlayerInputLocked() && !this.#player.isMoving && !this.#dialogUi.isVisible && !this.#partyMenu.isVisible && !this.#itemMenu.isVisible
   }
 
   /**
@@ -626,6 +626,10 @@ export class WorldScene extends Phaser.Scene {
 
     if (wasSpaceKeyPresed) {
       this.#itemMenu.handlePlayerInput('OK')
+      if (this.#itemMenu.selectedItemOption) {
+        this.#handleItemSelected(this.#itemMenu.selectedItemOption)
+        return
+      }
       return
     }
     this.#itemMenu.handlePlayerInput(selectedDirectionPressedOnce)
@@ -648,7 +652,7 @@ export class WorldScene extends Phaser.Scene {
     } = keyPressed
 
     if (wasBackKeyPressed) {
-      this.#partyMenu.hide()
+      this.#partyMenu.handlePlayerInput('CANCEL')
       return
     }
 
@@ -730,5 +734,14 @@ export class WorldScene extends Phaser.Scene {
   #saveGame () {
     dataManager.saveGame()
     this.#dialogUi.showDialogModal(['Game saved!'])
+  }
+
+  /**
+   * 
+   * @param {import('../types/typedef.js').Item} item 
+   */
+  #handleItemSelected (item) {
+    // todo
+    console.log(item)
   }
 }

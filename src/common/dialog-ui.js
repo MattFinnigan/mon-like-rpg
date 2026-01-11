@@ -97,7 +97,6 @@ export class DialogUi {
       delay: 25,
       callback: () => {
         this.#textAnimationPlaying = false
-        this.#scene.time.removeEvent(this.#currentTextEvent)
       }
     })
     this.#textAnimationPlaying = true

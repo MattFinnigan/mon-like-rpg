@@ -89,6 +89,8 @@ export class BattleScene extends Phaser.Scene {
   #playersThatHadATurn
   /** @type {import('../types/typedef.js').Item} */
   #activePlayerItem
+  /** @type {import('../types/typedef.js').Item} */
+  #itemToConsume
 
   /**
    * @type {object}
@@ -106,6 +108,7 @@ export class BattleScene extends Phaser.Scene {
     this.#player = null
     this.#playerMons = []
     this.#playersThatHadATurn = []
+    this.#itemToConsume = null
   }
   
   /**
@@ -508,6 +511,7 @@ export class BattleScene extends Phaser.Scene {
     this.#battleStateMachine.addState({
       name: BATTLE_STATES.BATTLE,
       onEnter: () => {
+        this.#battleMenu.hideItemMenu()
         if (this.#allPlayersHadATurn()) {
           this.#resetTurnTracker()
           this.#battleStateMachine.setState(BATTLE_STATES.PLAYERS_PLAY)
@@ -540,7 +544,10 @@ export class BattleScene extends Phaser.Scene {
     this.#battleStateMachine.addState({
       name: BATTLE_STATES.ITEM_USED,
       onEnter: () => {
-        this.events.emit(EVENT_KEYS.CONSUME_ITEM)
+        if (this.#itemToConsume) {
+          this.events.emit(EVENT_KEYS.CONSUME_ITEM, this.#itemToConsume)
+          this.#itemToConsume = null
+        }
       }
     })
 
@@ -644,16 +651,15 @@ export class BattleScene extends Phaser.Scene {
       switch (item.typeKey) {
         case ITEM_TYPE_KEY.HEALING:
           battleMon.healHp(item.value, () => {
+            this.#itemToConsume = item
             this.#battleStateMachine.setState(BATTLE_STATES.ITEM_USED)
             this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`${battleMon.name} was healed for ${item.value} hitpoints`], callback, SKIP_BATTLE_ANIMATIONS)
           })
           break
-        case ITEM_TYPE_KEY.BALL:
-          this.#battleStateMachine.setState(BATTLE_STATES.ITEM_USED)
-          this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(['But it failed!'], callback, SKIP_BATTLE_ANIMATIONS)
-          break
         default:
-          throw new Error('Non battle item used in battle!')
+          this.#battleStateMachine.setState(BATTLE_STATES.ITEM_USED)
+          this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(['But nothing happened...'], callback, SKIP_BATTLE_ANIMATIONS)
+          break
       }
     })
   }

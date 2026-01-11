@@ -1,5 +1,6 @@
 {
   "4": {
+    "id": 4,
     "baseMonIndex": 16,
     "name": "PIDGEY YO",
     "currentHp": 81,
@@ -13,6 +14,7 @@
     "attackIds": [2]
   },
   "5": {
+    "id": 5,
     "baseMonIndex": 151,
     "name": "BORRIS",
     "currentHp": 157,
