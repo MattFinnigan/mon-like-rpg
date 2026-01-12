@@ -473,7 +473,8 @@ export class PartyMenu {
     playItemEffect(this.#scene, {
       item,
       mon: this.#selectedMon,
-      callback: (wasUsed, msg) => {
+      callback: (res) => {
+        const { wasUsed, msg } = res
         this.#inputLocked = false
         this.#dialogUi.showDialogModal([msg])
         this.#dialogWaitingForInputCallback = () => {

@@ -757,7 +757,6 @@ export class WorldScene extends Phaser.Scene {
    */
   #handleItemSelected (item) {
     this.#itemMenu.hide()
-    this.#menu.hide()
     switch (item.typeKey) {
       case ITEM_TYPE_KEY.HEALING:
         this.#partyMenu.selectOnlyMode = true
@@ -766,7 +765,9 @@ export class WorldScene extends Phaser.Scene {
           playItemEffect(this, {
             mon: this.#partyMenu.selectedMon,
             item,
-            callback: (wasUsed, msg) => {
+            callback: (result) => {
+              const { msg } = result
+              this.#menu.hide()
               this.#dialogUi.showDialogModal([msg])
               this.#partyMenu.selectOnlyMode = false
               this.#partyMenu.hide()
