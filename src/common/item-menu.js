@@ -162,18 +162,13 @@ export class ItemMenu {
 
   #createItemMenuGameObjects () {    
     this.#getPlayerInvetory()
-    
-    const inventoryItems = this.#inventory.map(invItem => {
-      return this.#itemDetails.find(itemDetail => itemDetail.key === invItem.itemKey)
-    })
-
 
     this.#graphics = this.#createGraphics()
     this.#container = this.#scene.add.container(0, 0, [this.#graphics]).setDepth(2)
 
     for (let i = 0; i < this.#inventory.length; i++) {
       const y = 10 + 60 * i + this.#padding
-      const textObject = this.#scene.add.bitmapText(40 + this.#padding, y, 'gb-font', inventoryItems[i].name, 40)
+      const textObject = this.#scene.add.bitmapText(40 + this.#padding, y, 'gb-font', this.#inventory[i].itemKey, 40)
       const quantityObject = this.#scene.add.bitmapText(this.#width - 80 - this.#padding, y + 33, 'gb-font', `x${this.#inventory[i].qty}`, 30)
       this.#menuOptionsTextGameObjects.push(textObject)
       this.#menuOptionsTextGameObjects.push(quantityObject)

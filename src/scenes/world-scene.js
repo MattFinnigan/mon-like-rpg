@@ -93,7 +93,7 @@ export class WorldScene extends Phaser.Scene {
 
   init () {
     this.#resetSceneChangingFlags()
-    this.#bgmKey = BGM_ASSET_KEYS.SILPH_CO
+    this.#bgmKey = BGM_ASSET_KEYS.ROUTE_11
   }
 
   preload () {
