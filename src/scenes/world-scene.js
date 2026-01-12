@@ -22,6 +22,8 @@ import { generateWildMon } from '../utils/encounter-utils.js';
 import { Menu, MENU_OPTIONS } from '../world/menu/menu.js';
 import { ItemMenu } from '../common/item-menu.js';
 import { PartyMenu } from '../common/party-menu/party-menu.js';
+import { ITEM_TYPE_KEY } from '../types/items.js';
+import { playItemEffect } from '../utils/item-manager.js';
 
 const CUSTOM_TILED_TYPES = Object.freeze({
   NPC: 'npc',
@@ -80,6 +82,8 @@ export class WorldScene extends Phaser.Scene {
   #collisionLayer
   /** @type {PartyMenu} */
   #partyMenu
+  /** @type {() => void} */
+  #waitForMonToGiveItemCallback
 
   constructor () {
     super({
@@ -626,6 +630,7 @@ export class WorldScene extends Phaser.Scene {
 
     if (wasSpaceKeyPresed) {
       this.#itemMenu.handlePlayerInput('OK')
+
       if (this.#itemMenu.selectedItemOption) {
         this.#handleItemSelected(this.#itemMenu.selectedItemOption)
         return
@@ -653,11 +658,21 @@ export class WorldScene extends Phaser.Scene {
 
     if (wasBackKeyPressed) {
       this.#partyMenu.handlePlayerInput('CANCEL')
+      if (this.#waitForMonToGiveItemCallback) {
+        this.#partyMenu.hide()
+        this.#waitForMonToGiveItemCallback = undefined
+        this.#partyMenu.selectOnlyMode = false
+        this.#dialogUi.hideDialogModal()
+      }
       return
     }
 
     if (wasSpaceKeyPresed) {
       this.#partyMenu.handlePlayerInput('OK')
+      if (this.#waitForMonToGiveItemCallback && this.#partyMenu.selectedMon) {
+        this.#waitForMonToGiveItemCallback()
+        return
+      }
       return
     }
     this.#partyMenu.handlePlayerInput(selectedDirectionPressedOnce)
@@ -741,7 +756,28 @@ export class WorldScene extends Phaser.Scene {
    * @param {import('../types/typedef.js').Item} item 
    */
   #handleItemSelected (item) {
-    // todo
-    console.log(item)
+    this.#itemMenu.hide()
+    this.#menu.hide()
+    switch (item.typeKey) {
+      case ITEM_TYPE_KEY.HEALING:
+        this.#partyMenu.selectOnlyMode = true
+        this.#partyMenu.show()
+        this.#waitForMonToGiveItemCallback = () => {
+          playItemEffect(this, {
+            mon: this.#partyMenu.selectedMon,
+            item,
+            callback: (wasUsed, msg) => {
+              this.#dialogUi.showDialogModal([msg])
+              this.#partyMenu.selectOnlyMode = false
+              this.#partyMenu.hide()
+              this.#waitForMonToGiveItemCallback = undefined
+            }
+          })
+        }
+        break
+        default:
+          this.#dialogUi.showDialogModal([`Nothing happened...`])
+          break
+    }
   }
 }

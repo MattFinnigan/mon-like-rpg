@@ -72,6 +72,8 @@ export class PartyMenu {
   #inputLocked
   /** @type {PartyMon[]} */
   #partyMons
+  /** @type {boolean} */
+  #selectOnlyMode
 
   /**
    * 
@@ -88,7 +90,8 @@ export class PartyMenu {
     this.#dialogWaitingForInputCallback = undefined
     this.#inputLocked = false
     this.#partyMons = []
-
+    this.#selectOnlyMode = false
+  
     this.#playersMons = dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS)
 
     this.#createPartyMons()
@@ -110,6 +113,20 @@ export class PartyMenu {
    */
   get isVisible () {
     return this.#isVisible
+  }
+
+  /**
+   * @returns {PartyMon}
+   */
+  get selectedMon () {
+    return this.#selectedMon
+  }
+
+  /**
+   * @param {boolean} val
+   */
+  set selectOnlyMode (val) {
+    this.#selectOnlyMode = val
   }
 
   /**
@@ -497,6 +514,7 @@ export class PartyMenu {
     this.#partyStateMachine.addState({
       name: PARTY_STATES.WAIT_FOR_MON_SELECT,
       onEnter: () => {
+
         const { x, y } = this.#getCameraPosition()
 
         this.#container.setPosition(x, y)
@@ -506,7 +524,7 @@ export class PartyMenu {
         this.#phaserSelectedMonPlaceholderCursorGameObject.setAlpha(0)
         this.#phaserUserInputCursorGameObject.setAlpha(1)
         this.#setCursorToPartySelect()
-      
+    
         this.#selectedMon = null
         this.#selectedMonIndex = 0
         this.#cursorIndex = 0
@@ -522,6 +540,10 @@ export class PartyMenu {
         const { x, y } = this.#getCameraPosition()
         this.#selectedMon = this.#partyMons[this.#cursorIndex]
         this.#selectedMonIndex = this.#cursorIndex
+
+        if (this.#selectOnlyMode) {
+          return
+        }
 
         this.#phaserSelectedMonPlaceholderCursorGameObject.setPosition(this.#phaserUserInputCursorGameObject.x, this.#phaserUserInputCursorGameObject.y)
         this.#phaserSelectedMonPlaceholderCursorGameObject.setAlpha(0.5)
