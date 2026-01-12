@@ -26,3 +26,33 @@ export function createExpandBallAnimation (scene, position) {
 
   return scene.add.sprite(position.x, position.y, MON_BALLS.MON_BALL_EXPAND_1)
 }
+
+/**
+ * 
+ * @param {Phaser.Scene} scene 
+ * @param {import("../types/typedef").Coordinate} position
+ * @returns {Phaser.GameObjects.Sprite}
+ */
+export function createBallWiggleAnimation (scene, position) {
+  scene.anims.create({
+    key: MON_BALLS.MON_BALL_WIGGLE_ANIMATION,
+    frames: [
+      {
+        key: MON_BALLS.MON_BALL_WIGGLE_1
+      },
+      {
+        key: MON_BALLS.MON_BALL_WIGGLE_2
+      },
+      {
+        key: MON_BALLS.MON_BALL_WIGGLE_3
+      },
+      {
+        key: MON_BALLS.MON_BALL_WIGGLE_2
+      }
+    ],
+    frameRate: 10,
+    repeat: 0
+  })
+
+  return scene.add.sprite(position.x, position.y, MON_BALLS.MON_BALL_WIGGLE_2)
+}

@@ -1,4 +1,6 @@
-import { MON_ASSET_KEYS, MON_GRAY_ASSET_KEYS } from "../../assets/asset-keys.js";
+import { SKIP_BATTLE_ANIMATIONS } from "../../../config.js";
+import { MON_ASSET_KEYS, MON_BALLS, MON_GRAY_ASSET_KEYS } from "../../assets/asset-keys.js";
+import { createBallWiggleAnimation, createExpandBallAnimation } from "../../utils/animations.js";
 import { BattleMon } from "./battle-mon.js";
 
 /**
@@ -10,6 +12,11 @@ const ENEMY_IMAGE_POSITION = Object.freeze({
 })
 
 export class EnemyBattleMon extends BattleMon {
+  /** @type {Phaser.GameObjects.Sprite} */
+  #monBallWiggleSpriteAnimation
+  /** @type {Phaser.GameObjects.Sprite} */
+  #monBallExpandSpriteAnimation
+
   /**
    * 
    * @param {import("../../types/typedef").BattleMonConfig} config 
@@ -17,6 +24,16 @@ export class EnemyBattleMon extends BattleMon {
   constructor (config) {
     super(config, ENEMY_IMAGE_POSITION)
     this._phaserMonImageGameObject.setFlipX(true)
+    this.#monBallWiggleSpriteAnimation = createBallWiggleAnimation(this._scene, { x: 0, y: 0 }).setScale(1.25)
+    this.#monBallExpandSpriteAnimation = createExpandBallAnimation(this._scene, { x: 0, y: 0}).setScale(1.5).setAlpha(0)
+    this.#monBallWiggleSpriteAnimation.setAlpha(0)
+  }
+
+  /**
+   * @returns {import("../../types/typedef.js").Mon}
+   */
+  get monDetails () {
+    return this._monDetails
   }
 
   /**
@@ -31,6 +48,142 @@ export class EnemyBattleMon extends BattleMon {
       return
     }
     this.#playWildMonAppearAnimation(callback)
+  }
+
+  /**
+   * 
+   * @param {import("../../types/typedef.js").Item} item
+   * @param {(result: {
+   *   msg: string,
+   *   wasSuccessful: boolean
+   * }) => void} callback
+   */
+  playCatchAttempt (item, callback) {
+    let successRolls = 0
+    // todo increase/decrease changes based on ball
+    for (let i = 0; i < 3; i++) {
+      const roll = Phaser.Math.Between(0, 10)
+      if (roll < 8) {
+        successRolls++
+      }
+    }
+
+    const playBallExplode = (onComplete) => {
+      this.#monBallExpandSpriteAnimation.setAlpha(1)
+      this.#monBallExpandSpriteAnimation.play(MON_BALLS.MON_BALL_EXPAND_ANIMATION)
+      this.#monBallExpandSpriteAnimation.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
+        this.#monBallExpandSpriteAnimation.setAlpha(0)
+        onComplete()
+      })
+    }
+
+    const playFailedBallExplode = (finishUpCallback) => {
+      if (SKIP_BATTLE_ANIMATIONS) {
+        finishUpCallback()
+        return
+      }
+      this.#monBallWiggleSpriteAnimation.setAlpha(0)
+      playBallExplode(() => {
+        this._scene.time.delayedCall(100, () => {
+          this._phaserMonImageGameObject.setAlpha(1)
+          finishUpCallback()
+        })
+      })
+    }
+
+    const sendResult = () => {
+      if (successRolls === 3) {
+        this.#monBallWiggleSpriteAnimation.setTexture(MON_BALLS.MON_BALLS_SHEET_1, 9)
+        callback({
+          msg: `Wild ${this._baseMonDetails.name} was caught!`,
+          wasSuccessful: true
+        })
+        return
+      }
+      playFailedBallExplode(() => {
+        let msg = 'It broke free easily!'
+        if (successRolls === 1) {
+          msg = 'Gosh darn it!'
+        }
+        if (successRolls === 2) {
+          msg = 'Argh! So close!'
+        }
+        callback({
+          msg: msg,
+          wasSuccessful: false
+        })
+      })
+
+    }
+
+    if (SKIP_BATTLE_ANIMATIONS) {
+      sendResult()
+      return
+    }
+  
+    const startPos = { x: 224, y: 300 }
+    const endPos = { 
+      x: ENEMY_IMAGE_POSITION.x + 112, 
+      y: ENEMY_IMAGE_POSITION.y + 180 
+    }
+
+    const controlPoint = {
+      x: (startPos.x + endPos.x) / 2,
+      y: startPos.y - 250 // move UP for arc
+    }
+
+    const curve = new Phaser.Curves.QuadraticBezier(
+      new Phaser.Math.Vector2(startPos.x, startPos.y),
+      new Phaser.Math.Vector2(controlPoint.x, controlPoint.y),
+      new Phaser.Math.Vector2(endPos.x, endPos.y)
+    )
+
+    this.#monBallWiggleSpriteAnimation.setPosition(startPos.x, startPos.y)
+    this.#monBallWiggleSpriteAnimation.setAlpha(1)
+
+    this._scene.tweens.add({
+      targets: { t: 0 },
+      t: 1,
+      duration: 500,
+      onUpdate: (tween, target) => {
+        const point = curve.getPoint(target.t)
+        this.#monBallWiggleSpriteAnimation.setPosition(point.x, point.y)
+      },
+      onComplete: () => {
+        playBallHitExlpodeAnim()
+      }
+    })
+
+    const playBallHitExlpodeAnim = () => {
+      this.#monBallExpandSpriteAnimation.setPosition(endPos.x, endPos.y - 20)
+      this.#monBallExpandSpriteAnimation.setAlpha(1)
+      this._phaserMonImageGameObject.setAlpha(0)
+      this.#monBallWiggleSpriteAnimation.setAlpha(0)
+      
+      playBallExplode(() => {
+        this.#monBallExpandSpriteAnimation.setAlpha(0)
+        this.#monBallWiggleSpriteAnimation.setAlpha(1)
+        this._scene.time.delayedCall(500, () => {
+          playWiggleAnim(sendResult)
+        })
+      })
+    }
+    
+    let count = 1
+    const playWiggleAnim = (callback) => {
+      this.#monBallWiggleSpriteAnimation.play(MON_BALLS.MON_BALL_WIGGLE_ANIMATION)
+      this.#monBallWiggleSpriteAnimation.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
+        this.#monBallWiggleSpriteAnimation.stop()
+        this._scene.time.delayedCall(1000, () => {
+          if (count === successRolls) {
+            callback()
+            return
+          }
+          count++
+          playWiggleAnim(callback)
+        })
+      })
+    }
   }
 
   /**

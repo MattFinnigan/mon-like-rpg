@@ -616,11 +616,19 @@ export class BattleScene extends Phaser.Scene {
     this.#battleMenu.updateInfoPanelMessagesNoInputRequired(`${this.#battlePlayer.name} used ${this.#activePlayerItem.name}.`, () => {
       playItemEffect(this, {
         mon: this.#activePlayerMon,
+        enemyMon: this.#activeEnemyMon,
         item: this.#activePlayerItem,
-        callback: (wasUsed, msg) => {
+        callback: (res) => {
+          const { msg, wasSuccessful } = res
           this.#battleStateMachine.setState(BATTLE_STATES.ITEM_USED)
 
           this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([msg], () => {
+            // check if enemy mon was captures
+            if (this.#activePlayerItem.typeKey === ITEM_TYPE_KEY.BALL && wasSuccessful) {
+              this.#addWildMonToParty()
+              this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
+              return
+            }
             this.#battleStateMachine.setState(BATTLE_STATES.POST_ITEM_USED)
           }, SKIP_BATTLE_ANIMATIONS)
         }
@@ -920,5 +928,20 @@ export class BattleScene extends Phaser.Scene {
    */
   #runAttemptSucceeded () {
     return true
+  }
+
+  #addWildMonToParty () {
+    const partyMons = dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS)
+    if (partyMons.length > 5) {
+      return
+    }
+
+    partyMons.push({
+      ...this.#activeEnemyMon.monDetails,
+      id: Date.now() + Math.floor(Math.random() * 1000)
+    })
+
+    dataManager.store.set(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS, partyMons)
+    dataManager.saveData()
   }
 }

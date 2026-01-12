@@ -53,6 +53,13 @@ export class MonCore {
   }
 
   /**
+   * @returns {boolean}
+   */
+  get isWild () {
+    return this._monDetails.id === undefined
+  }
+
+  /**
    * @returns {number}
    */
   get currentHealth () {
@@ -74,6 +81,16 @@ export class MonCore {
   healHp (hp, callback) {
     throw new Error('healHp is not implemented')
   }
+
+  /**
+   * 
+   * @param {import("../types/typedef").Item} item
+   * @param {(result: {
+   *   msg: string,
+   *   wasSuccessful: boolean
+   * }) => void} callback
+   */
+  playCatchAttempt (item, callback) {}
 
   /**
    * 

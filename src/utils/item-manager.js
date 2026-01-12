@@ -2,35 +2,79 @@ import { MonCore } from "../common/mon-core.js"
 import { SCENE_KEYS } from "../scenes/scene-keys.js"
 import { EVENT_KEYS } from "../types/event-keys.js"
 import { ITEM_TYPE_DATA, ITEM_TYPE_KEY } from "../types/items.js"
+import { DATA_MANAGER_STORE_KEYS, dataManager } from "./data-manager.js"
 
 /**
  * 
  * @param {Phaser.Scene} scene
  * @param {object} config
  * @param {import("../types/typedef").Item} config.item
- * @param {(wasUsed: boolean, msg: string) => void} config.callback
+ * @param {(result: {
+ *   wasUsed: boolean,
+ *   msg: string,
+ *   wasSuccessful?: boolean
+ * }) => void} config.callback
  * @param {MonCore} [config.mon] 
+ * @param {MonCore} [config.enemyMon] 
  */
 export function playItemEffect (scene, config) {
-  const { item, mon, callback } = config
+  const { item, mon, enemyMon, callback } = config
   if (!canUseItemInScene(scene, item)) {
-    callback(false, `You can't use that right now...`)
+    callback({
+      wasUsed: false,
+      msg: `You can't use that right now...`
+    })
     return
   }
   switch (item.typeKey) {
     case ITEM_TYPE_KEY.HEALING:
       if (mon.currentHealth === mon.maxHealth) {
-        callback(false, `${mon.name} is already full health!`)
+        callback({
+          wasUsed: false,
+          msg: `${mon.name} is already full health!`
+        })
         return
       }
 
       mon.healHp(item.value, () => {
-        callback(true, `${mon.name} was healed for ${item.value} hitpoints`)
+        callback({
+          wasUsed: true,
+          msg: `${mon.name} was healed for ${item.value} hitpoints`
+        })
       })
       scene.events.emit(EVENT_KEYS.CONSUME_ITEM, item)
       break
+    case ITEM_TYPE_KEY.BALL:
+      if (!enemyMon.isWild) {
+        callback({
+          wasUsed: false,
+          msg: `You can't catch another trainer's POKEMON ya cheeky bugger!`
+        })
+        return
+      }
+      
+      const partyMons = dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS)
+      if (partyMons.length > 5) {
+        callback({
+          wasUsed: false,
+          msg: `You already have the max amount of POKEMON (6)`
+        })
+        return
+      }
+
+      enemyMon.playCatchAttempt(item, (result) => {
+        callback({
+          wasUsed: true,
+          msg: result.msg,
+          wasSuccessful: result.wasSuccessful
+        })
+      })
+      break
     default:
-      callback(false, `Nothing happened...`)
+      callback({
+        wasUsed: false,
+        msg: `Nothing happened...`
+      })
       break
   }
 }

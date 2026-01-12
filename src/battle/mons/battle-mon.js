@@ -155,6 +155,18 @@ export class BattleMon extends MonCore  {
 
   /**
    * 
+   * @param {import("../../types/typedef.js").Item} item
+   * @param {(result: {
+   *   msg: string,
+   *   wasSuccessful: boolean
+   * }) => void} callback
+   */
+  playCatchAttempt (item, callback) {
+    console.log('hello')
+  }
+
+  /**
+   * 
    * @param {() => void} callback
    * @param {boolean} noDamageTaken
    * @returns {void}
