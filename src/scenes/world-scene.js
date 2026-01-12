@@ -21,7 +21,7 @@ import { loadBattleAssets, loadMonAssets, loadTrainerSprites } from '../utils/lo
 import { generateWildMon } from '../utils/encounter-utils.js';
 import { Menu, MENU_OPTIONS } from '../world/menu/menu.js';
 import { ItemMenu } from '../common/item-menu.js';
-import { PartyMenu } from '../common/party-menu.js';
+import { PartyMenu } from '../common/party-menu/party-menu.js';
 
 const CUSTOM_TILED_TYPES = Object.freeze({
   NPC: 'npc',

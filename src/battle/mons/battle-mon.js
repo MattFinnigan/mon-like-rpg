@@ -1,30 +1,19 @@
 import Phaser from "../../lib/phaser.js"
 import { HealthBar } from "../../common/health-bar.js" 
 import { BATTLE_ASSET_KEYS, MON_ASSET_KEYS } from "../../assets/asset-keys.js"
-import { DataUtils } from "../../utils/data-utils.js"
 import { AudioManager } from "../../utils/audio-manager.js"
-import { getMonStats } from "../../utils/battle-utils.js"
 import { MON_TYPES } from "../../types/mon-types.js"
+import { MonCore } from "../../common/mon-core.js"
 
-export class BattleMon {
+export class BattleMon extends MonCore  {
   /** @protected @type {Phaser.Scene} */
   _scene
-  /** @protected @type {import("../../types/typedef.js").BaseMon} */
-  _baseMonDetails
-  /** @protected @type {import("../../types/typedef.js").Mon} */
-  _monDetails
   /** @protected  @type {Phaser.GameObjects.Image} */
   _phaserMonImageGameObject
   /** @protected  @type {Phaser.GameObjects.Image} */
   _phaserMonDetailsBackgroundImageGameObject
   /** @protected @type {HealthBar} */
   _healthBar
-  /** @protected @type {number} */
-  _currentHealth
-  /** @protected @type {number} */
-  _maxHealth
-  /** @protected @type {import("../../types/typedef.js").Attack[]} */
-  _monAttacks
   /** @protected  @type {Phaser.GameObjects.Container} */
   _phaserHealthBarGameContainer
   /** @protected @type {Phaser.GameObjects.BitmapText} */
@@ -35,16 +24,11 @@ export class BattleMon {
   _monHpLabelGameText
   /** @protected @type {boolean} */
   _skipBattleAnimations
-  /** @type {AudioManager} */
-  #audioManager
+
   /** @protected @type {string} */
   _battleSpriteAssetKey
   /** @type {boolean} */
   #showHpNums
-  /** @protected @type {import("../../types/typedef.js").MonStats} */
-  _monStats
-  /** @protected @type {Phaser.GameObjects.Container} */
-  _typeContainers
 
   /**
    * 
@@ -53,24 +37,17 @@ export class BattleMon {
    * @param {boolean} [showHpNums=false]
     */
   constructor (config, pos = { x: 0, y: 0 }, showHpNums) {
+    super(config.scene, config.monDetails)
     this._scene = config.scene
-    this._monDetails = config.monDetails
-    this._baseMonDetails = config.baseMonDetails
-    this._currentHealth = this._monDetails.currentHp
-    this._monAttacks = []
     this._skipBattleAnimations = config.skipBattleAnimations
     this._battleSpriteAssetKey = this._baseMonDetails.assetKey
     this.#showHpNums = showHpNums
 
-    this._monStats = getMonStats(this._baseMonDetails, this._monDetails)
-    this._maxHealth = this._monStats.hp
-
     this.#createMonGameObject(pos)
     this.#createMonDetailsGameObject()
     this.#createHealthBarComponents()
-    this.#getMonAttacks()
 
-    this.#audioManager = this._scene.registry.get('audio')
+  
   }
 
   /** @type {boolean} */
@@ -216,7 +193,7 @@ export class BattleMon {
     this._monLvlGameText = this._scene.add.bitmapText(144, 44, 'gb-font-thick', `Lv${this.currentLevel}`, 30)
     this._monHpLabelGameText = this._scene.add.bitmapText(30, 76, 'gb-font-thick', `HP:`, 20)
     this._healthBar = new HealthBar(this._scene, 72, 42, this._currentHealth, this._maxHealth, { showHpNums: this.#showHpNums })
-    this.#createMonsTypeGameObjectContainer()
+    this._typeContainers.setAlpha(1)
 
     this._phaserHealthBarGameContainer = this._scene.add.container(20, 0, [
       this._phaserMonDetailsBackgroundImageGameObject,
@@ -227,28 +204,9 @@ export class BattleMon {
       this._typeContainers
     ]).setAlpha(0)
   }
-
-  playMonCry (callback) {
-    if (this._skipBattleAnimations) {
-      callback()
-      return
-    }
-    this.#audioManager.playSfx(MON_ASSET_KEYS[this._baseMonDetails.assetKey], () => {
-      callback()
-    })
-  }
   
   hideBattleDetails () {
     this._phaserHealthBarGameContainer.setAlpha(0)
-  }
-
-  #getMonAttacks () {
-    this._monDetails.attackIds.forEach(attkId => {
-      const monAttk = DataUtils.getMonAttack(this._scene, attkId)
-      if (monAttk !== undefined) {
-        this._monAttacks.push(monAttk)
-      }
-    })
   }
 
   /**
@@ -261,31 +219,6 @@ export class BattleMon {
 
   #createMonDetailsGameObject () {
     this._phaserMonDetailsBackgroundImageGameObject = this._scene.add.image(0, 0 , BATTLE_ASSET_KEYS.ENEMY_BATTLE_DETAILS_BACKGROUND).setOrigin(0)
-  }
-
-  #createMonsTypeGameObjectContainer () {
-    this._typeContainers = this._scene.add.container(0, 0, [])
-
-    const typeOne = this._baseMonDetails.types[0]
-    const typeOneBg = this._scene.add.graphics()
-    typeOneBg.fillStyle(typeOne.colour, 1)
-    typeOneBg.fillRoundedRect(0, 0, 45, 22, 5)
-
-    this._typeContainers.add(this._scene.add.container(30, 45, [
-      typeOneBg,
-      this._scene.add.bitmapText(5, 2, 'gb-font-light', typeOne.name.substring(0, 3), 20)
-    ]))
-
-    if (this._baseMonDetails.types.length === 2) {
-      const typeTwo = this._baseMonDetails.types[1]
-      const typeTwoBg = this._scene.add.graphics()
-      typeTwoBg.fillStyle(typeTwo.colour, 1)
-      typeTwoBg.fillRoundedRect(0, 0, 45, 22, 5)
-      this._typeContainers.add(this._scene.add.container(80, 45, [
-        typeTwoBg,
-        this._scene.add.bitmapText(5, 2, 'gb-font-light', typeTwo.name.substring(0, 3), 20)
-      ]))
-    }
   }
 
   /**

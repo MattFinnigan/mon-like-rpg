@@ -148,6 +148,7 @@ export class BattleMenu {
   }
 
   hideItemMenu () {
+    this.#selectedItem = undefined
     this.#battleItemMenu.hide()
   }
 

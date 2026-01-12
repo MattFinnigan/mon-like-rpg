@@ -8,7 +8,6 @@ import { StateMachine } from '../utils/state-machine.js'
 import { SKIP_BATTLE_ANIMATIONS } from '../../config.js'
 import { ATTACK_TARGET, AttackManager } from '../battle/attacks/attack-manager.js'
 import { Controls } from '../utils/controls.js'
-import { DataUtils } from '../utils/data-utils.js'
 import { BattleTrainer } from '../battle/characters/battle-trainer.js'
 import { EVENT_KEYS } from '../types/event-keys.js'
 import { AudioManager } from '../utils/audio-manager.js'
@@ -19,6 +18,7 @@ import { BattleMon } from '../battle/mons/battle-mon.js'
 import { BattleCharacter } from '../battle/characters/battle-character.js'
 import { ITEM_TYPE_KEY } from '../types/items.js'
 import { OPPONENT_TYPES } from '../types/opponent-types.js'
+import { playItemEffect } from '../utils/item-manager.js'
 
 
 /** @enum {object} */
@@ -89,8 +89,6 @@ export class BattleScene extends Phaser.Scene {
   #playersThatHadATurn
   /** @type {import('../types/typedef.js').Item} */
   #activePlayerItem
-  /** @type {import('../types/typedef.js').Item} */
-  #itemToConsume
 
   /**
    * @type {object}
@@ -108,7 +106,6 @@ export class BattleScene extends Phaser.Scene {
     this.#player = null
     this.#playerMons = []
     this.#playersThatHadATurn = []
-    this.#itemToConsume = null
   }
   
   /**
@@ -542,13 +539,7 @@ export class BattleScene extends Phaser.Scene {
     })
 
     this.#battleStateMachine.addState({
-      name: BATTLE_STATES.ITEM_USED,
-      onEnter: () => {
-        if (this.#itemToConsume) {
-          this.events.emit(EVENT_KEYS.CONSUME_ITEM, this.#itemToConsume)
-          this.#itemToConsume = null
-        }
-      }
+      name: BATTLE_STATES.ITEM_USED
     })
 
     this.#battleStateMachine.addState({
@@ -622,67 +613,36 @@ export class BattleScene extends Phaser.Scene {
 
   #playerUseItem () {
     this.#battleMenu.hideItemMenu()
-    this.#announceItemUsed(this.#battlePlayer, this.#activePlayerItem, () => {
-      this.#playItemEffect(this.#activePlayerMon, this.#activePlayerItem, () => {
-        this.#battleStateMachine.setState(BATTLE_STATES.POST_ITEM_USED)
-      })
-    })
-  }
-
-  /**
-   * 
-   * @param {BattleCharacter} character 
-   * @param {import('../types/typedef.js').Item} item 
-   * @param {() => void} callback 
-   */
-  #announceItemUsed (character, item, callback) {
-    this.#battleMenu.updateInfoPanelMessagesNoInputRequired(`${character.name} used ${item.name}.`, callback, SKIP_BATTLE_ANIMATIONS)
-  }
-
-  /**
-   * 
-   * @param {BattleMon} battleMon 
-   * @param {import('../types/typedef.js').Item} item 
-   * @param {() => void} callback 
-   */
-  #playItemEffect (battleMon, item, callback) {
-    // todo play animation
-    this.time.delayedCall(1000, () => {
-      switch (item.typeKey) {
-        case ITEM_TYPE_KEY.HEALING:
-          battleMon.healHp(item.value, () => {
-            this.#itemToConsume = item
-            this.#battleStateMachine.setState(BATTLE_STATES.ITEM_USED)
-            this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`${battleMon.name} was healed for ${item.value} hitpoints`], callback, SKIP_BATTLE_ANIMATIONS)
-          })
-          break
-        default:
+    this.#battleMenu.updateInfoPanelMessagesNoInputRequired(`${this.#battlePlayer.name} used ${this.#activePlayerItem.name}.`, () => {
+      playItemEffect(this, {
+        mon: this.#activePlayerMon,
+        item: this.#activePlayerItem,
+        callback: (wasUsed, msg) => {
           this.#battleStateMachine.setState(BATTLE_STATES.ITEM_USED)
-          this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(['But nothing happened...'], callback, SKIP_BATTLE_ANIMATIONS)
-          break
-      }
-    })
+
+          this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([msg], () => {
+            this.#battleStateMachine.setState(BATTLE_STATES.POST_ITEM_USED)
+          }, SKIP_BATTLE_ANIMATIONS)
+        }
+      })
+    }, SKIP_BATTLE_ANIMATIONS)
   }
       
   #setUpBattleMons () {
-    const partyBaseMons = this.#player.partyMons.map(mon => DataUtils.getBaseMonDetails(this, mon.baseMonIndex))
     this.#playerMons = this.#player.partyMons.map((pm, i) => {
       return new PlayerBattleMon({
         scene: this,
         monDetails: pm,
-        baseMonDetails: partyBaseMons[i],
         skipBattleAnimations: SKIP_BATTLE_ANIMATIONS
       })
     })
 
     if (!this.#opponentIsWildMon()) {
-      const enemyBaseMons = this.#enemyTrainer.partyMons.map(mon => DataUtils.getBaseMonDetails(this, mon.baseMonIndex))
     
       this.#opponentMons = this.#enemyTrainer.partyMons.map((pm, i) => {
         return new EnemyBattleMon({
           scene: this,
           monDetails: pm,
-          baseMonDetails: enemyBaseMons[i],
           skipBattleAnimations: SKIP_BATTLE_ANIMATIONS
         })
       })
@@ -693,7 +653,6 @@ export class BattleScene extends Phaser.Scene {
       new EnemyBattleMon({
         scene: this,
         monDetails: this.#generatedMon.mon,
-        baseMonDetails: this.#generatedMon.baseMon,
         skipBattleAnimations: SKIP_BATTLE_ANIMATIONS
       })
     ]

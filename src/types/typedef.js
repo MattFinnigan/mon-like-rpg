@@ -5,7 +5,6 @@ import Phaser from "../lib/phaser.js";
  * @typedef BattleMonConfig
  * @type {Object}
  * @property {Phaser.Scene} scene
- * @property {BaseMon} baseMonDetails
  * @property {Mon} monDetails
  * @property {boolean} [skipBattleAnimations=false]
  */

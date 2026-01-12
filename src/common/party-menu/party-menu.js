@@ -1,15 +1,17 @@
-import { SKIP_BATTLE_ANIMATIONS } from '../../config.js'
-import { PARTY_MON_SPRITES, UI_ASSET_KEYS } from '../assets/asset-keys.js'
-import { SCENE_KEYS } from '../scenes/scene-keys.js'
-import { DIRECTION } from '../types/direction.js'
-import { ITEM_TYPE_KEY } from '../types/items.js'
-import { getMonStats } from '../utils/battle-utils.js'
-import { DATA_MANAGER_STORE_KEYS, dataManager } from '../utils/data-manager.js'
-import { DataUtils } from '../utils/data-utils.js'
-import { StateMachine } from '../utils/state-machine.js'
-import { DialogUi } from './dialog-ui.js'
-import { HealthBar } from './health-bar.js'
-import { ItemMenu } from './item-menu.js'
+import { SKIP_BATTLE_ANIMATIONS } from '../../../config.js'
+import { PARTY_MON_SPRITES, UI_ASSET_KEYS } from '../../assets/asset-keys.js'
+import { SCENE_KEYS } from '../../scenes/scene-keys.js'
+import { DIRECTION } from '../../types/direction.js'
+import { ITEM_TYPE_KEY } from '../../types/items.js'
+import { getMonStats } from '../../utils/battle-utils.js'
+import { DATA_MANAGER_STORE_KEYS, dataManager } from '../../utils/data-manager.js'
+import { DataUtils } from '../../utils/data-utils.js'
+import { playItemEffect } from '../../utils/item-manager.js'
+import { StateMachine } from '../../utils/state-machine.js'
+import { DialogUi } from '../dialog-ui.js'
+import { HealthBar } from '../health-bar.js'
+import { ItemMenu } from '../item-menu.js'
+import { PartyMon } from './party-mon.js'
 
 /** @enum {object} */
 const SELECTED_MON_MENU_OPTIONS = Object.freeze({
@@ -34,10 +36,8 @@ const PARTY_STATES = Object.freeze({
 export class PartyMenu {
   /** @type {Phaser.Scene} */
   #scene
-  /** @type {import('../types/typedef.js').Mon[]} */
-  #partyMons
-  /** @type {Phaser.GameObjects.Container[]} */
-  #phaserPartyMonGameObjects
+  /** @type {import('../../types/typedef.js').Mon[]} */
+  #playersMons
   /** @type {DialogUi} */
   #dialogUi
   /** @type {Phaser.GameObjects.Image} */
@@ -46,9 +46,7 @@ export class PartyMenu {
   #phaserUserInputCursorTween
   /** @type {number} */
   #cursorIndex
-  /** @type {HealthBar[]} */
-  #partyMonHealthBars
-  /** @type {import('../types/typedef.js').Mon} */
+  /** @type {PartyMon} */
   #selectedMon
   /** @type {number} */
   #selectedMonIndex
@@ -72,10 +70,8 @@ export class PartyMenu {
   #dialogWaitingForInputCallback
   /** @type {boolean} */
   #inputLocked
-  /** @type {Phaser.GameObjects.BitmapText[]} */
-  #partyMonHpText
-  /** @type {Phaser.GameObjects.BitmapText[]} */
-  #partyMonLvlText
+  /** @type {PartyMon[]} */
+  #partyMons
 
   /**
    * 
@@ -88,18 +84,17 @@ export class PartyMenu {
     this.#selectedMon = null
     this.#cursorIndex = 0
     this.#selectedMonIndex = 0
-    this.#partyMonHealthBars = []
-    this.#phaserPartyMonGameObjects = []
     this.#isVisible = false
     this.#dialogWaitingForInputCallback = undefined
     this.#inputLocked = false
-    this.#partyMonHpText = []
-    this.#partyMonLvlText = []
+    this.#partyMons = []
 
-    this.#partyMons = dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS)
-    
+    this.#playersMons = dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS)
+
+    this.#createPartyMons()
     this.#determineAvailableSelectedMonOptions()
-    this.#createPartyMonGameObjects()
+    this.#createPartyMonScreen()
+
     this.#createPlayerInputCursor()
     this.#createSelectedMonCursor()
     this.#createSelectedMonMenu()
@@ -119,14 +114,14 @@ export class PartyMenu {
 
   /**
    * 
-   * @param {import('../types/direction.js').Direction | 'OK' | 'CANCEL'} input
+   * @param {import('../../types/direction.js').Direction | 'OK' | 'CANCEL'} input
    */
   #unsupportedInput (input) {
     return input === DIRECTION.NONE || input === DIRECTION.LEFT || input === DIRECTION.RIGHT
   }
 
   #moveCursorDown () {
-    let availableOptionsLen = this.#partyMons.length
+    let availableOptionsLen = this.#playersMons.length
     this.#cursorIndex += 1
 
     if (this.#partyStateMachine.currentStateName === PARTY_STATES.WAIT_FOR_MON_OPTION_SELECT) {
@@ -140,7 +135,7 @@ export class PartyMenu {
   }
 
   #moveCursorUp () {
-    let availableOptionsLen = this.#partyMons.length
+    let availableOptionsLen = this.#playersMons.length
     this.#cursorIndex -= 1
 
     if (this.#partyStateMachine.currentStateName === PARTY_STATES.WAIT_FOR_MON_OPTION_SELECT) {
@@ -168,7 +163,7 @@ export class PartyMenu {
 
   /**
    * 
-   * @param {import('../types/direction.js').Direction | 'OK' | 'CANCEL'} input
+   * @param {import('../../types/direction.js').Direction | 'OK' | 'CANCEL'} input
    */
   handlePlayerInput (input) {
     const state = this.#partyStateMachine.currentStateName
@@ -229,7 +224,7 @@ export class PartyMenu {
 
   /**
    * 
-   * @param {import('../types/direction.js').Direction | 'OK' | 'CANCEL'} input
+   * @param {import('../../types/direction.js').Direction | 'OK' | 'CANCEL'} input
    */
   #handleFirstMonInput (input) {
     if (input === 'OK') {
@@ -244,7 +239,7 @@ export class PartyMenu {
 
   /**
    * 
-   * @param {import('../types/direction.js').Direction | 'OK' | 'CANCEL'} input
+   * @param {import('../../types/direction.js').Direction | 'OK' | 'CANCEL'} input
    */
   #handleMonSelectedMenuInput (input) {
     if (input === 'OK') {
@@ -272,7 +267,7 @@ export class PartyMenu {
 
   /**
    * 
-   * @param {import('../types/direction.js').Direction | 'OK' | 'CANCEL'} input
+   * @param {import('../../types/direction.js').Direction | 'OK' | 'CANCEL'} input
    */
   #handleSecondMonInput (input) {
     const selectingSameMon = this.#cursorIndex === this.#selectedMonIndex
@@ -298,8 +293,8 @@ export class PartyMenu {
    */
   #playMonSwitchAnimation (callback) {
     this.#scene.time.delayedCall(100, () => {
-      const firstMonGameObject = this.#phaserPartyMonGameObjects[this.#cursorIndex]
-      const secondMonGameObject = this.#phaserPartyMonGameObjects[this.#selectedMonIndex]
+      const firstMonGameObject = this.#partyMons[this.#cursorIndex].container
+      const secondMonGameObject = this.#partyMons[this.#selectedMonIndex].container
       
       let completed = 0
       const onDone = () => {
@@ -333,19 +328,19 @@ export class PartyMenu {
   }
 
   #switchAndSaveMons () {
-    const firstMonGameObject = this.#phaserPartyMonGameObjects[this.#cursorIndex]
-    const secondMonGameObject = this.#phaserPartyMonGameObjects[this.#selectedMonIndex]
+    const firstMonGameObject = this.#partyMons[this.#cursorIndex]
+    const secondMonGameObject = this.#partyMons[this.#selectedMonIndex]
 
-    const mon1 = this.#partyMons[this.#selectedMonIndex]
-    const mon2 = this.#partyMons[this.#cursorIndex]
+    const mon1 = this.#playersMons[this.#selectedMonIndex]
+    const mon2 = this.#playersMons[this.#cursorIndex]
     
-    this.#phaserPartyMonGameObjects[this.#cursorIndex] = secondMonGameObject
-    this.#phaserPartyMonGameObjects[this.#selectedMonIndex] = firstMonGameObject
+    this.#partyMons[this.#cursorIndex] = secondMonGameObject
+    this.#partyMons[this.#selectedMonIndex] = firstMonGameObject
     
-    this.#partyMons[this.#cursorIndex] = mon1
-    this.#partyMons[this.#selectedMonIndex] = mon2
+    this.#playersMons[this.#cursorIndex] = mon1
+    this.#playersMons[this.#selectedMonIndex] = mon2
     
-    dataManager.store.set(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS, this.#partyMons)
+    dataManager.store.set(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS, this.#playersMons)
     dataManager.saveData()
   }
 
@@ -372,33 +367,14 @@ export class PartyMenu {
     this.#phaserUserInputCursorTween.pause()
   }
 
-  #createPartyMonGameObjects () {
+  #createPartyMonScreen () {
     this.#container = this.#scene.add.container(0, 0, [
       this.#scene.add.rectangle(0, 0, 640, 576, 0xffffff).setOrigin(0)
     ])
     this.#partyMons.forEach((mon, i) => {
       const offsetY = i * 65
-      const baseMon = DataUtils.getBaseMonDetails(this.#scene, mon.baseMonIndex)
-      const monStats = getMonStats(baseMon, mon)
-      const hpBar = new HealthBar(this.#scene, 117, 23, mon.currentHp , monStats.hp, { monId: mon.id, scale: 1 })
-      const hpText = this.#scene.add.bitmapText(380, 35, 'gb-font-thick', `${mon.currentHp} / ${monStats.hp}`, 30).setOrigin(0)
-      const lvlText = this.#scene.add.bitmapText(350, 10, 'gb-font-thick', `Lv${mon.currentLevel}`, 30).setOrigin(0)
-  
-      this.#partyMonHealthBars.push(hpBar)
-      this.#partyMonHpText.push(hpText)
-      this.#partyMonLvlText.push(lvlText)
-
-      const partyMonContainer = this.#scene.add.container(50, offsetY, [
-        this.#scene.add.image(25, 5, PARTY_MON_SPRITES.PARTY_MON_SPRITES_SHEET_1, baseMon.partySpriteAssetKey)
-          .setScale(1.25),
-        this.#scene.add.bitmapText(65, 0, 'gb-font', mon.name, 40).setOrigin(0),
-        this.#scene.add.bitmapText(75, 40, 'gb-font-thick', `HP:`, 20).setOrigin(0),
-        hpBar.container,
-        lvlText,
-        hpText
-      ])
-      this.#container.add(partyMonContainer)
-      this.#phaserPartyMonGameObjects.push(partyMonContainer)
+      mon.container.setPosition(50, offsetY).setAlpha(1)
+      this.#container.add(mon.container)
       
     })
   }
@@ -470,90 +446,31 @@ export class PartyMenu {
 
   /**
    * 
-   * @param {import('../types/typedef.js').Item} item 
+   * @param {import('../../types/typedef.js').Item} item 
    */
   #applyItemToSelectedMon (item) {
-    this.#playItemEffect(item, () => {
-      // todo split decision depending on scene
-      this.#phaserUserInputCursorGameObject.setAlpha(1)
-      this.#phaserSelectedMonMenuGameObject.setAlpha(1)
-      this.#partyStateMachine.setState(PARTY_STATES.WAIT_FOR_MON_OPTION_SELECT)
-    })
-  }
-
-  /**
-   * 
-   * @param {import('../types/typedef.js').Item} item 
-   * @param {() => void} callback
-   */
-  #playItemEffect (item, callback) {
-    // TODO this is duplicate code to battle-menu/battle-scene!
+    this.#inputLocked = true
     this.#itemMenu.hide()
     this.#phaserSelectedMonMenuGameObject.setAlpha(0)
     this.#phaserUserInputCursorGameObject.setAlpha(0)
-    switch (item.typeKey) {
-      case ITEM_TYPE_KEY.HEALING:
-        let gameObjectIndex = 0
-        let noEffect = false
-
-        const healthBar = this.#partyMonHealthBars.find((hpBar, index) => {
-          if (hpBar.monId === this.#selectedMon.id) {
-            gameObjectIndex = index
-            return hpBar
-          }
-        })
-
-        this.#partyMons = this.#partyMons.map(mon => {
-          if (mon.id === this.#selectedMon.id) {
-            if (mon.currentHp === healthBar.maxHp) {
-              noEffect = true
-              return mon
-            }
-
-            const res = mon.currentHp += item.value
-            if (res > healthBar.maxHp) {
-              mon.currentHp = healthBar.maxHp
-            }
-            this.#selectedMon = mon
-          }
-          return mon
-        })
-
-        if (!noEffect) {
-          this.#inputLocked = true
-          dataManager.store.set(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS, this.#partyMons)
-
-          healthBar.setMeterPercentageAnimated(this.#selectedMon.currentHp, this.#selectedMon.currentHp / healthBar.maxHp, {
-            callback: () => {
-              this.#partyMonHpText[gameObjectIndex].setText(`${this.#selectedMon.currentHp} / ${healthBar.maxHp}`)
-              this.#dialogUi.showDialogModal([`${this.#selectedMon.name} was healed for ${item.value} hitpoints`])
-              this.#itemMenu.consumeItem(item)
-              this.#dialogWaitingForInputCallback = callback
-              this.#inputLocked = false
-            }
-          })
-          return
-        }
-
-        this.#dialogUi.showDialogModal([`${this.#selectedMon.name} is already full health!`])
+    playItemEffect(this.#scene, {
+      item,
+      mon: this.#selectedMon,
+      callback: (wasUsed, msg) => {
+        this.#inputLocked = false
+        this.#dialogUi.showDialogModal([msg])
         this.#dialogWaitingForInputCallback = () => {
           this.#dialogUi.showDialogModal([` `])
-          this.#itemMenu.show()
+          if (!wasUsed) {
+            this.#itemMenu.show()
+            return
+          }
           this.#phaserUserInputCursorGameObject.setAlpha(1)
           this.#phaserSelectedMonMenuGameObject.setAlpha(1)
+          this.#partyStateMachine.setState(PARTY_STATES.WAIT_FOR_MON_OPTION_SELECT)
         }
-
-        break
-      default:
-        this.#dialogUi.showDialogModal([`You can't use that right now!`])
-        this.#dialogWaitingForInputCallback = () => {
-          this.#dialogUi.showDialogModal([` `])
-          this.#itemMenu.show()
-          this.#phaserUserInputCursorGameObject.setAlpha(1)
-          this.#phaserSelectedMonMenuGameObject.setAlpha(1)
-        }
-        break
-    }
+      }
+    })
   }
 
   #createPartyStateMachine () {
@@ -679,5 +596,13 @@ export class PartyMenu {
     if (this.#sceneKey === SCENE_KEYS.WORLD_SCENE) {
       this.#availableSelectedMonOptions.unshift(SELECTED_MON_MENU_OPTIONS.SUMMARY)
     }
+  }
+
+  #createPartyMons () {
+    this.#playersMons.forEach(mon => {
+      this.#partyMons.push(
+        new PartyMon(this.#scene, mon)
+      )
+    })
   }
 }
