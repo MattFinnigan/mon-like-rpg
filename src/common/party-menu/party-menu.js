@@ -72,6 +72,8 @@ export class PartyMenu {
   #partyMons
   /** @type {boolean} */
   #selectOnlyMode
+  /** @type {number} */
+  #depth
 
   /**
    * 
@@ -88,6 +90,7 @@ export class PartyMenu {
     this.#inputLocked = false
     this.#partyMons = []
     this.#selectOnlyMode = false
+    this.#depth = 1
   
     this.#playersMons = dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS)
 
@@ -124,6 +127,20 @@ export class PartyMenu {
    */
   set selectOnlyMode (val) {
     this.#selectOnlyMode = val
+  }
+
+  /**
+   * @returns {boolean}
+   */
+  get hasMoreThanOneMon () {
+    return this.#partyMons.length > 1
+  }
+
+  /**
+   * @returns {boolean}
+   */
+  set depth (val) {
+    this.#depth = val
   }
 
   /**
@@ -380,12 +397,12 @@ export class PartyMenu {
   #createSelectedMonCursor () {
     const { x, y } = this.#getCameraPosition()
     this.#phaserSelectedMonPlaceholderCursorGameObject = this.#scene.add.image(x + 15, y + 18, UI_ASSET_KEYS.CURSOR, 0).setScale(1.25).setOrigin(0)
-    this.#phaserSelectedMonPlaceholderCursorGameObject.setAlpha(0)
+    this.#phaserSelectedMonPlaceholderCursorGameObject.setAlpha(0).setDepth(this.#depth)
   }
 
   #createPlayerInputCursor () {
     this.#phaserUserInputCursorGameObject = this.#scene.add.image(0, 0, UI_ASSET_KEYS.CURSOR, 0).setScale(1.25).setOrigin(0)
-    this.#phaserUserInputCursorGameObject.setAlpha(0).setDepth(2)
+    this.#phaserUserInputCursorGameObject.setAlpha(0).setDepth(1 + this.#depth)
 
     this.#phaserUserInputCursorTween = this.#scene.add.tween({
       delay: 0,
@@ -403,12 +420,12 @@ export class PartyMenu {
   #createPartyMonScreen () {
     this.#container = this.#scene.add.container(0, 0, [
       this.#scene.add.rectangle(0, 0, 640, 576, 0xffffff).setOrigin(0)
-    ])
+    ]).setDepth(this.#depth)
+  
     this.#partyMons.forEach((mon, i) => {
       const offsetY = i * 65
       mon.container.setPosition(50, offsetY).setAlpha(1)
       this.#container.add(mon.container)
-      
     })
   }
 
@@ -418,6 +435,9 @@ export class PartyMenu {
   }
 
   show () {
+    // this.#playersMons = dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS)
+    // this.#partyMons = []
+    // this.#createPartyMons()
     this.#partyStateMachine.setState(PARTY_STATES.WAIT_FOR_MON_SELECT)
   }
 
@@ -438,7 +458,7 @@ export class PartyMenu {
       this.#scene.add.bitmapText(40, 60, 'gb-font', SELECTED_MON_MENU_OPTIONS.SWITCH, 40).setOrigin(0),
       this.#scene.add.bitmapText(40, 110, 'gb-font', SELECTED_MON_MENU_OPTIONS.ITEM, 40).setOrigin(0),
       this.#scene.add.bitmapText(40, 160, 'gb-font', SELECTED_MON_MENU_OPTIONS.CANCEL, 40).setOrigin(0)
-    ])
+    ]).setDepth(this.#depth)
   }
 
   #setCursorToPartySelect () {

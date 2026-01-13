@@ -15,10 +15,10 @@ import { BGM_ASSET_KEYS, TRAINER_SPRITES } from '../assets/asset-keys.js'
 import { BattlePlayer } from '../battle/characters/battle-player.js'
 import { DATA_MANAGER_STORE_KEYS, dataManager } from '../utils/data-manager.js'
 import { BattleMon } from '../battle/mons/battle-mon.js'
-import { BattleCharacter } from '../battle/characters/battle-character.js'
 import { ITEM_TYPE_KEY } from '../types/items.js'
 import { OPPONENT_TYPES } from '../types/opponent-types.js'
 import { playItemEffect } from '../utils/item-manager.js'
+import { PartyMon } from '../common/party-menu/party-mon.js'
 
 
 /** @enum {object} */
@@ -40,7 +40,8 @@ const BATTLE_STATES = Object.freeze({
   PLAYER_VICTORY: 'PLAYER_VICTORY',
   PLAYER_DEFEATED: 'PLAYER_DEFEATED',
   ITEM_USED: 'ITEM_USED',
-  POST_ITEM_USED: 'POST_ITEM_USED'
+  POST_ITEM_USED: 'POST_ITEM_USED',
+  PLAYER_SWITCH: 'PLAYER_SWITCH'
 })
 
 /** @enum {object} */
@@ -89,6 +90,8 @@ export class BattleScene extends Phaser.Scene {
   #playersThatHadATurn
   /** @type {import('../types/typedef.js').Item} */
   #activePlayerItem
+  /** @type {PartyMon} */
+  #activePlayerSwitchMon
 
   /**
    * @type {object}
@@ -106,6 +109,7 @@ export class BattleScene extends Phaser.Scene {
     this.#player = null
     this.#playerMons = []
     this.#playersThatHadATurn = []
+    this.#activePlayerSwitchMon = null
   }
   
   /**
@@ -175,7 +179,7 @@ export class BattleScene extends Phaser.Scene {
     if (wasSpaceKeyPresed) {
       this.#battleMenu.handlePlayerInput('OK')
 
-      if (!this.#playerJustSelectedAnAttack() && !this.#playerJustSelectedAnItem()) {
+      if (!this.#playerJustSelectedAnAttack() && !this.#playerJustSelectedAnItem() && !this.#playerJustSelectedAMonToSwitch()) {
         return
       }
 
@@ -490,7 +494,16 @@ export class BattleScene extends Phaser.Scene {
         })
       }
     })
-    
+
+    this.#battleStateMachine.addState({
+      name: BATTLE_STATES.PLAYER_SWITCH,
+      onEnter: () => {
+        this.#introducePlayerMon(() => {
+          this.#battleStateMachine.setState(BATTLE_STATES.BATTLE)
+        })
+      }
+    })
+
     this.#battleStateMachine.addState({
       name: BATTLE_STATES.PLAYERS_PLAY,
       onEnter: () => {
@@ -509,6 +522,7 @@ export class BattleScene extends Phaser.Scene {
       name: BATTLE_STATES.BATTLE,
       onEnter: () => {
         this.#battleMenu.hideItemMenu()
+        this.#battleMenu.hidePartyMenu()
         if (this.#allPlayersHadATurn()) {
           this.#resetTurnTracker()
           this.#battleStateMachine.setState(BATTLE_STATES.PLAYERS_PLAY)
@@ -609,6 +623,23 @@ export class BattleScene extends Phaser.Scene {
       this.#playerUseItem()
       return
     }
+    if (this.#playerMonToSwitchWasSelected()) {
+      this.#playerSwitchMon()
+      return
+    }
+  }
+
+  #playerSwitchMon () {
+    this.#battleMenu.hidePartyMenu()
+    this.#battleMenu.updateInfoPanelMessagesNoInputRequired(`Come back, ${this.#activePlayerMon.name}.`, () => {
+      this.#activePlayerMon.playMonSwitchedOutAnimation(() => {
+      
+        this.#activePlayerMon = this.#playerMons.find(battleMon => battleMon.id === this.#activePlayerSwitchMon.id)
+        this.#activePlayerSwitchMon = null
+        this.#setPlayerMonToBattleMenu()
+        this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_SWITCH)
+      })
+    })
   }
 
   #playerUseItem () {
@@ -646,7 +677,6 @@ export class BattleScene extends Phaser.Scene {
     })
 
     if (!this.#opponentIsWildMon()) {
-    
       this.#opponentMons = this.#enemyTrainer.partyMons.map((pm, i) => {
         return new EnemyBattleMon({
           scene: this,
@@ -707,6 +737,23 @@ export class BattleScene extends Phaser.Scene {
    */
   #playerAttackWasSelected () {
     return !!this.#activePlayerMon.attacks[this.#activePlayerAttackIndex]
+  }
+
+  /**
+   * 
+   * @returns {boolean}
+   */
+  #playerJustSelectedAMonToSwitch () {
+    this.#activePlayerSwitchMon = this.#battleMenu.selectedMonToSwitchTo
+    return this.#playerMonToSwitchWasSelected()
+  }
+
+  /**
+   * 
+   * @returns {boolean}
+   */
+  #playerMonToSwitchWasSelected () {
+    return !!this.#activePlayerSwitchMon
   }
 
   /**

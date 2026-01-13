@@ -48,7 +48,7 @@ export class ItemMenu {
     this.#menuOptionsTextGameObjects = []
     this.#itemDetails = DataUtils.getItemDetails(this.#scene)
 
-    this.#scene.events.on(EVENT_KEYS.CONSUME_ITEM, (item) => this.consumeItem(item))
+    this.#scene.events.on(EVENT_KEYS.ITEM_CONSUMED, () => this.#createItemMenuGameObjects())
     this.#createItemMenuGameObjects()
   }
 
@@ -184,22 +184,5 @@ export class ItemMenu {
   #createUserInputCursor () {
     this.#userInputCursor = this.#scene.add.image(20 + this.#padding, 28 + this.#padding, UI_ASSET_KEYS.CURSOR)
     this.#userInputCursor.setScale(1.25)
-  }
-
-  /**
-   * 
-   * @param {import("../types/typedef.js").Item} item 
-   */
-  consumeItem (item) {
-    const newInv = this.#inventory.filter(invItem => {
-      if (invItem.itemKey === item.key) {
-        invItem.qty--
-      }
-      return invItem.qty > 0
-    })
-
-    dataManager.store.set(DATA_MANAGER_STORE_KEYS.PLAYER_INVENTORY, newInv)
-    dataManager.saveData()
-    this.#createItemMenuGameObjects()
   }
 }

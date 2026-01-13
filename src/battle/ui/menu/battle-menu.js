@@ -9,6 +9,8 @@ import { DIALOG_DETAILS } from '../../../types/dialog-ui.js'
 import { PlayerBattleMon } from '../../mons/player-battle-monster.js'
 import { ItemMenu } from '../../../common/item-menu.js'
 import { EVENT_KEYS } from '../../../types/event-keys.js'
+import { PartyMenu } from '../../../common/party-menu/party-menu.js'
+import { PartyMon } from '../../../common/party-menu/party-mon.js'
 
 
 const BATTLE_MENU_CURSOR_POS = Object.freeze({
@@ -68,6 +70,12 @@ export class BattleMenu {
   #battleItemMenu
   /** @type {import('../../../types/typedef.js').Item} */
   #selectedItem
+  /** @type {() => void} */
+  #onPartyMonSelection
+  /** @type {PartyMenu} */
+  #battlePartyMenu
+  /** @type {PartyMon} */
+  #selectedMonToSwitchTo
 
   /**
    * 
@@ -86,8 +94,12 @@ export class BattleMenu {
     this.#queuedMessageSkipAnimation = false
     this.#queuedMessageAnimationPlaying = false
     this.#selectedItem = undefined
+    this.#onPartyMonSelection = undefined
+    this.#selectedMonToSwitchTo = undefined
 
     this.#battleItemMenu = new ItemMenu(this.#scene)
+    this.#battlePartyMenu = new PartyMenu(this.#scene)
+    
     if (this.#activePlayerMon) {
       this.#createMonAttackSubMenu()
     }
@@ -111,6 +123,13 @@ export class BattleMenu {
     return undefined
   }
 
+  get selectedMonToSwitchTo () {
+    if (this.#activeBattleMenu === ACTIVE_BATTLE_MENU.BATTLE_PKMN) {
+      return this.#selectedMonToSwitchTo
+    }
+    return undefined
+  }
+
   /**
    * @param {PlayerBattleMon} activePlayerMon
    */
@@ -127,6 +146,7 @@ export class BattleMenu {
 
     this.#selectedAttackIndex = undefined
     this.#selectedItem = undefined
+    this.#selectedMonToSwitchTo = undefined
     this.#battleTextGameObjectLine1.setText('')
     this.#battleTextGameObjectLine2.setText('')
   }
@@ -150,6 +170,18 @@ export class BattleMenu {
   hideItemMenu () {
     this.#selectedItem = undefined
     this.#battleItemMenu.hide()
+  }
+
+  showPartyMenu () {
+    this.#activeBattleMenu = ACTIVE_BATTLE_MENU.BATTLE_PKMN
+    this.#battlePartyMenu.selectOnlyMode = true
+    this.#battlePartyMenu.show()
+  }
+
+  hidePartyMenu () {
+    this.#selectedMonToSwitchTo = undefined
+    this.#battlePartyMenu.selectOnlyMode = false
+    this.#battlePartyMenu.hide()
   }
 
   hideMonAttackSubMenu () {
@@ -205,9 +237,11 @@ export class BattleMenu {
           break
         case ACTIVE_BATTLE_MENU.BATTLE_ITEM:
           this.#battleItemMenu.handlePlayerInput('OK')
-            this.#selectedItem = this.#battleItemMenu.selectedItemOption
+          this.#selectedItem = this.#battleItemMenu.selectedItemOption
           break
         case ACTIVE_BATTLE_MENU.BATTLE_PKMN:
+          this.#battlePartyMenu.handlePlayerInput('OK')
+          this.#selectedMonToSwitchTo = this.#battlePartyMenu.selectedMon
         case ACTIVE_BATTLE_MENU.BATTLE_RUN:
           break
         default:
@@ -221,13 +255,18 @@ export class BattleMenu {
       this.#battleItemMenu.handlePlayerInput(input)
       return
     }
-    
+
+    if (state === ACTIVE_BATTLE_MENU.BATTLE_PKMN) {
+      this.#battlePartyMenu.handlePlayerInput(input)
+      return
+    }
+
     this.#updateSelectedBattleMenuOptionFromInput(input)
     this.#moveMainBattleMenuCursor()
     this.#updateSelectedMoveMenuOptionFromInput(input)
     this.#moveMoveSelectBattleMenuCursor()
   }
-
+  
   /**
    * 
    * @param {string[]} messages 
@@ -574,6 +613,7 @@ export class BattleMenu {
     this.hideInputCursor()
     this.hideMonAttackSubMenu()
     this.hideItemMenu()
+    this.hidePartyMenu()
     this.showMainBattleMenu()
   }
 
@@ -592,9 +632,7 @@ export class BattleMenu {
 
     if (this.#selectedBattleMenuOption === BATTLE_MENU_OPTIONS.PKMN) {
       this.#activeBattleMenu = ACTIVE_BATTLE_MENU.BATTLE_PKMN
-      this.updateInfoPanelMessagesAndWaitForInput(['You can\'t switch!'], () => {
-        this.#switchToMainBattleMenu()
-      }, SKIP_ANIMATIONS)
+      this.showPartyMenu()
       return
     }
 

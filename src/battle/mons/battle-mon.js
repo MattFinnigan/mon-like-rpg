@@ -121,7 +121,7 @@ export class BattleMon extends MonCore  {
     }
 
     const res = {
-      damageTaken: (((2 * level * critMod) / 50 + 2) * (attkPwr / 10) * (effectiveAttack / effectiveDefense)) * stabMod * typeMod,
+      damageTaken: Math.floor((((2 * level * critMod) / 50 + 2) * (attkPwr / 10) * (effectiveAttack / effectiveDefense)) * stabMod * typeMod),
       wasCriticalHit,
       wasSuperEffective,
       wasImmune,

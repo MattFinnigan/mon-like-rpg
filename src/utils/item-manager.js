@@ -42,7 +42,8 @@ export function playItemEffect (scene, config) {
           msg: `${mon.name} was healed for ${item.value} hitpoints`
         })
       })
-      scene.events.emit(EVENT_KEYS.CONSUME_ITEM, item)
+      consumeItem(item)
+      scene.events.emit(EVENT_KEYS.ITEM_CONSUMED, item)
       break
     case ITEM_TYPE_KEY.BALL:
       if (!enemyMon.isWild) {
@@ -87,4 +88,16 @@ export function playItemEffect (scene, config) {
  */
 export function canUseItemInScene (scene, item) {
   return ITEM_TYPE_DATA[item.typeKey].usableDuringScenes.includes(SCENE_KEYS[scene.scene.key])
+}
+
+export function consumeItem (item) {
+  const updatedInventory = dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_INVENTORY).filter(invItem => {
+    if (invItem.itemKey === item.key) {
+      invItem.qty--
+    }
+    return invItem.qty > 0
+  })
+
+  dataManager.store.set(DATA_MANAGER_STORE_KEYS.PLAYER_INVENTORY, updatedInventory)
+  dataManager.saveData()
 }

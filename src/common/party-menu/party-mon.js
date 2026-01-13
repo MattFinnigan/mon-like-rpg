@@ -1,4 +1,5 @@
 import { PARTY_MON_SPRITES } from "../../assets/asset-keys.js"
+import { DATA_MANAGER_STORE_KEYS, dataManager } from "../../utils/data-manager.js"
 import { HealthBar } from "../health-bar.js"
 import { MonCore } from "../mon-core.js"
 
@@ -26,6 +27,11 @@ export class PartyMon extends MonCore {
    */
   get container () {
     return this.#container
+  }
+
+  /** @returns {number} */
+  get id () {
+    return this._monDetails.id
   }
 
   #createPartyMonGameObject () {
@@ -57,5 +63,17 @@ export class PartyMon extends MonCore {
     }
     this.#healthBar.setMeterPercentageAnimated(this._currentHealth, this._currentHealth / this._maxHealth, { callback })
     this.#phaserHpTextGameObject.setText(`${this._currentHealth} / ${this._maxHealth}`)
+    this.#updateHp()
+  }
+
+  #updateHp () {
+    const withUpdatedMonHp = dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS).map(mon => {
+      if (mon.id === this._monDetails.id) {
+        mon.currentHp = this._currentHealth
+      }
+      return mon
+    })
+    dataManager.store.set(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS, withUpdatedMonHp)
+    dataManager.saveData()
   }
 }

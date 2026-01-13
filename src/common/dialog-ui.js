@@ -39,7 +39,7 @@ export class DialogUi {
     this.#isWaitingForInput = false
   
     const panel =  this.#scene.add.image(0, 0, SYSTEM_ASSET_KEYS.DIALOG_BACKGROUND).setOrigin(0)
-    this.#container = this.#scene.add.container(0, 0, [panel]).setDepth(2)
+    this.#container = this.#scene.add.container(0, 0, [panel]).setDepth(1)
     this.#uiText = this.#scene.add.bitmapText(DIALOG_DETAILS.paddingLeft * 2, DIALOG_DETAILS.paddingTop, 'gb-font', CANNOT_READ_SIGN_TEXT, 40).setMaxWidth(DIALOG_DETAILS.maxTextWidth(this.#scene.scale.width))
     this.#container.add(this.#uiText)
     this.#createPlayerInputCursor()
@@ -75,6 +75,7 @@ export class DialogUi {
     this.#userInputCursorTween.restart()
     this.#userInputCursor.setAlpha(1)
     this.#isWaitingForInput = true
+    this.#container.setDepth(3)
     this.#showDialogModal(messages, callback)
   }
 
@@ -83,6 +84,7 @@ export class DialogUi {
    * @param {string[]} messages 
    */
   showDialogModalNoInputRequired (messages) {
+    this.#container.setDepth(1)
     this.#userInputCursorTween.pause()
     this.#userInputCursor.setAlpha(0)
     this.#showDialogModal(messages)
@@ -122,6 +124,7 @@ export class DialogUi {
           this.#onFinish = undefined
         }
       }
+      this.#container.setDepth(1)
       return
     }
 

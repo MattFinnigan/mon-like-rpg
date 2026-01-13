@@ -83,7 +83,7 @@ export class WorldScene extends Phaser.Scene {
   /** @type {PartyMenu} */
   #partyMenu
   /** @type {() => void} */
-  #waitForMonToGiveItemCallback
+  #onPartyMonSelection
 
   constructor () {
     super({
@@ -123,6 +123,7 @@ export class WorldScene extends Phaser.Scene {
 
     this.#menu = new Menu(this)
     this.#partyMenu = new PartyMenu(this)
+    this.#partyMenu.depth = 3
     this.#itemMenu = new ItemMenu(this)
     this.#dialogUi = new DialogUi(this)
     this.#controls = new Controls(this)
@@ -664,9 +665,9 @@ export class WorldScene extends Phaser.Scene {
 
     if (wasBackKeyPressed) {
       this.#partyMenu.handlePlayerInput('CANCEL')
-      if (this.#waitForMonToGiveItemCallback) {
+      if (this.#onPartyMonSelection) {
         this.#partyMenu.hide()
-        this.#waitForMonToGiveItemCallback = undefined
+        this.#onPartyMonSelection = undefined
         this.#partyMenu.selectOnlyMode = false
         this.#dialogUi.hideDialogModal()
       }
@@ -675,8 +676,8 @@ export class WorldScene extends Phaser.Scene {
 
     if (wasSpaceKeyPresed) {
       this.#partyMenu.handlePlayerInput('OK')
-      if (this.#waitForMonToGiveItemCallback && this.#partyMenu.selectedMon) {
-        this.#waitForMonToGiveItemCallback()
+      if (this.#onPartyMonSelection && this.#partyMenu.selectedMon) {
+        this.#onPartyMonSelection()
         return
       }
       return
@@ -767,7 +768,7 @@ export class WorldScene extends Phaser.Scene {
         this.#itemMenu.hide()
         this.#partyMenu.selectOnlyMode = true
         this.#partyMenu.show()
-        this.#waitForMonToGiveItemCallback = () => {
+        this.#onPartyMonSelection = () => {
           playItemEffect(this, {
             mon: this.#partyMenu.selectedMon,
             item,
@@ -777,7 +778,7 @@ export class WorldScene extends Phaser.Scene {
                 this.#partyMenu.selectOnlyMode = false
                 this.#partyMenu.hide()
                 this.#itemMenu.show()
-                this.#waitForMonToGiveItemCallback = undefined
+                this.#onPartyMonSelection = undefined
               })
             }
           })

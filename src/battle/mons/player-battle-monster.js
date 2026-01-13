@@ -1,5 +1,6 @@
 import { BATTLE_ASSET_KEYS, MON_BACK_ASSET_KEYS, MON_BALLS } from "../../assets/asset-keys.js";
 import { createExpandBallAnimation } from "../../utils/animations.js";
+import { DATA_MANAGER_STORE_KEYS, dataManager } from "../../utils/data-manager.js";
 import { BattleMon } from "./battle-mon.js";
 
 /**
@@ -32,6 +33,11 @@ export class PlayerBattleMon extends BattleMon {
     this.#monBallExpandSpriteAnimation = null
   }
   
+  /** @returns {number} */
+  get id () {
+    return this._monDetails.id
+  }
+
   /**
    * 
    * @param {() => void} callback
@@ -68,7 +74,32 @@ export class PlayerBattleMon extends BattleMon {
         })
       })
     })
+  }
+  
+  playMonSwitchedOutAnimation (callback) {  
+    if (this._skipBattleAnimations) {
+      this._phaserHealthBarGameContainer.setAlpha(1)
+      this._phaserMonImageGameObject.setAlpha(1)
+      callback()
+      return
+    }
 
+    const endXPos = -200
+    this._scene.tweens.add({
+      delay: 500,
+      duration: 300,
+      x: {
+        from: PLAYER_IMAGE_POSITION.x,
+        to: endXPos
+      },
+      targets: this._phaserMonImageGameObject,
+      onComplete: () => {
+        this._phaserHealthBarGameContainer.setAlpha(0)
+        this._phaserMonImageGameObject.setAlpha(0)
+        this._phaserMonImageGameObject.setPosition(PLAYER_IMAGE_POSITION.x, PLAYER_IMAGE_POSITION.y)
+        callback()
+      }
+    })
   }
 
   /**
@@ -112,5 +143,36 @@ export class PlayerBattleMon extends BattleMon {
 
   #createMonDetailsGameObject () {
     this._phaserMonDetailsBackgroundImageGameObject.setTexture(BATTLE_ASSET_KEYS.PLAYER_BATTLE_DETAILS_BACKGROUND)
+  }
+
+  /**
+   * 
+   * @param {number} damage 
+   * @param {() => void} [callback] 
+   */
+  takeDamage (damage, callback) {
+    super.takeDamage(damage, callback)
+    this.#updateHp()
+  }
+
+  /**
+   * 
+   * @param {number} hp 
+   * @param {() => void} callback 
+   */
+  healHp (hp, callback) {
+    super.healHp(hp, callback)
+    this.#updateHp()
+  }
+
+  #updateHp () {
+    const withUpdatedMonHp = dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS).map(mon => {
+      if (mon.id === this._monDetails.id) {
+        mon.currentHp = this._currentHealth
+      }
+      return mon
+    })
+    dataManager.store.set(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS, withUpdatedMonHp)
+    dataManager.saveData()
   }
 }
