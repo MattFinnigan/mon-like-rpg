@@ -5,7 +5,7 @@ import { DIRECTION } from '../types/direction.js'
 import { EnemyBattleMon } from '../battle/mons/enemy-battle-monster.js'
 import { PlayerBattleMon } from '../battle/mons/player-battle-monster.js'
 import { StateMachine } from '../utils/state-machine.js'
-import { SKIP_BATTLE_ANIMATIONS } from '../../config.js'
+import { SKIP_ANIMATIONS } from '../../config.js'
 import { ATTACK_TARGET, AttackManager } from '../battle/attacks/attack-manager.js'
 import { Controls } from '../utils/controls.js'
 import { BattleTrainer } from '../battle/characters/battle-trainer.js'
@@ -138,7 +138,7 @@ export class BattleScene extends Phaser.Scene {
 
     this.#audioManager = this.registry.get('audio')
     this.#battleMenu = new BattleMenu(this)
-    this.#attackManager = new AttackManager(this, SKIP_BATTLE_ANIMATIONS)
+    this.#attackManager = new AttackManager(this, SKIP_ANIMATIONS)
     this.#controls = new Controls(this)
 
     this.#setUpBattleMons()
@@ -191,7 +191,7 @@ export class BattleScene extends Phaser.Scene {
    * @param {() => void} callback
    */
   #announceAttack (mon, attk, callback) {
-    this.#battleMenu.updateInfoPanelMessagesNoInputRequired(`${mon.name} used ${attk.name}!`, callback, SKIP_BATTLE_ANIMATIONS)
+    this.#battleMenu.updateInfoPanelMessagesNoInputRequired(`${mon.name} used ${attk.name}!`, callback, SKIP_ANIMATIONS)
   }
 
   /**
@@ -226,7 +226,7 @@ export class BattleScene extends Phaser.Scene {
         attk.animationName,
         ATTACK_TARGET.ENEMY,
         () => this.#playEnemyDamageTakenAnimation(result),
-        result.damageTaken === 0 || SKIP_BATTLE_ANIMATIONS
+        result.damageTaken === 0 || SKIP_ANIMATIONS
       )
     })
   }
@@ -240,7 +240,7 @@ export class BattleScene extends Phaser.Scene {
       this.#activeEnemyMon.takeDamage(result.damageTaken, () => {
         this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK)
       })
-    }, result.damageTaken === 0 || SKIP_BATTLE_ANIMATIONS)
+    }, result.damageTaken === 0 || SKIP_ANIMATIONS)
   }
 
 
@@ -324,7 +324,7 @@ export class BattleScene extends Phaser.Scene {
       postAttackMsgs.push(`But nothing happened!`)
     }
 
-    this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(postAttackMsgs, callback, SKIP_BATTLE_ANIMATIONS)
+    this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(postAttackMsgs, callback, SKIP_ANIMATIONS)
   }
 
   #playEnemyFaintedSequence () {
@@ -336,7 +336,7 @@ export class BattleScene extends Phaser.Scene {
         this.#audioManager.playBgm(this.#victoryBgmKey)
         this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(postDeathMsgs, () => {
           this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
-        }, SKIP_BATTLE_ANIMATIONS)
+        }, SKIP_ANIMATIONS)
         return
       }
 
@@ -344,7 +344,7 @@ export class BattleScene extends Phaser.Scene {
       postDeathMsgs.unshift(`Foe's ${this.#activeEnemyMon.name} fainted!`)
       this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(postDeathMsgs, () => {
         this.#battleStateMachine.setState(BATTLE_STATES.ENEMY_CHOOSE_MON)
-      }, SKIP_BATTLE_ANIMATIONS)
+      }, SKIP_ANIMATIONS)
     })
   }
 
@@ -361,7 +361,7 @@ export class BattleScene extends Phaser.Scene {
     this.#activePlayerMon.playDeathAnimation(() => {
       this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`${this.#activePlayerMon.name} fainted!`], () => {
         this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_CHOOSE_MON)
-      }, SKIP_BATTLE_ANIMATIONS)
+      }, SKIP_ANIMATIONS)
     })
   }
 
@@ -575,11 +575,11 @@ export class BattleScene extends Phaser.Scene {
         if (this.#runAttemptSucceeded()) {
           this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(['Got away safely...'], () => {
             this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
-          }, SKIP_BATTLE_ANIMATIONS)
+          }, SKIP_ANIMATIONS)
         } else {
           this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`Couldn't get away!`], () => {
             this.#battleMenu.showMainBattleMenu()
-          }, SKIP_BATTLE_ANIMATIONS)
+          }, SKIP_ANIMATIONS)
         }
       }
     })
@@ -630,10 +630,10 @@ export class BattleScene extends Phaser.Scene {
               return
             }
             this.#battleStateMachine.setState(BATTLE_STATES.POST_ITEM_USED)
-          }, SKIP_BATTLE_ANIMATIONS)
+          }, SKIP_ANIMATIONS)
         }
       })
-    }, SKIP_BATTLE_ANIMATIONS)
+    }, SKIP_ANIMATIONS)
   }
       
   #setUpBattleMons () {
@@ -641,7 +641,7 @@ export class BattleScene extends Phaser.Scene {
       return new PlayerBattleMon({
         scene: this,
         monDetails: pm,
-        skipBattleAnimations: SKIP_BATTLE_ANIMATIONS
+        skipBattleAnimations: SKIP_ANIMATIONS
       })
     })
 
@@ -651,7 +651,7 @@ export class BattleScene extends Phaser.Scene {
         return new EnemyBattleMon({
           scene: this,
           monDetails: pm,
-          skipBattleAnimations: SKIP_BATTLE_ANIMATIONS
+          skipBattleAnimations: SKIP_ANIMATIONS
         })
       })
       return
@@ -661,7 +661,7 @@ export class BattleScene extends Phaser.Scene {
       new EnemyBattleMon({
         scene: this,
         monDetails: this.#generatedMon.mon,
-        skipBattleAnimations: SKIP_BATTLE_ANIMATIONS
+        skipBattleAnimations: SKIP_ANIMATIONS
       })
     ]
     this.#activeEnemyMon = this.#opponentMons[0]
@@ -742,13 +742,13 @@ export class BattleScene extends Phaser.Scene {
   #createBattleTrainers () {
     if (!this.#opponentIsWildMon()) {
       this.#enemyBattleTrainer = new BattleTrainer(this, this.#enemyTrainer, this.#opponentMons, {
-        skipBattleAnimations: SKIP_BATTLE_ANIMATIONS,
+        skipBattleAnimations: SKIP_ANIMATIONS,
         assetKey: this.#enemyTrainer.assetKey
       })
     }
     this.#battlePlayer = new BattlePlayer(this, this.#player, this.#playerMons, {
       assetKey: TRAINER_SPRITES.RED,
-      skipBattleAnimations: SKIP_BATTLE_ANIMATIONS
+      skipBattleAnimations: SKIP_ANIMATIONS
     })
   }
 
@@ -762,7 +762,7 @@ export class BattleScene extends Phaser.Scene {
         this.#enemyBattleTrainer.playCharacterDisappearAnimation(() => {
           this.#battleStateMachine.setState(BATTLE_STATES.ENEMY_CHOOSE_MON)
         })
-      }, SKIP_BATTLE_ANIMATIONS)
+      }, SKIP_ANIMATIONS)
     })
   }
 
@@ -798,14 +798,14 @@ export class BattleScene extends Phaser.Scene {
       this.time.delayedCall(500, () => {
         this.#activeEnemyMon.playMonAppearAnimation(callback, true)
       })
-    }, SKIP_BATTLE_ANIMATIONS)          
+    }, SKIP_ANIMATIONS)          
   }
 
   #announceWildMon () {
     this.#activeEnemyMon.playMonAppearAnimation(() => {
       this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`Wild ${this.#activeEnemyMon.name} appeared!`], () => {
         this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_CHOOSE_MON)
-      }, SKIP_BATTLE_ANIMATIONS)
+      }, SKIP_ANIMATIONS)
     })
   }
 
@@ -841,7 +841,7 @@ export class BattleScene extends Phaser.Scene {
       this.time.delayedCall(500, () => {
         this.#activePlayerMon.playMonAppearAnimation(callback)
       })
-    }, SKIP_BATTLE_ANIMATIONS)
+    }, SKIP_ANIMATIONS)
   }
 
   #battleJustStarted () {
@@ -900,7 +900,7 @@ export class BattleScene extends Phaser.Scene {
     ]
 
     this.#enemyBattleTrainer.showTrainer()
-    this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(msgs, callback, SKIP_BATTLE_ANIMATIONS)
+    this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(msgs, callback, SKIP_ANIMATIONS)
   }
 
   /**
@@ -914,7 +914,7 @@ export class BattleScene extends Phaser.Scene {
       msgs.push(`You paid out $${this.#enemyTrainer.payOutOnDefeat}...`)
     }
     msgs.push(`YOU whited out!`)
-    this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(msgs, callback, SKIP_BATTLE_ANIMATIONS)
+    this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(msgs, callback, SKIP_ANIMATIONS)
   }
 
   #resetBattleMons () {

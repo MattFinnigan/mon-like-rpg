@@ -4,7 +4,7 @@ import { DIRECTION } from '../../../types/direction.js'
 import { exhaustiveGuard } from '../../../utils/guard.js'
 import { ACTIVE_BATTLE_MENU, ATTACK_MOVE_OPTIONS, BATTLE_MENU_OPTIONS } from './battle-menu-options.js'
 import { animateText } from '../../../utils/text-utils.js'
-import { SKIP_BATTLE_ANIMATIONS } from '../../../../config.js'
+import { SKIP_ANIMATIONS } from '../../../../config.js'
 import { DIALOG_DETAILS } from '../../../types/dialog-ui.js'
 import { PlayerBattleMon } from '../../mons/player-battle-monster.js'
 import { ItemMenu } from '../../../common/item-menu.js'
@@ -594,7 +594,7 @@ export class BattleMenu {
       this.#activeBattleMenu = ACTIVE_BATTLE_MENU.BATTLE_PKMN
       this.updateInfoPanelMessagesAndWaitForInput(['You can\'t switch!'], () => {
         this.#switchToMainBattleMenu()
-      }, SKIP_BATTLE_ANIMATIONS)
+      }, SKIP_ANIMATIONS)
       return
     }
 

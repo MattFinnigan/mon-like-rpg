@@ -1,4 +1,4 @@
-import { SKIP_BATTLE_ANIMATIONS } from "../../../config.js";
+import { SKIP_ANIMATIONS } from "../../../config.js";
 import { MON_ASSET_KEYS, MON_BALLS, MON_GRAY_ASSET_KEYS } from "../../assets/asset-keys.js";
 import { createBallWiggleAnimation, createExpandBallAnimation } from "../../utils/animations.js";
 import { BattleMon } from "./battle-mon.js";
@@ -78,7 +78,7 @@ export class EnemyBattleMon extends BattleMon {
     }
 
     const playFailedBallExplode = (finishUpCallback) => {
-      if (SKIP_BATTLE_ANIMATIONS) {
+      if (SKIP_ANIMATIONS) {
         finishUpCallback()
         return
       }
@@ -116,7 +116,7 @@ export class EnemyBattleMon extends BattleMon {
 
     }
 
-    if (SKIP_BATTLE_ANIMATIONS) {
+    if (SKIP_ANIMATIONS) {
       sendResult()
       return
     }

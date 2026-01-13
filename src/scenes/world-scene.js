@@ -1,4 +1,4 @@
-import { SKIP_BATTLE_ANIMATIONS, TILE_SIZE, TILED_COLLISION_ALPHA, WORLD_ZOOM } from '../../config.js';
+import { SKIP_ANIMATIONS, TILE_SIZE, TILED_COLLISION_ALPHA, WORLD_ZOOM } from '../../config.js';
 import { BGM_ASSET_KEYS, CHARACTER_ASSET_KEYS, DATA_ASSET_KEYS, TRAINER_SPRITES, WORLD_ASSET_KEYS } from '../assets/asset-keys.js';
 import { DIRECTION } from '../types/direction.js';
 import { EVENT_KEYS } from '../types/event-keys.js';
@@ -142,6 +142,17 @@ export class WorldScene extends Phaser.Scene {
     const wasBackKeyPressed = this.#controls.wasBackKeyPressed()
     const wasEnterPressed = this.#controls.wasEnterKeyPressed()
 
+    if (this.#dialogUi.isWaitingForInput) {
+      if (this.#dialogUi.isAnimationPlaying) {
+        return
+      }
+      if (wasSpaceKeyPresed || wasBackKeyPressed) {
+        this.#dialogUi.showNextMessage()
+        return
+      }
+      return
+    }
+
     if (this.#playerCanMove(selectedDirectionHeldDown)) {
       this.#player.moveCharacter(selectedDirectionHeldDown)
     }
@@ -171,7 +182,7 @@ export class WorldScene extends Phaser.Scene {
    * @returns {boolean}
    */
   #canToggleMenu () {
-    return !this.#isPlayerInputLocked() && !this.#player.isMoving && !this.#dialogUi.isVisible && !this.#partyMenu.isVisible && !this.#itemMenu.isVisible
+    return !this.#isPlayerInputLocked() && !this.#player.isMoving && !this.#partyMenu.isVisible && !this.#itemMenu.isVisible
   }
 
   /**
@@ -179,11 +190,10 @@ export class WorldScene extends Phaser.Scene {
    * @returns {boolean}
    */
   #playerCanInteract () {
-    return !this.#dialogUi.isAnimationPlaying && !this.#isPlayerInputLocked() && !this.#menu.isVisible
+    return !this.#isPlayerInputLocked() && !this.#menu.isVisible
   }
   
   #finishDialog () {
-    this.#dialogUi.hideDialogModal()
     if (this.#npcPlayerIsInteractingWith) {
       this.#npcPlayerIsInteractingWith.isTalkingToPlayer = false
       this.#npcPlayerIsInteractingWith = undefined
@@ -210,7 +220,9 @@ export class WorldScene extends Phaser.Scene {
       const msg = props.find(p => p.name === 'message')?.value
       const textToShow = msg || PLACEHOLDER_TEXT
   
-      this.#dialogUi.showDialogModal([textToShow.toUpperCase()])
+      this.#dialogUi.showDialogModalAndWaitForInput([textToShow.toUpperCase()], () => {
+        this.#finishDialog()
+      })
       return
     }
   }
@@ -227,27 +239,22 @@ export class WorldScene extends Phaser.Scene {
       }
       return npc.sprite.x === targetPosition.x && npc.sprite.y === targetPosition.y
     })
-
+    console.log(nearbyNpc)
     if (nearbyNpc) {
       nearbyNpc.facePlayer(this.#player.direction)
       nearbyNpc.isTalkingToPlayer = true
       this.#npcPlayerIsInteractingWith = nearbyNpc
-      this.#dialogUi.showDialogModal(nearbyNpc.messages)
+      this.#dialogUi.showDialogModalAndWaitForInput(nearbyNpc.messages, () => {
+        this.#finishDialog()
+        if (nearbyNpc.actionPending) {
+          nearbyNpc.doAction()
+        }
+      })
       return
     }
   }
 
   #checkForAndHandlePlayerInteraction () {
-    if (this.#dialogUi.isVisible && !this.#dialogUi.moreMessagesToShow) {
-      this.#finishDialog()
-      return
-    }
-
-    if (this.#dialogUi.isVisible && this.#dialogUi.moreMessagesToShow) {
-      this.#dialogUi.showNextMessage()
-      return
-    }
-
     const { x, y } = this.#player.sprite
     const targetPosition = getTargetPositionFromGameObjectPositionAndDirection({ x, y }, this.#player.direction)
 
@@ -318,7 +325,7 @@ export class WorldScene extends Phaser.Scene {
         encounterArea
       }),
       createWildEncounterSceneTransition(this, {
-        skipSceneTransition: SKIP_BATTLE_ANIMATIONS,
+        skipSceneTransition: SKIP_ANIMATIONS,
         spritesToNotBeObscured: [this.#player.sprite]
       })
     ]
@@ -570,7 +577,7 @@ export class WorldScene extends Phaser.Scene {
         }
       }),
       createBattleSceneTransition(this, {
-        skipSceneTransition: SKIP_BATTLE_ANIMATIONS,
+        skipSceneTransition: SKIP_ANIMATIONS,
         spritesToNotBeObscured: [this.#player.sprite, data.npc.sprite],
         type: TRANSITION_TYPES.LEFT_RIGHT_DOWN_SLOW
       })
@@ -596,7 +603,7 @@ export class WorldScene extends Phaser.Scene {
    * @returns {boolean}
    */
   #playerCanMove (direction) {
-    return direction !== DIRECTION.NONE && !this.#isPlayerInputLocked() && !this.#dialogUi.isVisible && !this.#menu.isVisible
+    return direction !== DIRECTION.NONE && !this.#isPlayerInputLocked() && !this.#menu.isVisible
   }
 
   #toggleMenu () {
@@ -630,7 +637,6 @@ export class WorldScene extends Phaser.Scene {
 
     if (wasSpaceKeyPresed) {
       this.#itemMenu.handlePlayerInput('OK')
-
       if (this.#itemMenu.selectedItemOption) {
         this.#handleItemSelected(this.#itemMenu.selectedItemOption)
         return
@@ -748,7 +754,7 @@ export class WorldScene extends Phaser.Scene {
 
   #saveGame () {
     dataManager.saveGame()
-    this.#dialogUi.showDialogModal(['Game saved!'])
+    this.#dialogUi.showDialogModalAndWaitForInput(['Game saved!'])
   }
 
   /**
@@ -756,9 +762,9 @@ export class WorldScene extends Phaser.Scene {
    * @param {import('../types/typedef.js').Item} item 
    */
   #handleItemSelected (item) {
-    this.#itemMenu.hide()
     switch (item.typeKey) {
       case ITEM_TYPE_KEY.HEALING:
+        this.#itemMenu.hide()
         this.#partyMenu.selectOnlyMode = true
         this.#partyMenu.show()
         this.#waitForMonToGiveItemCallback = () => {
@@ -767,17 +773,18 @@ export class WorldScene extends Phaser.Scene {
             item,
             callback: (result) => {
               const { msg } = result
-              this.#menu.hide()
-              this.#dialogUi.showDialogModal([msg])
-              this.#partyMenu.selectOnlyMode = false
-              this.#partyMenu.hide()
-              this.#waitForMonToGiveItemCallback = undefined
+              this.#dialogUi.showDialogModalAndWaitForInput([msg], () => {
+                this.#partyMenu.selectOnlyMode = false
+                this.#partyMenu.hide()
+                this.#itemMenu.show()
+                this.#waitForMonToGiveItemCallback = undefined
+              })
             }
           })
         }
         break
         default:
-          this.#dialogUi.showDialogModal([`Nothing happened...`])
+          this.#dialogUi.showDialogModalAndWaitForInput([`Nothing happened...`])
           break
     }
   }

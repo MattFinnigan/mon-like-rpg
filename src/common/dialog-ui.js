@@ -1,3 +1,4 @@
+import { SKIP_ANIMATIONS } from "../../config.js"
 import { SYSTEM_ASSET_KEYS, UI_ASSET_KEYS } from "../assets/asset-keys.js"
 import { DIALOG_DETAILS } from "../utils/consts.js"
 import { animateText, CANNOT_READ_SIGN_TEXT } from "../utils/text-utils.js"
@@ -21,6 +22,10 @@ export class DialogUi {
   #messagesToShow
   /** @type {Phaser.Time.TimerEvent} */
   #currentTextEvent
+  /** @type {() => void} */
+  #onFinish
+  /** @type {boolean} */
+  #isWaitingForInput
   
   /**
    * 
@@ -30,9 +35,11 @@ export class DialogUi {
     this.#scene = scene
     this.#textAnimationPlaying = false
     this.#messagesToShow = []
-
+    this.#onFinish = undefined
+    this.#isWaitingForInput = false
+  
     const panel =  this.#scene.add.image(0, 0, SYSTEM_ASSET_KEYS.DIALOG_BACKGROUND).setOrigin(0)
-    this.#container = this.#scene.add.container(0, 0, [panel])
+    this.#container = this.#scene.add.container(0, 0, [panel]).setDepth(2)
     this.#uiText = this.#scene.add.bitmapText(DIALOG_DETAILS.paddingLeft * 2, DIALOG_DETAILS.paddingTop, 'gb-font', CANNOT_READ_SIGN_TEXT, 40).setMaxWidth(DIALOG_DETAILS.maxTextWidth(this.#scene.scale.width))
     this.#container.add(this.#uiText)
     this.#createPlayerInputCursor()
@@ -53,14 +60,41 @@ export class DialogUi {
   get moreMessagesToShow () {
     return this.#messagesToShow.length > 0
   }
+
+  /** @returns {boolean} */
+  get isWaitingForInput () {
+    return this.#isWaitingForInput
+  }
   
   /**
    * 
+   * @param {string[]} messages 
+   * @param {() => void} [callback] 
+   */
+  showDialogModalAndWaitForInput (messages, callback) {
+    this.#userInputCursorTween.restart()
+    this.#userInputCursor.setAlpha(1)
+    this.#isWaitingForInput = true
+    this.#showDialogModal(messages, callback)
+  }
+
+  /**
+   * 
+   * @param {string[]} messages 
+   */
+  showDialogModalNoInputRequired (messages) {
+    this.#userInputCursorTween.pause()
+    this.#userInputCursor.setAlpha(0)
+    this.#showDialogModal(messages)
+  }
+
+  /**
+   * 
    * @param {string[]} messages
-   * @param {boolean} [skipAnimation]
+   * @param {() => void} [callback]
    * @returns {void}
    */
-  showDialogModal (messages, skipAnimation = false) {
+  #showDialogModal (messages, callback) {
     this.#messagesToShow = [...messages]
     const { x, bottom } = this.#scene.cameras.main.worldView
     const startX = x
@@ -69,21 +103,29 @@ export class DialogUi {
     this.#container.setPosition(startX, startY)
     this.#container.setAlpha(1)
     this.#isVisible = true
-    this.#userInputCursorTween.play()
 
-    this.showNextMessage(skipAnimation)
+    this.#onFinish = callback
+    this.showNextMessage()
   }
 
   /**
-   * @param {boolean} [skipAnimation]
    * @returns {void}
    */
-  showNextMessage (skipAnimation = false) {
+  showNextMessage () {
     if (this.#messagesToShow.length === 0) {
+      if (this.#isWaitingForInput) {
+        this.#isWaitingForInput = false
+        this.hideDialogModal()
+
+        if (this.#onFinish) {
+          this.#onFinish()
+          this.#onFinish = undefined
+        }
+      }
       return
     }
 
-    if (skipAnimation) {
+    if (SKIP_ANIMATIONS) {
       this.#uiText.setText(this.#messagesToShow.shift()).setAlpha(1)
       return
     }

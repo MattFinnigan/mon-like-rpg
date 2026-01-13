@@ -119,6 +119,13 @@ export class NPC extends Character {
   }
 
   /**
+   * @returns {boolean}
+   */
+  get actionPending () {
+    return this.#actionPending
+  }
+
+  /**
    * 
    * @param {import("../../types/direction.js").Direction} playerDirection 
    */
@@ -156,11 +163,6 @@ export class NPC extends Character {
       if (!this.#actionPending && this.#action !== NPC_ACTION_TYPES.NONE) {
         this.#actionPending = true
       }
-      return
-    }
-    
-    if (this.#actionPending) {
-      this.#doAction()
       return
     }
 
@@ -235,7 +237,7 @@ export class NPC extends Character {
     }
   }
 
-  #doAction () {
+  doAction () {
     switch (this.#action) {
       case NPC_ACTION_TYPES.BATTLE:
         this.#scene.events.emit(EVENT_KEYS.TRAINER_BATTLE_START, { npc: this, actionId: this.#actionId })

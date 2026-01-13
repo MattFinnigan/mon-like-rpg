@@ -1,4 +1,4 @@
-import { SKIP_BATTLE_ANIMATIONS } from '../../../config.js'
+import { SKIP_ANIMATIONS } from '../../../config.js'
 import { PARTY_MON_SPRITES, UI_ASSET_KEYS } from '../../assets/asset-keys.js'
 import { SCENE_KEYS } from '../../scenes/scene-keys.js'
 import { DIRECTION } from '../../types/direction.js'
@@ -66,8 +66,6 @@ export class PartyMenu {
   #sceneKey
   /** @type {ItemMenu} */
   #itemMenu
-  /** @type {() => void} */
-  #dialogWaitingForInputCallback
   /** @type {boolean} */
   #inputLocked
   /** @type {PartyMon[]} */
@@ -87,7 +85,6 @@ export class PartyMenu {
     this.#cursorIndex = 0
     this.#selectedMonIndex = 0
     this.#isVisible = false
-    this.#dialogWaitingForInputCallback = undefined
     this.#inputLocked = false
     this.#partyMons = []
     this.#selectOnlyMode = false
@@ -189,6 +186,11 @@ export class PartyMenu {
       return
     }
 
+    if (this.#dialogUi.isWaitingForInput) {
+      this.#handleDialogInput(input)
+      return
+    }
+
     if (state === PARTY_STATES.WAIT_FOR_ITEM_SELECTION) {
       this.#handleItemMenuInteraction(input)
       return
@@ -220,13 +222,27 @@ export class PartyMenu {
     }
   }
 
-  #handleItemMenuInteraction (input) {
-    if ((input === 'OK' || input === 'CANCEL') && this.#dialogWaitingForInputCallback) {
-      this.#dialogWaitingForInputCallback()
-      this.#dialogWaitingForInputCallback = undefined
+  /**
+   * 
+   * @param {import('../../types/direction.js').Direction | 'OK' | 'CANCEL'} input 
+   * @returns void
+   */
+  #handleDialogInput (input) {
+    if (this.#dialogUi.isAnimationPlaying) {
       return
     }
-
+    if (input === 'OK' || input === 'CANCEL') {
+      this.#dialogUi.showNextMessage()
+      return
+    }
+  }
+  
+  /**
+   * 
+   * @param {import('../../types/direction.js').Direction | 'OK' | 'CANCEL'} input 
+   * @returns void
+   */
+  #handleItemMenuInteraction (input) {
     if (input === 'CANCEL') {
       this.#partyStateMachine.setState(PARTY_STATES.WAIT_FOR_MON_OPTION_SELECT)
       return
@@ -476,17 +492,16 @@ export class PartyMenu {
       callback: (res) => {
         const { wasUsed, msg } = res
         this.#inputLocked = false
-        this.#dialogUi.showDialogModal([msg])
-        this.#dialogWaitingForInputCallback = () => {
-          this.#dialogUi.showDialogModal([` `])
+        this.#dialogUi.showDialogModalAndWaitForInput([msg], () => {
           if (!wasUsed) {
+            this.#dialogUi.showDialogModalNoInputRequired([' '])
             this.#itemMenu.show()
             return
           }
           this.#phaserUserInputCursorGameObject.setAlpha(1)
           this.#phaserSelectedMonMenuGameObject.setAlpha(1)
           this.#partyStateMachine.setState(PARTY_STATES.WAIT_FOR_MON_OPTION_SELECT)
-        }
+        })
       }
     })
   }
@@ -531,7 +546,7 @@ export class PartyMenu {
         this.#cursorIndex = 0
     
         this.#isVisible = true
-        this.#dialogUi.showDialogModal(['Choose a POKEMON.'])
+        this.#dialogUi.showDialogModalNoInputRequired(['Choose a POKEMON.'])
       }
     })
 
@@ -564,7 +579,7 @@ export class PartyMenu {
       name: PARTY_STATES.WAIT_FOR_MON_OPTION_SELECT,
       onEnter: () => {
         this.#itemMenu.hide()
-        this.#dialogUi.showDialogModal([`Select an option for ${this.#selectedMon.name}. `])
+        this.#dialogUi.showDialogModalNoInputRequired([`Select an option for ${this.#selectedMon.name}. `])
       }
     })
 
@@ -576,7 +591,7 @@ export class PartyMenu {
 
         this.#phaserSelectedMonMenuGameObject.setAlpha(0)
         
-        this.#dialogUi.showDialogModal(['Now choose a POKEMON to switch.'])
+        this.#dialogUi.showDialogModalNoInputRequired(['Now choose a POKEMON to switch.'])
       }
     })
 
@@ -596,7 +611,6 @@ export class PartyMenu {
       name: PARTY_STATES.WAIT_FOR_ITEM_SELECTION,
       onEnter: () => {
         this.#itemMenu.show()
-        this.#dialogUi.showDialogModal([' '])
       }
     })
 

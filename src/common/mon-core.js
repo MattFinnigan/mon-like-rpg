@@ -1,4 +1,4 @@
-import { SKIP_BATTLE_ANIMATIONS } from "../../config.js"
+import { SKIP_ANIMATIONS } from "../../config.js"
 import { MON_ASSET_KEYS } from "../assets/asset-keys.js"
 import { AudioManager } from "../utils/audio-manager.js"
 import { getMonStats } from "../utils/battle-utils.js"
@@ -98,7 +98,7 @@ export class MonCore {
    * @returns {void}
    */
   playMonCry (callback) {
-    if (SKIP_BATTLE_ANIMATIONS) {
+    if (SKIP_ANIMATIONS) {
       callback()
       return
     }
