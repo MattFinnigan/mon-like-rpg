@@ -19,6 +19,8 @@ import { ITEM_TYPE_KEY } from '../types/items.js'
 import { OPPONENT_TYPES } from '../types/opponent-types.js'
 import { playItemEffect } from '../utils/item-manager.js'
 import { PartyMon } from '../common/party-menu/party-mon.js'
+import { getMonStats } from '../utils/battle-utils.js'
+import { DataUtils } from '../utils/data-utils.js'
 
 
 /** @enum {object} */
@@ -577,6 +579,12 @@ export class BattleScene extends Phaser.Scene {
       name: BATTLE_STATES.PLAYER_DEFEATED,
       onEnter: () => {
         this.#annoucePlayerDefeat(() => {
+          const updated = dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS).map(mon => {
+            const hp = getMonStats(DataUtils.getBaseMonDetails(this, mon.baseMonIndex), mon).hp
+            mon.currentHp = hp
+            return mon
+          })
+          dataManager.store.set(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS, updated)
           this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
         })
         return
