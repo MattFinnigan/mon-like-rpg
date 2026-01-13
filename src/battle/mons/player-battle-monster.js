@@ -59,9 +59,7 @@ export class PlayerBattleMon extends BattleMon {
       y: PLAYER_IMAGE_POSITION.y + (this._phaserMonImageGameObject.height / 2) + 10,
     }
 
-    if (!this.#monBallExpandSpriteAnimation) {
-      this.#monBallExpandSpriteAnimation = createExpandBallAnimation(this._scene, coords).setScale(1.5)
-    }
+    this.#monBallExpandSpriteAnimation = createExpandBallAnimation(this._scene, coords).setScale(1.5)
 
     this.#monBallExpandSpriteAnimation.play(MON_BALLS.MON_BALL_EXPAND_ANIMATION)
     this.#monBallExpandSpriteAnimation.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {

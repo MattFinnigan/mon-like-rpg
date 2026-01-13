@@ -142,6 +142,7 @@ export class HealthBar {
         this.#rightCap.visible = isVisible
       },
       onComplete: () => {
+        this.#currentHp = targetHp
         if (options?.callback) {
           options.callback()
         }
