@@ -21,7 +21,8 @@ import { DIRECTION } from "../types/direction.js"
  * @typedef VirtualKeyInteract
   * @type {{
   *  SPACE: VirtualKey,
-  *  SHIFT: VirtualKey
+  *  SHIFT: VirtualKey,
+  *  ENTER: VirtualKey
    * }}
  */
 
@@ -63,7 +64,8 @@ export class Controls {
 
     this.#virtualKeyInteract = {
       SPACE: { isDown: false, justDown: false },
-      SHIFT: { isDown: false, justDown: false }
+      SHIFT: { isDown: false, justDown: false },
+      ENTER: { isDown: false, justDown: false }
     }
 
     this.#enterKey = this.#scene.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER)
@@ -90,7 +92,9 @@ export class Controls {
     if (this.#enterKey === undefined) {
       return false
     }
-    return Phaser.Input.Keyboard.JustDown(this.#enterKey)
+    return this.#isMobile()
+      ? this.#consumeJustDown(this.#virtualKeyInteract.ENTER)
+      : Phaser.Input.Keyboard.JustDown(this.#enterKey)
   }
 
   wasSpaceKeyPressed () {
@@ -184,6 +188,7 @@ export class Controls {
 
     this.#createButton(420, 370, 'B', this.#virtualKeyInteract.SHIFT)
     this.#createButton(570, 420, 'A', this.#virtualKeyInteract.SPACE)
+    this.#createButton(60, 50, 'MENU', this.#virtualKeyInteract.ENTER, 35)
   }
   /**
    * 
@@ -200,6 +205,7 @@ export class Controls {
       .setScale(0.65)
       .setInteractive({ useHandCursor: true })
       .setScrollFactor(0, 0)
+      .setDepth(999999)
 
     arrow.on('pointerdown', () => {
       arrow.setAlpha(0.8)
@@ -221,15 +227,15 @@ export class Controls {
    * @param {number} x 
    * @param {number} y 
    * @param {string} label 
-   * @param {VirtualKey} key 
+   * @param {VirtualKey} key
+   * @param {number} [radius=55]
    * @returns 
    */
-  #createButton (x, y, label, key) {
-    const radius = 55
+  #createButton (x, y, label, key, radius = 55) {
     const bg = this.#scene.add.circle(0, 0, radius, 0x000000, 1).setAlpha(this.#mobileButtonsAlpha).setScrollFactor(0, 0)
 
     const text = this.#scene.add.text(0, 0, label, {
-      fontSize: '34px',
+      fontSize: `${radius / 2 + 5}px`,
       color: '#ffff'
     }).setOrigin(0.5).setScrollFactor(0, 0)
 
@@ -249,7 +255,7 @@ export class Controls {
     })
 
   
-    return this.#scene.add.container(x, y, [bg, text])
+    return this.#scene.add.container(x, y, [bg, text]).setDepth(999)
   }
 
   /**
