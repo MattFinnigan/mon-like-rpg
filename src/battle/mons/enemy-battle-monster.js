@@ -92,7 +92,7 @@ export class EnemyBattleMon extends BattleMon {
     }
 
     const sendResult = () => {
-      if (successRolls === 3) {
+      if (successRolls >= 3) {
         this.#monBallWiggleSpriteAnimation.setTexture(MON_BALLS.MON_BALLS_SHEET_1, 9)
         callback({
           msg: `Wild ${this._baseMonDetails.name} was caught!`,

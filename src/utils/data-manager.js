@@ -27,14 +27,14 @@ const initalState = {
       y: 42 * TILE_SIZE
     },
     direction: DIRECTION.DOWN,
-    name: 'SPONION',
+    name: 'YOU',
     partyMons: [
       {
-        id: 2,
-        baseMonIndex: 15,
-        name: 'PIDGEY',
-        currentHp: 85,
-        currentLevel: 50,
+        id: 1,
+        baseMonIndex: 24,
+        name: 'PIKACHU',
+        currentHp: 46,
+        currentLevel: 25,
         attackEV: 5,
         defenseEV: 29,
         splAttackEV: 11,
@@ -42,11 +42,41 @@ const initalState = {
         speedEV: 2,
         hpEV: 35,
         attackIds: [2],
-        currentExp: 50
+        currentExp: 13000
+      },
+      {
+        id: 2,
+        baseMonIndex: 57,
+        name: 'GROWLITHE',
+        currentHp: 50,
+        currentLevel: 25,
+        attackEV: 5,
+        defenseEV: 29,
+        splAttackEV: 11,
+        splDefenseEV: 16,
+        speedEV: 2,
+        hpEV: 35,
+        attackIds: [3, 2],
+        currentExp: 12500
+      },
+      {
+        id: 3,
+        baseMonIndex: 130,
+        name: 'LAPRAS',
+        currentHp: 62,
+        currentLevel: 25,
+        attackEV: 5,
+        defenseEV: 29,
+        splAttackEV: 11,
+        splDefenseEV: 16,
+        speedEV: 2,
+        hpEV: 35,
+        attackIds: [1],
+        currentExp: 12510
       }
     ],
     inventory: [
-      { itemKey: ITEM_KEY.POKEBALL, qty: 5 },
+      { itemKey: ITEM_KEY.POKEBALL, qty: 20 },
       { itemKey: ITEM_KEY.POTION, qty: 20 },
       { itemKey: ITEM_KEY.REPEL, qty: 3 },
       { itemKey: ITEM_KEY.KEY_CARD, qty: 1 }
@@ -62,7 +92,7 @@ const devInitialState = {
       y: 42 * TILE_SIZE
     },
     direction: DIRECTION.DOWN,
-    name: 'SPONION',
+    name: 'YOU',
     partyMons: [
       {
         id: 1,

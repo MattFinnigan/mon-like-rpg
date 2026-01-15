@@ -1,4 +1,4 @@
-import { getMonStats } from "./battle-utils.js"
+import { calculateExperiencedNeededForLevelUp, getMonStats } from "./battle-utils.js"
 import { DataUtils } from "./data-utils.js"
 
 /**
@@ -43,7 +43,7 @@ export function generateWildMon (scene, area) {
     speedEV: Phaser.Math.Between(0, 30),
     hpEV: Phaser.Math.Between(0, 30),
     name: baseMon.name,
-    currentExp: 0
+    currentExp: calculateExperiencedNeededForLevelUp(level - 1)
   }
   
   const monHp = getMonStats(baseMon, mon).hp

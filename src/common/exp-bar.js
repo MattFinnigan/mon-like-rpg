@@ -56,7 +56,7 @@ export class ExpBar {
     this.#phaserCurrentExpText = this.#scene.add.bitmapText(-300, 15, 'gb-font', `${this.#currentExp}/${this.#expToNextLevel}`, 20).setOrigin(0)
     this.#container.add([
       this.#phaserCurrentExpBarGameObject,
-      this.#phaserCurrentExpText
+      // this.#phaserCurrentExpText
     ])
   }
 
