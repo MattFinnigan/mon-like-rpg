@@ -50,6 +50,7 @@ import Phaser from "../lib/phaser.js";
  * @property {number} speedEV
  * @property {number} hpEV
  * @property {number[]} attackIds
+ * @property {number} currentExp
  */
 
 /**

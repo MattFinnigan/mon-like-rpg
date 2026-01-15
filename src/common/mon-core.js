@@ -23,6 +23,10 @@ export class MonCore {
   _typeContainers
   /** @type {AudioManager} */
   #audioManager
+  /** @protected @type {number} */
+  _currentExp
+  /** @protected @type {number} */
+  _currentLevel
 
   /**
    * 
@@ -39,6 +43,8 @@ export class MonCore {
     this._currentHealth = this._monDetails.currentHp
     this._maxHealth = this._monStats.hp
     this._monAttacks = []
+    this._currentExp = this._monDetails.currentExp
+    this._currentLevel = this._monDetails.currentLevel
 
     this.#audioManager = this._scene.registry.get('audio')
     this.#createMonsTypeGameObjectContainer()
@@ -64,6 +70,13 @@ export class MonCore {
    */
   get currentHealth () {
     return this._currentHealth
+  }
+
+  /**
+   * @returns {number}
+   */
+  get currentExp () {
+    return this._currentExp
   }
 
   /**

@@ -173,4 +173,29 @@ export class PlayerBattleMon extends BattleMon {
     dataManager.store.set(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS, withUpdatedMonHp)
     dataManager.saveData()
   }
+
+  /**
+   * 
+   * @param {number} exp 
+   * @param {(leveledUp: boolean) => void} callback 
+   */
+  gainExperience (exp, callback) {
+    super.gainExperience(exp, (leveledUp) => {
+      this.#updateExp()
+      callback(leveledUp)
+    })
+    
+  }
+
+  #updateExp () {
+    const withUpdatedMonExp = dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS).map(mon => {
+      if (mon.id === this._monDetails.id) {
+        mon.currentExp = this._currentExp
+        mon.currentLevel = this._currentLevel
+      }
+      return mon
+    })
+    dataManager.store.set(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS, withUpdatedMonExp)
+    dataManager.saveData()
+  }
 }

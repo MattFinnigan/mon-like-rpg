@@ -31,15 +31,16 @@ const initalState = {
         id: 1,
         baseMonIndex: 149,
         name: 'MEWTWO',
-        currentHp: 50,
-        currentLevel: 99,
+        currentHp: 900000,
+        currentLevel: 20,
         attackEV: 14,
         defenseEV: 3,
         splAttackEV: 27,
         splDefenseEV: 8,
         speedEV: 19,
         hpEV: 22,
-        attackIds: [1, 2]
+        attackIds: [1, 2],
+        currentExp: 1
       },
       {
         id: 2,
@@ -53,7 +54,8 @@ const initalState = {
         splDefenseEV: 16,
         speedEV: 2,
         hpEV: 35,
-        attackIds: [2]
+        attackIds: [2],
+        currentExp: 50
       }
     ],
     inventory: [

@@ -240,7 +240,6 @@ export class WorldScene extends Phaser.Scene {
       }
       return npc.sprite.x === targetPosition.x && npc.sprite.y === targetPosition.y
     })
-    console.log(nearbyNpc)
     if (nearbyNpc) {
       nearbyNpc.facePlayer(this.#player.direction)
       nearbyNpc.isTalkingToPlayer = true

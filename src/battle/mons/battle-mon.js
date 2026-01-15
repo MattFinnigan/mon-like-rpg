@@ -4,6 +4,8 @@ import { BATTLE_ASSET_KEYS, MON_ASSET_KEYS } from "../../assets/asset-keys.js"
 import { AudioManager } from "../../utils/audio-manager.js"
 import { MON_TYPES } from "../../types/mon-types.js"
 import { MonCore } from "../../common/mon-core.js"
+import { ExpBar } from "../../common/exp-bar.js"
+import { calculateExperiencedNeededForLevelUp } from "../../utils/battle-utils.js"
 
 export class BattleMon extends MonCore  {
   /** @protected @type {Phaser.Scene} */
@@ -24,30 +26,29 @@ export class BattleMon extends MonCore  {
   _monHpLabelGameText
   /** @protected @type {boolean} */
   _skipBattleAnimations
-
   /** @protected @type {string} */
   _battleSpriteAssetKey
   /** @type {boolean} */
-  #showHpNums
+  #showHpNumsExpBar
+  /** @type {ExpBar} */
+  _expBar
 
   /**
    * 
    * @param {import("../../types/typedef.js").BattleMonConfig} config
    * @param {import("../../types/typedef.js").Coordinate} pos
-   * @param {boolean} [showHpNums=false]
+   * @param {boolean} [showHpNumsExpBar=false]
     */
-  constructor (config, pos = { x: 0, y: 0 }, showHpNums) {
+  constructor (config, pos = { x: 0, y: 0 }, showHpNumsExpBar) {
     super(config.scene, config.monDetails)
     this._scene = config.scene
     this._skipBattleAnimations = config.skipBattleAnimations
     this._battleSpriteAssetKey = this._baseMonDetails.assetKey
-    this.#showHpNums = showHpNums
-
+    this.#showHpNumsExpBar = showHpNumsExpBar
+    
     this.#createMonGameObject(pos)
     this.#createMonDetailsGameObject()
     this.#createHealthBarComponents()
-
-  
   }
 
   /** @type {boolean} */
@@ -204,8 +205,18 @@ export class BattleMon extends MonCore  {
     this._monNameGameText = this._scene.add.bitmapText(0, 2, 'gb-font', this.name, 40)
     this._monLvlGameText = this._scene.add.bitmapText(144, 44, 'gb-font-thick', `Lv${this.currentLevel}`, 30)
     this._monHpLabelGameText = this._scene.add.bitmapText(30, 76, 'gb-font-thick', `HP:`, 20)
-    this._healthBar = new HealthBar(this._scene, 72, 42, this._currentHealth, this._maxHealth, { showHpNums: this.#showHpNums })
+    this._healthBar = new HealthBar(this._scene, 72, 42, this._currentHealth, this._maxHealth, { showHpNums: this.#showHpNumsExpBar })
     this._typeContainers.setAlpha(1)
+    this._expBar = new ExpBar(this._scene, {
+      x: 290,
+      y: 140,
+      currentExp: this._monDetails.currentExp,
+      currentLevel: this._monDetails.currentLevel
+    })
+
+    if (!this.#showHpNumsExpBar) {
+      this._expBar.container.setAlpha(0)
+    }
 
     this._phaserHealthBarGameContainer = this._scene.add.container(20, 0, [
       this._phaserMonDetailsBackgroundImageGameObject,
@@ -213,7 +224,8 @@ export class BattleMon extends MonCore  {
       this._monLvlGameText,
       this._monHpLabelGameText,
       this._healthBar.container,
-      this._typeContainers
+      this._typeContainers,
+      this._expBar.container
     ]).setAlpha(0)
   }
   
@@ -230,7 +242,7 @@ export class BattleMon extends MonCore  {
   }
 
   #createMonDetailsGameObject () {
-    this._phaserMonDetailsBackgroundImageGameObject = this._scene.add.image(0, 0 , BATTLE_ASSET_KEYS.ENEMY_BATTLE_DETAILS_BACKGROUND).setOrigin(0)
+    this._phaserMonDetailsBackgroundImageGameObject = this._scene.add.image(0, 12, BATTLE_ASSET_KEYS.ENEMY_BATTLE_DETAILS_BACKGROUND).setOrigin(0)
   }
 
   /**
@@ -245,5 +257,25 @@ export class BattleMon extends MonCore  {
       this._currentHealth = this._maxHealth
     }
     this._healthBar.setMeterPercentageAnimated(this._currentHealth, this._currentHealth / this._maxHealth, { callback })
+  }
+
+  /**
+   * 
+   * @param {number} exp 
+   * @param {(leveledUp: boolean) => void} callback 
+   */
+  gainExperience (exp, callback) {
+    this._currentExp += exp
+    this._expBar.setMeterPercentageAnimated(this._currentExp, {
+      callback: (levelsGained) => {
+        if (levelsGained > 0) {
+          this._currentLevel += levelsGained
+          this._monLvlGameText.setText(`Lv${this._currentLevel}`)
+          callback(true)
+          return
+        }
+        callback(false)
+      }
+    })
   }
 }

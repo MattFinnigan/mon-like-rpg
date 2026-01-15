@@ -15,3 +15,22 @@ export function getMonStats (baseMon, mon, modifiers) {
     hp: Math.floor(((baseMon.baseHp + mon.hpEV) * 2) * mon.currentLevel / 300) + mon.currentLevel + 10
   }
 }
+
+/**
+ * 
+ * @param {number} enemyLvl
+ * @returns {number} 
+ */
+export function calculateExperienceGained (enemyLvl) {
+  return enemyLvl * 32 // could it be simplier?
+}
+
+/**
+ * 
+ * @param {number} lvl
+ * @returns {number} 
+ */
+export function calculateExperiencedNeededForLevelUp (lvl) {
+  // wont pretend i understand this.. copied from bulbapedia!
+  return (4 * (lvl + 1) ** 3) / 5
+}

@@ -19,7 +19,7 @@ import { ITEM_TYPE_KEY } from '../types/items.js'
 import { OPPONENT_TYPES } from '../types/opponent-types.js'
 import { playItemEffect } from '../utils/item-manager.js'
 import { PartyMon } from '../common/party-menu/party-mon.js'
-import { getMonStats } from '../utils/battle-utils.js'
+import { calculateExperienceGained, getMonStats } from '../utils/battle-utils.js'
 import { DataUtils } from '../utils/data-utils.js'
 
 
@@ -94,6 +94,8 @@ export class BattleScene extends Phaser.Scene {
   #activePlayerItem
   /** @type {PartyMon} */
   #activePlayerSwitchMon
+  /** @type {boolean} */
+  #inputLocked
 
   /**
    * @type {object}
@@ -158,7 +160,11 @@ export class BattleScene extends Phaser.Scene {
   update () {
     this.#battleStateMachine.update()
     const wasSpaceKeyPresed = this.#controls.wasSpaceKeyPressed()
-  
+    
+    if (this.#inputLocked) {
+      return
+    }
+
     if (wasSpaceKeyPresed && this.#needsOkInputToContinue()) {
       this.#battleMenu.handlePlayerInput('OK')
       return
@@ -334,32 +340,49 @@ export class BattleScene extends Phaser.Scene {
   }
 
   #playEnemyFaintedSequence () {
-    const postDeathMsgs = [this.#calculateExperienceEarned()]
     this.#activeEnemyMon.playDeathAnimation(() => {
-  
+      let postDeathMsgs = []
+
       if (this.#opponentIsWildMon()) {
-        postDeathMsgs.unshift(`Wild ${this.#activeEnemyMon.name} fainted!`)
+        postDeathMsgs.push()
         this.#audioManager.playBgm(this.#victoryBgmKey)
-        this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(postDeathMsgs, () => {
-          this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
+        this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`Wild ${this.#activeEnemyMon.name} fainted!`], () => {
+          this.#setExperienceGainedGetMessages((msgs) => {
+            this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(msgs, () => {
+              this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
+            })
+          })
         }, SKIP_ANIMATIONS)
         return
       }
 
       this.#enemyBattleTrainer.redrawRemainingMonsGameObject()
-      postDeathMsgs.unshift(`Foe's ${this.#activeEnemyMon.name} fainted!`)
-      this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(postDeathMsgs, () => {
-        this.#battleStateMachine.setState(BATTLE_STATES.ENEMY_CHOOSE_MON)
+      this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`Foe's ${this.#activeEnemyMon.name} fainted!`], () => {
+        this.#setExperienceGainedGetMessages((msgs) => {
+          this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(msgs, () => {
+            this.#battleStateMachine.setState(BATTLE_STATES.ENEMY_CHOOSE_MON)
+          })
+        })
       }, SKIP_ANIMATIONS)
     })
   }
 
   /**
    * 
-   * @returns {string}
+   * @param {(msgs: string[]) => void} callback 
    */
-  #calculateExperienceEarned () {
-    return `${this.#activePlayerMon.name} gained 32 experience points!`
+  #setExperienceGainedGetMessages (callback) {
+    this.#inputLocked = true
+    const expGained = calculateExperienceGained(this.#activeEnemyMon.currentLevel)
+    const msgs = [`${this.#activePlayerMon.name} gained ${expGained} experience points!`]
+    this.#activePlayerMon.gainExperience(expGained, (didLevelUp) => {
+      if (didLevelUp) {
+        msgs.push(`${this.#activePlayerMon.name} grew to level ${this.#activePlayerMon.currentLevel}!`)
+      }
+      this.#inputLocked = false
+      callback(msgs)
+    })
+    
   }
 
   #playPlayerFaintedSequence () {
