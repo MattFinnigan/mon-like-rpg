@@ -1,9 +1,11 @@
 import Phaser from "../lib/phaser.js";
-import { TILE_SIZE } from "../../config.js";
+import { USE_DEV_DATA, TILE_SIZE } from "../../config.js";
 import { DIRECTION } from "../types/direction.js";
 import { ITEM_KEY } from "../types/items.js";
 
 const LOCAL_STORAGE_KEY = 'MF_MON_DATA'
+const DEV_LOCAL_STORAGE_KEY = 'DEV_MF_MON_DATA'
+
 /**
  * @typedef GlobalState
  * @type {object}
@@ -67,6 +69,56 @@ const initalState = {
   }
 }
 
+/** @type {GlobalState} */
+const devInitialState = {
+  player: {
+    position: {
+      x: 7 * TILE_SIZE,
+      y: 42 * TILE_SIZE
+    },
+    direction: DIRECTION.DOWN,
+    name: 'SPONION',
+    partyMons: [
+      {
+        id: 1,
+        baseMonIndex: 149,
+        name: 'MEWTWO',
+        currentHp: 900000,
+        currentLevel: 20,
+        attackEV: 14,
+        defenseEV: 3,
+        splAttackEV: 27,
+        splDefenseEV: 8,
+        speedEV: 19,
+        hpEV: 22,
+        attackIds: [1, 2],
+        currentExp: 1
+      },
+      {
+        id: 2,
+        baseMonIndex: 15,
+        name: 'PIDGEY',
+        currentHp: 85,
+        currentLevel: 50,
+        attackEV: 5,
+        defenseEV: 29,
+        splAttackEV: 11,
+        splDefenseEV: 16,
+        speedEV: 2,
+        hpEV: 35,
+        attackIds: [2],
+        currentExp: 50
+      }
+    ],
+    inventory: [
+      { itemKey: ITEM_KEY.POKEBALL, qty: 5 },
+      { itemKey: ITEM_KEY.POTION, qty: 20 },
+      { itemKey: ITEM_KEY.REPEL, qty: 3 },
+      { itemKey: ITEM_KEY.KEY_CARD, qty: 1 }
+    ]
+  }
+}
+
 export const DATA_MANAGER_STORE_KEYS = Object.freeze({
   PLAYER_POSITION: 'PLAYER_POSITION',
   PLAYER_DIRECTION: 'PLAYER_DIRECTION',
@@ -81,7 +133,7 @@ class DataManager extends Phaser.Events.EventEmitter {
   constructor () {
     super()
     this.#store = new Phaser.Data.DataManager(this)
-    this.#updateDataManager(initalState)
+    this.#updateDataManager(USE_DEV_DATA ? devInitialState : initalState)
   }
 
   /** @type {Phaser.Data.DataManager} */
@@ -95,7 +147,7 @@ class DataManager extends Phaser.Events.EventEmitter {
       return
     }
     
-    const savedData = localStorage.getItem(LOCAL_STORAGE_KEY)
+    const savedData = localStorage.getItem(USE_DEV_DATA ? DEV_LOCAL_STORAGE_KEY : LOCAL_STORAGE_KEY)
     if (savedData === null) {
       return
     }
@@ -115,7 +167,7 @@ class DataManager extends Phaser.Events.EventEmitter {
     }
 
     const dataToSave = this.#updateDataManagerDataToGlobalStateObject()
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(dataToSave))
+    localStorage.setItem(USE_DEV_DATA ? DEV_LOCAL_STORAGE_KEY : LOCAL_STORAGE_KEY, JSON.stringify(dataToSave))
   }
 
   saveData () {
