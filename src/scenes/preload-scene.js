@@ -40,7 +40,8 @@ export class PreloadScene extends Phaser.Scene {
     const bgmAssetPath = 'assets/audio/bgm'
     const npcAssetPath = 'assets/images/npc'
     const battleAssetPath = 'assets/images/battle'
-    const attackAnimPath = 'assets/images/anims/pimen'
+    const attackAnimPath = 'assets/images/anims/attks'
+    const pinmenAttackAnimPath = 'assets/images/anims/pimen'
 
     // fonts
     this.load.bitmapFont(
@@ -75,24 +76,29 @@ export class PreloadScene extends Phaser.Scene {
     this.load.json(DATA_ASSET_KEYS.ENCOUNTER_AREAS, 'assets/data/encounter_areas.json')
     this.load.json(DATA_ASSET_KEYS.TRAINERS, 'assets/data/trainers.json')
     this.load.json(DATA_ASSET_KEYS.ITEMS, 'assets/data/items.json')
-
+    this.load.json(DATA_ASSET_KEYS.LEVEL_UP_MOVES, 'assets/data/level-up-moves.json')
+    
     // common
     this.load.image(SYSTEM_ASSET_KEYS.DIALOG_BACKGROUND, `/${backgroundAssetPath}/dialog.png`)
     this.load.image(UI_ASSET_KEYS.CURSOR, `${uiAssestPath}/cursor.png`)
     this.load.image(UI_ASSET_KEYS.ARROW, `${uiAssestPath}/arrow.png`)
   
     // attack
-    this.load.spritesheet(ATTACK_ASSET_KEYS.ICE_SHARD, `${attackAnimPath}/ice-attack/active.png`, {
+    this.load.spritesheet(ATTACK_ASSET_KEYS.ICE_SHARD, `${pinmenAttackAnimPath}/ice-attack/active.png`, {
       frameWidth: 32,
       frameHeight: 32
     })
-    this.load.spritesheet(ATTACK_ASSET_KEYS.ICE_SHARD_START, `${attackAnimPath}/ice-attack/start.png`, {
+    this.load.spritesheet(ATTACK_ASSET_KEYS.ICE_SHARD_START, `${pinmenAttackAnimPath}/ice-attack/start.png`, {
       frameWidth: 32,
       frameHeight: 32
     })
-    this.load.spritesheet(ATTACK_ASSET_KEYS.SLASH, `${attackAnimPath}/slash.png`, {
+    this.load.spritesheet(ATTACK_ASSET_KEYS.SLASH, `${pinmenAttackAnimPath}/slash.png`, {
       frameWidth: 48,
       frameHeight: 48
+    })
+    this.load.spritesheet(ATTACK_ASSET_KEYS.FIRE_SPIN, `${attackAnimPath}/fire-spin.png`, {
+      frameWidth: 137,
+      frameHeight: 177
     })
 
     this.load.image(WORLD_ASSET_KEYS.WORLD_BACKGROUND, `/${mapAssetPath}/background.png`)

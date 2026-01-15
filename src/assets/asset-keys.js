@@ -16,7 +16,8 @@ export const DATA_ASSET_KEYS = Object.freeze({
   BASE_MONS: 'BASE_MONS',
   ENCOUNTER_AREAS: 'ENCOUNTER_AREAS',
   TRAINERS: 'TRAINERS',
-  ITEMS: 'ITEMS'
+  ITEMS: 'ITEMS',
+  LEVEL_UP_MOVES: 'LEVEL_UP_MOVES'
 })
 
 export const HEALTH_BAR_ASSET_KEYS = Object.freeze({
@@ -32,7 +33,8 @@ export const SYSTEM_ASSET_KEYS = Object.freeze({
 export const ATTACK_ASSET_KEYS = Object.freeze({
   ICE_SHARD: 'ICE_SHARD',
   ICE_SHARD_START: 'ICE_SHARD_START',
-  SLASH: 'SLASH'
+  SLASH: 'SLASH',
+  FIRE_SPIN: 'FIRE_SPIN'
 })
 
 export const WORLD_ASSET_KEYS = Object.freeze({

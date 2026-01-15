@@ -269,7 +269,7 @@ export class BattleScene extends Phaser.Scene {
    * @returns {import('../types/typedef.js').Attack}
    */
   #getEnemyAttack () {
-    return this.#activeEnemyMon.attacks[0]
+    return this.#activeEnemyMon.attacks[Phaser.Math.Between(0, this.#activeEnemyMon.attacks.length - 1)]
   }
 
   /**

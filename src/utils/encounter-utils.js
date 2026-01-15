@@ -15,21 +15,35 @@ export function generateWildMon (scene, area) {
 
   const level = Phaser.Math.Between(chosenMon.minLevel, chosenMon.maxLevel)
   const baseMon = DataUtils.getBaseMonDetails(scene, chosenMon.baseMonIndex)
+  let learnableAttackIds = DataUtils.getMonLearnableMoves(scene, chosenMon.baseMonIndex, level)
+  let chosenAttackIds = []
+
+  if (learnableAttackIds.length < 5) {
+    chosenAttackIds = learnableAttackIds
+  } else {
+    for (let i = 0; i < 4; i++) {
+      const randomIndex = Phaser.Math.Between(0, learnableAttackIds.length - 1)
+
+      chosenAttackIds.push(learnableAttackIds[randomIndex])
+      learnableAttackIds.splice(randomIndex, 1)
+    }
+  }
 
   /** @type {import("../types/typedef.js").Mon} */
   const mon = {
     id: undefined,
+    currentHp: undefined,
     baseMonIndex: chosenMon.baseMonIndex,
     currentLevel: level,
-    currentHp: 123,
-    attackIds: [1, 2],
+    attackIds: chosenAttackIds,
     attackEV: Phaser.Math.Between(0, 30),
     defenseEV: Phaser.Math.Between(0, 30),
     splAttackEV: Phaser.Math.Between(0, 30),
     splDefenseEV: Phaser.Math.Between(0, 30),
     speedEV: Phaser.Math.Between(0, 30),
     hpEV: Phaser.Math.Between(0, 30),
-    name: baseMon.name
+    name: baseMon.name,
+    currentExp: 0
   }
   
   const monHp = getMonStats(baseMon, mon).hp

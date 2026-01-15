@@ -70,8 +70,6 @@ export class BattleMenu {
   #battleItemMenu
   /** @type {import('../../../types/typedef.js').Item} */
   #selectedItem
-  /** @type {() => void} */
-  #onPartyMonSelection
   /** @type {PartyMenu} */
   #battlePartyMenu
   /** @type {PartyMon} */
@@ -94,7 +92,6 @@ export class BattleMenu {
     this.#queuedMessageSkipAnimation = false
     this.#queuedMessageAnimationPlaying = false
     this.#selectedItem = undefined
-    this.#onPartyMonSelection = undefined
     this.#selectedMonToSwitchTo = undefined
 
     this.#battleItemMenu = new ItemMenu(this.#scene)

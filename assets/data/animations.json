@@ -60,6 +60,14 @@
     "assetKey": "SLASH"
   },
   {
+    "key": "FIRE_SPIN",
+    "frameRate": 8,
+    "repeat": 0,
+    "delay": 0,
+    "yoyo": true,
+    "assetKey": "FIRE_SPIN"
+  },
+  {
     "key": "NPC_2_DOWN",
     "frames": [9, 10, 11],
     "frameRate": 6,

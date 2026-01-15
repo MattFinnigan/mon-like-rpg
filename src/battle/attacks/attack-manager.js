@@ -2,7 +2,7 @@ import { exhaustiveGuard } from "../../utils/guard.js"
 import { ATTACK_KEYS } from "./attack-keys.js"
 import { IceShard } from "./ice-shard.js"
 import { Slash } from "./slash.js"
-
+import { FireSpin } from './fire-spin.js'
 /**
  * @typedef {keyof typeof ATTACK_TARGET} AttackTarget
  */
@@ -23,6 +23,8 @@ export class AttackManager {
   #iceShardAttack
   /** @type {Slash} */
   #slashAttack
+  /** @type {FireSpin} */
+  #fireWheelAttack
 
   /**
    * 
@@ -69,6 +71,12 @@ export class AttackManager {
         this.#slashAttack.gameObject.setPosition(x, y)
         this.#slashAttack.playAnimation(callback)
         break
+      case ATTACK_KEYS.FIRE_SPIN:
+        if (!this.#fireWheelAttack) {
+          this.#fireWheelAttack = new FireSpin(this.#scene, { x, y })
+        }
+        this.#fireWheelAttack.gameObject.setPosition(x, y)
+        this.#fireWheelAttack.playAnimation(callback)
         break
       default:
         exhaustiveGuard(attack)

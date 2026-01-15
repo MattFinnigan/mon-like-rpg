@@ -30,21 +30,6 @@ const initalState = {
     name: 'SPONION',
     partyMons: [
       {
-        id: 1,
-        baseMonIndex: 149,
-        name: 'MEWTWO',
-        currentHp: 900000,
-        currentLevel: 20,
-        attackEV: 14,
-        defenseEV: 3,
-        splAttackEV: 27,
-        splDefenseEV: 8,
-        speedEV: 19,
-        hpEV: 22,
-        attackIds: [1, 2],
-        currentExp: 1
-      },
-      {
         id: 2,
         baseMonIndex: 15,
         name: 'PIDGEY',
@@ -82,32 +67,47 @@ const devInitialState = {
       {
         id: 1,
         baseMonIndex: 149,
-        name: 'MEWTWO',
+        name: 'DEV GOD MON',
         currentHp: 900000,
-        currentLevel: 20,
+        currentLevel: 99,
         attackEV: 14,
         defenseEV: 3,
         splAttackEV: 27,
         splDefenseEV: 8,
         speedEV: 19,
         hpEV: 22,
-        attackIds: [1, 2],
-        currentExp: 1
+        attackIds: [1, 2, 3],
+        currentExp: 799999
       },
       {
         id: 2,
-        baseMonIndex: 15,
-        name: 'PIDGEY',
-        currentHp: 85,
-        currentLevel: 50,
-        attackEV: 5,
+        baseMonIndex: 3,
+        name: 'TANK',
+        currentHp: 900000,
+        currentLevel: 1,
+        attackEV: 1,
         defenseEV: 29,
-        splAttackEV: 11,
+        splAttackEV: 1,
         splDefenseEV: 16,
-        speedEV: 2,
+        speedEV: 1,
         hpEV: 35,
         attackIds: [2],
-        currentExp: 50
+        currentExp: 1
+      },
+      {
+        id: 3,
+        baseMonIndex: 6,
+        name: 'FODDER',
+        currentHp: 1,
+        currentLevel: 1,
+        attackEV: 1,
+        defenseEV: 29,
+        splAttackEV: 1,
+        splDefenseEV: 16,
+        speedEV: 1,
+        hpEV: 35,
+        attackIds: [2],
+        currentExp: 1
       }
     ],
     inventory: [

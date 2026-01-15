@@ -79,5 +79,24 @@ export class DataUtils {
       return item
     })
   }
-  
+
+  /**
+   * 
+   * @param {Phaser.Scene} scene 
+   * @param {number} baseMonIndex 
+   * @param {number} level
+   * @returns {number[]}
+   */
+  static getMonLearnableMoves (scene, baseMonIndex, level) {
+    const data = scene.cache.json.get(DATA_ASSET_KEYS.LEVEL_UP_MOVES)[baseMonIndex]
+    const res = []
+
+    for (const lvlNeeded in data) {
+      if (parseInt(lvlNeeded) <= level) {
+        res.push(data[lvlNeeded])
+      }
+    }
+    return [...new Set(res)]
+  }
+
 }

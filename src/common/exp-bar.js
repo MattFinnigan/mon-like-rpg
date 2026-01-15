@@ -54,7 +54,10 @@ export class ExpBar {
   #createExpBarGameObjects () {
     this.#phaserCurrentExpBarGameObject = this.#scene.add.rectangle(0, 0, 0, 8, 0x0096FF).setOrigin(0)
     this.#phaserCurrentExpText = this.#scene.add.bitmapText(-300, 15, 'gb-font', `${this.#currentExp}/${this.#expToNextLevel}`, 20).setOrigin(0)
-    this.#container.add([this.#phaserCurrentExpBarGameObject])
+    this.#container.add([
+      this.#phaserCurrentExpBarGameObject,
+      this.#phaserCurrentExpText
+    ])
   }
 
   #setMeterPercentage () {
