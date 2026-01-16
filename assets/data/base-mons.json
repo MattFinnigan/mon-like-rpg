@@ -13,7 +13,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["GRASS", "POISON"]
+    "types": [
+      "GRASS",
+      "POISON"
+    ],
+    "evolvesTo": 1,
+    "evolvesAtLevel": 16
   },
   "1": {
     "baseMonIndex": 1,
@@ -29,7 +34,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["GRASS", "POISON"]
+    "types": [
+      "GRASS",
+      "POISON"
+    ],
+    "evolvesTo": 2,
+    "evolvesAtLevel": 32
   },
   "2": {
     "baseMonIndex": 2,
@@ -45,7 +55,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["GRASS", "POISON"]
+    "types": [
+      "GRASS",
+      "POISON"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "3": {
     "baseMonIndex": 3,
@@ -61,7 +76,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["FIRE"]
+    "types": [
+      "FIRE"
+    ],
+    "evolvesTo": 4,
+    "evolvesAtLevel": 16
   },
   "4": {
     "baseMonIndex": 4,
@@ -77,7 +96,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["FIRE"]
+    "types": [
+      "FIRE"
+    ],
+    "evolvesTo": 5,
+    "evolvesAtLevel": 36
   },
   "5": {
     "baseMonIndex": 5,
@@ -93,7 +116,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["FIRE", "FLYING"]
+    "types": [
+      "FIRE",
+      "FLYING"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "6": {
     "baseMonIndex": 6,
@@ -109,7 +137,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["WATER"]
+    "types": [
+      "WATER"
+    ],
+    "evolvesTo": 7,
+    "evolvesAtLevel": 16
   },
   "7": {
     "baseMonIndex": 7,
@@ -125,7 +157,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["WATER"]
+    "types": [
+      "WATER"
+    ],
+    "evolvesTo": 8,
+    "evolvesAtLevel": 36
   },
   "8": {
     "baseMonIndex": 8,
@@ -141,7 +177,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["WATER"]
+    "types": [
+      "WATER"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "9": {
     "baseMonIndex": 9,
@@ -157,7 +197,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["BUG"]
+    "types": [
+      "BUG"
+    ],
+    "evolvesTo": 10,
+    "evolvesAtLevel": 7
   },
   "10": {
     "baseMonIndex": 10,
@@ -173,7 +217,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["BUG"]
+    "types": [
+      "BUG"
+    ],
+    "evolvesTo": 11,
+    "evolvesAtLevel": 10
   },
   "11": {
     "baseMonIndex": 11,
@@ -189,7 +237,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["BUG", "FLYING"]
+    "types": [
+      "BUG",
+      "FLYING"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "12": {
     "baseMonIndex": 12,
@@ -205,7 +258,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["BUG", "POISON"]
+    "types": [
+      "BUG",
+      "POISON"
+    ],
+    "evolvesTo": 13,
+    "evolvesAtLevel": 7
   },
   "13": {
     "baseMonIndex": 13,
@@ -221,7 +279,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["BUG", "POISON"]
+    "types": [
+      "BUG",
+      "POISON"
+    ],
+    "evolvesTo": 14,
+    "evolvesAtLevel": 10
   },
   "14": {
     "baseMonIndex": 14,
@@ -237,7 +300,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["BUG", "POISON"]
+    "types": [
+      "BUG",
+      "POISON"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "15": {
     "baseMonIndex": 15,
@@ -253,7 +321,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["NORMAL", "FLYING"]
+    "types": [
+      "NORMAL",
+      "FLYING"
+    ],
+    "evolvesTo": 16,
+    "evolvesAtLevel": 18
   },
   "16": {
     "baseMonIndex": 16,
@@ -269,7 +342,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["NORMAL", "FLYING"]
+    "types": [
+      "NORMAL",
+      "FLYING"
+    ],
+    "evolvesTo": 17,
+    "evolvesAtLevel": 36
   },
   "17": {
     "baseMonIndex": 17,
@@ -285,7 +363,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["NORMAL", "FLYING"]
+    "types": [
+      "NORMAL",
+      "FLYING"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "18": {
     "baseMonIndex": 18,
@@ -301,7 +384,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["NORMAL"]
+    "types": [
+      "NORMAL"
+    ],
+    "evolvesTo": 19,
+    "evolvesAtLevel": 20
   },
   "19": {
     "baseMonIndex": 19,
@@ -317,7 +404,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["NORMAL"]
+    "types": [
+      "NORMAL"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "20": {
     "baseMonIndex": 20,
@@ -333,7 +424,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["NORMAL", "FLYING"]
+    "types": [
+      "NORMAL",
+      "FLYING"
+    ],
+    "evolvesTo": 21,
+    "evolvesAtLevel": 20
   },
   "21": {
     "baseMonIndex": 21,
@@ -349,7 +445,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["NORMAL", "FLYING"]
+    "types": [
+      "NORMAL",
+      "FLYING"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "22": {
     "baseMonIndex": 22,
@@ -365,7 +466,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["POISON"]
+    "types": [
+      "POISON"
+    ],
+    "evolvesTo": 23,
+    "evolvesAtLevel": 22
   },
   "23": {
     "baseMonIndex": 23,
@@ -381,7 +486,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["POISON"]
+    "types": [
+      "POISON"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "24": {
     "baseMonIndex": 24,
@@ -397,7 +506,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["ELECTRIC"]
+    "types": [
+      "ELECTRIC"
+    ],
+    "evolvesTo": 25,
+    "evolvesAtLevel": 22
   },
   "25": {
     "baseMonIndex": 25,
@@ -413,7 +526,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["ELECTRIC"]
+    "types": [
+      "ELECTRIC"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "26": {
     "baseMonIndex": 26,
@@ -429,7 +546,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["GROUND"]
+    "types": [
+      "GROUND"
+    ],
+    "evolvesTo": 27,
+    "evolvesAtLevel": 22
   },
   "27": {
     "baseMonIndex": 27,
@@ -445,7 +566,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["GROUND"]
+    "types": [
+      "GROUND"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "28": {
     "baseMonIndex": 28,
@@ -461,7 +586,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["POISON"]
+    "types": [
+      "POISON"
+    ],
+    "evolvesTo": 29,
+    "evolvesAtLevel": 16
   },
   "29": {
     "baseMonIndex": 29,
@@ -477,7 +606,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["POISON"]
+    "types": [
+      "POISON"
+    ],
+    "evolvesTo": 30,
+    "evolvesAtLevel": 32
   },
   "30": {
     "baseMonIndex": 30,
@@ -493,7 +626,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["POISON", "GROUND"]
+    "types": [
+      "POISON",
+      "GROUND"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "31": {
     "baseMonIndex": 31,
@@ -509,7 +647,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["POISON"]
+    "types": [
+      "POISON"
+    ],
+    "evolvesTo": 32,
+    "evolvesAtLevel": 16
   },
   "32": {
     "baseMonIndex": 32,
@@ -525,7 +667,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["POISON"]
+    "types": [
+      "POISON"
+    ],
+    "evolvesTo": 33,
+    "evolvesAtLevel": 32
   },
   "33": {
     "baseMonIndex": 33,
@@ -541,7 +687,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["POISON", "GROUND"]
+    "types": [
+      "POISON",
+      "GROUND"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "34": {
     "baseMonIndex": 34,
@@ -557,7 +708,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["NORMAL"]
+    "types": [
+      "NORMAL"
+    ],
+    "evolvesTo": 35,
+    "evolvesAtLevel": 32
   },
   "35": {
     "baseMonIndex": 35,
@@ -573,7 +728,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["NORMAL"]
+    "types": [
+      "NORMAL"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "36": {
     "baseMonIndex": 36,
@@ -589,7 +748,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["FIRE"]
+    "types": [
+      "FIRE"
+    ],
+    "evolvesTo": 37,
+    "evolvesAtLevel": 32
   },
   "37": {
     "baseMonIndex": 37,
@@ -605,7 +768,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["FIRE"]
+    "types": [
+      "FIRE"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "38": {
     "baseMonIndex": 38,
@@ -621,7 +788,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["NORMAL"]
+    "types": [
+      "NORMAL"
+    ],
+    "evolvesTo": 39,
+    "evolvesAtLevel": 32
   },
   "39": {
     "baseMonIndex": 39,
@@ -637,7 +808,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["NORMAL"]
+    "types": [
+      "NORMAL"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "40": {
     "baseMonIndex": 40,
@@ -653,7 +828,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["POISON", "FLYING"]
+    "types": [
+      "POISON",
+      "FLYING"
+    ],
+    "evolvesTo": 41,
+    "evolvesAtLevel": 22
   },
   "41": {
     "baseMonIndex": 41,
@@ -669,7 +849,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["POISON", "FLYING"]
+    "types": [
+      "POISON",
+      "FLYING"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "42": {
     "baseMonIndex": 42,
@@ -685,7 +870,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["GRASS", "POISON"]
+    "types": [
+      "GRASS",
+      "POISON"
+    ],
+    "evolvesTo": 43,
+    "evolvesAtLevel": 21
   },
   "43": {
     "baseMonIndex": 43,
@@ -701,7 +891,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["GRASS", "POISON"]
+    "types": [
+      "GRASS",
+      "POISON"
+    ],
+    "evolvesTo": 44,
+    "evolvesAtLevel": 32
   },
   "44": {
     "baseMonIndex": 44,
@@ -717,7 +912,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["GRASS", "POISON"]
+    "types": [
+      "GRASS",
+      "POISON"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "45": {
     "baseMonIndex": 45,
@@ -733,7 +933,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["BUG", "GRASS"]
+    "types": [
+      "BUG",
+      "GRASS"
+    ],
+    "evolvesTo": 46,
+    "evolvesAtLevel": 24
   },
   "46": {
     "baseMonIndex": 46,
@@ -749,7 +954,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["BUG", "GRASS"]
+    "types": [
+      "BUG",
+      "GRASS"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "47": {
     "baseMonIndex": 47,
@@ -765,7 +975,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["BUG", "POISON"]
+    "types": [
+      "BUG",
+      "POISON"
+    ],
+    "evolvesTo": 48,
+    "evolvesAtLevel": 31
   },
   "48": {
     "baseMonIndex": 48,
@@ -781,7 +996,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["BUG", "POISON"]
+    "types": [
+      "BUG",
+      "POISON"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "49": {
     "baseMonIndex": 49,
@@ -797,7 +1017,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["GROUND"]
+    "types": [
+      "GROUND"
+    ],
+    "evolvesTo": 50,
+    "evolvesAtLevel": 26
   },
   "50": {
     "baseMonIndex": 50,
@@ -813,7 +1037,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["GROUND"]
+    "types": [
+      "GROUND"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "51": {
     "baseMonIndex": 51,
@@ -829,7 +1057,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["NORMAL"]
+    "types": [
+      "NORMAL"
+    ],
+    "evolvesTo": 52,
+    "evolvesAtLevel": 28
   },
   "52": {
     "baseMonIndex": 52,
@@ -845,7 +1077,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["NORMAL"]
+    "types": [
+      "NORMAL"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "53": {
     "baseMonIndex": 53,
@@ -861,7 +1097,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["WATER"]
+    "types": [
+      "WATER"
+    ],
+    "evolvesTo": 54,
+    "evolvesAtLevel": 33
   },
   "54": {
     "baseMonIndex": 54,
@@ -877,7 +1117,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["WATER"]
+    "types": [
+      "WATER"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "55": {
     "baseMonIndex": 55,
@@ -893,7 +1137,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["FIGHTING"]
+    "types": [
+      "FIGHTING"
+    ],
+    "evolvesTo": 56,
+    "evolvesAtLevel": 28
   },
   "56": {
     "baseMonIndex": 56,
@@ -909,7 +1157,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["FIGHTING"]
+    "types": [
+      "FIGHTING"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "57": {
     "baseMonIndex": 57,
@@ -925,7 +1177,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["FIRE"]
+    "types": [
+      "FIRE"
+    ],
+    "evolvesTo": 58,
+    "evolvesAtLevel": 30
   },
   "58": {
     "baseMonIndex": 58,
@@ -941,7 +1197,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["FIRE"]
+    "types": [
+      "FIRE"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "59": {
     "baseMonIndex": 59,
@@ -957,7 +1217,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["WATER"]
+    "types": [
+      "WATER"
+    ],
+    "evolvesTo": 60,
+    "evolvesAtLevel": 25
   },
   "60": {
     "baseMonIndex": 60,
@@ -973,7 +1237,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["WATER"]
+    "types": [
+      "WATER"
+    ],
+    "evolvesTo": 61,
+    "evolvesAtLevel": 36
   },
   "61": {
     "baseMonIndex": 61,
@@ -989,7 +1257,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["WATER", "FIGHTING"]
+    "types": [
+      "WATER",
+      "FIGHTING"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "62": {
     "baseMonIndex": 62,
@@ -1005,7 +1278,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["PSYCHIC"]
+    "types": [
+      "PSYCHIC"
+    ],
+    "evolvesTo": 63,
+    "evolvesAtLevel": 16
   },
   "63": {
     "baseMonIndex": 63,
@@ -1021,7 +1298,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["PSYCHIC"]
+    "types": [
+      "PSYCHIC"
+    ],
+    "evolvesTo": 64,
+    "evolvesAtLevel": 35
   },
   "64": {
     "baseMonIndex": 64,
@@ -1037,7 +1318,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["PSYCHIC"]
+    "types": [
+      "PSYCHIC"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "65": {
     "baseMonIndex": 65,
@@ -1053,7 +1338,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["FIGHTING"]
+    "types": [
+      "FIGHTING"
+    ],
+    "evolvesTo": 66,
+    "evolvesAtLevel": 28
   },
   "66": {
     "baseMonIndex": 66,
@@ -1069,7 +1358,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["FIGHTING"]
+    "types": [
+      "FIGHTING"
+    ],
+    "evolvesTo": 67,
+    "evolvesAtLevel": 40
   },
   "67": {
     "baseMonIndex": 67,
@@ -1085,7 +1378,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["FIGHTING"]
+    "types": [
+      "FIGHTING"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "68": {
     "baseMonIndex": 68,
@@ -1101,7 +1398,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["GRASS", "POISON"]
+    "types": [
+      "GRASS",
+      "POISON"
+    ],
+    "evolvesTo": 69,
+    "evolvesAtLevel": 21
   },
   "69": {
     "baseMonIndex": 69,
@@ -1117,7 +1419,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["GRASS", "POISON"]
+    "types": [
+      "GRASS",
+      "POISON"
+    ],
+    "evolvesTo": 70,
+    "evolvesAtLevel": 32
   },
   "70": {
     "baseMonIndex": 70,
@@ -1133,7 +1440,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["GRASS", "POISON"]
+    "types": [
+      "GRASS",
+      "POISON"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "71": {
     "baseMonIndex": 71,
@@ -1149,7 +1461,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["WATER", "POISON"]
+    "types": [
+      "WATER",
+      "POISON"
+    ],
+    "evolvesTo": 72,
+    "evolvesAtLevel": 30
   },
   "72": {
     "baseMonIndex": 72,
@@ -1165,7 +1482,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["WATER", "POISON"]
+    "types": [
+      "WATER",
+      "POISON"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "73": {
     "baseMonIndex": 73,
@@ -1181,7 +1503,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["ROCK", "GROUND"]
+    "types": [
+      "ROCK",
+      "GROUND"
+    ],
+    "evolvesTo": 74,
+    "evolvesAtLevel": 25
   },
   "74": {
     "baseMonIndex": 74,
@@ -1197,7 +1524,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["ROCK", "GROUND"]
+    "types": [
+      "ROCK",
+      "GROUND"
+    ],
+    "evolvesTo": 75,
+    "evolvesAtLevel": 40
   },
   "75": {
     "baseMonIndex": 75,
@@ -1213,7 +1545,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["ROCK", "GROUND"]
+    "types": [
+      "ROCK",
+      "GROUND"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "76": {
     "baseMonIndex": 76,
@@ -1229,7 +1566,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["FIRE"]
+    "types": [
+      "FIRE"
+    ],
+    "evolvesTo": 77,
+    "evolvesAtLevel": 40
   },
   "77": {
     "baseMonIndex": 77,
@@ -1245,7 +1586,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["FIRE"]
+    "types": [
+      "FIRE"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "78": {
     "baseMonIndex": 78,
@@ -1261,7 +1606,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["WATER", "PSYCHIC"]
+    "types": [
+      "WATER",
+      "PSYCHIC"
+    ],
+    "evolvesTo": 79,
+    "evolvesAtLevel": 37
   },
   "79": {
     "baseMonIndex": 79,
@@ -1277,7 +1627,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["WATER", "PSYCHIC"]
+    "types": [
+      "WATER",
+      "PSYCHIC"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "80": {
     "baseMonIndex": 80,
@@ -1293,7 +1648,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["ELECTRIC"]
+    "types": [
+      "ELECTRIC"
+    ],
+    "evolvesTo": 81,
+    "evolvesAtLevel": 30
   },
   "81": {
     "baseMonIndex": 81,
@@ -1309,7 +1668,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["ELECTRIC"]
+    "types": [
+      "ELECTRIC"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "82": {
     "baseMonIndex": 82,
@@ -1325,7 +1688,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["NORMAL", "FLYING"]
+    "types": [
+      "NORMAL",
+      "FLYING"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "83": {
     "baseMonIndex": 83,
@@ -1341,7 +1709,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["NORMAL", "FLYING"]
+    "types": [
+      "NORMAL",
+      "FLYING"
+    ],
+    "evolvesTo": 84,
+    "evolvesAtLevel": 31
   },
   "84": {
     "baseMonIndex": 84,
@@ -1357,7 +1730,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["NORMAL", "FLYING"]
+    "types": [
+      "NORMAL",
+      "FLYING"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "85": {
     "baseMonIndex": 85,
@@ -1373,7 +1751,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["WATER"]
+    "types": [
+      "WATER"
+    ],
+    "evolvesTo": 86,
+    "evolvesAtLevel": 34
   },
   "86": {
     "baseMonIndex": 86,
@@ -1389,7 +1771,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["WATER", "ICE"]
+    "types": [
+      "WATER",
+      "ICE"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "87": {
     "baseMonIndex": 87,
@@ -1405,7 +1792,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["POISON"]
+    "types": [
+      "POISON"
+    ],
+    "evolvesTo": 88,
+    "evolvesAtLevel": 38
   },
   "88": {
     "baseMonIndex": 88,
@@ -1421,7 +1812,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["POISON"]
+    "types": [
+      "POISON"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "89": {
     "baseMonIndex": 89,
@@ -1437,7 +1832,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["WATER"]
+    "types": [
+      "WATER"
+    ],
+    "evolvesTo": 90,
+    "evolvesAtLevel": 30
   },
   "90": {
     "baseMonIndex": 90,
@@ -1453,7 +1852,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["WATER", "ICE"]
+    "types": [
+      "WATER",
+      "ICE"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "91": {
     "baseMonIndex": 91,
@@ -1469,7 +1873,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["GHOST", "POISON"]
+    "types": [
+      "GHOST",
+      "POISON"
+    ],
+    "evolvesTo": 92,
+    "evolvesAtLevel": 25
   },
   "92": {
     "baseMonIndex": 92,
@@ -1485,7 +1894,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["GHOST", "POISON"]
+    "types": [
+      "GHOST",
+      "POISON"
+    ],
+    "evolvesTo": 93,
+    "evolvesAtLevel": 38
   },
   "93": {
     "baseMonIndex": 93,
@@ -1501,7 +1915,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["GHOST", "POISON"]
+    "types": [
+      "GHOST",
+      "POISON"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "94": {
     "baseMonIndex": 94,
@@ -1517,7 +1936,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["ROCK", "GROUND"]
+    "types": [
+      "ROCK",
+      "GROUND"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "95": {
     "baseMonIndex": 95,
@@ -1533,7 +1957,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["PSYCHIC"]
+    "types": [
+      "PSYCHIC"
+    ],
+    "evolvesTo": 96,
+    "evolvesAtLevel": 26
   },
   "96": {
     "baseMonIndex": 96,
@@ -1549,7 +1977,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["PSYCHIC"]
+    "types": [
+      "PSYCHIC"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "97": {
     "baseMonIndex": 97,
@@ -1565,7 +1997,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["WATER"]
+    "types": [
+      "WATER"
+    ],
+    "evolvesTo": 98,
+    "evolvesAtLevel": 28
   },
   "98": {
     "baseMonIndex": 98,
@@ -1581,7 +2017,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["WATER"]
+    "types": [
+      "WATER"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "99": {
     "baseMonIndex": 99,
@@ -1597,7 +2037,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["ELECTRIC"]
+    "types": [
+      "ELECTRIC"
+    ],
+    "evolvesTo": 100,
+    "evolvesAtLevel": 30
   },
   "100": {
     "baseMonIndex": 100,
@@ -1613,7 +2057,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["ELECTRIC"]
+    "types": [
+      "ELECTRIC"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "101": {
     "baseMonIndex": 101,
@@ -1629,7 +2077,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["GRASS", "PSYCHIC"]
+    "types": [
+      "GRASS",
+      "PSYCHIC"
+    ],
+    "evolvesTo": 102,
+    "evolvesAtLevel": 30
   },
   "102": {
     "baseMonIndex": 102,
@@ -1645,7 +2098,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["GRASS", "PSYCHIC"]
+    "types": [
+      "GRASS",
+      "PSYCHIC"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "103": {
     "baseMonIndex": 103,
@@ -1661,7 +2119,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["GROUND"]
+    "types": [
+      "GROUND"
+    ],
+    "evolvesTo": 104,
+    "evolvesAtLevel": 28
   },
   "104": {
     "baseMonIndex": 104,
@@ -1677,7 +2139,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["GROUND"]
+    "types": [
+      "GROUND"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "105": {
     "baseMonIndex": 105,
@@ -1693,7 +2159,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["FIGHTING"]
+    "types": [
+      "FIGHTING"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "106": {
     "baseMonIndex": 106,
@@ -1709,7 +2179,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["FIGHTING"]
+    "types": [
+      "FIGHTING"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "107": {
     "baseMonIndex": 107,
@@ -1725,7 +2199,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["NORMAL"]
+    "types": [
+      "NORMAL"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "108": {
     "baseMonIndex": 108,
@@ -1741,7 +2219,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["POISON"]
+    "types": [
+      "POISON"
+    ],
+    "evolvesTo": 109,
+    "evolvesAtLevel": 35
   },
   "109": {
     "baseMonIndex": 109,
@@ -1757,7 +2239,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["POISON"]
+    "types": [
+      "POISON"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "110": {
     "baseMonIndex": 110,
@@ -1773,7 +2259,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["GROUND", "ROCK"]
+    "types": [
+      "GROUND",
+      "ROCK"
+    ],
+    "evolvesTo": 111,
+    "evolvesAtLevel": 42
   },
   "111": {
     "baseMonIndex": 111,
@@ -1789,7 +2280,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["GROUND", "ROCK"]
+    "types": [
+      "GROUND",
+      "ROCK"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "112": {
     "baseMonIndex": 112,
@@ -1805,7 +2301,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["NORMAL"]
+    "types": [
+      "NORMAL"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "113": {
     "baseMonIndex": 113,
@@ -1821,7 +2321,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["GRASS"]
+    "types": [
+      "GRASS"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "114": {
     "baseMonIndex": 114,
@@ -1837,7 +2341,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["NORMAL"]
+    "types": [
+      "NORMAL"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "115": {
     "baseMonIndex": 115,
@@ -1853,7 +2361,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["WATER"]
+    "types": [
+      "WATER"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "116": {
     "baseMonIndex": 116,
@@ -1869,7 +2381,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["WATER"]
+    "types": [
+      "WATER"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "117": {
     "baseMonIndex": 117,
@@ -1885,7 +2401,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["WATER"]
+    "types": [
+      "WATER"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "118": {
     "baseMonIndex": 118,
@@ -1901,7 +2421,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["WATER"]
+    "types": [
+      "WATER"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "119": {
     "baseMonIndex": 119,
@@ -1917,7 +2441,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["WATER"]
+    "types": [
+      "WATER"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "120": {
     "baseMonIndex": 120,
@@ -1933,7 +2461,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["WATER", "PSYCHIC"]
+    "types": [
+      "WATER",
+      "PSYCHIC"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "121": {
     "baseMonIndex": 121,
@@ -1949,7 +2482,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["PSYCHIC"]
+    "types": [
+      "PSYCHIC"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "122": {
     "baseMonIndex": 122,
@@ -1965,7 +2502,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["BUG", "FLYING"]
+    "types": [
+      "BUG",
+      "FLYING"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "123": {
     "baseMonIndex": 123,
@@ -1981,7 +2523,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["ICE", "PSYCHIC"]
+    "types": [
+      "ICE",
+      "PSYCHIC"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "124": {
     "baseMonIndex": 124,
@@ -1997,7 +2544,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["ELECTRIC"]
+    "types": [
+      "ELECTRIC"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "125": {
     "baseMonIndex": 125,
@@ -2013,7 +2564,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["FIRE"]
+    "types": [
+      "FIRE"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "126": {
     "baseMonIndex": 126,
@@ -2029,7 +2584,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["BUG"]
+    "types": [
+      "BUG"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "127": {
     "baseMonIndex": 127,
@@ -2045,7 +2604,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["NORMAL"]
+    "types": [
+      "NORMAL"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "128": {
     "baseMonIndex": 128,
@@ -2061,7 +2624,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["WATER"]
+    "types": [
+      "WATER"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "129": {
     "baseMonIndex": 129,
@@ -2077,7 +2644,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["WATER", "FLYING"]
+    "types": [
+      "WATER",
+      "FLYING"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "130": {
     "baseMonIndex": 130,
@@ -2093,7 +2665,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["WATER", "ICE"]
+    "types": [
+      "WATER",
+      "ICE"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "131": {
     "baseMonIndex": 131,
@@ -2109,7 +2686,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["NORMAL"]
+    "types": [
+      "NORMAL"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "132": {
     "baseMonIndex": 132,
@@ -2125,7 +2706,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["NORMAL"]
+    "types": [
+      "NORMAL"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "133": {
     "baseMonIndex": 133,
@@ -2141,7 +2726,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["WATER"]
+    "types": [
+      "WATER"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "134": {
     "baseMonIndex": 134,
@@ -2157,7 +2746,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["ELECTRIC"]
+    "types": [
+      "ELECTRIC"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "135": {
     "baseMonIndex": 135,
@@ -2173,7 +2766,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["FIRE"]
+    "types": [
+      "FIRE"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "136": {
     "baseMonIndex": 136,
@@ -2189,7 +2786,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["NORMAL"]
+    "types": [
+      "NORMAL"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "137": {
     "baseMonIndex": 137,
@@ -2205,7 +2806,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["ROCK", "WATER"]
+    "types": [
+      "ROCK",
+      "WATER"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "138": {
     "baseMonIndex": 138,
@@ -2221,7 +2827,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["ROCK", "WATER"]
+    "types": [
+      "ROCK",
+      "WATER"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "139": {
     "baseMonIndex": 139,
@@ -2237,7 +2848,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["ROCK", "WATER"]
+    "types": [
+      "ROCK",
+      "WATER"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "140": {
     "baseMonIndex": 140,
@@ -2253,7 +2869,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["ROCK", "WATER"]
+    "types": [
+      "ROCK",
+      "WATER"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "141": {
     "baseMonIndex": 141,
@@ -2269,7 +2890,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["ROCK", "FLYING"]
+    "types": [
+      "ROCK",
+      "FLYING"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "142": {
     "baseMonIndex": 142,
@@ -2285,7 +2911,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["NORMAL"]
+    "types": [
+      "NORMAL"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "143": {
     "baseMonIndex": 143,
@@ -2301,7 +2931,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["ICE", "FLYING"]
+    "types": [
+      "ICE",
+      "FLYING"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "144": {
     "baseMonIndex": 144,
@@ -2317,7 +2952,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["ELECTRIC", "FLYING"]
+    "types": [
+      "ELECTRIC",
+      "FLYING"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "145": {
     "baseMonIndex": 145,
@@ -2333,7 +2973,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["FIRE", "FLYING"]
+    "types": [
+      "FIRE",
+      "FLYING"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "146": {
     "baseMonIndex": 146,
@@ -2349,7 +2994,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["DRAGON"]
+    "types": [
+      "DRAGON"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "147": {
     "baseMonIndex": 147,
@@ -2365,7 +3014,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["DRAGON"]
+    "types": [
+      "DRAGON"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "148": {
     "baseMonIndex": 148,
@@ -2381,7 +3034,12 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["DRAGON", "FLYING"]
+    "types": [
+      "DRAGON",
+      "FLYING"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "149": {
     "baseMonIndex": 149,
@@ -2397,7 +3055,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["PSYCHIC"]
+    "types": [
+      "PSYCHIC"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "150": {
     "baseMonIndex": 150,
@@ -2413,7 +3075,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["PSYCHIC"]
+    "types": [
+      "PSYCHIC"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   },
   "151": {
     "baseMonIndex": 151,
@@ -2429,6 +3095,11 @@
     "learnSets": [],
     "partySpriteSheet": 1,
     "partySpriteAssetKey": 1,
-    "types": ["PSYCHIC", "GHOST"]
+    "types": [
+      "PSYCHIC",
+      "GHOST"
+    ],
+    "evolvesTo": null,
+    "evolvesAtLevel": null
   }
 }

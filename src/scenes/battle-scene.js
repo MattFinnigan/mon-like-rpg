@@ -21,6 +21,8 @@ import { playItemEffect } from '../utils/item-manager.js'
 import { PartyMon } from '../common/party-menu/party-mon.js'
 import { calculateExperienceGained, getMonStats } from '../utils/battle-utils.js'
 import { DataUtils } from '../utils/data-utils.js'
+import { DialogUi } from '../common/dialog-ui.js'
+import { loadMonAssets } from '../utils/load-assets.js'
 
 
 /** @enum {object} */
@@ -96,6 +98,8 @@ export class BattleScene extends Phaser.Scene {
   #activePlayerSwitchMon
   /** @type {boolean} */
   #inputLocked
+  /** @type {import('../types/typedef.js').Mon[]} */
+  #evolutionPendingMons
 
   /**
    * @type {object}
@@ -114,6 +118,7 @@ export class BattleScene extends Phaser.Scene {
     this.#playerMons = []
     this.#playersThatHadATurn = []
     this.#activePlayerSwitchMon = null
+    this.#evolutionPendingMons = []
   }
   
   /**
@@ -375,9 +380,12 @@ export class BattleScene extends Phaser.Scene {
     this.#inputLocked = true
     const expGained = calculateExperienceGained(this.#activeEnemyMon.currentLevel)
     const msgs = [`${this.#activePlayerMon.name} gained ${expGained} experience points!`]
-    this.#activePlayerMon.gainExperience(expGained, (didLevelUp) => {
+    this.#activePlayerMon.gainExperience(expGained, (didLevelUp, evolved) => {
       if (didLevelUp) {
         msgs.push(`${this.#activePlayerMon.name} grew to level ${this.#activePlayerMon.currentLevel}!`)
+        if (evolved) {
+          this.#evolutionPendingMons.push(this.#activePlayerMon.monDetails)
+        }
       }
       this.#inputLocked = false
       callback(msgs)
@@ -411,6 +419,10 @@ export class BattleScene extends Phaser.Scene {
   }
 
   #transitionToNextScene () {
+    if (this.#evolutionPendingMons.length) {
+      this.#startEvolveScene()
+      return
+    }
     this.cameras.main.fadeOut(500, 255, 255, 255)
     this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
       this.scene.start(SCENE_KEYS.WORLD_SCENE)
@@ -1021,5 +1033,29 @@ export class BattleScene extends Phaser.Scene {
 
     dataManager.store.set(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS, partyMons)
     dataManager.saveData()
+  }
+
+  #startEvolveScene () {
+    this.load.once('complete', () => {
+      const dialog = new DialogUi(this)
+      dialog.setFontSize(30)
+      dialog.showDialogModalNoInputRequired(['Wait.. Wuh?'])
+      this.time.delayedCall(1000, () => {
+        this.cameras.main.fadeOut(500, 255, 255, 255)
+        this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
+          this.scene.start(SCENE_KEYS.EVOLVE_SCENE, {
+            toEvolve: this.#evolutionPendingMons
+          })
+        })
+      })
+    })
+  
+    this.#evolutionPendingMons.forEach(mon => {
+      const evolveFrom = DataUtils.getBaseMonDetails(this, mon.baseMonIndex)
+      const evolveTo = DataUtils.getBaseMonDetails(this, evolveFrom.evolvesTo)
+      loadMonAssets(this, evolveTo)
+    })
+    
+    this.load.start()
   }
 }

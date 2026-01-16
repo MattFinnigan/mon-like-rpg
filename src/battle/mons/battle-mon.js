@@ -51,34 +51,44 @@ export class BattleMon extends MonCore  {
     this.#createHealthBarComponents()
   }
 
-  /** @type {boolean} */
+  /** @returns {boolean} */
   get isFainted () {
     return this._currentHealth <= 0
   }
 
-  /** @type {string} */
+  /** @returns {string} */
   get name () {
     return this._monDetails.name
   }
 
-  /** @type {number} */
+  /** @returns {number} */
   get currentLevel () {
     return this._monDetails.currentLevel
   }
 
-  /** @type {import("../../types/typedef.js").Attack[]} */
+  /** @returns {import("../../types/typedef.js").Attack[]} */
   get attacks () {
     return [...this._monAttacks]
   }
 
-  /** @type {import("../../types/typedef.js").MonStats} */
+  /** @returns {import("../../types/typedef.js").MonStats} */
   get monStats () {
     return this._monStats
   }
 
-  /** @type {import("../../types/typedef.js").Type[]} */
+  /** @returns {import("../../types/typedef.js").Type[]} */
   get types () {
     return this._baseMonDetails.types
+  }
+
+  /** @returns {import("../../types/typedef.js").BaseMon} */
+  get baseMonDetails () {
+    return this._baseMonDetails
+  }
+
+  /** @returns {import("../../types/typedef.js").Mon} */
+  get monDetails () {
+    return this._monDetails
   }
 
   /**
@@ -262,7 +272,7 @@ export class BattleMon extends MonCore  {
   /**
    * 
    * @param {number} exp 
-   * @param {(leveledUp: boolean) => void} callback 
+   * @param {(leveledUp: boolean, evolved: boolean) => void} callback 
    */
   gainExperience (exp, callback) {
     this._currentExp += exp
@@ -271,10 +281,13 @@ export class BattleMon extends MonCore  {
         if (levelsGained > 0) {
           this._currentLevel += levelsGained
           this._monLvlGameText.setText(`Lv${this._currentLevel}`)
-          callback(true)
+
+          const evolved = this._baseMonDetails.evolvesAtLevel <= this._currentLevel
+
+          callback(true, evolved)
           return
         }
-        callback(false)
+        callback(false, false)
       }
     })
   }

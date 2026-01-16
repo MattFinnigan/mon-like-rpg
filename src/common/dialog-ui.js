@@ -65,7 +65,15 @@ export class DialogUi {
   get isWaitingForInput () {
     return this.#isWaitingForInput
   }
-  
+
+  /**
+   * 
+   * @param {number} size 
+   */
+  setFontSize (size) {
+    this.#uiText.setFontSize(size)
+  }
+
   /**
    * 
    * @param {string[]} messages 

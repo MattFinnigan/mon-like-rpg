@@ -177,12 +177,12 @@ export class PlayerBattleMon extends BattleMon {
   /**
    * 
    * @param {number} exp 
-   * @param {(leveledUp: boolean) => void} callback 
+   * @param {(leveledUp: boolean, evolved: boolean) => void} callback 
    */
   gainExperience (exp, callback) {
-    super.gainExperience(exp, (leveledUp) => {
+    super.gainExperience(exp, (leveledUp, evolved) => {
       this.#updateExp()
-      callback(leveledUp)
+      callback(leveledUp, evolved)
     })
     
   }

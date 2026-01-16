@@ -33,6 +33,8 @@ import Phaser from "../lib/phaser.js";
  * @property {number[]} learnSet
  * @property {number} partySpriteSheet
  * @property {number} partySpriteAssetKey
+ * @property {number|null} evolvesTo
+ * @property {number|null} evolvesAtLevel
  */
 
 /**
