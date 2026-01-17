@@ -1,3 +1,4 @@
+import { SKIP_ANIMATIONS } from "../../config.js"
 import { calculateExperiencedNeededForLevelUp } from "../utils/battle-utils.js"
 
 export class ExpBar {
@@ -77,7 +78,7 @@ export class ExpBar {
    */
   setMeterPercentageAnimated (targetExp, options) {
     let percent = (targetExp - this.#expForCurrentLevel) / (this.#expToNextLevel - this.#expForCurrentLevel)
-    const duration = options?.duration || 1000
+    const duration = options?.duration || (SKIP_ANIMATIONS ? 0 : 1000)
     let width = this.#fullWidth * percent
 
     if (percent > 1) {

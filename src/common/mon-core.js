@@ -2,6 +2,7 @@ import { SKIP_ANIMATIONS } from "../../config.js"
 import { MON_ASSET_KEYS } from "../assets/asset-keys.js"
 import { AudioManager } from "../utils/audio-manager.js"
 import { getMonStats } from "../utils/battle-utils.js"
+import { DATA_MANAGER_STORE_KEYS, dataManager } from "../utils/data-manager.js"
 import { DataUtils } from "../utils/data-utils.js"
 
 export class MonCore {
@@ -121,6 +122,7 @@ export class MonCore {
   }
 
   #getMonAttacks () {
+    this._monAttacks = []
     this._monDetails.attackIds.forEach(attkId => {
       const monAttk = DataUtils.getMonAttack(this._scene, attkId)
       if (monAttk !== undefined) {
@@ -154,4 +156,21 @@ export class MonCore {
     }
   }
 
+  /**
+   * 
+   * @param {number[]} ids 
+   */
+  updateAttackIds (ids) {
+    this._monDetails.attackIds = ids
+    const withUpdatedMonHp = dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS).map(mon => {
+      if (mon.id === this._monDetails.id) {
+        mon.attackIds = this._monDetails.attackIds
+      }
+      return mon
+    })
+    dataManager.store.set(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS, withUpdatedMonHp)
+    dataManager.saveData()
+
+    this.#getMonAttacks()
+  }
 }

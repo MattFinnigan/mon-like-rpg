@@ -95,6 +95,21 @@ const devInitialState = {
     name: 'YOU',
     partyMons: [
       {
+        id: 1123123,
+        baseMonIndex: 3,
+        name: '123',
+        currentHp: 900000,
+        currentLevel: 8,
+        attackEV: 14,
+        defenseEV: 3,
+        splAttackEV: 27,
+        splDefenseEV: 8,
+        speedEV: 19,
+        hpEV: 22,
+        attackIds: [2, 2, 2, 2],
+        currentExp: 506.6
+      },
+      {
         id: 1,
         baseMonIndex: 149,
         name: 'DEV GOD MON',

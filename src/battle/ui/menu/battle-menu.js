@@ -270,7 +270,7 @@ export class BattleMenu {
     this.#scene.time.delayedCall(100, () => {
       this.#queuedInfoPanelMessages = messages
       this.#queuedInfoPanelCallback = callback
-      this.#queuedMessageSkipAnimation = skipAnimation
+      this.#queuedMessageSkipAnimation = SKIP_ANIMATIONS || skipAnimation
 
       this.#updateInfoPaneWithMessage()
     })
@@ -285,7 +285,8 @@ export class BattleMenu {
   updateInfoPanelMessagesNoInputRequired (message, callback, skipAnimation = false) {
     this.#queuedMessageAnimationPlaying = true
     this.#battleTextGameObjectLine1.setText('').setAlpha(1)
-  
+    skipAnimation = skipAnimation || SKIP_ANIMATIONS
+
     if (skipAnimation) {
       this.#battleTextGameObjectLine1.setText(message)
       this.#waitingForPlayerInput = false

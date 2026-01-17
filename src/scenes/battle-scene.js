@@ -48,8 +48,7 @@ const BATTLE_STATES = Object.freeze({
   POST_ITEM_USED: 'POST_ITEM_USED',
   PLAYER_SWITCH: 'PLAYER_SWITCH',
   GAINING_EXPERIENCE: 'GAINING_EXPERIENCE',
-  POST_EXPERIENCE_GAINED: 'POST_EXPERIENCE_GAINED',
-  LEARNING_NEW_MOVE: 'LEARNING_NEW_MOVE'
+  POST_EXPERIENCE_GAINED: 'POST_EXPERIENCE_GAINED'
 })
 
 /** @enum {object} */
@@ -175,6 +174,23 @@ export class BattleScene extends Phaser.Scene {
     const wasBackKeyPressed = this.#controls.wasBackKeyPressed()
     const selectedDirection = this.#controls.getDirectionKeyJustPressed()
   
+    if (this.#learnAttackManager.learningNewAttack) {
+      if (wasSpaceKeyPresed) {
+        this.#learnAttackManager.handlePlayerInput('OK')
+        return
+      }
+
+      if (wasBackKeyPressed) {
+        this.#learnAttackManager.handlePlayerInput('CANCEL')
+        return
+      }
+
+      if (selectedDirection !== DIRECTION.NONE) {
+        this.#learnAttackManager.handlePlayerInput(selectedDirection)
+      }
+      return
+    }
+    
     if (wasSpaceKeyPresed && this.#needsOkInputToContinue()) {
       this.#battleMenu.handlePlayerInput('OK')
       return
@@ -604,10 +620,6 @@ export class BattleScene extends Phaser.Scene {
     })
 
     this.#battleStateMachine.addState({
-      name: BATTLE_STATES.LEARNING_NEW_MOVE
-    })
-
-    this.#battleStateMachine.addState({
       name: BATTLE_STATES.PLAYER_VICTORY,
       onEnter: () => {
         this.#audioManager.playBgm(this.#victoryBgmKey)
@@ -766,8 +778,7 @@ export class BattleScene extends Phaser.Scene {
       state === BATTLE_STATES.PLAYER_DEFEATED ||
       state === BATTLE_STATES.PLAYER_VICTORY ||
       state === BATTLE_STATES.RUN_ATTEMPT ||
-      state === BATTLE_STATES.POST_EXPERIENCE_GAINED ||
-      state === BATTLE_STATES.LEARNING_NEW_MOVE
+      state === BATTLE_STATES.POST_EXPERIENCE_GAINED
   }
 
   #waitingForPlayerToTakeTurn () {
@@ -1070,21 +1081,19 @@ export class BattleScene extends Phaser.Scene {
   #postExperienceGainedSequence () {
     this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(this.#postExperienceGainMsgs, () => {
       this.#postExperienceGainMsgs = []
-      this.#learnAttackManager.checkMonHasNewMoveToLearn(this.#activePlayerMon.monDetails, (msgs, newMove) => {
-        if (newMove) {
-          // this.#battleStateMachine.setState(BATTLE_STATES.LEARNING_NEW_MOVE)
-          this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(msgs, () => {
-            this.#activePlayerMon.attacks = [...this.#activePlayerMon.attacks, newMove]
-            this.#battleMenu.createMonAttackSubMenu()
+      this.#learnAttackManager.checkMonHasNewMoveToLearn(this.#activePlayerMon.monDetails, (newAttackIds) => {
+        if (newAttackIds) {
+          this.#activePlayerMon.updateAttackIds(newAttackIds)
+          this.#battleMenu.createMonAttackSubMenu()
 
-            if (this.#opponentIsWildMon()) {
-              this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
-              return
-            }
-            this.#battleStateMachine.setState(BATTLE_STATES.ENEMY_CHOOSE_MON)
-          })
+          if (this.#opponentIsWildMon()) {
+            this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
+            return
+          }
+          this.#battleStateMachine.setState(BATTLE_STATES.ENEMY_CHOOSE_MON)
           return
         }
+
         if (this.#opponentIsWildMon()) {
           this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
           return

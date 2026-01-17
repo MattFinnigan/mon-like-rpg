@@ -71,11 +71,6 @@ export class BattleMon extends MonCore  {
     return [...this._monAttacks]
   }
 
-  /** @param {import("../../types/typedef.js").Attack[]} attacks */
-  set attacks (attacks) {
-    this._monAttacks = attacks
-  }
-
   /** @returns {import("../../types/typedef.js").MonStats} */
   get monStats () {
     return this._monStats
