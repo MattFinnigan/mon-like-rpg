@@ -23,6 +23,7 @@ import { calculateExperienceGained, getMonStats } from '../utils/battle-utils.js
 import { DataUtils } from '../utils/data-utils.js'
 import { DialogUi } from '../common/dialog-ui.js'
 import { loadMonAssets } from '../utils/load-assets.js'
+import { LearnAttackManager } from '../common/learn-attack-mananger.js'
 
 
 /** @enum {object} */
@@ -45,7 +46,10 @@ const BATTLE_STATES = Object.freeze({
   PLAYER_DEFEATED: 'PLAYER_DEFEATED',
   ITEM_USED: 'ITEM_USED',
   POST_ITEM_USED: 'POST_ITEM_USED',
-  PLAYER_SWITCH: 'PLAYER_SWITCH'
+  PLAYER_SWITCH: 'PLAYER_SWITCH',
+  GAINING_EXPERIENCE: 'GAINING_EXPERIENCE',
+  POST_EXPERIENCE_GAINED: 'POST_EXPERIENCE_GAINED',
+  LEARNING_NEW_MOVE: 'LEARNING_NEW_MOVE'
 })
 
 /** @enum {object} */
@@ -96,10 +100,11 @@ export class BattleScene extends Phaser.Scene {
   #activePlayerItem
   /** @type {PartyMon} */
   #activePlayerSwitchMon
-  /** @type {boolean} */
-  #inputLocked
   /** @type {import('../types/typedef.js').Mon[]} */
   #evolutionPendingMons
+  #postExperienceGainMsgs
+  /** @type {LearnAttackManager} */
+  #learnAttackManager
 
   /**
    * @type {object}
@@ -119,6 +124,7 @@ export class BattleScene extends Phaser.Scene {
     this.#playersThatHadATurn = []
     this.#activePlayerSwitchMon = null
     this.#evolutionPendingMons = []
+    this.#postExperienceGainMsgs = []
   }
   
   /**
@@ -153,6 +159,7 @@ export class BattleScene extends Phaser.Scene {
     this.#battleMenu = new BattleMenu(this)
     this.#attackManager = new AttackManager(this, SKIP_ANIMATIONS)
     this.#controls = new Controls(this)
+    this.#learnAttackManager = new LearnAttackManager(this)
 
     this.#setUpBattleMons()
     this.#createBattleStateMachine()
@@ -165,11 +172,9 @@ export class BattleScene extends Phaser.Scene {
   update () {
     this.#battleStateMachine.update()
     const wasSpaceKeyPresed = this.#controls.wasSpaceKeyPressed()
-    
-    if (this.#inputLocked) {
-      return
-    }
-
+    const wasBackKeyPressed = this.#controls.wasBackKeyPressed()
+    const selectedDirection = this.#controls.getDirectionKeyJustPressed()
+  
     if (wasSpaceKeyPresed && this.#needsOkInputToContinue()) {
       this.#battleMenu.handlePlayerInput('OK')
       return
@@ -179,12 +184,12 @@ export class BattleScene extends Phaser.Scene {
       return
     }
 
-    if (this.#controls.wasBackKeyPressed()) {
+    if (wasBackKeyPressed) {
       this.#battleMenu.handlePlayerInput('CANCEL')
       return
     }
 
-    const selectedDirection = this.#controls.getDirectionKeyJustPressed()
+    
     if (selectedDirection !== DIRECTION.NONE) {
       this.#battleMenu.handlePlayerInput(selectedDirection)
     }
@@ -346,38 +351,23 @@ export class BattleScene extends Phaser.Scene {
 
   #playEnemyFaintedSequence () {
     this.#activeEnemyMon.playDeathAnimation(() => {
-      let postDeathMsgs = []
 
       if (this.#opponentIsWildMon()) {
-        postDeathMsgs.push()
         this.#audioManager.playBgm(this.#victoryBgmKey)
         this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`Wild ${this.#activeEnemyMon.name} fainted!`], () => {
-          this.#setExperienceGainedGetMessages((msgs) => {
-            this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(msgs, () => {
-              this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
-            })
-          })
+          this.#battleStateMachine.setState(BATTLE_STATES.GAINING_EXPERIENCE)
         }, SKIP_ANIMATIONS)
         return
       }
 
       this.#enemyBattleTrainer.redrawRemainingMonsGameObject()
       this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`Foe's ${this.#activeEnemyMon.name} fainted!`], () => {
-        this.#setExperienceGainedGetMessages((msgs) => {
-          this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(msgs, () => {
-            this.#battleStateMachine.setState(BATTLE_STATES.ENEMY_CHOOSE_MON)
-          })
-        })
+        this.#battleStateMachine.setState(BATTLE_STATES.GAINING_EXPERIENCE)
       }, SKIP_ANIMATIONS)
     })
   }
 
-  /**
-   * 
-   * @param {(msgs: string[]) => void} callback 
-   */
-  #setExperienceGainedGetMessages (callback) {
-    this.#inputLocked = true
+  #setExperienceGainedGetMessages () {
     const expGained = calculateExperienceGained(this.#activeEnemyMon.currentLevel)
     const msgs = [`${this.#activePlayerMon.name} gained ${expGained} experience points!`]
     this.#activePlayerMon.gainExperience(expGained, (didLevelUp, evolved) => {
@@ -387,10 +377,9 @@ export class BattleScene extends Phaser.Scene {
           this.#evolutionPendingMons.push(this.#activePlayerMon.monDetails)
         }
       }
-      this.#inputLocked = false
-      callback(msgs)
+      this.#postExperienceGainMsgs = msgs
+      this.#battleStateMachine.setState(BATTLE_STATES.POST_EXPERIENCE_GAINED)
     })
-    
   }
 
   #playPlayerFaintedSequence () {
@@ -601,6 +590,24 @@ export class BattleScene extends Phaser.Scene {
     })
 
     this.#battleStateMachine.addState({
+      name: BATTLE_STATES.GAINING_EXPERIENCE,
+      onEnter: () => {
+        this.#setExperienceGainedGetMessages()
+      }
+    })
+
+    this.#battleStateMachine.addState({
+      name: BATTLE_STATES.POST_EXPERIENCE_GAINED,
+      onEnter: () => {
+        this.#postExperienceGainedSequence()
+      }
+    })
+
+    this.#battleStateMachine.addState({
+      name: BATTLE_STATES.LEARNING_NEW_MOVE
+    })
+
+    this.#battleStateMachine.addState({
       name: BATTLE_STATES.PLAYER_VICTORY,
       onEnter: () => {
         this.#audioManager.playBgm(this.#victoryBgmKey)
@@ -758,7 +765,9 @@ export class BattleScene extends Phaser.Scene {
       state === BATTLE_STATES.ITEM_USED ||
       state === BATTLE_STATES.PLAYER_DEFEATED ||
       state === BATTLE_STATES.PLAYER_VICTORY ||
-      state === BATTLE_STATES.RUN_ATTEMPT
+      state === BATTLE_STATES.RUN_ATTEMPT ||
+      state === BATTLE_STATES.POST_EXPERIENCE_GAINED ||
+      state === BATTLE_STATES.LEARNING_NEW_MOVE
   }
 
   #waitingForPlayerToTakeTurn () {
@@ -1038,7 +1047,6 @@ export class BattleScene extends Phaser.Scene {
   #startEvolveScene () {
     this.load.once('complete', () => {
       const dialog = new DialogUi(this)
-      dialog.setFontSize(30)
       dialog.showDialogModalNoInputRequired(['Wait.. Wuh?'])
       this.time.delayedCall(1000, () => {
         this.cameras.main.fadeOut(500, 255, 255, 255)
@@ -1057,5 +1065,32 @@ export class BattleScene extends Phaser.Scene {
     })
     
     this.load.start()
+  }
+
+  #postExperienceGainedSequence () {
+    this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(this.#postExperienceGainMsgs, () => {
+      this.#postExperienceGainMsgs = []
+      this.#learnAttackManager.checkMonHasNewMoveToLearn(this.#activePlayerMon.monDetails, (msgs, newMove) => {
+        if (newMove) {
+          // this.#battleStateMachine.setState(BATTLE_STATES.LEARNING_NEW_MOVE)
+          this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(msgs, () => {
+            this.#activePlayerMon.attacks = [...this.#activePlayerMon.attacks, newMove]
+            this.#battleMenu.createMonAttackSubMenu()
+
+            if (this.#opponentIsWildMon()) {
+              this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
+              return
+            }
+            this.#battleStateMachine.setState(BATTLE_STATES.ENEMY_CHOOSE_MON)
+          })
+          return
+        }
+        if (this.#opponentIsWildMon()) {
+          this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
+          return
+        }
+        this.#battleStateMachine.setState(BATTLE_STATES.ENEMY_CHOOSE_MON)
+      })
+    })
   }
 }

@@ -40,7 +40,7 @@ export class DialogUi {
   
     const panel =  this.#scene.add.image(0, 0, SYSTEM_ASSET_KEYS.DIALOG_BACKGROUND).setOrigin(0)
     this.#container = this.#scene.add.container(0, 0, [panel]).setDepth(1)
-    this.#uiText = this.#scene.add.bitmapText(DIALOG_DETAILS.paddingLeft * 2, DIALOG_DETAILS.paddingTop, 'gb-font', CANNOT_READ_SIGN_TEXT, 40).setMaxWidth(DIALOG_DETAILS.maxTextWidth(this.#scene.scale.width))
+    this.#uiText = this.#scene.add.bitmapText(DIALOG_DETAILS.paddingLeft, DIALOG_DETAILS.paddingTop, 'gb-font', CANNOT_READ_SIGN_TEXT, 30).setMaxWidth(DIALOG_DETAILS.maxTextWidth(this.#scene.scale.width))
     this.#container.add(this.#uiText)
     this.#createPlayerInputCursor()
     this.hideDialogModal()
@@ -64,14 +64,6 @@ export class DialogUi {
   /** @returns {boolean} */
   get isWaitingForInput () {
     return this.#isWaitingForInput
-  }
-
-  /**
-   * 
-   * @param {number} size 
-   */
-  setFontSize (size) {
-    this.#uiText.setFontSize(size)
   }
 
   /**

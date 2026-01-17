@@ -43,7 +43,7 @@ export function generateWildMon (scene, area) {
     speedEV: Phaser.Math.Between(0, 30),
     hpEV: Phaser.Math.Between(0, 30),
     name: baseMon.name,
-    currentExp: calculateExperiencedNeededForLevelUp(level - 1)
+    currentExp: calculateExperiencedNeededForLevelUp(level - 1) + 1
   }
   
   const monHp = getMonStats(baseMon, mon).hp

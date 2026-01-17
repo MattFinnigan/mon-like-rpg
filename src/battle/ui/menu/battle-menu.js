@@ -98,7 +98,7 @@ export class BattleMenu {
     this.#battlePartyMenu = new PartyMenu(this.#scene)
     
     if (this.#activePlayerMon) {
-      this.#createMonAttackSubMenu()
+      this.createMonAttackSubMenu()
     }
     this.#createMainInfoPane()
     this.#createMainBattleMenu()
@@ -132,7 +132,7 @@ export class BattleMenu {
    */
   set activePlayerMon (activePlayerMon) {
     this.#activePlayerMon = activePlayerMon
-    this.#createMonAttackSubMenu()
+    this.createMonAttackSubMenu()
   }
 
   showMainBattleMenu () {
@@ -191,10 +191,6 @@ export class BattleMenu {
   }
 
   playInputCursorAnimation () {
-    this.#userInputCursorPhaserGameImageObject.setPosition(
-      this.#battleTextGameObjectLine1.displayWidth + this.#userInputCursorPhaserGameImageObject.width * 4,
-      this.#userInputCursorPhaserGameImageObject.y
-    )
     this.#userInputCursorPhaserGameImageObject.setAlpha(1)
     this.#userInputCursorPhaserTween.restart()
   }
@@ -366,8 +362,8 @@ export class BattleMenu {
     )
     this.hideMainBattleMenu()
   }
-
-  #createMonAttackSubMenu () {
+  
+  createMonAttackSubMenu () {
     this.#attackCursorPhaserImageGameObject = this.#scene.add.image(ATTACK_MENU_CURSOR_POS.x, ATTACK_MENU_CURSOR_POS.y, UI_ASSET_KEYS.CURSOR, 0)
       .setOrigin(0)
       .setScale(1.35)
@@ -377,6 +373,7 @@ export class BattleMenu {
     for (let i = 0; i < 4; i++) {
       attackNames.push(this.#activePlayerMon.attacks[i]?.name || '-')
     }
+    console.log(attackNames)
 
     this.#moveSelectionSubBattleMenuPhaserContainerGameObject = this.#scene.add.container(0, DIALOG_DETAILS.y, [
       this.#scene.add.bitmapText(55, DIALOG_DETAILS.paddingTop, 'gb-font', attackNames[0], 30),
@@ -665,7 +662,10 @@ export class BattleMenu {
 
 
   #createPlayerInputCursor () {
-    this.#userInputCursorPhaserGameImageObject = this.#scene.add.image(0, 0, UI_ASSET_KEYS.CURSOR, 0).setOrigin(0).setAngle(90)
+    const y = this.#scene.scale.height - 15 - DIALOG_DETAILS.paddingTop
+    const x = this.#scene.scale.width - 19 - DIALOG_DETAILS.paddingLeft
+
+    this.#userInputCursorPhaserGameImageObject = this.#scene.add.image(x, y, UI_ASSET_KEYS.CURSOR, 0).setOrigin(0).setAngle(90)
     this.#userInputCursorPhaserGameImageObject.setAlpha(0)
 
     this.#userInputCursorPhaserTween = this.#scene.add.tween({
@@ -673,8 +673,9 @@ export class BattleMenu {
       duration: 500,
       repeat: -1,
       y: {
-        from: PLAYER_INPUT_CURSOR_POS.y,
-        to: PLAYER_INPUT_CURSOR_POS.y + 6
+        from: y,
+        start: y,
+        to: y + 6
       },
       targets: this.#userInputCursorPhaserGameImageObject
     })

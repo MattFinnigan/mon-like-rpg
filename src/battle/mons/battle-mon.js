@@ -71,6 +71,11 @@ export class BattleMon extends MonCore  {
     return [...this._monAttacks]
   }
 
+  /** @param {import("../../types/typedef.js").Attack[]} attacks */
+  set attacks (attacks) {
+    this._monAttacks = attacks
+  }
+
   /** @returns {import("../../types/typedef.js").MonStats} */
   get monStats () {
     return this._monStats
@@ -282,7 +287,7 @@ export class BattleMon extends MonCore  {
           this._currentLevel += levelsGained
           this._monLvlGameText.setText(`Lv${this._currentLevel}`)
 
-          const evolved = this._baseMonDetails.evolvesAtLevel <= this._currentLevel
+          const evolved = this._baseMonDetails.evolvesTo ? this._baseMonDetails.evolvesAtLevel <= this._currentLevel : false
 
           callback(true, evolved)
           return
