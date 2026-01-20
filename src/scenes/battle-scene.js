@@ -29,7 +29,6 @@ import { LearnAttackManager } from '../common/learn-attack-mananger.js'
 /** @enum {object} */
 const BATTLE_STATES = Object.freeze({
   INTRO: 'INTRO',
-  ENEMY_OUT: 'ENEMY_OUT',
   PRE_BATTLE_INFO: 'PRE_BATTLE_INFO',
   WILD_MON_OUT: 'WILD_MON_OUT',
   ENEMY_MON_OUT: 'ENEMY_MON_OUT',
@@ -441,13 +440,6 @@ export class BattleScene extends Phaser.Scene {
       name: BATTLE_STATES.INTRO,
       onEnter: () => {
         this.#createBattleTrainers()
-        this.#battleStateMachine.setState(BATTLE_STATES.PRE_BATTLE_INFO)
-      }
-    })
-  
-    this.#battleStateMachine.addState({
-      name: BATTLE_STATES.PRE_BATTLE_INFO,
-      onEnter: () => {
         this.#bringOutPlayerTrainer()
 
         if (this.#opponentIsWildMon()) {
@@ -455,6 +447,17 @@ export class BattleScene extends Phaser.Scene {
           return
         }
 
+        this.#enemyBattleTrainer.playCharacterAppearAnimation(() => {
+          this.#battleStateMachine.setState(BATTLE_STATES.PRE_BATTLE_INFO)
+        })
+
+        
+      }
+    })
+  
+    this.#battleStateMachine.addState({
+      name: BATTLE_STATES.PRE_BATTLE_INFO,
+      onEnter: () => {
         this.#introduceEnemyTrainer()
       }
     })
@@ -770,9 +773,6 @@ export class BattleScene extends Phaser.Scene {
   #needsOkInputToContinue () {
     const state = this.#battleStateMachine.currentStateName
     return state === BATTLE_STATES.PRE_BATTLE_INFO ||
-      state === BATTLE_STATES.ENEMY_OUT ||
-      state === BATTLE_STATES.ENEMY_MON_OUT ||
-      state === BATTLE_STATES.WILD_MON_OUT ||
       state === BATTLE_STATES.POST_ATTACK ||
       state === BATTLE_STATES.ITEM_USED ||
       state === BATTLE_STATES.PLAYER_DEFEATED ||
@@ -867,13 +867,11 @@ export class BattleScene extends Phaser.Scene {
   }
 
   #introduceEnemyTrainer () {
-    this.#enemyBattleTrainer.playCharacterAppearAnimation(() => {
-      this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`${this.#enemyBattleTrainer.trainerType.toUpperCase()} ${this.#enemyBattleTrainer.name.toUpperCase()} wants to fight!`], () => {
-        this.#enemyBattleTrainer.playCharacterDisappearAnimation(() => {
-          this.#battleStateMachine.setState(BATTLE_STATES.ENEMY_CHOOSE_MON)
-        })
-      }, SKIP_ANIMATIONS)
-    })
+    this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`${this.#enemyBattleTrainer.trainerType.toUpperCase()} ${this.#enemyBattleTrainer.name.toUpperCase()} wants to fight!`], () => {
+      this.#enemyBattleTrainer.playCharacterDisappearAnimation(() => {
+        this.#battleStateMachine.setState(BATTLE_STATES.ENEMY_CHOOSE_MON)
+      })
+    }, SKIP_ANIMATIONS)
   }
 
   #enemyChooseNextMon () {

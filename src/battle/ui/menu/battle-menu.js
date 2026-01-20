@@ -155,6 +155,9 @@ export class BattleMenu {
   }
 
   showMonAttackSubMenu () {
+    if (!this.#moveSelectionSubBattleMenuPhaserContainerGameObject) {
+      return
+    }
     this.#activeBattleMenu = ACTIVE_BATTLE_MENU.BATTLE_MOVE_SELECT
     this.#moveSelectionSubBattleMenuPhaserContainerGameObject.setAlpha(1)
   }

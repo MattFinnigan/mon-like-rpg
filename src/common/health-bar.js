@@ -56,7 +56,6 @@ export class HealthBar {
       this.#addHealthBarComponents()
       this.#setHealthBarText()
     }
-    console.log(this.#currentHp, this.#maxHp)
   }
 
   get container () {
