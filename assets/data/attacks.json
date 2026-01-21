@@ -8,7 +8,7 @@
     "criticalHitModifier": 1,
     "usesMonSplStat": true,
     "selfStatusEffects": [],
-    "opponentStatusEffects": [],
+    "opponentStatusEffect": { "name": "FREEZE", "chancePercentage": 100 },
     "powerPoints": 10,
     "accuracy": 100
   },
@@ -21,7 +21,7 @@
     "criticalHitModifier": 4,
     "usesMonSplStat": false,
     "selfStatusEffects": [],
-    "opponentStatusEffects": [],
+    "opponentStatusEffect": null,
     "powerPoints": 20,
     "accuracy": 100
   },
@@ -34,7 +34,20 @@
     "criticalHitModifier": 1,
     "usesMonSplStat": true,
     "selfStatusEffects": [],
-    "opponentStatusEffects": [],
+    "opponentStatusEffect": null,
+    "powerPoints": 15,
+    "accuracy": 100
+  },
+  {
+    "id": 4,
+    "name": "SPLASH",
+    "animationName": "SPLASH",
+    "typeKey": "NORMAL",
+    "power": 0,
+    "criticalHitModifier": 1,
+    "usesMonSplStat": true,
+    "selfStatusEffects": [],
+    "opponentStatusEffect": null,
     "powerPoints": 15,
     "accuracy": 100
   }

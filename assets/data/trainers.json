@@ -5,7 +5,7 @@
     "rewardOnVictory": 1500,
     "payOutOnDefeat": 1000,
     "assetKey": "PSYCHIC",
-    "partyMons": [4, 5],
+    "partyMons": [4, 5, 6],
     "defeatedMsg": "NOOO! BORRIS!!!"
   }
 }

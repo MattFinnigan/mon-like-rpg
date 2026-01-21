@@ -5,7 +5,8 @@ import { AudioManager } from "../../utils/audio-manager.js"
 import { MON_TYPES } from "../../types/mon-types.js"
 import { MonCore } from "../../common/mon-core.js"
 import { ExpBar } from "../../common/exp-bar.js"
-import { calculateExperiencedNeededForLevelUp } from "../../utils/battle-utils.js"
+import { STATUS_EFFECT } from "../../types/status-effect.js"
+import { exhaustiveGuard } from "../../utils/guard.js"
 
 export class BattleMon extends MonCore  {
   /** @protected @type {Phaser.Scene} */
@@ -30,8 +31,12 @@ export class BattleMon extends MonCore  {
   _battleSpriteAssetKey
   /** @type {boolean} */
   #showHpNumsExpBar
-  /** @type {ExpBar} */
+  /** @protected @type {ExpBar} */
   _expBar
+  /** @protected @type {import("../../types/status-effect.js").StatusEffect|null} */
+  _currentStatusEffect
+  /** @type {number} */
+  _statusEffectRemovalAttempts
 
   /**
    * 
@@ -45,6 +50,7 @@ export class BattleMon extends MonCore  {
     this._skipBattleAnimations = config.skipBattleAnimations
     this._battleSpriteAssetKey = this._baseMonDetails.assetKey
     this.#showHpNumsExpBar = showHpNumsExpBar
+    this._statusEffectRemovalAttempts = 0
     
     this.#createMonGameObject(pos)
     this.#createMonDetailsGameObject()
@@ -91,54 +97,9 @@ export class BattleMon extends MonCore  {
     return this._monDetails
   }
 
-  /**
-   * 
-   * @param {BattleMon} attacker 
-   * @param {import("../../types/typedef.js").Attack} attackMove 
-   * @returns {import("../../types/typedef.js").PostAttackResult}
-   * 
-   */
-  receiveAttackAndCalculateDamage (attacker, attackMove) {
-    const level = attacker.currentLevel
-    const attackerStats = attacker.monStats
-    const attkPwr = attackMove.power
-    const attackMoveType = MON_TYPES[attackMove.typeKey]
-
-    const effectiveAttack = attackMove.usesMonSplStat ? attackerStats.splAttack : attackerStats.attack
-    const effectiveDefense = attackMove.usesMonSplStat ? this._monStats.splDefense : this._monStats.defense
-    const stabMod = attacker.types.find(t => attackMoveType.name === t.name) ? 1.5 : 1
-    let critMod = 1
-    let typeMod = 1
-    
-    const monTypesFlat = this._baseMonDetails.types.map(type => type.name)
-
-    const wasImmune = !!attackMoveType.immuneTo.find(am => monTypesFlat.indexOf(am) !== -1)
-    const wasSuperEffective = !!attackMoveType.superEffectiveAgainst.find(am => monTypesFlat.indexOf(am) !== -1)
-    const wasResistant = !!this._baseMonDetails.types.find(mt => mt.resistantAgainst.indexOf(attackMoveType.name) !== -1)
-    let wasCriticalHit = wasImmune
-      ? false
-      : Phaser.Math.Between(attackMove.criticalHitModifier, 16) === 16
-
-    if (wasCriticalHit) {
-      critMod = 2
-    }
-    
-    if (wasSuperEffective) {
-      typeMod = 2
-    } else if (wasResistant) {
-      typeMod = 0.5
-    } else if (wasImmune) {
-      typeMod = 0
-    }
-
-    const res = {
-      damageTaken: Math.floor((((2 * level * critMod) / 50 + 2) * (attkPwr / 10) * (effectiveAttack / effectiveDefense)) * stabMod * typeMod),
-      wasCriticalHit,
-      wasSuperEffective,
-      wasImmune,
-      wasResistant
-    }
-    return res
+  /** @returns {import("../../types/status-effect.js").StatusEffect|null} */
+  get currentStatusEffect () {
+    return this._currentStatusEffect
   }
 
   /**
@@ -153,6 +114,69 @@ export class BattleMon extends MonCore  {
       this._currentHealth = 0
     }
     this._healthBar.setMeterPercentageAnimated(this._currentHealth, this._currentHealth / this._maxHealth, { callback })
+  }
+
+  /**
+   * 
+   * @param {import("../../types/status-effect.js").StatusEffect|null} status 
+   * @param {() => void} callback 
+   */
+  applyStatusEffect (status, callback) {
+    let statusText = ''
+
+    switch (status) {
+      case STATUS_EFFECT.FREEZE:
+        statusText = 'FRZN'
+        break
+      case STATUS_EFFECT.BURN:
+      case STATUS_EFFECT.CONFUSE:
+      case STATUS_EFFECT.PARALYSE:
+        break
+      default:
+        exhaustiveGuard(status)
+        break
+    }
+
+    // todo animations
+    this._currentStatusEffect = status
+    this._monLvlGameText.setText(statusText)
+    this._statusEffectRemovalAttempts = 0
+    callback()
+  }
+
+  /**
+   * 
+   * @returns {{
+   *  result: boolean,
+   *  statusEffect: import("../../types/status-effect.js").StatusEffect
+   * }}
+   */
+  rollStatusEffectRemoval () {
+    const statusEffect = this._currentStatusEffect
+    let result = false
+    
+    this._statusEffectRemovalAttempts++
+
+    switch (statusEffect) {
+      case STATUS_EFFECT.FREEZE:
+        result = Phaser.Math.Between(this._statusEffectRemovalAttempts, 10) === 10
+        break
+      case STATUS_EFFECT.BURN:
+      case STATUS_EFFECT.CONFUSE:
+      case STATUS_EFFECT.PARALYSE:
+        break
+      default:
+        exhaustiveGuard(statusEffect)
+        break
+    }
+
+    if (result) {
+      this._monLvlGameText.setText(`Lv${this._currentLevel}`)
+      this._currentStatusEffect = null
+      this._statusEffectRemovalAttempts = 0
+    }
+
+    return { statusEffect, result }
   }
 
   /**
@@ -280,8 +304,10 @@ export class BattleMon extends MonCore  {
       callback: (levelsGained) => {
         if (levelsGained > 0) {
           this._currentLevel += levelsGained
-          this._monLvlGameText.setText(`Lv${this._currentLevel}`)
-
+          if (!this._currentStatusEffect) {
+            this._monLvlGameText.setText(`Lv${this._currentLevel}`)
+          }
+          
           const evolved = this._baseMonDetails.evolvesTo ? this._baseMonDetails.evolvesAtLevel <= this._currentLevel : false
 
           callback(true, evolved)

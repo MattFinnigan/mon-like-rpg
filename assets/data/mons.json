@@ -1,6 +1,21 @@
 {
   "4": {
     "id": 4,
+    "baseMonIndex": 128,
+    "name": "MAGIKARP",
+    "currentHp": 120,
+    "currentLevel": 99,
+    "attackEV": 5,
+    "defenseEV": 29,
+    "splAttackEV": 11,
+    "splDefenseEV": 16,
+    "speedEV": 2,
+    "hpEV": 24,
+    "attackIds": [4],
+    "currentExp": 0
+  },
+  "5": {
+    "id": 5,
     "baseMonIndex": 16,
     "name": "PIDGEY YO",
     "currentHp": 33,
@@ -14,8 +29,8 @@
     "attackIds": [2],
     "currentExp": 0
   },
-  "5": {
-    "id": 5,
+  "6": {
+    "id": 6,
     "baseMonIndex": 151,
     "name": "BORRIS",
     "currentHp": 157,

@@ -1,6 +1,5 @@
 import { OPPONENT_TYPES } from "../types/opponent-types.js";
 import Phaser from "../lib/phaser.js";
-
 /**
  * @typedef BattleMonConfig
  * @type {Object}
@@ -99,6 +98,12 @@ import Phaser from "../lib/phaser.js";
  */
 
 /**
+ * @typedef {object} OpponentStatusEffect
+ * @property {import("./status-effect.js").StatusEffect} name
+ * @property {number} chancePercentage percentage per landed attk
+ */
+
+/**
  * @typedef Attack
  * @type {Object}
  * @property {number} id
@@ -109,7 +114,7 @@ import Phaser from "../lib/phaser.js";
  * @property {number} criticalHitModifier
  * @property {number} usesMonSplStat flag to uses attack mon's special attack, defener's special defense
  * @property {array} selfStatusEffects
- * @property {array} opponentStatusEffects
+ * @property {OpponentStatusEffect} opponentStatusEffect
  * @property {number} powerPoints
  * @property {number} accuracy
  */
@@ -148,13 +153,19 @@ import Phaser from "../lib/phaser.js";
  */
 
 /**
- * @typedef PostAttackResult
+ * @typedef PostAttackDamageResult
  * @type {object}
  * @property {number} damageTaken
  * @property {boolean} wasCriticalHit
  * @property {boolean} wasSuperEffective
  * @property {boolean} wasResistant
  * @property {boolean} wasImmune
+ */
+
+/**
+ * @typedef {object} PostAttackResult
+ * @property {PostAttackDamageResult} damage
+ * @property {import("./status-effect.js").StatusEffect} statusEffect
  */
 
 /**
