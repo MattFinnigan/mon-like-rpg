@@ -9,6 +9,8 @@ import { SKIP_ANIMATIONS } from "../../../config.js"
 import { STATUS_EFFECT } from "../../types/status-effect.js"
 import Phaser from "../../lib/phaser.js"
 import { Splash } from "./splash.js"
+import { ThunderWave } from "./thunder-wave.js"
+import { ConfuseRay } from "./confuse-ray.js"
 /**
  * @typedef {keyof typeof ATTACK_TARGET} AttackTarget
  */
@@ -33,6 +35,10 @@ export class AttackManager {
   #fireWheelAttack
   /** @type {Splash} */
   #splashAttack
+  /** @type {ThunderWave} */
+  #thunderWaveAttack
+  /** @type {ConfuseRay} */
+  #confuseRayAttack
 
   /**
    * 
@@ -86,12 +92,27 @@ export class AttackManager {
         }
         this.#fireWheelAttack.gameObject.setPosition(x, y)
         this.#fireWheelAttack.playAnimation(callback)
+        break
       case ATTACK_KEYS.SPLASH:
         if (!this.#splashAttack) {
           this.#splashAttack = new Splash(this.#scene, { x, y })
         }
         this.#splashAttack.gameObject.setPosition(x, y)
         this.#splashAttack.playAnimation(callback)
+        break
+      case ATTACK_KEYS.THUNDER_WAVE:
+        if (!this.#thunderWaveAttack) {
+          this.#thunderWaveAttack = new ThunderWave(this.#scene, { x, y })
+        }
+        this.#thunderWaveAttack.gameObject.setPosition(x, y)
+        this.#thunderWaveAttack.playAnimation(callback)
+        break
+      case ATTACK_KEYS.CONFUSE_RAY:
+        if (!this.#confuseRayAttack) {
+          this.#confuseRayAttack = new ConfuseRay(this.#scene, { x, y })
+        }
+        this.#confuseRayAttack.gameObject.setPosition(x, y)
+        this.#confuseRayAttack.playAnimation(callback)
         break
       default:
         exhaustiveGuard(attackAnim)

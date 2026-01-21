@@ -241,15 +241,20 @@ export class BattleScene extends Phaser.Scene {
    * @param {() => void} callback 
    */
   #announceStatusEffectApplied (mon, status, callback) {
-    let msg = `${mon.name} was `
+    let msg = `${mon.name} `
 
     switch (status) {
       case STATUS_EFFECT.FREEZE:
-        msg += 'frozen!'
+        msg += 'was FROZEN!'
         break
       case STATUS_EFFECT.BURN:
+        msg += 'was BURNT!'
+        break
       case STATUS_EFFECT.CONFUSE:
+        msg += 'became CONFUSED!'
+        break
       case STATUS_EFFECT.PARALYSE:
+        msg += 'was PARALYZED!'
         break
       default:
         exhaustiveGuard(status)
@@ -268,31 +273,65 @@ export class BattleScene extends Phaser.Scene {
       callback(true)
       return
     }
+
     const { result, statusEffect } = mon.rollStatusEffectRemoval()
     let canAttack = result
-
     let msg = ''
+
+    const showMessage = () => {
+      this.#battleMenu.updateInfoPanelMessagesNoInputRequired(msg, () => {
+        this.time.delayedCall(500, () => {
+          callback(canAttack)
+        })
+      }, SKIP_ANIMATIONS)
+    }
 
     switch (statusEffect) {
       case STATUS_EFFECT.FREEZE:
         msg = result
           ? `${mon.name} thawed out!`
           : `${mon.name} is frozen solid...`
+        showMessage()
         break
       case STATUS_EFFECT.BURN:
+        canAttack = true
+        msg = `${mon.name} was hurt by their burn.`
+        mon.takeDamage(20, () => {
+          showMessage()
+        })
+        break
       case STATUS_EFFECT.CONFUSE:
+        if (result) {
+          msg = `${mon.name} snapped out of their confusion!`
+          showMessage()
+          return
+        }
+
+        const hitSelf = Phaser.Math.Between(0, 1) === 1
+        
+        if (hitSelf) {
+          msg = `${mon.name} hurt itself in confusion...`
+          canAttack = false
+          mon.takeDamage(10, () => {
+            showMessage()
+          })
+          return
+        }
+        callback(true)
+        break
       case STATUS_EFFECT.PARALYSE:
+        canAttack = Phaser.Math.Between(0, 1) === 1
+        if (!canAttack) {
+          msg = `${mon.name} couldn't move!`
+          showMessage()
+          return
+        }
+        callback(true)
         break
         default:
           exhaustiveGuard(statusEffect)
           break
     }
-    
-    this.#battleMenu.updateInfoPanelMessagesNoInputRequired(msg, () => {
-      this.time.delayedCall(500, () => {
-        callback(canAttack)
-      })
-    }, SKIP_ANIMATIONS)
   }
 
   /**
@@ -331,19 +370,39 @@ export class BattleScene extends Phaser.Scene {
     })
   }
 
+  /**
+   * @param {() => void} callback
+   */
+  #playPlayerApplyStatusEffect (callback) {
+    this.#battleStateMachine.setState(BATTLE_STATES.STATUS_EFFECT_CHECK)
+    this.#activePlayerMon.applyStatusEffect(this.#lastAttackResult.statusEffect, () => {
+      this.#announceStatusEffectApplied(this.#activePlayerMon, this.#lastAttackResult.statusEffect, () => {
+        callback()
+      })
+    })
+  }
+
   #playerAttack () {
-    const attack = this.#getPlayerAttack()
-    this.#announceAttack(this.#activePlayerMon, attack, () => {
-      this.#attackManager.playAttackSequence(
-        this.#activePlayerMon,
-        this.#activeEnemyMon,
-        attack,
-        ATTACK_TARGET.ENEMY,
-        (result) => {
-          this.#lastAttackResult = result
-          this.#playEnemyDamageTakenAnimation()
-        }
-      )
+    this.#checkMonStatusEffect(this.#activePlayerMon, (canAttack) => {
+
+      if (!canAttack) {
+        this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK)
+        return
+      }
+
+      const attack = this.#getPlayerAttack()
+      this.#announceAttack(this.#activePlayerMon, attack, () => {
+        this.#attackManager.playAttackSequence(
+          this.#activePlayerMon,
+          this.#activeEnemyMon,
+          attack,
+          ATTACK_TARGET.ENEMY,
+          (result) => {
+            this.#lastAttackResult = result
+            this.#playEnemyDamageTakenAnimation()
+          }
+        )
+      })
     })
   }
 
@@ -358,6 +417,13 @@ export class BattleScene extends Phaser.Scene {
   #playPlayerDamageTakenAnimation () {
     this.#activePlayerMon.playMonTakeDamageAnimation(() => {
       this.#activePlayerMon.takeDamage(this.#lastAttackResult.damage.damageTaken, () => {
+  
+        if (this.#lastAttackResult.statusEffect) {
+          this.#playPlayerApplyStatusEffect(() => {
+            this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK)
+          })
+          return
+        }
         this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK)
       })
     }, this.#lastAttackResult.damage.damageTaken === 0)
@@ -410,23 +476,25 @@ export class BattleScene extends Phaser.Scene {
       damageTaken
     } = this.#lastAttackResult.damage
 
-    if (wasCriticalHit) {
-      postAttackMsgs.push('A critical hit!')
-    }
+    if (damageTaken) {
+      if (wasCriticalHit) {
+        postAttackMsgs.push('A critical hit!')
+      }
 
-    if (wasSuperEffective) {
-      postAttackMsgs.push(`It's super effective!`)
-    }
+      if (wasSuperEffective) {
+        postAttackMsgs.push(`It's super effective!`)
+      }
 
-    if (wasResistant) {
-      postAttackMsgs.push(`It's not very effective...`)
+      if (wasResistant) {
+        postAttackMsgs.push(`It's not very effective...`)
+      }
     }
 
     if (wasImmune) {
       postAttackMsgs.push(`But nothing happened!`)
     }
 
-    if (!damageTaken) {
+    if (!damageTaken && !this.#lastAttackResult.statusEffect) {
       postAttackMsgs.push(`But it did nothing!`)
     }
 

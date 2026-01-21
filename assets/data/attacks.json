@@ -34,7 +34,7 @@
     "criticalHitModifier": 1,
     "usesMonSplStat": true,
     "selfStatusEffects": [],
-    "opponentStatusEffect": null,
+    "opponentStatusEffect": { "name": "BURN", "chancePercentage": 100 },
     "powerPoints": 15,
     "accuracy": 100
   },
@@ -48,6 +48,32 @@
     "usesMonSplStat": true,
     "selfStatusEffects": [],
     "opponentStatusEffect": null,
+    "powerPoints": 15,
+    "accuracy": 100
+  },
+  {
+    "id": 5,
+    "name": "CONFUSE RAY",
+    "animationName": "CONFUSE_RAY",
+    "typeKey": "PSYCHIC",
+    "power": 0,
+    "criticalHitModifier": 1,
+    "usesMonSplStat": true,
+    "selfStatusEffects": [],
+    "opponentStatusEffect": { "name": "CONFUSE", "chancePercentage": 100 },
+    "powerPoints": 15,
+    "accuracy": 100
+  },
+  {
+    "id": 6,
+    "name": "THUNDER WAVE",
+    "animationName": "THUNDER_WAVE",
+    "typeKey": "ELECTRIC",
+    "power": 0,
+    "criticalHitModifier": 1,
+    "usesMonSplStat": true,
+    "selfStatusEffects": [],
+    "opponentStatusEffect": { "name": "PARALYSE", "chancePercentage": 100 },
     "powerPoints": 15,
     "accuracy": 100
   }

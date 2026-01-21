@@ -106,7 +106,7 @@ const devInitialState = {
         splDefenseEV: 8,
         speedEV: 19,
         hpEV: 22,
-        attackIds: [2, 2, 2, 2],
+        attackIds: [3, 4, 5, 6],
         currentExp: 506.6
       },
       {

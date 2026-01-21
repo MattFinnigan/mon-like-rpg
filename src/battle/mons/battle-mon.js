@@ -129,8 +129,13 @@ export class BattleMon extends MonCore  {
         statusText = 'FRZN'
         break
       case STATUS_EFFECT.BURN:
+        statusText = 'BRN'
+        break
       case STATUS_EFFECT.CONFUSE:
+        statusText = 'CONF'
+        break
       case STATUS_EFFECT.PARALYSE:
+        statusText = 'PRZD'
         break
       default:
         exhaustiveGuard(status)
@@ -161,8 +166,9 @@ export class BattleMon extends MonCore  {
       case STATUS_EFFECT.FREEZE:
         result = Phaser.Math.Between(this._statusEffectRemovalAttempts, 10) === 10
         break
-      case STATUS_EFFECT.BURN:
       case STATUS_EFFECT.CONFUSE:
+        result = Phaser.Math.Between(this._statusEffectRemovalAttempts, 5) === 5
+      case STATUS_EFFECT.BURN:
       case STATUS_EFFECT.PARALYSE:
         break
       default:
