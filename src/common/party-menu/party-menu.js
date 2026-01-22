@@ -17,6 +17,7 @@ import { PartyMon } from './party-mon.js'
 /** @enum {object} */
 const SELECTED_MON_MENU_OPTIONS = Object.freeze({
   SUMMARY: 'SUMMARY',
+  RELEASE: 'RELEASE',
   SWITCH: 'SWITCH',
   ITEM: 'ITEM',
   CANCEL: 'CANCEL'
@@ -31,7 +32,8 @@ const PARTY_STATES = Object.freeze({
   SWITCH_MON: 'SWITCH_MON',
   POST_SWITCH: 'POST_SWITCH',
   WAIT_FOR_ITEM_SELECTION: 'WAIT_FOR_ITEM_SELECTION',
-  POST_ITEM_USED: 'POST_ITEM_USED'
+  POST_ITEM_USED: 'POST_ITEM_USED',
+  WAIT_FOR_RELEASE_CONFIRM: 'WAIT_FOR_RELEASE_CONFIRM'
 })
 
 export class PartyMenu {
@@ -99,7 +101,7 @@ export class PartyMenu {
     this.#selectOnlyMode = false
     this.#depth = 1
     this.#selectedMonMenuOffsetX = 380
-    this.#selectedMonMenuOffsetY = 145
+    this.#selectedMonMenuOffsetY = 100
     
     this.#playersMons = dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS)
 
@@ -111,7 +113,7 @@ export class PartyMenu {
     this.#createSelectedMonCursor()
     this.#createSelectedMonMenu()
     this.#createPartyStateMachine()
-    this.#dialogUi = new DialogUi(this.#scene)
+    this.#dialogUi = new DialogUi(this.#scene, ['NO', 'YES'])
     this.#itemMenu = new ItemMenu(this.#scene)
 
     this.#selectedMonInputCusorOffsetY = this.#selectedMonMenuOffsetY + this.#phaserUserInputCursorGameObject.height + 10
@@ -253,22 +255,34 @@ export class PartyMenu {
   /**
    * 
    * @param {import('../../types/direction.js').Direction | 'OK' | 'CANCEL'} input 
-   * @returns void
    */
   #handleDialogInput (input) {
     if (this.#dialogUi.isAnimationPlaying) {
       return
     }
-    if (input === 'OK' || input === 'CANCEL') {
+
+    if (input === DIRECTION.UP || input === DIRECTION.DOWN) {
+      this.#dialogUi.moveOptionsCursor(input)
+      return
+    }
+
+    if (input === 'OK') {
+      if (this.#dialogUi.isWaitingOnOptionSelect) {
+        this.#dialogUi.selectCurrentOption()
+        return
+      }
       this.#dialogUi.showNextMessage()
       return
+    }
+
+    if (input === 'CANCEL') {
+      this.#dialogUi.showNextMessage()
     }
   }
   
   /**
    * 
    * @param {import('../../types/direction.js').Direction | 'OK' | 'CANCEL'} input 
-   * @returns void
    */
   #handleItemMenuInteraction (input) {
     if (input === 'CANCEL') {
@@ -307,6 +321,9 @@ export class PartyMenu {
       const selection = this.#availableSelectedMonOptions[this.#cursorIndex]
       switch (selection) {
         case SELECTED_MON_MENU_OPTIONS.SUMMARY:
+          break
+        case SELECTED_MON_MENU_OPTIONS.RELEASE:
+          this.#partyStateMachine.setState(PARTY_STATES.WAIT_FOR_RELEASE_CONFIRM)
           break
         case SELECTED_MON_MENU_OPTIONS.ITEM:
           this.#partyStateMachine.setState(PARTY_STATES.WAIT_FOR_ITEM_SELECTION)
@@ -347,7 +364,8 @@ export class PartyMenu {
       return
     }
   }
-  
+
+
   /**
    * 
    * @param {() => void} callback 
@@ -432,7 +450,11 @@ export class PartyMenu {
     this.#container = this.#scene.add.container(0, 0, [
       this.#scene.add.rectangle(0, 0, 640, 576, 0xffffff).setOrigin(0)
     ]).setDepth(this.#depth)
-  
+
+    this.#setPartMonPositions()
+  }
+
+  #setPartMonPositions () {
     this.#partyMons.forEach((mon, i) => {
       const offsetY = i * 65
       mon.container.setPosition(50, offsetY).setAlpha(1)
@@ -457,14 +479,15 @@ export class PartyMenu {
   }
 
   #createSelectedMonMenu () {this.#selectedMonMenuOffsetY
-    const uiBorderBackground = createDialogUIGameObjectContainer(this.#scene, { x: 0, y: 0, }, 260, 235)
+    const uiBorderBackground = createDialogUIGameObjectContainer(this.#scene, { x: 0, y: 0, }, 260, 282)
 
     this.#phaserSelectedMonMenuGameObject = this.#scene.add.container(0, 0, [
       uiBorderBackground,
       this.#scene.add.bitmapText(50, 25, 'gb-font', SELECTED_MON_MENU_OPTIONS.SUMMARY, 40).setOrigin(0),
-      this.#scene.add.bitmapText(50, 75, 'gb-font', SELECTED_MON_MENU_OPTIONS.SWITCH, 40).setOrigin(0),
-      this.#scene.add.bitmapText(50, 125, 'gb-font', SELECTED_MON_MENU_OPTIONS.ITEM, 40).setOrigin(0),
-      this.#scene.add.bitmapText(50, 175, 'gb-font', SELECTED_MON_MENU_OPTIONS.CANCEL, 40).setOrigin(0)
+      this.#scene.add.bitmapText(50, 75, 'gb-font', SELECTED_MON_MENU_OPTIONS.RELEASE, 40).setOrigin(0),
+      this.#scene.add.bitmapText(50, 125, 'gb-font', SELECTED_MON_MENU_OPTIONS.SWITCH, 40).setOrigin(0),
+      this.#scene.add.bitmapText(50, 175, 'gb-font', SELECTED_MON_MENU_OPTIONS.ITEM, 40).setOrigin(0),
+      this.#scene.add.bitmapText(50, 225, 'gb-font', SELECTED_MON_MENU_OPTIONS.CANCEL, 40).setOrigin(0)
     ]).setDepth(this.#depth)
   }
 
@@ -530,6 +553,38 @@ export class PartyMenu {
           this.#partyStateMachine.setState(PARTY_STATES.WAIT_FOR_MON_OPTION_SELECT)
         })
       }
+    })
+  }
+
+  #confirmRelease () {
+    this.#dialogUi.showDialogModalAndWaitForOptionSelect([`Are you sure you want to release ${this.#selectedMon.name}?`], (choice) => {
+      if (choice === 'YES') {
+        const mons = dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS)
+
+        const withoutReleased = mons.filter(mon => {
+          if (mon.id === this.#selectedMon.id) {
+            return false
+          }
+          return true
+        })
+
+        dataManager.store.set(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS, withoutReleased)
+        dataManager.saveData()
+
+        
+
+        this.#dialogUi.showDialogModalNoInputRequired([`${this.#selectedMon.name} was released...`])
+        this.#scene.time.delayedCall(1000, () => {
+          this.#partyMons[this.#selectedMonIndex].container.removeAll()
+          this.#partyMons.splice(this.#selectedMonIndex, 1)
+          this.#playersMons = withoutReleased
+          this.#setPartMonPositions()
+          this.#partyStateMachine.setState(PARTY_STATES.WAIT_FOR_MON_SELECT)
+        })
+        return
+      }
+      this.#dialogUi.hideDialogModal()
+      this.#partyStateMachine.setState(PARTY_STATES.WAIT_FOR_MON_SELECT)
     })
   }
 
@@ -611,6 +666,17 @@ export class PartyMenu {
     })
 
     this.#partyStateMachine.addState({
+      name: PARTY_STATES.WAIT_FOR_RELEASE_CONFIRM,
+      onEnter: () => {
+        this.#phaserSelectedMonMenuGameObject.setAlpha(0)
+        this.#phaserSelectedMonPlaceholderCursorGameObject.setAlpha(0)
+        this.#phaserUserInputCursorGameObject.setAlpha(0)
+        this.#phaserUserInputCursorTween.pause()
+        this.#confirmRelease()
+      }
+    })
+
+    this.#partyStateMachine.addState({
       name: PARTY_STATES.SWITCH_MON,
       onEnter: () => {
         this.#setCursorToPartySelect()
@@ -658,6 +724,7 @@ export class PartyMenu {
     ]
 
     if (this.#sceneKey === SCENE_KEYS.WORLD_SCENE) {
+      this.#availableSelectedMonOptions.unshift(SELECTED_MON_MENU_OPTIONS.RELEASE)
       this.#availableSelectedMonOptions.unshift(SELECTED_MON_MENU_OPTIONS.SUMMARY)
     }
   }

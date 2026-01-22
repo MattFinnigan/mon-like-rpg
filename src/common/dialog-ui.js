@@ -3,6 +3,7 @@ import { SYSTEM_ASSET_KEYS, UI_ASSET_KEYS } from "../assets/asset-keys.js"
 import { DIRECTION } from "../types/direction.js"
 import { DIALOG_DETAILS } from "../utils/consts.js"
 import { animateText, CANNOT_READ_SIGN_TEXT } from "../utils/text-utils.js"
+import { createDialogUIGameObjectContainer } from "../utils/ui-utils.js"
 
 export class DialogUi {
   /** @type {Phaser.Scene} */
@@ -41,7 +42,11 @@ export class DialogUi {
   #optionSelectRequired
   /** @type {boolean} */
   #isWaitingOnOptionSelect
-  
+  /** @type {number} */
+  #optionsContainerWidth
+  /** @type {number} */
+  #optionsContainerHeight
+
   /**
    * 
    * @param {Phaser.Scene} scene
@@ -57,6 +62,9 @@ export class DialogUi {
     this.#currentOptionIndex = 0
     this.#optionSelectRequired = false
     this.#isWaitingOnOptionSelect = false
+    this.#optionsContainerWidth = 170
+    this.#optionsContainerHeight = 150
+
 
     const panel =  this.#scene.add.image(0, 0, SYSTEM_ASSET_KEYS.DIALOG_BACKGROUND).setOrigin(0)
     this.#container = this.#scene.add.container(0, 0, [panel]).setDepth(1)
@@ -145,6 +153,7 @@ export class DialogUi {
 
     this.#container.setPosition(startX, startY)
     this.#container.setAlpha(1)
+    this.#phaserOptionsContainer.setPosition(startX + this.#scene.scale.width - this.#optionsContainerWidth, startY - this.#optionsContainerHeight)
     this.#isVisible = true
 
     this.#onFinish = callback
@@ -210,6 +219,8 @@ export class DialogUi {
     this.#container.setAlpha(0)
     this.#isVisible = false
     this.#userInputCursorTween.pause()
+    this.#isWaitingForInput = false
+    this.#optionSelectRequired = false
   }
 
   /**
@@ -240,34 +251,24 @@ export class DialogUi {
       return
     }
 
-    const containerWidth = 150
-    const containerHeight = 110
-
-    const containerX = this.#scene.scale.width - 4 - containerWidth
-    const containerY = DIALOG_DETAILS.y - containerHeight
-
-    const g = this.#scene.add.graphics()
-    g.fillStyle(0xFFFFFF, 1)
-    g.fillRect(0, 0, containerWidth, containerHeight)
-    g.lineStyle(4, 0x000000, 1)
-    g.strokeRect(0, 0, containerWidth, containerHeight)
+    const uiBorderBackground = createDialogUIGameObjectContainer(this.#scene, { x: 0, y: 0 }, this.#optionsContainerWidth, this.#optionsContainerHeight)
 
     const options = this.#dialogOptions.map((option, i) => {
-      return this.#scene.add.bitmapText(40, 10 + (50 * i), 'gb-font', option, 40).setOrigin(0).setDepth(2)
+      return this.#scene.add.bitmapText(50, 30 + (50 * i), 'gb-font', option, 40).setOrigin(0).setDepth(3)
     })
 
-    this.#phaserOptionsContainer = this.#scene.add.container(containerX, containerY, [g, ...options]).setDepth(2).setAlpha(0)
+    this.#phaserOptionsContainer = this.#scene.add.container(0, 0, [uiBorderBackground, ...options]).setDepth(3).setAlpha(0)
 
-    this.#optionsCursor = this.#scene.add.image(10, 20, UI_ASSET_KEYS.CURSOR, 0).setOrigin(0).setDepth(2)
+    this.#optionsCursor = this.#scene.add.image(20, 40, UI_ASSET_KEYS.CURSOR, 0).setOrigin(0).setDepth(3)
 
     this.#optionsCursorTween = this.#scene.add.tween({
       delay: 0,
       duration: 500,
       repeat: -1,
       x: {
-        from: 10,
-        start: 10,
-        to: 16
+        from: 20,
+        start: 20,
+        to: 26
       },
       targets: this.#optionsCursor
     })
@@ -285,6 +286,7 @@ export class DialogUi {
   #hideOptionsDialog () {
     this.#isWaitingOnOptionSelect = false
     this.#currentOptionIndex = 0
+    this.#optionsCursor.setPosition(20, 40)
     this.#optionsCursorTween.pause()
     this.#phaserOptionsContainer.setAlpha(0)
   }
@@ -313,7 +315,7 @@ export class DialogUi {
     }
     this.#optionsCursor.setPosition(
       this.#optionsCursor.x,
-      10 + (50 * this.#currentOptionIndex) 
+      40 + (50 * this.#currentOptionIndex) 
     )
   }
 
@@ -326,7 +328,7 @@ export class DialogUi {
     }
     this.#optionsCursor.setPosition(
       this.#optionsCursor.x,
-      10 + (50 * this.#currentOptionIndex) 
+      40 + (50 * this.#currentOptionIndex) 
     )
   }
 

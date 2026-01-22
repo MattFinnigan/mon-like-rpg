@@ -246,7 +246,9 @@ export class LearnAttackManager {
     this.#waitForOverrideChoice = false
     this.#waitForOverrideOrNot = false
     this.#waitForMoveLearnedConfirm = true
-    this.#phaserMoveReplaceContainer.setAlpha(0)
+    if (this.#phaserMoveReplaceContainer) {
+      this.#phaserMoveReplaceContainer.setAlpha(0)
+    }
     this.#dialogUi.showDialogModalNoInputRequired([`${this.#currentMon.name} did not learn ${this.#learningNewAttack.name}`])
     this.#scene.time.delayedCall(1000, () => {
       callback(null)
