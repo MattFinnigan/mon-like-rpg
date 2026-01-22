@@ -11,6 +11,7 @@ import { ItemMenu } from '../../../common/item-menu.js'
 import { EVENT_KEYS } from '../../../types/event-keys.js'
 import { PartyMenu } from '../../../common/party-menu/party-menu.js'
 import { PartyMon } from '../../../common/party-menu/party-mon.js'
+import { createDialogUIGameObjectContainer } from '../../../utils/ui-utils.js'
 
 
 const BATTLE_MENU_CURSOR_POS = Object.freeze({
@@ -74,8 +75,10 @@ export class BattleMenu {
   #battlePartyMenu
   /** @type {PartyMon} */
   #selectedMonToSwitchTo
-  /** @type {Phaser.GameObjects.Container} */
-  #moveSelectCurrentDetailsPhaserContainer
+  /** @type {Phaser.GameObjects.BitmapText} */
+  #moveSelectCurrentMoveType
+  /** @type {Phaser.GameObjects.BitmapText} */
+  #moveSelectCurrentMovePP
 
   /**
    * 
@@ -379,13 +382,28 @@ export class BattleMenu {
     for (let i = 0; i < 4; i++) {
       attackNames.push(this.#activePlayerMon.attacks[i]?.name || '-')
     }
+    const detailsWidth = 310
+    const detailsHeight = 110
+
+    const uiBorderBackground = createDialogUIGameObjectContainer(this.#scene, { x: 3, y: -detailsHeight }, detailsWidth, detailsHeight)
+    const typeText = this.#scene.add.bitmapText(30, -detailsHeight + 25, 'gb-font', 'TYPE/', 30)
+    const ppText = this.#scene.add.bitmapText(30, -detailsHeight + 60, 'gb-font', 'PP/', 30)
+
+    const attk = this.#activePlayerMon.attacks[0]
+    this.#moveSelectCurrentMoveType = this.#scene.add.bitmapText(135, -detailsHeight + 25, 'gb-font', attk.typeKey, 30)
+    this.#moveSelectCurrentMovePP = this.#scene.add.bitmapText(135, -detailsHeight + 60, 'gb-font', `${attk.powerPoints}/${attk.powerPoints}`, 30)
 
     this.#moveSelectionSubBattleMenuPhaserContainerGameObject = this.#scene.add.container(0, DIALOG_DETAILS.y, [
       this.#scene.add.bitmapText(55, DIALOG_DETAILS.paddingTop, 'gb-font', attackNames[0], 30),
       this.#scene.add.bitmapText(350, DIALOG_DETAILS.paddingTop, 'gb-font', attackNames[1], 30),
       this.#scene.add.bitmapText(55, 110, 'gb-font', attackNames[2], 30),
       this.#scene.add.bitmapText(350, 110, 'gb-font', attackNames[3], 30),
-      this.#attackCursorPhaserImageGameObject
+      this.#attackCursorPhaserImageGameObject,
+      uiBorderBackground,
+      typeText,
+      ppText,
+      this.#moveSelectCurrentMoveType,
+      this.#moveSelectCurrentMovePP
     ])
 
     this.hideMonAttackSubMenu()
@@ -589,22 +607,34 @@ export class BattleMenu {
     if (this.#activeBattleMenu !== ACTIVE_BATTLE_MENU.BATTLE_MOVE_SELECT) {
       return
     }
+    let attk = this.#activePlayerMon.attacks[0]
     switch (this.#selectedAttackMenuOption) {
       case ATTACK_MOVE_OPTIONS.MOVE_1:
         this.#attackCursorPhaserImageGameObject.setPosition(ATTACK_MENU_CURSOR_POS.x, ATTACK_MENU_CURSOR_POS.y)
-        return
+        break
       case ATTACK_MOVE_OPTIONS.MOVE_2:
+        attk = this.#activePlayerMon.attacks[1]
         this.#attackCursorPhaserImageGameObject.setPosition(325, ATTACK_MENU_CURSOR_POS.y)
-        return
+        break
       case ATTACK_MOVE_OPTIONS.MOVE_3:
+        attk = this.#activePlayerMon.attacks[2]
         this.#attackCursorPhaserImageGameObject.setPosition(ATTACK_MENU_CURSOR_POS.x, 115)
-        return
+        break
       case ATTACK_MOVE_OPTIONS.MOVE_4:
+        attk = this.#activePlayerMon.attacks[3]
         this.#attackCursorPhaserImageGameObject.setPosition(325, 115)
-        return
+        break
       default:
         exhaustiveGuard(this.#selectedAttackMenuOption)
+        break
     }
+    if (attk) {
+      this.#moveSelectCurrentMoveType.setText(attk.typeKey)
+      this.#moveSelectCurrentMovePP.setText(`${attk.powerPoints}/${attk.powerPoints}`)
+      return
+    }
+    this.#moveSelectCurrentMoveType.setText('-')
+    this.#moveSelectCurrentMovePP.setText(`-/-`)
   }
 
   #switchToMainBattleMenu () {

@@ -923,7 +923,8 @@ export class BattleScene extends Phaser.Scene {
       state === BATTLE_STATES.PLAYER_DEFEATED ||
       state === BATTLE_STATES.PLAYER_VICTORY ||
       state === BATTLE_STATES.RUN_ATTEMPT ||
-      state === BATTLE_STATES.POST_EXPERIENCE_GAINED
+      state === BATTLE_STATES.POST_EXPERIENCE_GAINED ||
+      state === BATTLE_STATES.WILD_MON_OUT
   }
 
   #waitingForPlayerToTakeTurn () {
