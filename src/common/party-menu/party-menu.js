@@ -8,6 +8,7 @@ import { DATA_MANAGER_STORE_KEYS, dataManager } from '../../utils/data-manager.j
 import { DataUtils } from '../../utils/data-utils.js'
 import { playItemEffect } from '../../utils/item-manager.js'
 import { StateMachine } from '../../utils/state-machine.js'
+import { createDialogUIGameObjectContainer } from '../../utils/ui-utils.js'
 import { DialogUi } from '../dialog-ui.js'
 import { HealthBar } from '../health-bar.js'
 import { ItemMenu } from '../item-menu.js'
@@ -74,6 +75,12 @@ export class PartyMenu {
   #selectOnlyMode
   /** @type {number} */
   #depth
+  /** @type {number} */
+  #selectedMonMenuOffsetX
+  /** @type {number} */
+  #selectedMonMenuOffsetY
+  /** @type {number} */
+  #selectedMonInputCusorOffsetY
 
   /**
    * 
@@ -91,7 +98,9 @@ export class PartyMenu {
     this.#partyMons = []
     this.#selectOnlyMode = false
     this.#depth = 1
-  
+    this.#selectedMonMenuOffsetX = 380
+    this.#selectedMonMenuOffsetY = 145
+    
     this.#playersMons = dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS)
 
     this.#createPartyMons()
@@ -104,6 +113,8 @@ export class PartyMenu {
     this.#createPartyStateMachine()
     this.#dialogUi = new DialogUi(this.#scene)
     this.#itemMenu = new ItemMenu(this.#scene)
+
+    this.#selectedMonInputCusorOffsetY = this.#selectedMonMenuOffsetY + this.#phaserUserInputCursorGameObject.height + 10
 
     this.hide()
   }
@@ -184,7 +195,7 @@ export class PartyMenu {
     const { x, y } = this.#getCameraPosition()
     let newY = y + (this.#cursorIndex * 65) + 18
     if (this.#partyStateMachine.currentStateName === PARTY_STATES.WAIT_FOR_MON_OPTION_SELECT) {
-      newY = y + (this.#cursorIndex * 50) + 185
+      newY = y + (this.#cursorIndex * 50) + this.#selectedMonInputCusorOffsetY
     }
     this.#phaserUserInputCursorGameObject.setPosition(
       this.#phaserUserInputCursorGameObject.x,
@@ -445,19 +456,15 @@ export class PartyMenu {
     this.#partyStateMachine.setState(PARTY_STATES.HIDDEN)
   }
 
-  #createSelectedMonMenu () {
-    const g = this.#scene.add.graphics()
-    g.fillStyle(0xFFFFFF, 1)
-    g.fillRect(0, 0, 235, 210)
-    g.lineStyle(4, 0x000000, 1)
-    g.strokeRect(0, 0, 235, 210)
+  #createSelectedMonMenu () {this.#selectedMonMenuOffsetY
+    const uiBorderBackground = createDialogUIGameObjectContainer(this.#scene, { x: 0, y: 0, }, 260, 235)
 
     this.#phaserSelectedMonMenuGameObject = this.#scene.add.container(0, 0, [
-      g,
-      this.#scene.add.bitmapText(40, 10, 'gb-font', SELECTED_MON_MENU_OPTIONS.SUMMARY, 40).setOrigin(0),
-      this.#scene.add.bitmapText(40, 60, 'gb-font', SELECTED_MON_MENU_OPTIONS.SWITCH, 40).setOrigin(0),
-      this.#scene.add.bitmapText(40, 110, 'gb-font', SELECTED_MON_MENU_OPTIONS.ITEM, 40).setOrigin(0),
-      this.#scene.add.bitmapText(40, 160, 'gb-font', SELECTED_MON_MENU_OPTIONS.CANCEL, 40).setOrigin(0)
+      uiBorderBackground,
+      this.#scene.add.bitmapText(50, 25, 'gb-font', SELECTED_MON_MENU_OPTIONS.SUMMARY, 40).setOrigin(0),
+      this.#scene.add.bitmapText(50, 75, 'gb-font', SELECTED_MON_MENU_OPTIONS.SWITCH, 40).setOrigin(0),
+      this.#scene.add.bitmapText(50, 125, 'gb-font', SELECTED_MON_MENU_OPTIONS.ITEM, 40).setOrigin(0),
+      this.#scene.add.bitmapText(50, 175, 'gb-font', SELECTED_MON_MENU_OPTIONS.CANCEL, 40).setOrigin(0)
     ]).setDepth(this.#depth)
   }
 
@@ -482,7 +489,7 @@ export class PartyMenu {
   #setCursorToMonMenu () {
     const { x, y } = this.#getCameraPosition()
     const startX = x + 400
-    this.#phaserUserInputCursorGameObject.setPosition(startX, y + 185)
+    this.#phaserUserInputCursorGameObject.setPosition(startX, y + this.#selectedMonInputCusorOffsetY)
 
     this.#phaserUserInputCursorTween = this.#scene.add.tween({
       delay: 0,
@@ -586,7 +593,7 @@ export class PartyMenu {
         this.#cursorIndex = 0
         
         this.#phaserSelectedMonMenuGameObject.setAlpha(1)
-        this.#phaserSelectedMonMenuGameObject.setPosition(x + 390, y + 170)
+        this.#phaserSelectedMonMenuGameObject.setPosition(x + this.#selectedMonMenuOffsetX, y + this.#selectedMonMenuOffsetY)
         this.#setCursorToMonMenu()
 
         this.#scene.time.delayedCall(100, () => {

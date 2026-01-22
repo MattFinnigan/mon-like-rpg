@@ -8,7 +8,7 @@
     "criticalHitModifier": 1,
     "usesMonSplStat": true,
     "selfStatusEffects": [],
-    "opponentStatusEffect": { "name": "FREEZE", "chancePercentage": 100 },
+    "opponentStatusEffect": { "name": "FREEZE", "chancePercentage": 20 },
     "powerPoints": 10,
     "accuracy": 100
   },
@@ -22,7 +22,7 @@
     "usesMonSplStat": false,
     "selfStatusEffects": [],
     "opponentStatusEffect": null,
-    "powerPoints": 20,
+    "powerPoints": 35,
     "accuracy": 100
   },
   {
@@ -34,8 +34,8 @@
     "criticalHitModifier": 1,
     "usesMonSplStat": true,
     "selfStatusEffects": [],
-    "opponentStatusEffect": { "name": "BURN", "chancePercentage": 100 },
-    "powerPoints": 15,
+    "opponentStatusEffect": { "name": "BURN", "chancePercentage": 30 },
+    "powerPoints": 10,
     "accuracy": 100
   },
   {
@@ -48,7 +48,7 @@
     "usesMonSplStat": true,
     "selfStatusEffects": [],
     "opponentStatusEffect": null,
-    "powerPoints": 15,
+    "powerPoints": 39,
     "accuracy": 100
   },
   {
@@ -62,7 +62,7 @@
     "selfStatusEffects": [],
     "opponentStatusEffect": { "name": "CONFUSE", "chancePercentage": 100 },
     "powerPoints": 15,
-    "accuracy": 100
+    "accuracy": 70
   },
   {
     "id": 6,
@@ -75,6 +75,6 @@
     "selfStatusEffects": [],
     "opponentStatusEffect": { "name": "PARALYSE", "chancePercentage": 100 },
     "powerPoints": 15,
-    "accuracy": 100
+    "accuracy": 90
   }
 ]

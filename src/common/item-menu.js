@@ -5,6 +5,7 @@ import { DataUtils } from "../utils/data-utils.js"
 import { exhaustiveGuard } from "../utils/guard.js"
 import { SCENE_KEYS } from "../scenes/scene-keys.js"
 import { EVENT_KEYS } from "../types/event-keys.js"
+import { createDialogUIGameObjectContainer } from "../utils/ui-utils.js"
 
 
 export class ItemMenu {
@@ -16,8 +17,6 @@ export class ItemMenu {
   #width
   /** @type {number} */
   #height
-  /** @type {Phaser.GameObjects.Graphics} */
-  #graphics
   /** @type {Phaser.GameObjects.Container} */
   #container
   /** @type {boolean} */
@@ -41,7 +40,7 @@ export class ItemMenu {
    */
   constructor (scene) {
     this.#scene = scene
-    this.#padding = 4
+    this.#padding = 20
     this.#width = 275
     this.#height = 555
     this.#selectedItemOptionIndex = 0
@@ -68,8 +67,8 @@ export class ItemMenu {
 
   show () {
     const { right, top } = this.#scene.cameras.main.worldView
-    const startX = right - this.#padding * 2 - this.#width
-    const startY = top + this.#padding * 2
+    const startX = right - this.#width
+    const startY = top
     this.#container.setPosition(startX, startY)
     this.#container.setAlpha(1)
     this.#isVisible = true
@@ -98,16 +97,6 @@ export class ItemMenu {
     }
 
     this.#moveMenuCursor(input)
-  }
-
-  #createGraphics () {
-    const g = this.#scene.add.graphics()
-    g.fillStyle(0xFFFFFF, 1)
-    g.fillRect(1, 0, this.#width - 1, this.#height - 1)
-    g.lineStyle(4, 0x000000, 1)
-    g.strokeRect(0, 0, this.#width, this.#height)
-
-    return g
   }
 
   /**
@@ -163,8 +152,8 @@ export class ItemMenu {
   #createItemMenuGameObjects () {    
     this.#getPlayerInvetory()
 
-    this.#graphics = this.#createGraphics()
-    this.#container = this.#scene.add.container(0, 0, [this.#graphics]).setDepth(2)
+    const uiBorderBackground = createDialogUIGameObjectContainer(this.#scene, { x: 0, y: 0 }, this.#width, this.#height)
+    this.#container = this.#scene.add.container(0, 0, [uiBorderBackground]).setDepth(2)
 
     for (let i = 0; i < this.#inventory.length; i++) {
       const y = 10 + 60 * i + this.#padding

@@ -2,6 +2,7 @@ import { UI_ASSET_KEYS } from "../../assets/asset-keys.js"
 import { DIRECTION } from "../../types/direction.js"
 import Phaser from "../../lib/phaser.js"
 import { exhaustiveGuard } from "../../utils/guard.js"
+import { createDialogUIGameObjectContainer } from "../../utils/ui-utils.js"
 
 /**
  * @typedef {keyof typeof MENU_OPTIONS} MenuOptions
@@ -27,8 +28,6 @@ export class Menu {
   #width
   /** @type {number} */
   #height
-  /** @type {Phaser.GameObjects.Graphics} */
-  #graphics
   /** @type {Phaser.GameObjects.Container} */
   #container
   /** @type {boolean} */
@@ -50,18 +49,18 @@ export class Menu {
    */
   constructor (scene) {
     this.#scene = scene
-    this.#padding = 4
+    this.#padding = 20
     this.#width = 275
     this.#availaleMenuOptions = [MENU_OPTIONS.POKEMON, MENU_OPTIONS.ITEM, MENU_OPTIONS.SAVE, MENU_OPTIONS.EXIT]
-    this.#height = 10 + this.#padding * 2 + this.#availaleMenuOptions.length * 50
+    this.#height = this.#padding * 2 + this.#availaleMenuOptions.length * 50
 
     this.#menuOptionsTextGameObjects = []
     this.#selectedMenuOptionIndex = 0
-    this.#graphics = this.#createGraphics()
-    this.#container = this.#scene.add.container(0, 0, [this.#graphics])
+
+    this.#container = createDialogUIGameObjectContainer(this.#scene, { x: 0, y: 0 }, this.#width, this.#height)
 
     for (let i = 0; i < this.#availaleMenuOptions.length; i++) {
-      const y = 10 + 50 * i + this.#padding
+      const y = (this.#padding / 2) + 50 * i + this.#padding
       const textObject = this.#scene.add.bitmapText(40 + this.#padding, y, 'gb-font', this.#availaleMenuOptions[i], 40)
       this.#menuOptionsTextGameObjects.push(textObject)
       this.#container.add(textObject)
@@ -90,8 +89,8 @@ export class Menu {
 
   show () {
     const { right, top } = this.#scene.cameras.main.worldView
-    const startX = right - this.#padding * 2 - this.#width
-    const startY = top + this.#padding * 2
+    const startX = right - this.#width
+    const startY = top
     this.#container.setPosition(startX, startY)
     this.#container.setAlpha(1)
     this.#isVisible = true
@@ -121,17 +120,6 @@ export class Menu {
 
     this.#moveMenuCursor(input)
   }
-
-  #createGraphics () {
-    const g = this.#scene.add.graphics()
-    g.fillStyle(0xFFFFFF, 1)
-    g.fillRect(1, 0, this.#width - 1, this.#height - 1)
-    g.lineStyle(4, 0x000000, 1)
-    g.strokeRect(0, 0, this.#width, this.#height)
-
-    return g
-  }
-
   /**
    * @returns {void}
    */

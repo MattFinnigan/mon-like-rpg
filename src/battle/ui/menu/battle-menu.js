@@ -74,6 +74,8 @@ export class BattleMenu {
   #battlePartyMenu
   /** @type {PartyMon} */
   #selectedMonToSwitchTo
+  /** @type {Phaser.GameObjects.Container} */
+  #moveSelectCurrentDetailsPhaserContainer
 
   /**
    * 
@@ -377,7 +379,6 @@ export class BattleMenu {
     for (let i = 0; i < 4; i++) {
       attackNames.push(this.#activePlayerMon.attacks[i]?.name || '-')
     }
-    console.log(attackNames)
 
     this.#moveSelectionSubBattleMenuPhaserContainerGameObject = this.#scene.add.container(0, DIALOG_DETAILS.y, [
       this.#scene.add.bitmapText(55, DIALOG_DETAILS.paddingTop, 'gb-font', attackNames[0], 30),

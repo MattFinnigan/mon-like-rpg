@@ -42,6 +42,7 @@ export class PreloadScene extends Phaser.Scene {
     const battleAssetPath = 'assets/images/battle'
     const attackAnimPath = 'assets/images/anims/attks'
     const pinmenAttackAnimPath = 'assets/images/anims/pimen'
+    const uiDialogAssetPath = 'assets/images/ui/dialog'
 
     // fonts
     this.load.bitmapFont(
@@ -80,6 +81,15 @@ export class PreloadScene extends Phaser.Scene {
     
     // common
     this.load.image(SYSTEM_ASSET_KEYS.DIALOG_BACKGROUND, `/${backgroundAssetPath}/dialog.png`)
+    this.load.image(UI_ASSET_KEYS.DIALOG_BORDER_BOTTOM, `/${uiDialogAssetPath}/border-bottom.png`)
+    this.load.image(UI_ASSET_KEYS.DIALOG_BORDER_BOTTOM_LEFT, `/${uiDialogAssetPath}/border-bottom-left.png`)
+    this.load.image(UI_ASSET_KEYS.DIALOG_BORDER_BOTTOM_RIGHT, `/${uiDialogAssetPath}/border-bottom-right.png`)
+    this.load.image(UI_ASSET_KEYS.DIALOG_BORDER_LEFT, `/${uiDialogAssetPath}/border-left.png`)
+    this.load.image(UI_ASSET_KEYS.DIALOG_BORDER_RIGHT, `/${uiDialogAssetPath}/border-right.png`)
+    this.load.image(UI_ASSET_KEYS.DIALOG_BORDER_TOP, `/${uiDialogAssetPath}/border-top.png`)
+    this.load.image(UI_ASSET_KEYS.DIALOG_BORDER_TOP_LEFT, `/${uiDialogAssetPath}/border-top-left.png`)
+    this.load.image(UI_ASSET_KEYS.DIALOG_BORDER_TOP_RIGHT, `/${uiDialogAssetPath}/border-top-right.png`)
+
     this.load.image(UI_ASSET_KEYS.CURSOR, `${uiAssestPath}/cursor.png`)
     this.load.image(UI_ASSET_KEYS.ARROW, `${uiAssestPath}/arrow.png`)
   
