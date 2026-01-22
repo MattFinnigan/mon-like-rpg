@@ -50,7 +50,8 @@ const BATTLE_STATES = Object.freeze({
   PLAYER_SWITCH: 'PLAYER_SWITCH',
   GAINING_EXPERIENCE: 'GAINING_EXPERIENCE',
   POST_EXPERIENCE_GAINED: 'POST_EXPERIENCE_GAINED',
-  STATUS_EFFECT_CHECK: 'STATUS_EFFECT_CHECK'
+  STATUS_EFFECT_CHECK: 'STATUS_EFFECT_CHECK',
+  MON_FAINTED: 'MON_FAINTED'
 })
 
 /** @enum {object} */
@@ -266,10 +267,54 @@ export class BattleScene extends Phaser.Scene {
   /**
    * 
    * @param {BattleMon} mon
+   * @param {() => void} callback
+   */
+  #checkPostBattleTurnMonStatusEffect (mon, callback) {
+    /** @type {import('../types/status-effect.js').StatusEffect[]} */
+    const postBattleStatusEffects = [
+      STATUS_EFFECT.BURN
+    ]
+    
+    if (!postBattleStatusEffects.includes(mon.currentStatusEffect)) {
+      callback()
+      return
+    }
+
+    const { statusEffect } = mon.rollStatusEffectRemoval()
+    let msg = ''
+
+    const showMessage = () => {
+      this.#battleMenu.updateInfoPanelMessagesNoInputRequired(msg, () => {
+        this.time.delayedCall(500, () => {
+          callback()
+        })
+      }, SKIP_ANIMATIONS)
+    }
+
+    switch (statusEffect) {
+      case STATUS_EFFECT.BURN:
+        msg = `${mon.name} was hurt by their burn.`
+        mon.takeDamage(mon.maxHealth * 0.10, () => {
+          showMessage()
+        })
+        break
+      }
+  }
+
+  /**
+   * 
+   * @param {BattleMon} mon
    * @param {(canAttack: boolean) => void} callback
    */
-  #checkMonStatusEffect (mon, callback) {
-    if (!mon.currentStatusEffect) {
+  #checkPreAttackMonStatusEffect (mon, callback) {
+    /** @type {import('../types/status-effect.js').StatusEffect[]} */
+    const preAttackStatusEffects = [
+      STATUS_EFFECT.FREEZE,
+      STATUS_EFFECT.CONFUSE,
+      STATUS_EFFECT.PARALYSE
+    ]
+    
+    if (!preAttackStatusEffects.includes(mon.currentStatusEffect)) {
       callback(true)
       return
     }
@@ -292,13 +337,6 @@ export class BattleScene extends Phaser.Scene {
           ? `${mon.name} thawed out!`
           : `${mon.name} is frozen solid...`
         showMessage()
-        break
-      case STATUS_EFFECT.BURN:
-        canAttack = true
-        msg = `${mon.name} was hurt by their burn.`
-        mon.takeDamage(20, () => {
-          showMessage()
-        })
         break
       case STATUS_EFFECT.CONFUSE:
         if (result) {
@@ -328,9 +366,6 @@ export class BattleScene extends Phaser.Scene {
         }
         callback(true)
         break
-        default:
-          exhaustiveGuard(statusEffect)
-          break
     }
   }
 
@@ -383,7 +418,7 @@ export class BattleScene extends Phaser.Scene {
   }
 
   #playerAttack () {
-    this.#checkMonStatusEffect(this.#activePlayerMon, (canAttack) => {
+    this.#checkPreAttackMonStatusEffect(this.#activePlayerMon, (canAttack) => {
 
       if (!canAttack) {
         this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK)
@@ -434,7 +469,7 @@ export class BattleScene extends Phaser.Scene {
       return
     }
 
-    this.#checkMonStatusEffect(this.#activeEnemyMon, (canAttack) => {
+    this.#checkPreAttackMonStatusEffect(this.#activeEnemyMon, (canAttack) => {
 
       if (!canAttack) {
         this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK)
@@ -444,8 +479,8 @@ export class BattleScene extends Phaser.Scene {
       const attack = this.#getEnemyAttack()
       this.#announceAttack(this.#activeEnemyMon, attack, () => {
         this.#attackManager.playAttackSequence(
-          this.#activePlayerMon,
           this.#activeEnemyMon,
+          this.#activePlayerMon,
           attack,
           ATTACK_TARGET.PLAYER,
           (result) => {
@@ -492,9 +527,7 @@ export class BattleScene extends Phaser.Scene {
 
     if (wasImmune) {
       postAttackMsgs.push(`But nothing happened!`)
-    }
-
-    if (!damageTaken && !this.#lastAttackResult.statusEffect) {
+    } else if (!damageTaken && !this.#lastAttackResult.statusEffect) {
       postAttackMsgs.push(`But it did nothing!`)
     }
 
@@ -542,22 +575,24 @@ export class BattleScene extends Phaser.Scene {
       }, SKIP_ANIMATIONS)
     })
   }
+  
+  /**
+   * @param {() => void} callback
+   * @returns {boolean}
+   */
+  #checkMonFaintedStatuses (callback) {
+    if (this.#activeEnemyMon.isFainted) {
+      this.#battleStateMachine.setState(BATTLE_STATES.MON_FAINTED)
+      this.#playEnemyFaintedSequence()
+      return
+    }
 
-  #postBattleSequenceCheck() {
-    this.#announceAttackEffects(() => {
-      if (this.#activeEnemyMon.isFainted) {
-        this.#playEnemyFaintedSequence()
-        return
-      }
-
-      if (this.#activePlayerMon.isFainted) {
-        this.#playPlayerFaintedSequence()
-        return
-      }
-
-      this.#battleStateMachine.setState(BATTLE_STATES.BATTLE)
-      
-    })
+    if (this.#activePlayerMon.isFainted) {
+      this.#battleStateMachine.setState(BATTLE_STATES.MON_FAINTED)
+      this.#playPlayerFaintedSequence()
+      return
+    }
+    callback()
   }
 
   #transitionToNextScene () {
@@ -708,20 +743,32 @@ export class BattleScene extends Phaser.Scene {
 
         this.#battleMenu.hideItemMenu()
         this.#battleMenu.hidePartyMenu()
+
         if (this.#allPlayersHadATurn()) {
           this.#resetTurnTracker()
-          this.#battleStateMachine.setState(BATTLE_STATES.PLAYERS_PLAY)
+          this.#checkPostBattleTurnMonStatusEffect(this.#activePlayerMon, () => {
+            this.#checkMonFaintedStatuses(() => {
+              this.#checkPostBattleTurnMonStatusEffect(this.#activeEnemyMon, () => {
+                this.#checkMonFaintedStatuses(() => {
+                  this.#battleStateMachine.setState(BATTLE_STATES.PLAYERS_PLAY)
+                })
+              })
+            })
+          })
           return
         }
+
         if (!this.#enemyHadATurn() && !this.#playerHadATurn()) {
           this.#determineAndTakeFirstTurn()
           return
         }
+
         if (this.#enemyHadATurn()) {
           this.#playersThatHadATurn.push(BATTLE_PLAYERS.PLAYER)
           this.#playPlayersTurnSequence()
           return
         }
+
         if (this.#playerHadATurn()) {
           this.#playersThatHadATurn.push(BATTLE_PLAYERS.ENEMY)
           this.#enemyAttack()
@@ -733,12 +780,20 @@ export class BattleScene extends Phaser.Scene {
     this.#battleStateMachine.addState({
       name: BATTLE_STATES.POST_ATTACK,
       onEnter: () => {
-        this.#postBattleSequenceCheck()
+        this.#announceAttackEffects(() => {
+          this.#checkMonFaintedStatuses(() => {
+            this.#battleStateMachine.setState(BATTLE_STATES.BATTLE)
+          })
+        })
       }
     })
 
     this.#battleStateMachine.addState({
       name: BATTLE_STATES.STATUS_EFFECT_CHECK
+    })
+
+    this.#battleStateMachine.addState({
+      name: BATTLE_STATES.MON_FAINTED
     })
 
     this.#battleStateMachine.addState({
@@ -924,7 +979,8 @@ export class BattleScene extends Phaser.Scene {
       state === BATTLE_STATES.PLAYER_VICTORY ||
       state === BATTLE_STATES.RUN_ATTEMPT ||
       state === BATTLE_STATES.POST_EXPERIENCE_GAINED ||
-      state === BATTLE_STATES.WILD_MON_OUT
+      state === BATTLE_STATES.WILD_MON_OUT ||
+      state === BATTLE_STATES.MON_FAINTED
   }
 
   #waitingForPlayerToTakeTurn () {

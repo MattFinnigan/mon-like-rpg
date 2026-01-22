@@ -187,8 +187,9 @@ export class AttackManager {
     let typeMod = 1
     
     const monTypesFlat = defender.baseMonDetails.types.map(type => type.name)
-
-    const wasImmune = !!attackMoveType.immuneTo.find(am => monTypesFlat.indexOf(am) !== -1)
+    const wasImmune = !!defender.baseMonDetails.types.find(defenderType => {
+      return defenderType.immuneTo.find(immuneTo => immuneTo === attackMove.typeKey)
+    })
     const wasSuperEffective = !!attackMoveType.superEffectiveAgainst.find(am => monTypesFlat.indexOf(am) !== -1)
     const wasResistant = !!defender.baseMonDetails.types.find(mt => mt.resistantAgainst.indexOf(attackMoveType.name) !== -1)
     let wasCriticalHit = wasImmune

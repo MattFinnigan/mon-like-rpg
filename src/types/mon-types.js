@@ -4,7 +4,7 @@ const TYPES = {
   NORMAL: {
     name: 'NORMAL',
     colour: 0xA8A77A,
-    immuneTo: ['GHOST'],
+    immuneTo: [],
     superEffectiveAgainst: [],
     resistantAgainst: []
   },
