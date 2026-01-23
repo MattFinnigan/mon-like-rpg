@@ -111,9 +111,9 @@ export class PreloadScene extends Phaser.Scene {
       frameHeight: 177
     })
 
-    this.load.image(WORLD_ASSET_KEYS.WORLD_BACKGROUND, `/${mapAssetPath}/background.png`)
-    this.load.image(WORLD_ASSET_KEYS.WORLD_FOREGROUND, `/${mapAssetPath}/foreground.png`)
-    this.load.tilemapTiledJSON(WORLD_ASSET_KEYS.WORLD_MAIN_LEVEL, 'assets/data/level.json')
+    this.load.image(WORLD_ASSET_KEYS.WORLD_BACKGROUND, `/${mapAssetPath}/aus.png`)
+    this.load.image(WORLD_ASSET_KEYS.WORLD_FOREGROUND, `/${mapAssetPath}/aus-foreground.png`)
+    this.load.tilemapTiledJSON(WORLD_ASSET_KEYS.WORLD_MAIN_LEVEL, 'assets/data/auslevel.json')
 
     this.load.image(WORLD_ASSET_KEYS.WORLD_COLLISION, `/${mapAssetPath}/collision.png`)
     this.load.image(WORLD_ASSET_KEYS.WORLD_ENCOUNTER_ZONE, `/${mapAssetPath}/encounter.png`)
@@ -144,6 +144,10 @@ export class PreloadScene extends Phaser.Scene {
       frameHeight: 96
     })
     this.load.spritesheet(CHARACTER_ASSET_KEYS.NPC_SHEET_5, `${npcAssetPath}/npc5.png`, {
+      frameWidth: 72,
+      frameHeight: 96
+    })
+    this.load.spritesheet(CHARACTER_ASSET_KEYS.NPC_SHEET_6, `${npcAssetPath}/npc6.png`, {
       frameWidth: 72,
       frameHeight: 96
     })

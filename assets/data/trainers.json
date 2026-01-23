@@ -7,5 +7,23 @@
     "assetKey": "PSYCHIC",
     "partyMons": [4, 5, 6],
     "defeatedMsg": "NOOO! BORRIS!!!"
+  },
+  "2": {
+    "name": "CLINTON",
+    "trainerType": "BURGLAR",
+    "rewardOnVictory": 1500,
+    "payOutOnDefeat": 1000,
+    "assetKey": "BURGLAR",
+    "partyMons": [4, 5, 6],
+    "defeatedMsg": "Yeah James, hes gone in there. What collision?"
+  },
+  "3": {
+    "name": "AHMED",
+    "trainerType": "FISHERMAN",
+    "rewardOnVictory": 1500,
+    "payOutOnDefeat": 1000,
+    "assetKey": "FISHERMAN",
+    "partyMons": [7, 8, 9],
+    "defeatedMsg": "Alwell... a feeds a feed!"
   }
 }

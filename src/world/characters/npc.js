@@ -37,6 +37,7 @@ export const NPC_MOVEMENT_PATTERN = Object.freeze({
 /**
  * @typedef NPCConfigProps
  * @type {object}
+ * @property {string} name
  * @property {number} frame
  * @property {string[]} messages
  * @property {NPCPath} npcPath
@@ -70,6 +71,8 @@ export class NPC extends Character {
   #actionId
   /** @type {boolean} */
   #actionPending
+  /** @type {string} */
+  #name
   
   /**
    * 
@@ -95,7 +98,8 @@ export class NPC extends Character {
     this.#currentPathIndex = 0
     this.#movementPattern = config.movementPattern
     this.#lastMovementTime = Phaser.Math.Between(3500, 5000)
-
+    this.#name = config.name
+    
     this.#action = config.action
     this.#actionId = config.actionId
     this.#actionPending = false
@@ -226,8 +230,8 @@ export class NPC extends Character {
       case DIRECTION.LEFT:
       case DIRECTION.RIGHT:
       case DIRECTION.UP:
-        if (!this._phaserGameObject.anims.isPlaying || this._phaserGameObject.anims.currentAnim?.key !== `NPC_2_${this._direction}`) {
-          this._phaserGameObject.play(`NPC_2_${this._direction}`)
+        if (!this._phaserGameObject.anims.isPlaying || this._phaserGameObject.anims.currentAnim?.key !== `${this.#name}_${this._direction}`) {
+          this._phaserGameObject.play(`${this.#name}_${this._direction}`)
         }
       break
       case DIRECTION.NONE:

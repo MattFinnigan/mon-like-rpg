@@ -23,8 +23,8 @@ const DEV_LOCAL_STORAGE_KEY = 'DEV_MF_MON_DATA'
 const initalState = {
   player: {
     position: {
-      x: 7 * TILE_SIZE,
-      y: 42 * TILE_SIZE
+      x: 112 * TILE_SIZE,
+      y: 80 * TILE_SIZE
     },
     direction: DIRECTION.DOWN,
     name: 'YOU',
@@ -88,8 +88,8 @@ const initalState = {
 const devInitialState = {
   player: {
     position: {
-      x: 7 * TILE_SIZE,
-      y: 42 * TILE_SIZE
+      x: 112 * TILE_SIZE,
+      y: 80 * TILE_SIZE
     },
     direction: DIRECTION.DOWN,
     name: 'YOU',

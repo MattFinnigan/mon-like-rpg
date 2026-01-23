@@ -43,5 +43,50 @@
     "hpEV": 24,
     "attackIds": [2],
     "currentExp": 0
+  },
+  "7": {
+    "id": 7,
+    "baseMonIndex": 128,
+    "name": "MAGIKARP",
+    "currentHp": null,
+    "currentLevel": 26,
+    "attackEV": 5,
+    "defenseEV": 29,
+    "splAttackEV": 11,
+    "splDefenseEV": 16,
+    "speedEV": 2,
+    "hpEV": 24,
+    "attackIds": [4],
+    "currentExp": 0
+  },
+  "8": {
+    "id": 8,
+    "baseMonIndex": 71,
+    "name": "TENTACOOL",
+    "currentHp": null,
+    "currentLevel": 24,
+    "attackEV": 5,
+    "defenseEV": 29,
+    "splAttackEV": 11,
+    "splDefenseEV": 16,
+    "speedEV": 2,
+    "hpEV": 24,
+    "attackIds": [1, 5],
+    "currentExp": 0
+  },
+  "9": {
+    "id": 9,
+    "baseMonIndex": 79,
+    "name": "SLOWBRO",
+    "currentHp": null,
+    "currentLevel": 37,
+    "attackEV": 5,
+    "defenseEV": 29,
+    "splAttackEV": 11,
+    "splDefenseEV": 16,
+    "speedEV": 2,
+    "hpEV": 24,
+    "attackIds": [0, 1, 5],
+    "currentExp": 0
   }
 }

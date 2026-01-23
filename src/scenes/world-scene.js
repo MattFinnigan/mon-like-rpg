@@ -375,9 +375,9 @@ export class WorldScene extends Phaser.Scene {
       const npcMovement = npcObject.properties.find(prop => prop.name === TILED_NPC_PROPERTY.MOVEMENT_PATTERN)?.value || 'IDLE'
       const npcAction = npcObject.properties.find(prop => prop.name === TILED_NPC_PROPERTY.ACTION)?.value || 'NONE'
       const npcActionId = npcObject.properties.find(prop => prop.name === TILED_NPC_PROPERTY.ACTION_ID)?.value || undefined
-
       const npc = new NPC(this, {
         scene: this,
+        name: npcObject.name,
         assetKey: CHARACTER_ASSET_KEYS['NPC_SHEET_' + npcSheet],
         position: { x: npcObject.x, y: npcObject.y - TILE_SIZE },
         direction: DIRECTION.DOWN,
@@ -388,6 +388,7 @@ export class WorldScene extends Phaser.Scene {
         action: npcAction,
         actionId: npcActionId
       })
+
       this.#npcs.push(npc)
     })
 

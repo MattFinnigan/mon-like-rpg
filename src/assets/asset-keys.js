@@ -60,11 +60,23 @@ export const CHARACTER_ASSET_KEYS = Object.freeze({
   NPC_SHEET_3: 'NPC_SHEET_3',
   NPC_SHEET_4: 'NPC_SHEET_4',
   NPC_SHEET_5: 'NPC_SHEET_5',
+  NPC_SHEET_6: 'NPC_SHEET_6'
 })
 
 export const TRAINER_SPRITES = Object.freeze({
   RED: 'RED',
-  PSYCHIC: 'PSYCHIC'
+  PSYCHIC: 'PSYCHIC',
+  GAMBLER: 'GAMBLER',
+  BURGLAR: 'BURGLAR',
+  FISHERMAN: 'FISHERMAN'
+})
+
+export const TRAINER_GRAY_SPRITES = Object.freeze({
+  RED_GRAY: 'RED_GRAY',
+  PSYCHIC_GRAY: 'PSYCHIC_GRAY',
+  GAMBLER_GRAY: 'GAMBLER_GRAY',
+  BURGLAR_GRAY: 'BURGLAR_GRAY',
+  FISHERMAN_GRAY: 'FISHERMAN_GRAY'
 })
 
 export const TYPE_ASSET_KEYS = Object.freeze({
@@ -86,11 +98,6 @@ export const TYPE_ASSET_KEYS = Object.freeze({
   DARK: 'DARK',
   STEEL: 'STEEL',
   FAIRY: 'FAIRY'
-})
-
-export const TRAINER_GRAY_SPRITES = Object.freeze({
-  RED_GRAY: 'RED_GRAY',
-  PSYCHIC_GRAY: 'PSYCHIC_GRAY'
 })
 
 export const BGM_ASSET_KEYS = Object.freeze({

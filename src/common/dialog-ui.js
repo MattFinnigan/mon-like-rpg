@@ -153,7 +153,10 @@ export class DialogUi {
 
     this.#container.setPosition(startX, startY)
     this.#container.setAlpha(1)
-    this.#phaserOptionsContainer.setPosition(startX + this.#scene.scale.width - this.#optionsContainerWidth, startY - this.#optionsContainerHeight)
+    if (this.#phaserOptionsContainer) {
+      this.#phaserOptionsContainer.setPosition(startX + this.#scene.scale.width - this.#optionsContainerWidth, startY - this.#optionsContainerHeight)
+    }
+  
     this.#isVisible = true
 
     this.#onFinish = callback
