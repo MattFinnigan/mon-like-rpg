@@ -11,7 +11,7 @@ import { Controls } from '../utils/controls.js'
 import { BattleTrainer } from '../battle/characters/battle-trainer.js'
 import { EVENT_KEYS } from '../types/event-keys.js'
 import { AudioManager } from '../utils/audio-manager.js'
-import { BGM_ASSET_KEYS, TRAINER_SPRITES } from '../assets/asset-keys.js'
+import { BGM_ASSET_KEYS, SFX_ASSET_KEYS, TRAINER_SPRITES } from '../assets/asset-keys.js'
 import { BattlePlayer } from '../battle/characters/battle-player.js'
 import { DATA_MANAGER_STORE_KEYS, dataManager } from '../utils/data-manager.js'
 import { BattleMon } from '../battle/mons/battle-mon.js'
@@ -295,8 +295,10 @@ export class BattleScene extends Phaser.Scene {
     switch (statusEffect) {
       case STATUS_EFFECT.BURN:
         msg = `${mon.name} was hurt by their burn.`
-        mon.takeDamage(mon.maxHealth * 0.10, () => {
-          showMessage()
+        mon.playMonTakeDamageSequence(mon.maxHealth * 0.10,  {
+          sfxAssetKey: SFX_ASSET_KEYS.TAKE_DAMAGE,
+          skipAnimation: true,
+          callback: () => showMessage()
         })
         break
       }
@@ -351,8 +353,10 @@ export class BattleScene extends Phaser.Scene {
         if (hitSelf) {
           msg = `${mon.name} hurt itself in confusion...`
           canAttack = false
-          mon.takeDamage(10, () => {
-            showMessage()
+          mon.playMonTakeDamageSequence(mon.maxHealth * 0.10,  {
+            sfxAssetKey: SFX_ASSET_KEYS.TAKE_DAMAGE,
+            skipAnimation: true,
+            callback: () => showMessage()
           })
           return
         }
@@ -376,22 +380,6 @@ export class BattleScene extends Phaser.Scene {
    */
   #getPlayerAttack () {
     return this.#activePlayerMon.attacks[this.#activePlayerAttackIndex]
-  }
-
-  #playEnemyDamageTakenAnimation () {
-    this.#activeEnemyMon.playMonTakeDamageAnimation(() => {
-      this.#activeEnemyMon.takeDamage(this.#lastAttackResult.damage.damageTaken, () => {
-
-        if (this.#lastAttackResult.statusEffect) {
-          this.#playEnemyApplyStatusEffect(() => {
-            this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK)
-          })
-          return
-        }
-
-        this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK)
-      })
-    }, this.#lastAttackResult.damage.damageTaken === 0 || SKIP_ANIMATIONS)
   }
 
   /**
@@ -435,7 +423,19 @@ export class BattleScene extends Phaser.Scene {
           ATTACK_TARGET.ENEMY,
           (result) => {
             this.#lastAttackResult = result
-            this.#playEnemyDamageTakenAnimation()
+            this.#activeEnemyMon.playMonTakeDamageSequence(this.#lastAttackResult.damage.damageTaken,  {
+              sfxAssetKey: this.#determinePostAttackSoundEffect(),
+              callback: () => {
+                if (this.#lastAttackResult.statusEffect) {
+                  this.#playEnemyApplyStatusEffect(() => {
+                    this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK)
+                  })
+                  return
+                }
+
+                this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK)
+              }
+            })
           }
         )
       })
@@ -450,20 +450,6 @@ export class BattleScene extends Phaser.Scene {
     return this.#activeEnemyMon.attacks[Phaser.Math.Between(0, this.#activeEnemyMon.attacks.length - 1)]
   }
 
-  #playPlayerDamageTakenAnimation () {
-    this.#activePlayerMon.playMonTakeDamageAnimation(() => {
-      this.#activePlayerMon.takeDamage(this.#lastAttackResult.damage.damageTaken, () => {
-  
-        if (this.#lastAttackResult.statusEffect) {
-          this.#playPlayerApplyStatusEffect(() => {
-            this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK)
-          })
-          return
-        }
-        this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK)
-      })
-    }, this.#lastAttackResult.damage.damageTaken === 0)
-  }
 
   #enemyAttack() {
     if (this.#activeEnemyMon.isFainted) {
@@ -486,11 +472,41 @@ export class BattleScene extends Phaser.Scene {
           ATTACK_TARGET.PLAYER,
           (result) => {
             this.#lastAttackResult = result
-            this.#playPlayerDamageTakenAnimation()
+            this.#activePlayerMon.playMonTakeDamageSequence(this.#lastAttackResult.damage.damageTaken,  {
+              sfxAssetKey: this.#determinePostAttackSoundEffect(),
+              callback: () => {
+                if (this.#lastAttackResult.statusEffect) {
+                  this.#playPlayerApplyStatusEffect(() => {
+                    this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK)
+                  })
+                  return
+                }
+                this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK)
+              }
+            })
           }
         )
       })
     })
+  }
+
+  /**
+   * 
+   * @returns {string|null}
+   */
+  #determinePostAttackSoundEffect () {
+    if (!this.#lastAttackResult.damage.damageTaken) {
+      return null
+    }
+    if (this.#lastAttackResult.damage.wasSuperEffective) {
+      return SFX_ASSET_KEYS.SUPER_EFFECTIVE
+    }
+
+    if (this.#lastAttackResult.damage.wasResistant) {
+      return SFX_ASSET_KEYS.NOT_VERY_EFFECTIVE
+    }
+
+    return SFX_ASSET_KEYS.TAKE_DAMAGE
   }
 
   /**
@@ -537,7 +553,6 @@ export class BattleScene extends Phaser.Scene {
 
   #playEnemyFaintedSequence () {
     this.#activeEnemyMon.playDeathAnimation(() => {
-
       if (this.#opponentIsWildMon()) {
         this.#audioManager.playBgm(this.#victoryBgmKey)
         this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`Wild ${this.#activeEnemyMon.name} fainted!`], () => {
@@ -558,7 +573,8 @@ export class BattleScene extends Phaser.Scene {
     const msgs = [`${this.#activePlayerMon.name} gained ${expGained} experience points!`]
     this.#activePlayerMon.gainExperience(expGained, (didLevelUp, evolved) => {
       if (didLevelUp) {
-        msgs.push(`${this.#activePlayerMon.name} grew to level ${this.#activePlayerMon.currentLevel}!`)
+        this.#audioManager.playSfx(SFX_ASSET_KEYS.LEVEL_UP, { primaryAudio: true })
+        msgs.unshift(`${this.#activePlayerMon.name} grew to level ${this.#activePlayerMon.currentLevel}!`)
         if (evolved) {
           this.#evolutionPendingMons.push(this.#activePlayerMon.monDetails)
         }
@@ -852,6 +868,7 @@ export class BattleScene extends Phaser.Scene {
       name: BATTLE_STATES.RUN_ATTEMPT,
       onEnter: () => {
         if (this.#runAttemptSucceeded()) {
+          this.#audioManager.playSfx(SFX_ASSET_KEYS.RUN, { primaryAudio: true })
           this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(['Got away safely...'], () => {
             this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
           }, SKIP_ANIMATIONS)

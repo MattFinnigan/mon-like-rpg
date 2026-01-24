@@ -56,7 +56,7 @@ export class BattleTrainer extends BattleCharacter {
     this.#characterSpriteShowing = true
     const startXPos = -30
     const endXPos = ENEMY_IMAGE_POSITION.x
-
+    // TODO resize gray/normal sprites to match
     this.#phaserTrainerImageGameObject.setPosition(startXPos, ENEMY_IMAGE_POSITION.y)
     this.#phaserTrainerImageGameObject.setAlpha(1)
 
@@ -78,6 +78,7 @@ export class BattleTrainer extends BattleCharacter {
       targets: this.#phaserTrainerImageGameObject,
       onComplete: () => {
         this.showRemainingMons()
+        this.#phaserTrainerImageGameObject.setPosition(ENEMY_IMAGE_POSITION.x, ENEMY_IMAGE_POSITION.y)
         this.#phaserTrainerImageGameObject.setTexture(TRAINER_SPRITES[this._assetKey])
         callback()
       }

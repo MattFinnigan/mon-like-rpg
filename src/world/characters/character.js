@@ -3,6 +3,8 @@ import { DIRECTION } from "../../types/direction.js"
 import Phaser from "../../lib/phaser.js"
 import { getTargetPositionFromGameObjectPositionAndDirection } from "../../utils/grid-utils.js"
 import { exhaustiveGuard } from "../../utils/guard.js"
+import { AudioManager } from "../../utils/audio-manager.js"
+import { SFX_ASSET_KEYS } from "../../assets/asset-keys.js"
 
 /**
  * @typedef CharacterIdleFrameConfig
@@ -51,6 +53,8 @@ export class Character {
   _collisionLayer
   /** @protected @type {Character[]} */
   _otherCharactersToCheckForCollisionsWith
+  /** @type {AudioManager} */
+  #audioManager
 
   /**
    * 
@@ -72,6 +76,7 @@ export class Character {
 
     this._phaserGameObject = this._scene.add.sprite(config.position.x, config.position.y, config.assetKey, this._getIdleFrame()).setOrigin(this._origin.x, this._origin.y).setScale(1.25)
     this._spriteGridMovementFinishedCallback = config.spriteGridMovementFinishedCallback
+    this.#audioManager = this._scene.registry.get('audio')
   }
 
   /** @type {Phaser.GameObjects.Sprite} */
@@ -165,11 +170,17 @@ export class Character {
     if (this._direction === DIRECTION.NONE) {
       return
     }
-    
+
     const targetPosition = { ...this._targetPosition }
     const updatedPosition = getTargetPositionFromGameObjectPositionAndDirection(targetPosition, this._direction)
 
-    return this.#doesPositionCollideWithCollisionLayer(updatedPosition) || this.#doesPositionCollideWithOtherCharacter(updatedPosition)
+    const res = this.#doesPositionCollideWithCollisionLayer(updatedPosition) || this.#doesPositionCollideWithOtherCharacter(updatedPosition)
+
+    if (res && !this.#audioManager.sfxIsPlaying) {
+      this.#audioManager.playSfx(SFX_ASSET_KEYS.COLLISION, { primaryAudio: true })
+    }
+
+    return res
   }
 
   #handleSpriteMovement () {

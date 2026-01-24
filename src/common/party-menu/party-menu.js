@@ -1,8 +1,9 @@
 import { SKIP_ANIMATIONS } from '../../../config.js'
-import { PARTY_MON_SPRITES, UI_ASSET_KEYS } from '../../assets/asset-keys.js'
+import { PARTY_MON_SPRITES, SFX_ASSET_KEYS, UI_ASSET_KEYS } from '../../assets/asset-keys.js'
 import { SCENE_KEYS } from '../../scenes/scene-keys.js'
 import { DIRECTION } from '../../types/direction.js'
 import { ITEM_TYPE_KEY } from '../../types/items.js'
+import { AudioManager } from '../../utils/audio-manager.js'
 import { getMonStats } from '../../utils/battle-utils.js'
 import { DATA_MANAGER_STORE_KEYS, dataManager } from '../../utils/data-manager.js'
 import { DataUtils } from '../../utils/data-utils.js'
@@ -83,6 +84,8 @@ export class PartyMenu {
   #selectedMonMenuOffsetY
   /** @type {number} */
   #selectedMonInputCusorOffsetY
+  /** @type {AudioManager} */
+  #audioManager
 
   /**
    * 
@@ -102,6 +105,7 @@ export class PartyMenu {
     this.#depth = 1
     this.#selectedMonMenuOffsetX = 380
     this.#selectedMonMenuOffsetY = 100
+    this.#audioManager = this.#scene.registry.get('audio')
     
     this.#playersMons = dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS)
 
@@ -372,6 +376,7 @@ export class PartyMenu {
    */
   #playMonSwitchAnimation (callback) {
     this.#scene.time.delayedCall(100, () => {
+      this.#audioManager.playSfx(SFX_ASSET_KEYS.SWAP, { primaryAudio: true })
       const firstMonGameObject = this.#partyMons[this.#cursorIndex].container
       const secondMonGameObject = this.#partyMons[this.#selectedMonIndex].container
       

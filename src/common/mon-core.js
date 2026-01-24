@@ -111,13 +111,14 @@ export class MonCore {
    * @param {() => void} callback
    * @returns {void}
    */
-  playMonCry (callback) {
+  _playMonCry (callback) {
     if (SKIP_ANIMATIONS) {
       callback()
       return
     }
-    this.#audioManager.playSfx(MON_ASSET_KEYS[this._baseMonDetails.assetKey], () => {
-      callback()
+    this.#audioManager.playSfx(MON_ASSET_KEYS[this._baseMonDetails.assetKey], {
+      primaryAudio: true,
+      callback: () => callback()
     })
   }
 

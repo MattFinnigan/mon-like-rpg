@@ -1,5 +1,6 @@
-import { BATTLE_ASSET_KEYS, MON_BACK_ASSET_KEYS, MON_BALLS } from "../../assets/asset-keys.js";
+import { BATTLE_ASSET_KEYS, MON_BACK_ASSET_KEYS, MON_BALLS, SFX_ASSET_KEYS } from "../../assets/asset-keys.js";
 import { createExpandBallAnimation } from "../../utils/animations.js";
+import { AudioManager } from "../../utils/audio-manager.js";
 import { DATA_MANAGER_STORE_KEYS, dataManager } from "../../utils/data-manager.js";
 import { BattleMon } from "./battle-mon.js";
 
@@ -14,6 +15,8 @@ const PLAYER_IMAGE_POSITION = Object.freeze({
 export class PlayerBattleMon extends BattleMon {
   /** @type {Phaser.GameObjects.Sprite} */
   #monBallExpandSpriteAnimation
+  /** @type {AudioManager} */
+  #audioManager
 
   /**
    * 
@@ -31,6 +34,7 @@ export class PlayerBattleMon extends BattleMon {
     this.#createMonGameObject()
     this.#createMonDetailsGameObject()
     this.#monBallExpandSpriteAnimation = null
+    this.#audioManager = this._scene.registry.get('audio')
   }
   
   /** @returns {number} */
@@ -60,13 +64,13 @@ export class PlayerBattleMon extends BattleMon {
     }
 
     this.#monBallExpandSpriteAnimation = createExpandBallAnimation(this._scene, coords).setScale(1.5)
-
+    this.#audioManager.playSfx(SFX_ASSET_KEYS.BALL_POOF, { primaryAudio: true })
     this.#monBallExpandSpriteAnimation.play(MON_BALLS.MON_BALL_EXPAND_ANIMATION)
     this.#monBallExpandSpriteAnimation.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
       this.#monBallExpandSpriteAnimation.setAlpha(0)
       this._scene.time.delayedCall(300, () => {
         this._phaserMonImageGameObject.setAlpha(1)
-        super.playMonCry(() => {
+        super._playMonCry(() => {
           this._phaserHealthBarGameContainer.setAlpha(1)
           callback()
         })
@@ -116,16 +120,17 @@ export class PlayerBattleMon extends BattleMon {
       callback()
       return
     }
-    super.playMonCry(() => {
+    super._playMonCry(() => {
       this._scene.tweens.add({
-        delay: 300,
-        duration: 300,
+        delay: 200,
+        duration: 250,
         y: {
           from: startYPos,
           to: endYPos
         },
         targets: this._phaserMonImageGameObject,
         onComplete: () => {
+          super._playFaintThud()
           this._phaserHealthBarGameContainer.setAlpha(0)
           callback()
         }
@@ -145,11 +150,11 @@ export class PlayerBattleMon extends BattleMon {
 
   /**
    * 
-   * @param {number} damage 
+   * @param {number} damage
    * @param {() => void} [callback] 
    */
-  takeDamage (damage, callback) {
-    super.takeDamage(damage, callback)
+  _takeDamage (damage, callback) {
+    super._takeDamage(damage, callback)
     this.#updateHp()
   }
 

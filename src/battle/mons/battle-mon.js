@@ -1,6 +1,6 @@
 import Phaser from "../../lib/phaser.js"
 import { HealthBar } from "../../common/health-bar.js" 
-import { BATTLE_ASSET_KEYS, MON_ASSET_KEYS } from "../../assets/asset-keys.js"
+import { BATTLE_ASSET_KEYS, MON_ASSET_KEYS, SFX_ASSET_KEYS } from "../../assets/asset-keys.js"
 import { AudioManager } from "../../utils/audio-manager.js"
 import { MON_TYPES } from "../../types/mon-types.js"
 import { MonCore } from "../../common/mon-core.js"
@@ -37,6 +37,8 @@ export class BattleMon extends MonCore  {
   _currentStatusEffect
   /** @type {number} */
   _statusEffectRemovalAttempts
+  /** @type {AudioManager} */
+  #audioManager
 
   /**
    * 
@@ -51,7 +53,8 @@ export class BattleMon extends MonCore  {
     this._battleSpriteAssetKey = this._baseMonDetails.assetKey
     this.#showHpNumsExpBar = showHpNumsExpBar
     this._statusEffectRemovalAttempts = 0
-    
+    this.#audioManager = this._scene.registry.get('audio')
+
     this.#createMonGameObject(pos)
     this.#createMonDetailsGameObject()
     this.#createHealthBarComponents()
@@ -104,15 +107,46 @@ export class BattleMon extends MonCore  {
 
   /**
    * 
-   * @param {number} damage 
-   * @param {() => void} [callback] 
+   * @param {number} damage
+   * @param {object} config
+   * @param {string} config.sfxAssetKey 
+   * @param {() => void} config.callback
+   * @param {boolean} [config.skipAnimation=false]
+   * @returns 
    */
-  takeDamage (damage, callback) {
+  playMonTakeDamageSequence (damage, config) {
+    if (!damage) {
+      config.callback()
+      return
+    }
+    
+    this.#audioManager.playSfx(config.sfxAssetKey, { primaryAudio: true })
+    if (config.skipAnimation) {
+      this._takeDamage(damage, () => {
+        config.callback()
+      })
+      return
+    }
+
+    this.#playMonTakeDamageAnimation(() => {
+      this._takeDamage(damage, () => {
+        config.callback()
+      })
+    })
+  }
+
+  /**
+   * 
+   * @param {number} damage
+   * @param {() => void} callback 
+   */
+  _takeDamage (damage, callback) {
     // update current hp, animate hp bar
     this._currentHealth -= damage
     if (this._currentHealth < 0) {
       this._currentHealth = 0
     }
+
     this._healthBar.setMeterPercentageAnimated(this._currentHealth, this._currentHealth / this._maxHealth, { callback })
   }
 
@@ -209,11 +243,10 @@ export class BattleMon extends MonCore  {
   /**
    * 
    * @param {() => void} callback
-   * @param {boolean} noDamageTaken
    * @returns {void}
    */
-  playMonTakeDamageAnimation (callback, noDamageTaken) {
-    if (this._skipBattleAnimations || noDamageTaken) {
+  #playMonTakeDamageAnimation (callback) {
+    if (this._skipBattleAnimations) {
       callback()
       return
     }
@@ -320,6 +353,20 @@ export class BattleMon extends MonCore  {
           return
         }
         callback(false, false)
+      }
+    })
+  }
+
+  /**
+   * 
+   * @param {() => void} [callback] 
+   */
+  _playFaintThud (callback) {
+    this.#audioManager.playSfx(SFX_ASSET_KEYS.FAINT_THUD, {
+      callback: () => {
+        if (callback) {
+          callback()
+        }
       }
     })
   }

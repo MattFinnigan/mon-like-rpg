@@ -1,7 +1,8 @@
-import { MON_ASSET_KEYS, MON_GRAY_ASSET_KEYS } from '../assets/asset-keys.js'
+import { BGM_ASSET_KEYS, MON_ASSET_KEYS, MON_GRAY_ASSET_KEYS } from '../assets/asset-keys.js'
 import { BattleMon } from '../battle/mons/battle-mon.js'
 import { DialogUi } from '../common/dialog-ui.js'
 import Phaser from '../lib/phaser.js'
+import { AudioManager } from '../utils/audio-manager.js'
 import { Controls } from '../utils/controls.js'
 import { DATA_MANAGER_STORE_KEYS, dataManager } from '../utils/data-manager.js'
 import { DataUtils } from '../utils/data-utils.js'
@@ -27,6 +28,8 @@ export class EvolveScene extends Phaser.Scene {
   #phaserCurrentEvolvingToGameImage
   /** @type {Controls} */
   #controls
+  /** @type {AudioManager} */
+  #audioManager
 
   constructor () {
     super({
@@ -57,6 +60,7 @@ export class EvolveScene extends Phaser.Scene {
 
     this.#controls = new Controls(this)
     this.#dialogUi = new DialogUi(this)
+    this.#audioManager = this.registry.get('audio')
     this.#phaserEvolvingMonContainer = this.add.container(200, 100)
 
     this.#currentEvolvingFrom = this.#evolvingFromMonsQueue.shift()
@@ -99,13 +103,13 @@ export class EvolveScene extends Phaser.Scene {
   #startEvolutionSequence() {
     const evolvingFromBase = DataUtils.getBaseMonDetails(this, this.#currentEvolvingFrom.baseMonIndex)
     this.#dialogUi.showDialogModalNoInputRequired([`What's happening?!?`])
-    
-    this.time.delayedCall(1000, () => {
+    this.#audioManager.playBgm(BGM_ASSET_KEYS.EVOLUTION)
+    this.time.delayedCall(1500, () => {
       // const duration = 5000
       const acceleration = 0.8
       const minInterval = 30
       
-      let currentInterval = 600
+      let currentInterval = 1000
 
       this.#phaserCurrentEvolvingFromGameImage.setTexture(MON_GRAY_ASSET_KEYS[evolvingFromBase.assetKey + '_GRAY'])
       let showingA = 1
@@ -116,7 +120,7 @@ export class EvolveScene extends Phaser.Scene {
         this.#phaserCurrentEvolvingToGameImage.setAlpha(1)
         count++
 
-        if (count > 20) {
+        if (count > 35) {
           this.#finishEvolution()
           return
         }
@@ -152,6 +156,8 @@ export class EvolveScene extends Phaser.Scene {
     dataManager.saveData()
       
     this.time.delayedCall(500, () => {
+      this.#audioManager.stopBgm(BGM_ASSET_KEYS.EVOLUTION)
+      this.#audioManager.playSfx(BGM_ASSET_KEYS.MON_CAUGHT, { primaryAudio: true })
       this.#phaserCurrentEvolvingToGameImage.setTexture(MON_ASSET_KEYS[this.#currentEvolvingTo.assetKey])
       this.#phaserCurrentEvolvingFromGameImage.setAlpha(0)
       this.#phaserCurrentEvolvingToGameImage.setAlpha(1)

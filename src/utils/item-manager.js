@@ -1,7 +1,9 @@
+import { SFX_ASSET_KEYS } from "../assets/asset-keys.js"
 import { MonCore } from "../common/mon-core.js"
 import { SCENE_KEYS } from "../scenes/scene-keys.js"
 import { EVENT_KEYS } from "../types/event-keys.js"
 import { ITEM_TYPE_DATA, ITEM_TYPE_KEY } from "../types/items.js"
+import { AudioManager } from "./audio-manager.js"
 import { DATA_MANAGER_STORE_KEYS, dataManager } from "./data-manager.js"
 
 /**
@@ -18,8 +20,12 @@ import { DATA_MANAGER_STORE_KEYS, dataManager } from "./data-manager.js"
  * @param {MonCore} [config.enemyMon] 
  */
 export function playItemEffect (scene, config) {
+  /** @type {AudioManager} */
+  const audioManager = scene.registry.get('audio')
+
   const { item, mon, enemyMon, callback } = config
   if (!canUseItemInScene(scene, item)) {
+    audioManager.playSfx(SFX_ASSET_KEYS.DENIED)
     callback({
       wasUsed: false,
       msg: `You can't use that right now...`
@@ -35,7 +41,7 @@ export function playItemEffect (scene, config) {
         })
         return
       }
-
+      audioManager.playSfx(SFX_ASSET_KEYS.POTION_USED)
       mon.healHp(item.value, () => {
         callback({
           wasUsed: true,
@@ -47,6 +53,7 @@ export function playItemEffect (scene, config) {
       break
     case ITEM_TYPE_KEY.BALL:
       if (!enemyMon.isWild) {
+        audioManager.playSfx(SFX_ASSET_KEYS.DENIED)
         callback({
           wasUsed: false,
           msg: `You can't catch another trainer's POKEMON ya cheeky bugger!`
@@ -56,13 +63,13 @@ export function playItemEffect (scene, config) {
       
       const partyMons = dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS)
       if (partyMons.length > 5) {
+        audioManager.playSfx(SFX_ASSET_KEYS.DENIED)
         callback({
           wasUsed: false,
           msg: `You already have the max amount of POKEMON (6)`
         })
         return
       }
-
       enemyMon.playCatchAttempt(item, (result) => {
         callback({
           wasUsed: true,
@@ -90,6 +97,10 @@ export function canUseItemInScene (scene, item) {
   return ITEM_TYPE_DATA[item.typeKey].usableDuringScenes.includes(SCENE_KEYS[scene.scene.key])
 }
 
+/**
+ * 
+ * @param {import("../types/typedef").Item} item 
+ */
 export function consumeItem (item) {
   const updatedInventory = dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_INVENTORY).filter(invItem => {
     if (invItem.itemKey === item.key) {

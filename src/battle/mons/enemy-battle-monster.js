@@ -1,6 +1,7 @@
 import { SKIP_ANIMATIONS } from "../../../config.js";
-import { MON_ASSET_KEYS, MON_BALLS, MON_GRAY_ASSET_KEYS } from "../../assets/asset-keys.js";
+import { MON_ASSET_KEYS, MON_BALLS, MON_GRAY_ASSET_KEYS, SFX_ASSET_KEYS } from "../../assets/asset-keys.js";
 import { createBallWiggleAnimation, createExpandBallAnimation } from "../../utils/animations.js";
+import { AudioManager } from "../../utils/audio-manager.js";
 import { BattleMon } from "./battle-mon.js";
 
 /**
@@ -16,6 +17,8 @@ export class EnemyBattleMon extends BattleMon {
   #monBallWiggleSpriteAnimation
   /** @type {Phaser.GameObjects.Sprite} */
   #monBallExpandSpriteAnimation
+  /** @type {AudioManager} */
+  #audioManager
 
   /**
    * 
@@ -27,6 +30,7 @@ export class EnemyBattleMon extends BattleMon {
     this.#monBallWiggleSpriteAnimation = createBallWiggleAnimation(this._scene, { x: 0, y: 0 }).setScale(1.25)
     this.#monBallExpandSpriteAnimation = createExpandBallAnimation(this._scene, { x: 0, y: 0}).setScale(1.5).setAlpha(0)
     this.#monBallWiggleSpriteAnimation.setAlpha(0)
+    this.#audioManager = config.scene.registry.get('audio')
   }
 
   /**
@@ -70,6 +74,7 @@ export class EnemyBattleMon extends BattleMon {
 
     const playBallExplode = (onComplete) => {
       this.#monBallExpandSpriteAnimation.setAlpha(1)
+      this.#audioManager.playSfx(SFX_ASSET_KEYS.BALL_POOF, { primaryAudio: true })
       this.#monBallExpandSpriteAnimation.play(MON_BALLS.MON_BALL_EXPAND_ANIMATION)
       this.#monBallExpandSpriteAnimation.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
         this.#monBallExpandSpriteAnimation.setAlpha(0)
@@ -138,20 +143,23 @@ export class EnemyBattleMon extends BattleMon {
       new Phaser.Math.Vector2(endPos.x, endPos.y)
     )
 
-    this.#monBallWiggleSpriteAnimation.setPosition(startPos.x, startPos.y)
-    this.#monBallWiggleSpriteAnimation.setAlpha(1)
+    this._scene.time.delayedCall(250, () => {
+      this.#monBallWiggleSpriteAnimation.setPosition(startPos.x, startPos.y)
+      this.#monBallWiggleSpriteAnimation.setAlpha(1)
 
-    this._scene.tweens.add({
-      targets: { t: 0 },
-      t: 1,
-      duration: 500,
-      onUpdate: (tween, target) => {
-        const point = curve.getPoint(target.t)
-        this.#monBallWiggleSpriteAnimation.setPosition(point.x, point.y)
-      },
-      onComplete: () => {
-        playBallHitExlpodeAnim()
-      }
+      this.#audioManager.playSfx(SFX_ASSET_KEYS.BALL_TOSS, { primaryAudio: true })
+      this._scene.tweens.add({
+        targets: { t: 0 },
+        t: 1,
+        duration: 500,
+        onUpdate: (tween, target) => {
+          const point = curve.getPoint(target.t)
+          this.#monBallWiggleSpriteAnimation.setPosition(point.x, point.y)
+        },
+        onComplete: () => {
+          playBallHitExlpodeAnim()
+        }
+      })
     })
 
     const playBallHitExlpodeAnim = () => {
@@ -171,6 +179,7 @@ export class EnemyBattleMon extends BattleMon {
     
     let count = 1
     const playWiggleAnim = (callback) => {
+      this.#audioManager.playSfx(SFX_ASSET_KEYS.BALL_WIGGLE, { primaryAudio: true })
       this.#monBallWiggleSpriteAnimation.play(MON_BALLS.MON_BALL_WIGGLE_ANIMATION)
       this.#monBallWiggleSpriteAnimation.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
         this.#monBallWiggleSpriteAnimation.stop()
@@ -217,7 +226,7 @@ export class EnemyBattleMon extends BattleMon {
       targets: this._phaserMonImageGameObject,
       onComplete: () => {
         this._phaserMonImageGameObject.setTexture(MON_ASSET_KEYS[assetKey])
-        super.playMonCry(() => {
+        super._playMonCry(() => {
           this._phaserHealthBarGameContainer.setAlpha(1)
           callback()
         })
@@ -257,7 +266,7 @@ export class EnemyBattleMon extends BattleMon {
         return Math.round(t * steps) / steps
       },
       onComplete: () => {
-        super.playMonCry(() => {
+        super._playMonCry(() => {
           this._phaserHealthBarGameContainer.setAlpha(1)
           callback()
         })
@@ -281,16 +290,17 @@ export class EnemyBattleMon extends BattleMon {
       callback()
       return
     }
-    super.playMonCry(() => {
+    super._playMonCry(() => {
       this._scene.tweens.add({
-        delay: 300,
-        duration: 350,
+        delay: 200,
+        duration: 250,
         y: {
           from: startYPos,
           to: endYPos
         },
         targets: this._phaserMonImageGameObject,
         onComplete: () => {
+          super._playFaintThud()
           this._phaserHealthBarGameContainer.setAlpha(0)
           this._phaserMonImageGameObject.setAlpha(0)
           callback()

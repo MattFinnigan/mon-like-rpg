@@ -1,5 +1,5 @@
 import { SKIP_ANIMATIONS, TILE_SIZE, TILED_COLLISION_ALPHA, WORLD_ZOOM } from '../../config.js';
-import { BGM_ASSET_KEYS, CHARACTER_ASSET_KEYS, DATA_ASSET_KEYS, TRAINER_SPRITES, WORLD_ASSET_KEYS } from '../assets/asset-keys.js';
+import { BGM_ASSET_KEYS, CHARACTER_ASSET_KEYS, DATA_ASSET_KEYS, SFX_ASSET_KEYS, TRAINER_SPRITES, WORLD_ASSET_KEYS } from '../assets/asset-keys.js';
 import { DIRECTION } from '../types/direction.js';
 import { EVENT_KEYS } from '../types/event-keys.js';
 import { OPPONENT_TYPES } from '../types/opponent-types.js';
@@ -780,6 +780,7 @@ export class WorldScene extends Phaser.Scene {
 
   #saveGame () {
     dataManager.saveGame()
+    this.#audioManager.playSfx(SFX_ASSET_KEYS.SAVE)
     this.#dialogUi.showDialogModalAndWaitForInput(['Game saved!'])
   }
 

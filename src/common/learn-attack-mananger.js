@@ -1,7 +1,8 @@
-import { UI_ASSET_KEYS } from '../assets/asset-keys.js'
+import { SFX_ASSET_KEYS, UI_ASSET_KEYS } from '../assets/asset-keys.js'
 import Phaser from '../lib/phaser.js'
 import { DIALOG_DETAILS } from '../types/dialog-ui.js'
 import { DIRECTION } from '../types/direction.js'
+import { AudioManager } from '../utils/audio-manager.js'
 import { DATA_MANAGER_STORE_KEYS, dataManager } from '../utils/data-manager.js'
 import { DataUtils } from '../utils/data-utils.js'
 import { DialogUi } from './dialog-ui.js'
@@ -31,6 +32,8 @@ export class LearnAttackManager {
   #onReplaceMove
   /** @type {Phaser.Tweens.Tween} */
   #replaceMoveCursorTween
+  /** @type {AudioManager} */
+  #audioManager
 
   /**
    * 
@@ -57,6 +60,7 @@ export class LearnAttackManager {
     this.#waitForOverrideChoice = false
     this.#replaceMoveIndex = 0
     this.#onReplaceMove = undefined
+    this.#audioManager = this.#scene.registry.get('audio')
     this.#dialogUi.hideDialogModal()
   }
 
@@ -181,6 +185,8 @@ export class LearnAttackManager {
 
     this.#waitForMoveLearnedConfirm = true
     msgs.push(`${this.#currentMon.name} learned ${this.#learningNewAttack.name}!`)
+    
+    this.#audioManager.playSfx(SFX_ASSET_KEYS.ITEM_OBTAINED, { primaryAudio: true })
 
     this.#dialogUi.showDialogModalAndWaitForInput(msgs, () => {
       this.#reset()

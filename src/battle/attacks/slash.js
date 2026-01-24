@@ -38,11 +38,6 @@ export class Slash extends Attack {
       this._attackGameObject2,
       this._attackGameObject3
     ]).setAlpha(0)
-
-    scene.load.spritesheet(ATTACK_ASSET_KEYS.SLASH, `${ATTACK_ANIMS_PATH}/slash.png`, {
-      frameWidth: 48,
-      frameHeight: 48
-    })
   }
 
   /**

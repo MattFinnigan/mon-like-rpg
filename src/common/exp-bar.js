@@ -1,4 +1,6 @@
 import { SKIP_ANIMATIONS } from "../../config.js"
+import { SFX_ASSET_KEYS } from "../assets/asset-keys.js"
+import { AudioManager } from "../utils/audio-manager.js"
 import { calculateExperiencedNeededForLevelUp } from "../utils/battle-utils.js"
 
 export class ExpBar {
@@ -20,6 +22,9 @@ export class ExpBar {
   #phaserCurrentExpText
   /** @type {number} */
   #expForCurrentLevel
+  /** @type {AudioManager}  */
+  #audioManager
+
   /**
    * 
    * @param {Phaser.Scene} scene 
@@ -36,6 +41,7 @@ export class ExpBar {
     this.#fullWidth = 260
     this.#currentExp = config.currentExp
     this.#currentLevel = config.currentLevel
+    this.#audioManager = this.#scene.registry.get('audio')
 
     this.#expForCurrentLevel = calculateExperiencedNeededForLevelUp(this.#currentLevel - 1)
     this.#expToNextLevel = calculateExperiencedNeededForLevelUp(this.#currentLevel)
@@ -87,7 +93,8 @@ export class ExpBar {
       this.#expToNextLevel = calculateExperiencedNeededForLevelUp(this.#currentLevel)
       width = this.#fullWidth
     }
-
+    
+    this.#audioManager.playSfx(SFX_ASSET_KEYS.EXP_GAIN)
     this.#scene.tweens.add({
       targets: this.#phaserCurrentExpBarGameObject,
       displayWidth: width,

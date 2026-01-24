@@ -1,5 +1,6 @@
-import { UI_ASSET_KEYS } from "../assets/asset-keys.js"
+import { SFX_ASSET_KEYS, UI_ASSET_KEYS } from "../assets/asset-keys.js"
 import { DIRECTION } from "../types/direction.js"
+import { AudioManager } from "./audio-manager.js"
 /**
  * @typedef VirtualKey
  * @type {object}
@@ -44,6 +45,8 @@ export class Controls {
   #virtualKeyInteract
   /** @type {Phaser.Input.Keyboard.Key | undefined} */
   #enterKey
+  /** @type {AudioManager} */
+  #audioManager
 
   /**
    * 
@@ -54,6 +57,7 @@ export class Controls {
     this.#cursorKeys = this.#scene.input.keyboard.createCursorKeys()
     this.#lockPlayerInput = false
     this.#mobileButtonsAlpha = 0.3
+    this.#audioManager = this.#scene.registry.get('audio')
 
     this.#virtualKeyDirections = {
       LEFT: { isDown: false, justDown: false },
@@ -92,27 +96,43 @@ export class Controls {
     if (this.#enterKey === undefined) {
       return false
     }
-    return this.#isMobile()
+    const res =  this.#isMobile()
       ? this.#consumeJustDown(this.#virtualKeyInteract.ENTER)
       : Phaser.Input.Keyboard.JustDown(this.#enterKey)
+
+    if (res) {
+      this.#audioManager.playSfx(SFX_ASSET_KEYS.MENU)
+    }
+    return res
   }
 
   wasSpaceKeyPressed () {
     if (this.#cursorKeys === undefined) {
       return false
     }
-    return this.#isMobile()
+    const res = this.#isMobile()
       ? this.#consumeJustDown(this.#virtualKeyInteract.SPACE)
       : Phaser.Input.Keyboard.JustDown(this.#cursorKeys.space)
+
+    if (res) {
+      this.#audioManager.playSfx(SFX_ASSET_KEYS.PRESS_AB)
+    }
+    return res
   }
 
   wasBackKeyPressed () {
     if (this.#cursorKeys === undefined) {
       return false
     }
-    return this.#isMobile()
+    
+    const res =  this.#isMobile()
       ?  this.#consumeJustDown(this.#virtualKeyInteract.SHIFT)
       : Phaser.Input.Keyboard.JustDown(this.#cursorKeys.shift)
+
+    if (res) {
+      this.#audioManager.playSfx(SFX_ASSET_KEYS.PRESS_AB)
+    }
+    return res
   }
 
   getDirectionKeyJustPressed () {
@@ -142,7 +162,7 @@ export class Controls {
         selectedDirection = DIRECTION.DOWN
       }
     }
-    
+
     return selectedDirection
   }
 
