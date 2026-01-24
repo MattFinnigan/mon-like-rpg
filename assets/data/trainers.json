@@ -5,7 +5,7 @@
     "rewardOnVictory": 1500,
     "payOutOnDefeat": 1000,
     "assetKey": "PSYCHIC",
-    "partyMons": [4, 5, 6],
+    "partyMons": [10, 11, 24],
     "defeatedMsg": "NOOO! BORRIS!!!"
   },
   "2": {
@@ -14,7 +14,7 @@
     "rewardOnVictory": 1500,
     "payOutOnDefeat": 1000,
     "assetKey": "BURGLAR",
-    "partyMons": [4, 5, 6],
+    "partyMons": [15, 19, 14],
     "defeatedMsg": "Yeah James, hes gone in there. What collision?"
   },
   "3": {
@@ -23,7 +23,7 @@
     "rewardOnVictory": 1500,
     "payOutOnDefeat": 1000,
     "assetKey": "FISHERMAN",
-    "partyMons": [7, 8, 9],
+    "partyMons": [12, 23, 13, 14],
     "defeatedMsg": "Alwell... a feeds a feed!"
   },
   "4": {
@@ -32,7 +32,61 @@
     "rewardOnVictory": 1500,
     "payOutOnDefeat": 1000,
     "assetKey": "SPANIAN",
-    "partyMons": [7, 8, 9],
+    "partyMons": [20, 22, 21, 18],
     "defeatedMsg": "That's poo lad..."
+  },
+  "5": {
+    "name": "DAVO",
+    "trainerType": "FISHERMAN",
+    "rewardOnVictory": 1500,
+    "payOutOnDefeat": 1000,
+    "assetKey": "FISHERMAN",
+    "partyMons": [12, 9, 23],
+    "defeatedMsg": "Bloody tourists..."
+  },
+  "6": {
+    "name": "JOSEPH JR",
+    "trainerType": "POKEMANIAC",
+    "rewardOnVictory": 1500,
+    "payOutOnDefeat": 1000,
+    "assetKey": "POKEMANIAC",
+    "partyMons": [11, 24, 17],
+    "defeatedMsg": "Please don't tell anyone how I live"
+  },
+  "7": {
+    "name": "MEI",
+    "trainerType": "LASS",
+    "rewardOnVictory": 1500,
+    "payOutOnDefeat": 1000,
+    "assetKey": "LASS",
+    "partyMons": [25, 15, 23],
+    "defeatedMsg": "Argh.. where did it go!?!"
+  },
+  "8": {
+    "name": "JASON",
+    "trainerType": "TAMER",
+    "rewardOnVictory": 1500,
+    "payOutOnDefeat": 1000,
+    "assetKey": "TAMER",
+    "partyMons": [17, 14, 22],
+    "defeatedMsg": "And where is the Oprea House...?"
+  },
+  "9": {
+    "name": "JOHNNO",
+    "trainerType": "HIKER",
+    "rewardOnVictory": 1500,
+    "payOutOnDefeat": 1000,
+    "assetKey": "HIKER",
+    "partyMons": [16, 21, 22],
+    "defeatedMsg": "Phew... pff..."
+  },
+  "10": {
+    "name": "JARRYD",
+    "trainerType": "POKEMANIAC",
+    "rewardOnVictory": 1500,
+    "payOutOnDefeat": 1000,
+    "assetKey": "POKEMANIAC",
+    "partyMons": [24, 13, 11],
+    "defeatedMsg": "Wait... is that a Waddi Tree?!?"
   }
 }

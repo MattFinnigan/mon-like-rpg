@@ -158,15 +158,17 @@
             ],
             "expandedObjectLayers": [
                 18,
+                26,
+                25,
                 17,
                 19,
                 21
             ],
-            "scale": 1.5,
-            "selectedLayer": 11,
+            "scale": 0.5,
+            "selectedLayer": 10,
             "viewCenter": {
-                "x": 6548.666666666666,
-                "y": 4522
+                "x": 7204,
+                "y": 4326
             }
         },
         "aus.tmx#GSCd_Ba": {
@@ -206,11 +208,11 @@
                 18,
                 21
             ],
-            "scale": 1.5,
+            "scale": 2,
             "selectedLayer": 11,
             "viewCenter": {
-                "x": 932.6666666666666,
-                "y": 3080.6666666666665
+                "x": 861,
+                "y": 2319
             }
         },
         "map.tmx#RBY-BP_A1": {
