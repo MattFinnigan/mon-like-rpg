@@ -1,7 +1,6 @@
 import Phaser from "../../lib/phaser.js"
 import { ATTACK_ASSET_KEYS } from "../../assets/asset-keys.js"
 import { Attack } from "./attack.js"
-import { ATTACK_ANIMS_PATH } from "../../utils/consts.js"
 
 export class Slash extends Attack {
   /** @protected @type {Phaser.GameObjects.Container} */
@@ -38,11 +37,6 @@ export class Slash extends Attack {
       this._attackGameObject2,
       this._attackGameObject3
     ]).setAlpha(0)
-
-    scene.load.spritesheet(ATTACK_ASSET_KEYS.SLASH, `${ATTACK_ANIMS_PATH}/slash.png`, {
-      frameWidth: 48,
-      frameHeight: 48
-    })
   }
 
   /**

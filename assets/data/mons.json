@@ -271,10 +271,10 @@
   },
   "22": {
     "id": 22,
-    "baseMonIndex": 67,
-    "name": "MACHAMP",
+    "baseMonIndex": 65,
+    "name": "MACHOP",
     "currentHp": null,
-    "currentLevel": 37,
+    "currentLevel": 16,
     "attackEV": 8,
     "defenseEV": 6,
     "splAttackEV": 2,

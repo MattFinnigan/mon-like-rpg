@@ -1,5 +1,4 @@
-import { BATTLE_ASSET_KEYS, MON_ASSET_KEYS, MON_BACK_ASSET_KEYS, MON_BALLS, MON_GRAY_ASSET_KEYS, TRAINER_GRAY_SPRITES, TRAINER_SPRITES } from "../assets/asset-keys.js"
-import { BACKGROUND_ASSETS_PATH, BATTLE_ASSETS_PATH, MON_BACK_SPRITES_ASSETS_PATH, MON_BALL_ANIMS_ASSETS_PATH, MON_CRIES_ASSETS_PATH, MON_GRAY_SPRITES_ASSETS_PATH, MON_SPRITES_ASSETS_PATH, TRAINER_GRAY_ASSETS_PATH, TRAINER_SPRITES_ASSETS_PATH } from "./consts.js"
+import { BATTLE_ASSET_KEYS, HEALTH_BAR_ASSET_KEYS, MON_ASSET_KEYS, MON_BACK_ASSET_KEYS, MON_BALLS, MON_GRAY_ASSET_KEYS, PARTY_MON_SPRITES, TRAINER_GRAY_SPRITES, TRAINER_SPRITES, TYPE_ASSET_KEYS } from "../assets/asset-keys.js"
 
 /**
  * 
@@ -10,10 +9,14 @@ export function loadMonAssets (scene, baseMon) {
   const monNum = baseMon.baseMonIndex + 1
   const key = MON_ASSET_KEYS[baseMon.assetKey]
 
-  scene.load.image(key, `${MON_SPRITES_ASSETS_PATH}/${monNum}.png`)
-  scene.load.image(MON_BACK_ASSET_KEYS[key + '_BACK'], `${MON_BACK_SPRITES_ASSETS_PATH}/${monNum}.png`)
-  scene.load.image(MON_GRAY_ASSET_KEYS[key + '_GRAY'], `${MON_GRAY_SPRITES_ASSETS_PATH}/${monNum}.png`)
-  scene.load.audio(key, [`${MON_CRIES_ASSETS_PATH}/${monNum}.ogg`])
+  scene.load.image(key, `/assets/images/mons/${monNum}.png`)
+  scene.load.image(MON_BACK_ASSET_KEYS[key + '_BACK'], `/assets/images/mons/backs/${monNum}.png`)
+  scene.load.image(MON_GRAY_ASSET_KEYS[key + '_GRAY'], `/assets/images/mons/gray/${monNum}.png`)
+  scene.load.audio(key, [`assets/audio/mons/cries/${monNum}.ogg`])
+  scene.load.image(TYPE_ASSET_KEYS.NORMAL, `/assets/images/types/NORMAL.png`)
+  // baseMon.types.forEach(t => {
+  //   scene.load.image(TYPE_ASSET_KEYS[t.name], `/assets/images/types/${t.name}.png`)
+  // })
 }
 
 /**
@@ -22,25 +25,29 @@ export function loadMonAssets (scene, baseMon) {
  * @param {string} assetKey 
  */
 export function loadTrainerSprites (scene, assetKey) {
-  scene.load.image(TRAINER_SPRITES[assetKey], `${TRAINER_SPRITES_ASSETS_PATH}/RBY Y${assetKey.toLowerCase()}.png`)
-  scene.load.image(TRAINER_GRAY_SPRITES[assetKey + '_GRAY'], `${TRAINER_GRAY_ASSETS_PATH}/RBY ${assetKey.toLowerCase()} BW.png`)
+  scene.load.image(TRAINER_SPRITES[assetKey], `/assets/images/trainers/RBY Y${assetKey.toLowerCase()}.png`)
+  scene.load.image(TRAINER_GRAY_SPRITES[assetKey + '_GRAY'], `/assets/images/trainers/gray/RBY ${assetKey.toLowerCase()} BW.png`)
 }
 
 export function loadBattleAssets (scene) {
-  scene.load.image(BATTLE_ASSET_KEYS.BATTLE_MENU_OPTIONS_BACKGROUND, `${BACKGROUND_ASSETS_PATH}/battle-menu-options.png`)
-  scene.load.image(BATTLE_ASSET_KEYS.PLAYER_BATTLE_DETAILS_BACKGROUND, `/${BACKGROUND_ASSETS_PATH}/player-battle-details.png`)
-  scene.load.image(BATTLE_ASSET_KEYS.ENEMY_BATTLE_DETAILS_BACKGROUND, `${BACKGROUND_ASSETS_PATH}/enemy-battle-details.png`)
+  const backgroundAssetPath = 'assets/images/backgrounds'
+  const battleAssetPath = 'assets/images/battle'
+  const monBallAssetPath = 'assets/images/anims/ball'
 
-  scene.load.spritesheet(MON_BALLS.MON_BALLS_SHEET_1, `${BATTLE_ASSETS_PATH}/balls.png`, {
+  scene.load.image(BATTLE_ASSET_KEYS.BATTLE_MENU_OPTIONS_BACKGROUND, `/${backgroundAssetPath}/battle-menu-options.png`)
+  scene.load.image(BATTLE_ASSET_KEYS.PLAYER_BATTLE_DETAILS_BACKGROUND, `/${backgroundAssetPath}/player-battle-details.png`)
+  scene.load.image(BATTLE_ASSET_KEYS.ENEMY_BATTLE_DETAILS_BACKGROUND, `/${backgroundAssetPath}/enemy-battle-details.png`)
+
+  scene.load.spritesheet(MON_BALLS.MON_BALLS_SHEET_1, `/${battleAssetPath}/balls.png`, {
     frameWidth: 48,
     frameHeight: 48
   })
 
-  scene.load.image(MON_BALLS.MON_BALL_EXPAND_1, `/${MON_BALL_ANIMS_ASSETS_PATH}/expand_1.png`)
-  scene.load.image(MON_BALLS.MON_BALL_EXPAND_2, `/${MON_BALL_ANIMS_ASSETS_PATH}/expand_2.png`)
-  scene.load.image(MON_BALLS.MON_BALL_EXPAND_3, `/${MON_BALL_ANIMS_ASSETS_PATH}/expand_3.png`)
+  scene.load.image(MON_BALLS.MON_BALL_EXPAND_1, `/${monBallAssetPath}/expand_1.png`)
+  scene.load.image(MON_BALLS.MON_BALL_EXPAND_2, `/${monBallAssetPath}/expand_2.png`)
+  scene.load.image(MON_BALLS.MON_BALL_EXPAND_3, `/${monBallAssetPath}/expand_3.png`)
 
-  scene.load.image(MON_BALLS.MON_BALL_WIGGLE_1, `/${MON_BALL_ANIMS_ASSETS_PATH}/wiggle_1.png`)
-  scene.load.image(MON_BALLS.MON_BALL_WIGGLE_2, `/${MON_BALL_ANIMS_ASSETS_PATH}/wiggle_2.png`)
-  scene.load.image(MON_BALLS.MON_BALL_WIGGLE_3, `/${MON_BALL_ANIMS_ASSETS_PATH}/wiggle_3.png`)
+  scene.load.image(MON_BALLS.MON_BALL_WIGGLE_1, `/${monBallAssetPath}/wiggle_1.png`)
+  scene.load.image(MON_BALLS.MON_BALL_WIGGLE_2, `/${monBallAssetPath}/wiggle_2.png`)
+  scene.load.image(MON_BALLS.MON_BALL_WIGGLE_3, `/${monBallAssetPath}/wiggle_3.png`)
 }

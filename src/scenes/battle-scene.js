@@ -26,7 +26,6 @@ import { loadMonAssets } from '../utils/load-assets.js'
 import { LearnAttackManager } from '../common/learn-attack-mananger.js'
 import { STATUS_EFFECT } from '../types/status-effect.js'
 import { exhaustiveGuard } from '../utils/guard.js'
-import { BGM_ASSETS_PATH } from '../utils/consts.js'
 
 
 /** @enum {object} */
@@ -151,7 +150,7 @@ export class BattleScene extends Phaser.Scene {
       this.#victoryBgmKey = BGM_ASSET_KEYS.TRAINER_VICTORY
     }
   
-    this.load.audio(BGM_ASSET_KEYS[this.#victoryBgmKey], [`${BGM_ASSETS_PATH}/${this.#victoryBgmKey}.flac`])
+    this.load.audio(BGM_ASSET_KEYS[this.#victoryBgmKey], [`assets/audio/bgm/${this.#victoryBgmKey}.flac`])
   }
 
   create () {

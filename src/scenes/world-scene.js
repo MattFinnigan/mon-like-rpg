@@ -24,7 +24,6 @@ import { ItemMenu } from '../common/item-menu.js';
 import { PartyMenu } from '../common/party-menu/party-menu.js';
 import { ITEM_TYPE_KEY } from '../types/items.js';
 import { playItemEffect } from '../utils/item-manager.js';
-import { BGM_ASSETS_PATH } from '../utils/consts.js';
 
 const CUSTOM_TILED_TYPES = Object.freeze({
   NPC: 'npc',
@@ -99,9 +98,9 @@ export class WorldScene extends Phaser.Scene {
   }
 
   preload () {
-    this.load.audio(this.#bgmKey, [`${BGM_ASSETS_PATH}/${this.#bgmKey}.flac`])
-    this.load.audio(BGM_ASSET_KEYS.TRAINER_BATTLE, [`${BGM_ASSETS_PATH}/TRAINER_BATTLE.flac`])
-    this.load.audio(BGM_ASSET_KEYS.WILD_ENCOUNTER, [`${BGM_ASSETS_PATH}/WILD_ENCOUNTER.flac`])
+    this.load.audio(this.#bgmKey, [`assets/audio/bgm/${this.#bgmKey}.flac`])
+    this.load.audio(BGM_ASSET_KEYS.TRAINER, [`assets/audio/bgm/TRAINER.flac`])
+    this.load.audio(BGM_ASSET_KEYS.WILD_ENCOUNTER, [`assets/audio/bgm/WILD_ENCOUNTER.flac`])
   }
 
   create () {
@@ -591,7 +590,7 @@ export class WorldScene extends Phaser.Scene {
    */
   #startTrainerBattle (data) {
     this.#isTransitioning = true
-    this.#audioManager.playBgm(BGM_ASSET_KEYS.TRAINER_BATTLE)
+    this.#audioManager.playBgm(BGM_ASSET_KEYS.TRAINER)
 
     const promises = [
       this.#prepareForBattleScene({
