@@ -38,7 +38,8 @@ const TILED_NPC_PROPERTY = Object.freeze({
   SHEET: 'sheet',
   MESSAGE: 'message',
   ACTION: 'action',
-  ACTION_ID: 'action_id'
+  ACTION_ID: 'action_id',
+  FACING: 'facing'
 })
 
 /**
@@ -270,6 +271,22 @@ export class WorldScene extends Phaser.Scene {
     dataManager.store.set(DATA_MANAGER_STORE_KEYS.PLAYER_DIRECTION, this.#player.direction)
   }
 
+  #saveNpcPositions () {
+    const npcPositions = []
+    const npcDirections = []
+
+    this.#npcs.forEach(npc => {
+      npcPositions.push({
+        x: npc.sprite.x,
+        y: npc.sprite.y
+      })
+      npcDirections.push(npc.direction)
+    })
+    
+    dataManager.store.set(DATA_MANAGER_STORE_KEYS.NPC_POSITIONS, npcPositions)
+    dataManager.store.set(DATA_MANAGER_STORE_KEYS.NPC_DIRECTIONS, this.#player.direction)
+  }
+
   /**
    * 
    * @returns {number|undefined}
@@ -346,8 +363,10 @@ export class WorldScene extends Phaser.Scene {
   #createNPCs (map) {
     this.#npcs = []
 
+    const savedNpcPositions = dataManager.store.get(DATA_MANAGER_STORE_KEYS.NPC_POSITIONS)
+    const savedNpcDirections = dataManager.store.get(DATA_MANAGER_STORE_KEYS.NPC_DIRECTIONS)
     const npcLayers = map.getObjectLayerNames().filter(layerName => layerName.includes('NPC'))
-    npcLayers.forEach(layerName => {
+    npcLayers.forEach((layerName, i) => {
       const layer = map.getObjectLayer(layerName)
       const npcObject = layer.objects.find(obj => obj.type === CUSTOM_TILED_TYPES.NPC)
       if (!npcObject || npcObject.x === undefined || npcObject.y === undefined) {
@@ -375,12 +394,14 @@ export class WorldScene extends Phaser.Scene {
       const npcMovement = npcObject.properties.find(prop => prop.name === TILED_NPC_PROPERTY.MOVEMENT_PATTERN)?.value || 'IDLE'
       const npcAction = npcObject.properties.find(prop => prop.name === TILED_NPC_PROPERTY.ACTION)?.value || 'NONE'
       const npcActionId = npcObject.properties.find(prop => prop.name === TILED_NPC_PROPERTY.ACTION_ID)?.value || undefined
+      const npcFacing = npcObject.properties.find(prop => prop.name === TILED_NPC_PROPERTY.FACING)?.value || 'DOWN'
+
       const npc = new NPC(this, {
         scene: this,
         name: npcObject.name,
         assetKey: CHARACTER_ASSET_KEYS['NPC_SHEET_' + npcSheet],
-        position: { x: npcObject.x, y: npcObject.y - TILE_SIZE },
-        direction: DIRECTION.DOWN,
+        position: savedNpcPositions[i] || { x: npcObject.x, y: npcObject.y - TILE_SIZE },
+        direction: savedNpcDirections[i] || DIRECTION[npcFacing],
         frame: parseInt(npcFrame, 10),
         messages: npcMessages,
         npcPath,
@@ -404,6 +425,7 @@ export class WorldScene extends Phaser.Scene {
   #prepareForBattleScene (data) {
     return new Promise(resolve => {
       this.#savePlayerPosition()
+      this.#saveNpcPositions()
 
       const battleConfig = {
         generatedMon: null,
@@ -564,6 +586,7 @@ export class WorldScene extends Phaser.Scene {
    * @param {object} data 
    * @param {NPC} data.npc
    * @param {number} data.actionId
+   * @param {() => void} data.onTransitionComplete
    */
   #startTrainerBattle (data) {
     this.#isTransitioning = true
@@ -585,6 +608,7 @@ export class WorldScene extends Phaser.Scene {
     ]
 
     Promise.all(promises).then(responses => {
+      data.onTransitionComplete()
       this.#startBattleScene(responses[0])
     })
   }

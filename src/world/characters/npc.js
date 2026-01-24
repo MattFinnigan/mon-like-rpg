@@ -26,7 +26,9 @@ const NPC_ACTION_TYPES = Object.freeze({
 /** @enum {NpcMovemntPattern} */
 export const NPC_MOVEMENT_PATTERN = Object.freeze({
   IDLE: 'IDLE',
-  CLOCKWISE: 'CLOCKWISE'
+  CLOCKWISE: 'CLOCKWISE',
+  LEFT_RIGHT: 'LEFT_RIGHT',
+  UP_DOWN: 'UP_DOWN'
 })
 
 /**
@@ -97,7 +99,7 @@ export class NPC extends Character {
     this.#npcPath = config.npcPath
     this.#currentPathIndex = 0
     this.#movementPattern = config.movementPattern
-    this.#lastMovementTime = Phaser.Math.Between(3500, 5000)
+    this.#lastMovementTime = this.#getMovementRate()
     this.#name = config.name
     
     this.#action = config.action
@@ -160,7 +162,7 @@ export class NPC extends Character {
    * @returns {void}
    */
   update (time) {
-    if (this._isMoving) {
+    if (this._isMoving || this.#actionPending) {
       return
     }
     if (this.#isTalkingToPlayer) {
@@ -180,7 +182,21 @@ export class NPC extends Character {
     let characterDirection = DIRECTION.NONE
 
     if (time > this.#lastMovementTime) {
-      let nextPositionIndex = Math.random() < 0.5 ? this.#currentPathIndex - 1 : this.#currentPathIndex + 1
+      let nextPositionIndex = this.#currentPathIndex
+
+      switch (this.#movementPattern) {
+        case NPC_MOVEMENT_PATTERN.CLOCKWISE:
+          nextPositionIndex = Math.random() < 0.5 ? this.#currentPathIndex - 1 : this.#currentPathIndex + 1
+          break
+        case NPC_MOVEMENT_PATTERN.UP_DOWN:
+        case NPC_MOVEMENT_PATTERN.LEFT_RIGHT:
+          nextPositionIndex = this.#currentPathIndex + 1
+          break
+        default:
+          exhaustiveGuard(this.#movementPattern)
+          break
+      }
+
       if (nextPositionIndex === -1) {
         nextPositionIndex = this.#currentPathIndex + 1
       }
@@ -214,7 +230,7 @@ export class NPC extends Character {
       }
       
       this.moveCharacter(characterDirection)
-      this.#lastMovementTime = time + Phaser.Math.Between(1000, 3000)
+      this.#lastMovementTime = time + this.#getMovementRate()
     }
   }
 
@@ -244,16 +260,43 @@ export class NPC extends Character {
   doAction () {
     switch (this.#action) {
       case NPC_ACTION_TYPES.BATTLE:
-        this.#scene.events.emit(EVENT_KEYS.TRAINER_BATTLE_START, { npc: this, actionId: this.#actionId })
+        this.#scene.events.emit(EVENT_KEYS.TRAINER_BATTLE_START, {
+          npc: this,
+          actionId: this.#actionId,
+          onTransitionComplete: () => {
+            this.#actionPending = false
+          } })
         break
       case NPC_ACTION_TYPES.HEAL:
       case NPC_ACTION_TYPES.ITEM:
       case NPC_ACTION_TYPES.TRADE:
       case NPC_ACTION_TYPES.NONE:
+        this.#actionPending = false
         break
       default:
         exhaustiveGuard(this.#action)
     }
-    this.#actionPending = false
+  }
+
+  /**
+   * 
+   * @returns {number}
+   */
+  #getMovementRate () {
+    if (this.#movementPattern === NPC_MOVEMENT_PATTERN.IDLE) {
+      return 0
+    }
+
+    switch (this.#movementPattern) {
+      case NPC_MOVEMENT_PATTERN.CLOCKWISE:
+        return Phaser.Math.Between(1000, 3000)
+      case NPC_MOVEMENT_PATTERN.LEFT_RIGHT:
+      case NPC_MOVEMENT_PATTERN.UP_DOWN:
+        return 300
+      default:
+        exhaustiveGuard(this.#movementPattern)
+        break
+    } 
+    // return Phaser.Math.Between(3500, 5000)
   }
 }

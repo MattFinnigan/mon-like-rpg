@@ -1247,6 +1247,12 @@
                                  "value":3
                                 }, 
                                 {
+                                 "name":"facing",
+                                 "propertytype":"directions",
+                                 "type":"string",
+                                 "value":"UP"
+                                }, 
+                                {
                                  "name":"frame",
                                  "type":"int",
                                  "value":1
@@ -1307,6 +1313,12 @@
                          "name":"NPC3",
                          "properties":[
                                 {
+                                 "name":"facing",
+                                 "propertytype":"directions",
+                                 "type":"string",
+                                 "value":"RIGHT"
+                                }, 
+                                {
                                  "name":"frame",
                                  "type":"int",
                                  "value":10
@@ -1315,6 +1327,11 @@
                                  "name":"message",
                                  "type":"string",
                                  "value":"It's bloody hot!"
+                                }, 
+                                {
+                                 "name":"sheet",
+                                 "type":"int",
+                                 "value":3
                                 }],
                          "rotation":0,
                          "type":"npc",
@@ -1457,9 +1474,20 @@
                          "name":"NPC1",
                          "properties":[
                                 {
+                                 "name":"action",
+                                 "propertytype":"npc_action",
+                                 "type":"string",
+                                 "value":"BATTLE"
+                                }, 
+                                {
+                                 "name":"action_id",
+                                 "type":"int",
+                                 "value":4
+                                }, 
+                                {
                                  "name":"frame",
                                  "type":"int",
-                                 "value":10
+                                 "value":4
                                 }, 
                                 {
                                  "name":"message",
@@ -1467,15 +1495,57 @@
                                  "value":"HOODOOS!;;Got 2 dollas for tha bus lad?"
                                 }, 
                                 {
+                                 "name":"movement_pattern",
+                                 "propertytype":"npc_movement",
+                                 "type":"string",
+                                 "value":"LEFT_RIGHT"
+                                }, 
+                                {
                                  "name":"sheet",
                                  "type":"int",
-                                 "value":5
+                                 "value":2
                                 }],
                          "rotation":0,
                          "type":"npc",
                          "visible":true,
                          "width":64,
+                         "x":7808,
+                         "y":4416
+                        }, 
+                        {
+                         "gid":859,
+                         "height":64,
+                         "id":17,
+                         "name":"1",
+                         "rotation":0,
+                         "type":"npc_path",
+                         "visible":true,
+                         "width":64,
+                         "x":7872,
+                         "y":4416
+                        }, 
+                        {
+                         "gid":859,
+                         "height":64,
+                         "id":18,
+                         "name":"2",
+                         "rotation":0,
+                         "type":"npc_path",
+                         "visible":true,
+                         "width":64,
                          "x":7936,
+                         "y":4416
+                        }, 
+                        {
+                         "gid":859,
+                         "height":64,
+                         "id":19,
+                         "name":"3",
+                         "rotation":0,
+                         "type":"npc_path",
+                         "visible":true,
+                         "width":64,
+                         "x":8000,
                          "y":4416
                         }],
                  "opacity":1,
@@ -1714,7 +1784,7 @@
          "y":0
         }],
  "nextlayerid":27,
- "nextobjectid":17,
+ "nextobjectid":20,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

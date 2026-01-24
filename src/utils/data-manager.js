@@ -17,6 +17,9 @@ const DEV_LOCAL_STORAGE_KEY = 'DEV_MF_MON_DATA'
  * @property {string} player.name
  * @property {import("../types/typedef.js").Mon[]} player.partyMons
  * @property {import("../types/typedef.js").Inventory} player.inventory
+ * @property {object} npcs
+ * @property {import("../types/typedef.js").Coordinate[]} npcs.positions
+ * @property {import("../types/direction").Direction[]} npcs.directions
  */
 
 /** @type {GlobalState} */
@@ -81,6 +84,10 @@ const initalState = {
       { itemKey: ITEM_KEY.REPEL, qty: 3 },
       { itemKey: ITEM_KEY.KEY_CARD, qty: 1 }
     ]
+  },
+  npcs: {
+    positions: [],
+    directions: []
   }
 }
 
@@ -161,6 +168,10 @@ const devInitialState = {
       { itemKey: ITEM_KEY.REPEL, qty: 3 },
       { itemKey: ITEM_KEY.KEY_CARD, qty: 1 }
     ]
+  },
+  npcs: {
+    positions: [],
+    directions: []
   }
 }
 
@@ -170,6 +181,8 @@ export const DATA_MANAGER_STORE_KEYS = Object.freeze({
   PLAYER_NAME: 'PLAYER_NAME',
   PLAYER_PARTY_MONS: 'PLAYER_PARTY_MONS',
   PLAYER_INVENTORY: 'PLAYER_INVENTORY',
+  NPC_POSITIONS: 'NPC_POSITIONS',
+  NPC_DIRECTIONS: 'NPC_DIRECTIONS'
 })
 
 class DataManager extends Phaser.Events.EventEmitter {
@@ -231,6 +244,8 @@ class DataManager extends Phaser.Events.EventEmitter {
       [DATA_MANAGER_STORE_KEYS.PLAYER_NAME]: data.player.name,
       [DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS]: data.player.partyMons,
       [DATA_MANAGER_STORE_KEYS.PLAYER_INVENTORY]: data.player.inventory,
+      [DATA_MANAGER_STORE_KEYS.NPC_POSITIONS]: data.npcs.positions,
+      [DATA_MANAGER_STORE_KEYS.NPC_DIRECTIONS]: data.npcs.directions
     })
   }
 
@@ -245,6 +260,10 @@ class DataManager extends Phaser.Events.EventEmitter {
         name: this.#store.get(DATA_MANAGER_STORE_KEYS.PLAYER_NAME),
         partyMons: this.#store.get(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS),
         inventory: this.#store.get(DATA_MANAGER_STORE_KEYS.PLAYER_INVENTORY)
+      },
+      npcs: {
+        positions: this.#store.get(DATA_MANAGER_STORE_KEYS.NPC_POSITIONS),
+        directions: this.#store.get(DATA_MANAGER_STORE_KEYS.NPC_DIRECTIONS)
       }
     }
   }

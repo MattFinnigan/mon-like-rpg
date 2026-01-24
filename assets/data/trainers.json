@@ -25,5 +25,14 @@
     "assetKey": "FISHERMAN",
     "partyMons": [7, 8, 9],
     "defeatedMsg": "Alwell... a feeds a feed!"
+  },
+  "4": {
+    "name": "SPANIAN",
+    "trainerType": "LAD",
+    "rewardOnVictory": 1500,
+    "payOutOnDefeat": 1000,
+    "assetKey": "SPANIAN",
+    "partyMons": [7, 8, 9],
+    "defeatedMsg": "That's poo lad..."
   }
 }

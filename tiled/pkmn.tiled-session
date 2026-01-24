@@ -153,6 +153,7 @@
         },
         "aus.tmx": {
             "expandedGroupLayers": [
+                18,
                 22
             ],
             "expandedObjectLayers": [
@@ -161,11 +162,11 @@
                 19,
                 21
             ],
-            "scale": 0.5,
-            "selectedLayer": 14,
+            "scale": 1.5,
+            "selectedLayer": 11,
             "viewCenter": {
-                "x": 6905,
-                "y": 4644
+                "x": 6548.666666666666,
+                "y": 4522
             }
         },
         "aus.tmx#GSCd_Ba": {
@@ -201,10 +202,14 @@
                 25,
                 23
             ],
+            "expandedObjectLayers": [
+                18,
+                21
+            ],
             "scale": 1.5,
             "selectedLayer": 11,
             "viewCenter": {
-                "x": 980.3333333333333,
+                "x": 932.6666666666666,
                 "y": 3080.6666666666665
             }
         },
@@ -325,7 +330,7 @@
         "map.tmx"
     ],
     "project": "pkmn.tiled-project",
-    "property.type": "npc_action",
+    "property.type": "directions",
     "recentFiles": [
         "/Users/mattfinnigan/Documents/code/Web/pkmn/assets/data/level.json",
         "aus.tmx",

@@ -60,6 +60,19 @@
             ]
         },
         {
+            "id": 11,
+            "name": "directions",
+            "storageType": "string",
+            "type": "enum",
+            "values": [
+                "UP",
+                "DOWN",
+                "LEFT",
+                "RIGHT"
+            ],
+            "valuesAsFlags": false
+        },
+        {
             "color": "#ffa0a0a4",
             "drawFill": true,
             "id": 4,
@@ -139,6 +152,12 @@
                     "value": 0
                 },
                 {
+                    "name": "facing",
+                    "propertyType": "directions",
+                    "type": "string",
+                    "value": "DOWN"
+                },
+                {
                     "name": "frame",
                     "type": "int",
                     "value": 0
@@ -194,7 +213,9 @@
             "type": "enum",
             "values": [
                 "CLOCKWISE",
-                "IDLE"
+                "IDLE",
+                "LEFT_RIGHT",
+                "UP_DOWN"
             ],
             "valuesAsFlags": false
         },

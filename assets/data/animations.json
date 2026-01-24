@@ -102,5 +102,41 @@
     "delay": 0,
     "yoyo": true,
     "assetKey": "NPC_SHEET_1"
+  },
+  {
+    "key": "NPC1_DOWN",
+    "frames": [3, 4, 5],
+    "frameRate": 6,
+    "repeat": -1,
+    "delay": 0,
+    "yoyo": true,
+    "assetKey": "NPC_SHEET_2"
+  },
+  {
+    "key": "NPC1_LEFT",
+    "frames": [15, 16, 17],
+    "frameRate": 6,
+    "repeat": -1,
+    "delay": 0,
+    "yoyo": true,
+    "assetKey": "NPC_SHEET_2"
+  },
+  {
+    "key": "NPC1_RIGHT",
+    "frames": [27, 28, 29],
+    "frameRate": 6,
+    "repeat": -1,
+    "delay": 0,
+    "yoyo": true,
+    "assetKey": "NPC_SHEET_2"
+  },
+  {
+    "key": "NPC1_UP",
+    "frames": [39, 40, 41],
+    "frameRate": 6,
+    "repeat": -1,
+    "delay": 0,
+    "yoyo": true,
+    "assetKey": "NPC_SHEET_2"
   }
 ]
