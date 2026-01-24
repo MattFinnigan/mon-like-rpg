@@ -139,15 +139,19 @@ export class NPC extends Character {
     switch (playerDirection) {
       case DIRECTION.DOWN:
       case DIRECTION.NONE:
+        this._direction = DIRECTION.UP
         this._phaserGameObject.setFrame(this._idleFrameConfig.UP)
         break
       case DIRECTION.LEFT:
+        this._direction = DIRECTION.RIGHT
         this._phaserGameObject.setFrame(this._idleFrameConfig.RIGHT)
         break
       case DIRECTION.UP:
+        this._direction = DIRECTION.DOWN
         this._phaserGameObject.setFrame(this._idleFrameConfig.DOWN)
         break
       case DIRECTION.RIGHT:
+        this._direction = DIRECTION.LEFT
         this._phaserGameObject.setFrame(this._idleFrameConfig.LEFT)
         break
       default:

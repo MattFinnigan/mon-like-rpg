@@ -284,7 +284,7 @@ export class WorldScene extends Phaser.Scene {
     })
     
     dataManager.store.set(DATA_MANAGER_STORE_KEYS.NPC_POSITIONS, npcPositions)
-    dataManager.store.set(DATA_MANAGER_STORE_KEYS.NPC_DIRECTIONS, this.#player.direction)
+    dataManager.store.set(DATA_MANAGER_STORE_KEYS.NPC_DIRECTIONS, npcDirections)
   }
 
   /**
@@ -395,7 +395,7 @@ export class WorldScene extends Phaser.Scene {
       const npcAction = npcObject.properties.find(prop => prop.name === TILED_NPC_PROPERTY.ACTION)?.value || 'NONE'
       const npcActionId = npcObject.properties.find(prop => prop.name === TILED_NPC_PROPERTY.ACTION_ID)?.value || undefined
       const npcFacing = npcObject.properties.find(prop => prop.name === TILED_NPC_PROPERTY.FACING)?.value || 'DOWN'
-
+  
       const npc = new NPC(this, {
         scene: this,
         name: npcObject.name,
