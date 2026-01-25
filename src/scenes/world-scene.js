@@ -95,11 +95,11 @@ export class WorldScene extends Phaser.Scene {
 
   init () {
     this.#resetSceneChangingFlags()
-    this.#bgmKey = BGM_ASSET_KEYS.BEACH
+    this.#bgmKey = BGM_ASSET_KEYS.ROUTE_24
   }
 
   preload () {
-    this.load.audio(this.#bgmKey, [`${BGM_ASSETS_PATH}/${this.#bgmKey}.mp3`])
+    this.load.audio(this.#bgmKey, [`${BGM_ASSETS_PATH}/${this.#bgmKey}.flac`])
     this.load.audio(BGM_ASSET_KEYS.TRAINER_BATTLE, [`${BGM_ASSETS_PATH}/TRAINER_BATTLE.flac`])
     this.load.audio(BGM_ASSET_KEYS.WILD_ENCOUNTER, [`${BGM_ASSETS_PATH}/WILD_ENCOUNTER.flac`])
   }

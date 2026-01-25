@@ -105,6 +105,11 @@ export class BattleMon extends MonCore  {
     return this._currentStatusEffect
   }
 
+  /** @returns {Phaser.GameObjects.Image} */
+  get phaserMonImageGameObject () {
+    return this._phaserMonImageGameObject
+  }
+
   /**
    * 
    * @param {number} damage
@@ -311,7 +316,7 @@ export class BattleMon extends MonCore  {
    * @param {import("../../types/typedef.js").Coordinate} pos 
    */
   #createMonGameObject (pos) {
-    this._phaserMonImageGameObject = this._scene.add.image(pos.x, pos.y, this._battleSpriteAssetKey, this._baseMonDetails.assetFrame).setOrigin(0).setAlpha(0)
+    this._phaserMonImageGameObject = this._scene.add.image(pos.x, pos.y, this._battleSpriteAssetKey, this._baseMonDetails.assetFrame).setOrigin(0).setAlpha(0).setDepth(-1)
   }
 
   #createMonDetailsGameObject () {

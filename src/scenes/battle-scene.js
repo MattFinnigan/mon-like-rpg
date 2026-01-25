@@ -677,6 +677,7 @@ export class BattleScene extends Phaser.Scene {
     this.#battleStateMachine.addState({
       name: BATTLE_STATES.ENEMY_MON_OUT,
       onEnter: () => {
+        this.#attackManager.enemyMonImageGameObject = this.#activeEnemyMon.phaserMonImageGameObject
         this.#hideEnemyTrainer(() => {
           this.#introduceEnemyMon(() => {
             if (!this.#activePlayerMon) {
@@ -692,6 +693,7 @@ export class BattleScene extends Phaser.Scene {
     this.#battleStateMachine.addState({
       name: BATTLE_STATES.WILD_MON_OUT,
       onEnter: () => {
+        this.#attackManager.enemyMonImageGameObject = this.#activeEnemyMon.phaserMonImageGameObject
         this.#announceWildMon()
       }
     })
@@ -722,6 +724,7 @@ export class BattleScene extends Phaser.Scene {
     this.#battleStateMachine.addState({
       name: BATTLE_STATES.PLAYER_MON_OUT,
       onEnter: () => {
+        this.#attackManager.playerMonImageGameObject = this.#activePlayerMon.phaserMonImageGameObject
         this.#hidePlayerTrainer(() => {
           this.#introducePlayerMon(() => {
             this.#battleStateMachine.setState(BATTLE_STATES.PLAYERS_PLAY)

@@ -25,6 +25,10 @@ export const ATTACK_TARGET = Object.freeze({
 export class AttackManager {
   /** @type {Phaser.Scene} */
   #scene
+  /** @type {Phaser.GameObjects.Image} */
+  #playerMonImageGameObject
+  /** @type {Phaser.GameObjects.Image} */
+  #enemyMonImageGameObject
   /** @type {boolean} */
   #skipBattleAnimations
   /** @type {IceShard} */
@@ -51,6 +55,22 @@ export class AttackManager {
   }
 
   /**
+   * @param {Phaser.GameObjects.Image} gameObj
+   */
+  set playerMonImageGameObject (gameObj) {
+    this.#playerMonImageGameObject = gameObj
+    
+  }
+
+  /**
+   * @param {Phaser.GameObjects.Image} gameObj
+   */
+  set enemyMonImageGameObject (gameObj) {
+    this.#enemyMonImageGameObject = gameObj
+  }
+
+
+  /**
    * 
    * @param {import("./attack-keys").AttackKeys} attackAnim 
    * @param {string} target 
@@ -75,9 +95,12 @@ export class AttackManager {
   
     let x = ENEMY_COORDS.x
     let y = ENEMY_COORDS.y
+    let attackerMonGameObject = this.#playerMonImageGameObject
+  
     if (target === ATTACK_TARGET.PLAYER) {
       x = PLAYER_COORDS.x
       y = PLAYER_COORDS.y
+      attackerMonGameObject = this.#enemyMonImageGameObject
     }
 
     switch (attackAnim) {
@@ -104,9 +127,8 @@ export class AttackManager {
         break
       case ATTACK_KEYS.SPLASH:
         if (!this.#splashAttack) {
-          this.#splashAttack = new Splash(this.#scene, { x, y })
+          this.#splashAttack = new Splash(this.#scene, { x, y }, attackerMonGameObject)
         }
-        // this.#splashAttack.gameObjectContainer.setPosition(x, y)
         this.#splashAttack.playAnimation(callback)
         break
       case ATTACK_KEYS.THUNDER_WAVE:
