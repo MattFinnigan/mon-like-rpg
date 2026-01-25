@@ -294,11 +294,12 @@ export class BattleScene extends Phaser.Scene {
 
     switch (statusEffect) {
       case STATUS_EFFECT.BURN:
-        msg = `${mon.name} was hurt by their burn.`
-        mon.playMonTakeDamageSequence(mon.maxHealth * 0.10,  {
-          sfxAssetKey: SFX_ASSET_KEYS.TAKE_DAMAGE,
-          skipAnimation: true,
-          callback: () => showMessage()
+        mon.playBurntAnim(() => {
+          msg = `${mon.name} was hurt by their burn.`
+          mon.playMonTakeDamageSequence(mon.maxHealth * 0.10,  {
+            skipAnimation: true,
+            callback: () => showMessage()
+          })
         })
         break
       }
@@ -351,12 +352,13 @@ export class BattleScene extends Phaser.Scene {
         const hitSelf = Phaser.Math.Between(0, 1) === 1
         
         if (hitSelf) {
-          msg = `${mon.name} hurt itself in confusion...`
-          canAttack = false
-          mon.playMonTakeDamageSequence(mon.maxHealth * 0.10,  {
-            sfxAssetKey: SFX_ASSET_KEYS.TAKE_DAMAGE,
-            skipAnimation: true,
-            callback: () => showMessage()
+          mon.playConfusedAnim(() => {
+            msg = `${mon.name} hurt itself in confusion...`
+            canAttack = false
+            mon.playMonTakeDamageSequence(mon.maxHealth * 0.10,  {
+              sfxAssetKey: SFX_ASSET_KEYS.TAKE_DAMAGE,
+              callback: () => showMessage()
+            })
           })
           return
         }
@@ -365,8 +367,10 @@ export class BattleScene extends Phaser.Scene {
       case STATUS_EFFECT.PARALYSE:
         canAttack = Phaser.Math.Between(0, 1) === 1
         if (!canAttack) {
-          msg = `${mon.name} couldn't move!`
-          showMessage()
+          mon.playParalyzedAnim(() => {
+            msg = `${mon.name} couldn't move!`
+            showMessage()
+          })
           return
         }
         callback(true)

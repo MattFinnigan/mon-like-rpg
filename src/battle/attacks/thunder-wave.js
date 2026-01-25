@@ -35,6 +35,7 @@ export class ThunderWave extends Attack {
     if (this._isAnimationPlaying) {
       return
     }
+
     this._isAnimationPlaying = true
     this._attackGameObjectContainer.setAlpha(1)
     this._attackGameObject1.play(ATTACK_KEYS.THUNDER_WAVE)

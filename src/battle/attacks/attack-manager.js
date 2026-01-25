@@ -75,14 +75,9 @@ export class AttackManager {
    * @param {import("./attack-keys").AttackKeys} attackAnim 
    * @param {string} target 
    * @param {() => void} callback
-   * @param {boolean} noDamageTaken
    * @returns {void}
    */
-  playAttackAnimation (attackAnim, target, callback, noDamageTaken) {
-    // if (this.#skipBattleAnimations || noDamageTaken) {
-    //   callback()
-    //   return
-    // }
+  #playAttackAnimation (attackAnim, target, callback) {
     const PLAYER_COORDS = {
       x: 150,
       y: 300
@@ -129,6 +124,7 @@ export class AttackManager {
         if (!this.#splashAttack) {
           this.#splashAttack = new Splash(this.#scene, { x, y }, attackerMonGameObject)
         }
+        this.#splashAttack.monImageGameObject = attackerMonGameObject
         this.#splashAttack.playAnimation(callback)
         break
       case ATTACK_KEYS.THUNDER_WAVE:
@@ -142,7 +138,7 @@ export class AttackManager {
         if (!this.#confuseRayAttack) {
           this.#confuseRayAttack = new ConfuseRay(this.#scene, PLAYER_COORDS, ENEMY_COORDS, target)
         }
-        // this.#confuseRayAttack.gameObjectContainer.setPosition(x, y)
+        this.#confuseRayAttack.target = target
         this.#confuseRayAttack.playAnimation(callback)
         break
       default:
@@ -168,11 +164,14 @@ export class AttackManager {
 
     const waitTime = result.damage.damageTaken > 0 ? 500 : 0
     this.#scene.time.delayedCall(waitTime, () => {
-      this.playAttackAnimation(
+      if (this.#skipBattleAnimations || (result.damage.damageTaken === 0 && !result.statusEffect && attack.name !== ATTACK_KEYS.SPLASH)) {
+        callback(result)
+        return
+      }
+      this.#playAttackAnimation(
         attack.animationName,
         target,
-        () => callback(result),
-        result.damage.damageTaken === 0 || SKIP_ANIMATIONS
+        () => callback(result)
       )
     })
   }

@@ -169,5 +169,14 @@
     "delay": 0,
     "yoyo": false,
     "assetKey": "BALL_POOF"
+  },
+  {
+    "key": "BURNT",
+    "frames": [0, 1, 2, 3],
+    "frameRate": 8,
+    "repeat": 0,
+    "delay": 0,
+    "yoyo": false,
+    "assetKey": "BURNT"
   }
 ]

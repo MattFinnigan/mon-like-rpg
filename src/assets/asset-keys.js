@@ -153,6 +153,12 @@ export const SFX_ASSET_KEYS = Object.freeze({
   EXP_GAIN: 'EXP_GAIN'
 })
 
+export const STATUS_EFFECT_ASSET_KEYS = Object.freeze({
+  CONFUSED: 'CONFUSED',
+  BURNT: 'BURNT',
+  PARALYZED: 'PARALYZED'
+})
+
 export const PARTY_MON_SPRITES = Object.freeze({
   PARTY_MON_SPRITES_SHEET_1: 'PARTY_MON_SPRITES_SHEET_1'
 })

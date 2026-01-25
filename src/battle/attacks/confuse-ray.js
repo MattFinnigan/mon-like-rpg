@@ -65,6 +65,13 @@ export class ConfuseRay extends Attack {
   }
 
   /**
+   * @param {string} val
+   */
+  set target (val) {
+    this.#target = val
+  }
+
+  /**
    * @param {() => void} [callback]
    * @returns {void}
    */
@@ -72,11 +79,6 @@ export class ConfuseRay extends Attack {
     if (this._isAnimationPlaying) {
       return
     }
-
-    // this._attackGameObjectContainer.setPosition(this.#enemyCoords.x, this.#enemyCoords.y)
-    // if (this.#target === ATTACK_TARGET.ENEMY) {
-    //   this._attackGameObjectContainer.setPosition(this.#playerCoords.x, this.#playerCoords.y)
-    // }
 
     const promises = [
       new Promise(resolve => {
@@ -119,7 +121,7 @@ export class ConfuseRay extends Attack {
         targetCoords = originCoords
         originCoords = temp
       }
-
+      
       this.#frames.forEach((frame, i) => {
         frame.setPosition(originCoords.x, originCoords.y)
         const delay = i * 60

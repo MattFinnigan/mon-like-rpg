@@ -37,7 +37,7 @@
     "criticalHitModifier": 1,
     "usesMonSplStat": true,
     "selfStatusEffects": [],
-    "opponentStatusEffect": { "name": "BURN", "chancePercentage": 30 },
+    "opponentStatusEffect": { "name": "BURN", "chancePercentage": 100 },
     "powerPoints": 10,
     "accuracy": 100
   },

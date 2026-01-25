@@ -19,6 +19,13 @@ export class Splash extends Attack {
   }
 
   /**
+   * @param {Phaser.GameObjects.Image} val
+   */
+  set monImageGameObject (val) {
+    this.#monImageGameObject = val
+  }
+
+  /**
    * @param {() => void} [callback]
    * @returns {void}
    */
