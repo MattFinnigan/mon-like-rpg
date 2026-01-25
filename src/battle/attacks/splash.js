@@ -4,13 +4,9 @@ import { Attack } from "./attack.js"
 
 export class Splash extends Attack {
   /** @protected @type {Phaser.GameObjects.Container} */
-  _attackGameObject
+  _attackGameObjectContainer
   /** @protected @type {Phaser.GameObjects.Sprite} */
   _attackGameObject1
-  /** @protected @type {Phaser.GameObjects.Sprite} */
-  _attackGameObject2
-  /** @protected @type {Phaser.GameObjects.Sprite} */
-  _attackGameObject3
 
   /**
    * 

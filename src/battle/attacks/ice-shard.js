@@ -4,7 +4,7 @@ import { Attack } from "./attack.js"
 
 export class IceShard extends Attack {
   /** @protected @type {Phaser.GameObjects.Sprite} */
-  _attackGameObject
+  _attackGameObjectContainer
 
   /**
    * 
@@ -14,10 +14,13 @@ export class IceShard extends Attack {
   constructor (scene, position) {
     super(scene, position)
 
-    this._attackGameObject = this._scene.add.sprite(this._position.x, this._position.y, ATTACK_ASSET_KEYS.ICE_SHARD, 2)
+    this._attackGameObjectContainer = this._scene.add.sprite(this._position.x, this._position.y, ATTACK_ASSET_KEYS.ICE_SHARD, 2)
       .setOrigin(0.5)
       .setScale(4)
       .setAlpha(0)
+
+    super.createAttackAnimation(ATTACK_ASSET_KEYS.ICE_SHARD_START)
+    super.createAttackAnimation(ATTACK_ASSET_KEYS.ICE_SHARD)
   }
 
   /**
@@ -30,8 +33,9 @@ export class IceShard extends Attack {
     }
 
     this._isAnimationPlaying = true
-    this._attackGameObject.setAlpha(1)
-    
+    this._attackGameObjectContainer.setAlpha(1)
+    this._attackGameObjectContainer.play(ATTACK_ASSET_KEYS.ICE_SHARD_START)
+
     const promises = [
       new Promise(resolve => {
         this._audioManager.playSfx(ATTACK_ASSET_KEYS.ICE_SHARD, {
@@ -40,10 +44,9 @@ export class IceShard extends Attack {
         })
       }),
       new Promise (resolve => {
-        this._attackGameObject.play(ATTACK_ASSET_KEYS.ICE_SHARD_START)
-        this._attackGameObject.once(Phaser.Animations.Events.ANIMATION_COMPLETE_KEY + ATTACK_ASSET_KEYS.ICE_SHARD_START, () => {
-          this._attackGameObject.play(ATTACK_ASSET_KEYS.ICE_SHARD)
-          this._attackGameObject.once(Phaser.Animations.Events.ANIMATION_COMPLETE_KEY + ATTACK_ASSET_KEYS.ICE_SHARD, () => {
+        this._attackGameObjectContainer.once(Phaser.Animations.Events.ANIMATION_COMPLETE_KEY + ATTACK_ASSET_KEYS.ICE_SHARD_START, () => {
+          this._attackGameObjectContainer.play(ATTACK_ASSET_KEYS.ICE_SHARD)
+          this._attackGameObjectContainer.once(Phaser.Animations.Events.ANIMATION_COMPLETE_KEY + ATTACK_ASSET_KEYS.ICE_SHARD, () => {
             this._isAnimationPlaying = false
             resolve()
           })
@@ -52,7 +55,7 @@ export class IceShard extends Attack {
     ]
 
     Promise.all(promises).then(() => {
-      this._attackGameObject.setAlpha(0).setFrame(0)
+      this._attackGameObjectContainer.setAlpha(0).setFrame(0)
       if (callback) {
         callback()
       }

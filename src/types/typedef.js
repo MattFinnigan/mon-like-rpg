@@ -109,9 +109,7 @@ import Phaser from "../lib/phaser.js";
  * @property {number} id
  * @property {string} name
  * @property {import("../battle/attacks/attack-keys.js").AttackKeys} animationName
- * @property {string[]} assetKeys
- * @property {number} frameHeight
- * @property {number} frameWidth
+ * @property {import("../assets/asset-keys.js").AttackAssetKey[]} assetKeys
  * @property {string} typeKey
  * @property {number} power
  * @property {number} criticalHitModifier

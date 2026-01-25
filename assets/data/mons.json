@@ -71,7 +71,7 @@
     "splDefenseEV": 8,
     "speedEV": 7,
     "hpEV": 4,
-    "attackIds": [1, 5, 2],
+    "attackIds": [5, 2],
     "currentExp": 0
   },
   "9": {

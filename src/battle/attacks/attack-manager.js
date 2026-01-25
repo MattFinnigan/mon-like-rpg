@@ -63,12 +63,21 @@ export class AttackManager {
     //   callback()
     //   return
     // }
+    const PLAYER_COORDS = {
+      x: 150,
+      y: 300
+    }
 
-    let x = 500
-    let y = 100
+    const ENEMY_COORDS = {
+      x: 500,
+      y: 100
+    }
+  
+    let x = ENEMY_COORDS.x
+    let y = ENEMY_COORDS.y
     if (target === ATTACK_TARGET.PLAYER) {
-      x = 150
-      y = 300
+      x = PLAYER_COORDS.x
+      y = PLAYER_COORDS.y
     }
 
     switch (attackAnim) {
@@ -76,42 +85,42 @@ export class AttackManager {
         if (!this.#iceShardAttack) {
           this.#iceShardAttack = new IceShard(this.#scene, { x, y })
         }
-        this.#iceShardAttack.gameObject.setPosition(x, y)
+        this.#iceShardAttack.gameObjectContainer.setPosition(x, y)
         this.#iceShardAttack.playAnimation(callback)
         break
       case ATTACK_KEYS.SLASH:
         if (!this.#slashAttack) {
           this.#slashAttack = new Slash(this.#scene, { x, y })
         }
-        this.#slashAttack.gameObject.setPosition(x, y)
+        this.#slashAttack.gameObjectContainer.setPosition(x, y)
         this.#slashAttack.playAnimation(callback)
         break
       case ATTACK_KEYS.FIRE_SPIN:
         if (!this.#fireSpinAttack) {
           this.#fireSpinAttack = new FireSpin(this.#scene, { x, y })
         }
-        this.#fireSpinAttack.gameObject.setPosition(x, y)
+        this.#fireSpinAttack.gameObjectContainer.setPosition(x, y)
         this.#fireSpinAttack.playAnimation(callback)
         break
       case ATTACK_KEYS.SPLASH:
         if (!this.#splashAttack) {
           this.#splashAttack = new Splash(this.#scene, { x, y })
         }
-        // this.#splashAttack.gameObject.setPosition(x, y)
+        // this.#splashAttack.gameObjectContainer.setPosition(x, y)
         this.#splashAttack.playAnimation(callback)
         break
       case ATTACK_KEYS.THUNDER_WAVE:
         if (!this.#thunderWaveAttack) {
           this.#thunderWaveAttack = new ThunderWave(this.#scene, { x, y })
         }
-        // this.#thunderWaveAttack.gameObject.setPosition(x, y)
+        this.#thunderWaveAttack.gameObjectContainer.setPosition(x, y)
         this.#thunderWaveAttack.playAnimation(callback)
         break
       case ATTACK_KEYS.CONFUSE_RAY:
         if (!this.#confuseRayAttack) {
-          this.#confuseRayAttack = new ConfuseRay(this.#scene, { x, y })
+          this.#confuseRayAttack = new ConfuseRay(this.#scene, PLAYER_COORDS, ENEMY_COORDS, target)
         }
-        // this.#confuseRayAttack.gameObject.setPosition(x, y)
+        // this.#confuseRayAttack.gameObjectContainer.setPosition(x, y)
         this.#confuseRayAttack.playAnimation(callback)
         break
       default:

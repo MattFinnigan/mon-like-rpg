@@ -5,7 +5,7 @@ import { ATTACK_ANIMS_PATH } from "../../utils/consts.js"
 
 export class Slash extends Attack {
   /** @protected @type {Phaser.GameObjects.Container} */
-  _attackGameObject
+  _attackGameObjectContainer
   /** @protected @type {Phaser.GameObjects.Sprite} */
   _attackGameObject1
   /** @protected @type {Phaser.GameObjects.Sprite} */
@@ -33,11 +33,13 @@ export class Slash extends Attack {
       .setOrigin(0.6, 0.35)
       .setScale(4)
 
-    this._attackGameObject = this._scene.add.container(this._position.x, this._position.y, [
+    this._attackGameObjectContainer = this._scene.add.container(this._position.x, this._position.y, [
       this._attackGameObject1,
       this._attackGameObject2,
       this._attackGameObject3
     ]).setAlpha(0)
+
+    super.createAttackAnimation(ATTACK_ASSET_KEYS.SLASH)
   }
 
   /**
@@ -50,6 +52,10 @@ export class Slash extends Attack {
     }
 
     this._isAnimationPlaying = true
+    this._attackGameObjectContainer.setAlpha(1)
+    this._attackGameObject1.play(ATTACK_ASSET_KEYS.SLASH)
+    this._attackGameObject2.play(ATTACK_ASSET_KEYS.SLASH)
+    this._attackGameObject3.play(ATTACK_ASSET_KEYS.SLASH)
 
     const promises = [
       new Promise(resolve => {
@@ -59,14 +65,9 @@ export class Slash extends Attack {
         })
       }),
       new Promise(resolve => {
-        this._attackGameObject.setAlpha(1)
-        this._attackGameObject1.play(ATTACK_ASSET_KEYS.SLASH)
-        this._attackGameObject2.play(ATTACK_ASSET_KEYS.SLASH)
-        this._attackGameObject3.play(ATTACK_ASSET_KEYS.SLASH)
-
         this._attackGameObject1.once(Phaser.Animations.Events.ANIMATION_COMPLETE_KEY + ATTACK_ASSET_KEYS.SLASH, () => {
           this._isAnimationPlaying = false
-          this._attackGameObject.setAlpha(0)
+          this._attackGameObjectContainer.setAlpha(0)
           this._attackGameObject1.setFrame(0)
           this._attackGameObject2.setFrame(1)
           this._attackGameObject3.setFrame(2)

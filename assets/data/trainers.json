@@ -14,7 +14,7 @@
     "rewardOnVictory": 1500,
     "payOutOnDefeat": 1000,
     "assetKey": "BURGLAR",
-    "partyMons": [15, 19, 14],
+    "partyMons": [8, 15, 19, 14],
     "defeatedMsg": "Yeah James, hes gone in there. What collision?"
   },
   "3": {

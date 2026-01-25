@@ -1,5 +1,6 @@
 import Phaser from "../../lib/phaser.js"
 import { AudioManager } from "../../utils/audio-manager.js"
+import { DataUtils } from "../../utils/data-utils.js"
 
 export class Attack {
   /** @protected @type {Phaser.Scene} */
@@ -9,7 +10,7 @@ export class Attack {
   /** @protected @type {boolean} */
   _isAnimationPlaying
   /** @protected @type {Phaser.GameObjects.Sprite|Phaser.GameObjects.Container|undefined} */
-  _attackGameObject
+  _attackGameObjectContainer
   /** @protected @type {AudioManager} */
   _audioManager
 
@@ -29,8 +30,8 @@ export class Attack {
   /**
    * @returns {Phaser.GameObjects.Sprite|Phaser.GameObjects.Container|undefined}
   */
-  get gameObject () {
-    return this._attackGameObject
+  get gameObjectContainer () {
+    return this._attackGameObjectContainer
   }
 
   /**
@@ -39,5 +40,31 @@ export class Attack {
    */
   playAnimation (callback) {
     throw new Error('playAnimation is not implemented')
+  }
+
+  /**
+   * @param {string} assetKey 
+   */
+  createAttackAnimation (assetKey) {
+    if (!this._scene.anims.get(assetKey)) {
+      const animation = DataUtils.getAttackAnimation(this._scene, assetKey)
+      if (!animation) {
+        return
+      }
+      const frames = animation.frames
+        ? this._scene.anims.generateFrameNumbers(animation.assetKey, { frames: animation.frames })
+        : this._scene.anims.generateFrameNumbers(animation.assetKey)
+
+      const anim = {
+        key: animation.key,
+        frames: frames,
+        frameRate: animation.frameRate,
+        repeat: animation.repeat,
+        delay: animation.delay,
+        yoyo: animation.yoyo
+      }
+
+      this._scene.anims.create(anim)
+    }
   }
 }

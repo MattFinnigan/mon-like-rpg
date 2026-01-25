@@ -89,25 +89,6 @@ export class PreloadScene extends Phaser.Scene {
 
     this.load.image(UI_ASSET_KEYS.CURSOR, `${UI_ASSETS_PATH}/cursor.png`)
     this.load.image(UI_ASSET_KEYS.ARROW, `${UI_ASSETS_PATH}/arrow.png`)
-  
-    // attack
-    // this.load.spritesheet(ATTACK_ASSET_KEYS.ICE_SHARD, `${ATTACK_ANIMS_PATH}/ice-attack/active.png`, {
-    //   frameWidth: 32,
-    //   frameHeight: 32
-    // })
-    // this.load.spritesheet(ATTACK_ASSET_KEYS.ICE_SHARD_START, `${ATTACK_ANIMS_PATH}/ice-attack/start.png`, {
-    //   frameWidth: 32,
-    //   frameHeight: 32
-    // })
-    // this.load.spritesheet(ATTACK_ASSET_KEYS.FIRE_SPIN, `${ATTACK_ANIMS_PATH}/fire-spin.png`, {
-    //   frameWidth: 137,
-    //   frameHeight: 177
-    // })
-    // this.load.spritesheet(ATTACK_ASSET_KEYS.SLASH, `${ATTACK_ANIMS_PATH}/slash.png`, {
-    //   frameWidth: 48,
-    //   frameHeight: 48
-    // })
-
 
     this.load.image(WORLD_ASSET_KEYS.WORLD_BACKGROUND, `/${MAP_ASSETS_PATH}/aus.png`)
     this.load.image(WORLD_ASSET_KEYS.WORLD_FOREGROUND, `/${MAP_ASSETS_PATH}/aus-foreground.png`)

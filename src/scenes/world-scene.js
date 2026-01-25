@@ -95,11 +95,11 @@ export class WorldScene extends Phaser.Scene {
 
   init () {
     this.#resetSceneChangingFlags()
-    this.#bgmKey = BGM_ASSET_KEYS.ROUTE_11
+    this.#bgmKey = BGM_ASSET_KEYS.BEACH
   }
 
   preload () {
-    this.load.audio(this.#bgmKey, [`${BGM_ASSETS_PATH}/${this.#bgmKey}.flac`])
+    this.load.audio(this.#bgmKey, [`${BGM_ASSETS_PATH}/${this.#bgmKey}.mp3`])
     this.load.audio(BGM_ASSET_KEYS.TRAINER_BATTLE, [`${BGM_ASSETS_PATH}/TRAINER_BATTLE.flac`])
     this.load.audio(BGM_ASSET_KEYS.WILD_ENCOUNTER, [`${BGM_ASSETS_PATH}/WILD_ENCOUNTER.flac`])
   }
@@ -442,7 +442,7 @@ export class WorldScene extends Phaser.Scene {
       switch (data.type) {
         case OPPONENT_TYPES.WILD_ENCOUNTER:
           battleConfig.generatedMon = generateWildMon(this, data.encounterArea)
-          monsToPreload.push(battleConfig.generatedMon.baseMon)
+          monsToPreload.push(battleConfig.generatedMon.mon)
           break
         case OPPONENT_TYPES.TRAINER:
         case OPPONENT_TYPES.GYM_LEADER:
