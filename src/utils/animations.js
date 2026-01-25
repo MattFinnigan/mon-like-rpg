@@ -7,6 +7,12 @@ import { MON_BALLS } from "../assets/asset-keys.js"
  * @returns {Phaser.GameObjects.Sprite}
  */
 export function createExpandBallAnimation (scene, position) {
+  const sprite = scene.add.sprite(position.x, position.y, MON_BALLS.MON_BALL_EXPAND_1)
+  
+  if (scene.anims.get(MON_BALLS.MON_BALL_EXPAND_ANIMATION)) {
+    return sprite
+  }
+
   scene.anims.create({
     key: MON_BALLS.MON_BALL_EXPAND_ANIMATION,
     frames: [
@@ -24,7 +30,7 @@ export function createExpandBallAnimation (scene, position) {
     repeat: 0
   })
 
-  return scene.add.sprite(position.x, position.y, MON_BALLS.MON_BALL_EXPAND_1)
+  return sprite
 }
 
 /**
@@ -34,6 +40,12 @@ export function createExpandBallAnimation (scene, position) {
  * @returns {Phaser.GameObjects.Sprite}
  */
 export function createBallWiggleAnimation (scene, position) {
+  const sprite = scene.add.sprite(position.x, position.y, MON_BALLS.MON_BALL_WIGGLE_2)
+  
+  if (scene.anims.get(MON_BALLS.MON_BALL_WIGGLE_ANIMATION)) {
+    return sprite
+  }
+
   scene.anims.create({
     key: MON_BALLS.MON_BALL_WIGGLE_ANIMATION,
     frames: [
@@ -54,5 +66,5 @@ export function createBallWiggleAnimation (scene, position) {
     repeat: 0
   })
 
-  return scene.add.sprite(position.x, position.y, MON_BALLS.MON_BALL_WIGGLE_2)
+  return sprite
 }
