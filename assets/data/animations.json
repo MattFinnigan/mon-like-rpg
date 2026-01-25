@@ -174,5 +174,32 @@
     "delay": 0,
     "yoyo": true,
     "assetKey": "NPC_SHEET_3"
+  },
+  {
+    "key": "BALL_WIGGLE",
+    "frames": [1, 12, 13, 14, 1, 24, 25, 26, 1],
+    "frameRate": 18,
+    "repeat": 0,
+    "delay": 0,
+    "yoyo": false,
+    "assetKey": "MON_BALLS_SHEET_1"
+  },
+  {
+    "key": "BALL_OPEN",
+    "frames": [36, 37, 38],
+    "frameRate": 32,
+    "repeat": 0,
+    "delay": 0,
+    "yoyo": false,
+    "assetKey": "MON_BALLS_SHEET_1"
+  },
+  {
+    "key": "BALL_POOF",
+    "frames": [0, 1, 2],
+    "frameRate": 10,
+    "repeat": 0,
+    "delay": 0,
+    "yoyo": false,
+    "assetKey": "BALL_POOF"
   }
 ]

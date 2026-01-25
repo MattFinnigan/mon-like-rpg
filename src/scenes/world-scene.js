@@ -17,7 +17,7 @@ import { Player } from '../world/characters/player.js';
 import { DialogUi } from '../common/dialog-ui.js';
 import { SCENE_KEYS } from "./scene-keys.js";
 import { exhaustiveGuard } from '../utils/guard.js';
-import { loadBattleAssets, loadMonAssets, loadTrainerSprites } from '../utils/load-assets.js';
+import { loadMonAssets, loadTrainerSprites } from '../utils/load-assets.js';
 import { generateWildMon } from '../utils/encounter-utils.js';
 import { Menu, MENU_OPTIONS } from '../world/menu/menu.js';
 import { ItemMenu } from '../common/item-menu.js';
@@ -496,7 +496,6 @@ export class WorldScene extends Phaser.Scene {
       }
 
       loadTrainerSprites(this, TRAINER_SPRITES.RED)
-      loadBattleAssets(this)
 
       this.load.start()
     })

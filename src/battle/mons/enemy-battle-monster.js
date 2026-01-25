@@ -1,6 +1,5 @@
 import { SKIP_ANIMATIONS } from "../../../config.js";
-import { MON_ASSET_KEYS, MON_BALLS, MON_GRAY_ASSET_KEYS, SFX_ASSET_KEYS } from "../../assets/asset-keys.js";
-import { createBallWiggleAnimation, createExpandBallAnimation } from "../../utils/animations.js";
+import { BGM_ASSET_KEYS, MON_ASSET_KEYS, MON_BALLS, MON_GRAY_ASSET_KEYS, SFX_ASSET_KEYS } from "../../assets/asset-keys.js";
 import { AudioManager } from "../../utils/audio-manager.js";
 import { BattleMon } from "./battle-mon.js";
 
@@ -14,9 +13,9 @@ const ENEMY_IMAGE_POSITION = Object.freeze({
 
 export class EnemyBattleMon extends BattleMon {
   /** @type {Phaser.GameObjects.Sprite} */
-  #monBallWiggleSpriteAnimation
+  #monBallSprite
   /** @type {Phaser.GameObjects.Sprite} */
-  #monBallExpandSpriteAnimation
+  #monBallExpandSprite
   /** @type {AudioManager} */
   #audioManager
 
@@ -27,9 +26,10 @@ export class EnemyBattleMon extends BattleMon {
   constructor (config) {
     super(config, ENEMY_IMAGE_POSITION)
     this._phaserMonImageGameObject.setFlipX(true)
-    this.#monBallWiggleSpriteAnimation = createBallWiggleAnimation(this._scene, { x: 0, y: 0 }).setScale(1.25)
-    this.#monBallExpandSpriteAnimation = createExpandBallAnimation(this._scene, { x: 0, y: 0}).setScale(1.5).setAlpha(0)
-    this.#monBallWiggleSpriteAnimation.setAlpha(0)
+    this.#monBallSprite = this._scene.add.sprite(0, 0, MON_BALLS.MON_BALLS_SHEET_1, 1).setScale(1.25)
+    this.#monBallExpandSprite = this._scene.add.sprite(0, 0, MON_BALLS.BALL_POOF, 0).setScale(1.5).setAlpha(0)
+
+    this.#monBallSprite.setAlpha(0)
     this.#audioManager = config.scene.registry.get('audio')
   }
 
@@ -63,6 +63,7 @@ export class EnemyBattleMon extends BattleMon {
    * }) => void} callback
    */
   playCatchAttempt (item, callback) {
+    this.#monBallSprite.setTexture(MON_BALLS.MON_BALLS_SHEET_1, 1)
     let successRolls = 0
     // todo increase/decrease changes based on ball
     for (let i = 0; i < 3; i++) {
@@ -72,33 +73,38 @@ export class EnemyBattleMon extends BattleMon {
       }
     }
 
-    const playBallExplode = (onComplete) => {
-      this.#monBallExpandSpriteAnimation.setAlpha(1)
+    const playBallExplode = onComplete => {
+      this.#monBallExpandSprite.setAlpha(1)
       this.#audioManager.playSfx(SFX_ASSET_KEYS.BALL_POOF, { primaryAudio: true })
-      this.#monBallExpandSpriteAnimation.play(MON_BALLS.MON_BALL_EXPAND_ANIMATION)
-      this.#monBallExpandSpriteAnimation.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
-        this.#monBallExpandSpriteAnimation.setAlpha(0)
+      this.#monBallExpandSprite.play(MON_BALLS.BALL_POOF)
+
+      this.#monBallExpandSprite.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
+        this.#monBallExpandSprite.setAlpha(0)
         onComplete()
       })
     }
 
-    const playFailedBallExplode = (finishUpCallback) => {
+    const playFailedBallExplode = finishUpCallback => {
       if (SKIP_ANIMATIONS) {
         finishUpCallback()
         return
       }
-      this.#monBallWiggleSpriteAnimation.setAlpha(0)
-      playBallExplode(() => {
-        this._scene.time.delayedCall(100, () => {
-          this._phaserMonImageGameObject.setAlpha(1)
-          finishUpCallback()
+      this.#monBallSprite.play(MON_BALLS.BALL_OPEN)
+      this.#monBallSprite.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
+        this.#monBallSprite.setAlpha(0)
+        playBallExplode(() => {
+          this._scene.time.delayedCall(100, () => {
+            this._phaserMonImageGameObject.setAlpha(1)
+            finishUpCallback()
+          })
         })
       })
     }
 
     const sendResult = () => {
       if (successRolls >= 3) {
-        this.#monBallWiggleSpriteAnimation.setTexture(MON_BALLS.MON_BALLS_SHEET_1, 9)
+        this.#audioManager.playSfx(BGM_ASSET_KEYS.MON_CAUGHT, { primaryAudio: true })
+        this.#monBallSprite.setTexture(MON_BALLS.MON_BALLS_SHEET_1, 52)
         callback({
           msg: `Wild ${this._baseMonDetails.name} was caught!`,
           wasSuccessful: true
@@ -144,8 +150,8 @@ export class EnemyBattleMon extends BattleMon {
     )
 
     this._scene.time.delayedCall(250, () => {
-      this.#monBallWiggleSpriteAnimation.setPosition(startPos.x, startPos.y)
-      this.#monBallWiggleSpriteAnimation.setAlpha(1)
+      this.#monBallSprite.setPosition(startPos.x, startPos.y)
+      this.#monBallSprite.setAlpha(1)
 
       this.#audioManager.playSfx(SFX_ASSET_KEYS.BALL_TOSS, { primaryAudio: true })
       this._scene.tweens.add({
@@ -154,7 +160,7 @@ export class EnemyBattleMon extends BattleMon {
         duration: 500,
         onUpdate: (tween, target) => {
           const point = curve.getPoint(target.t)
-          this.#monBallWiggleSpriteAnimation.setPosition(point.x, point.y)
+          this.#monBallSprite.setPosition(point.x, point.y)
         },
         onComplete: () => {
           playBallHitExlpodeAnim()
@@ -163,14 +169,14 @@ export class EnemyBattleMon extends BattleMon {
     })
 
     const playBallHitExlpodeAnim = () => {
-      this.#monBallExpandSpriteAnimation.setPosition(endPos.x, endPos.y - 20)
-      this.#monBallExpandSpriteAnimation.setAlpha(1)
+      this.#monBallExpandSprite.setPosition(endPos.x, endPos.y - 20)
+      this.#monBallExpandSprite.setAlpha(1)
       this._phaserMonImageGameObject.setAlpha(0)
-      this.#monBallWiggleSpriteAnimation.setAlpha(0)
+      this.#monBallSprite.setAlpha(0)
       
       playBallExplode(() => {
-        this.#monBallExpandSpriteAnimation.setAlpha(0)
-        this.#monBallWiggleSpriteAnimation.setAlpha(1)
+        this.#monBallExpandSprite.setAlpha(0)
+        this.#monBallSprite.setAlpha(1)
         this._scene.time.delayedCall(500, () => {
           playWiggleAnim(sendResult)
         })
@@ -180,11 +186,11 @@ export class EnemyBattleMon extends BattleMon {
     let count = 1
     const playWiggleAnim = (callback) => {
       this.#audioManager.playSfx(SFX_ASSET_KEYS.BALL_WIGGLE, { primaryAudio: true })
-      this.#monBallWiggleSpriteAnimation.play(MON_BALLS.MON_BALL_WIGGLE_ANIMATION)
-      this.#monBallWiggleSpriteAnimation.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
-        this.#monBallWiggleSpriteAnimation.stop()
+      this.#monBallSprite.play(MON_BALLS.BALL_WIGGLE)
+      this.#monBallSprite.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
+        this.#monBallSprite.stop()
         this._scene.time.delayedCall(1000, () => {
-          if (count === successRolls) {
+          if (count >= successRolls) {
             callback()
             return
           }

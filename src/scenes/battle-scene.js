@@ -11,7 +11,7 @@ import { Controls } from '../utils/controls.js'
 import { BattleTrainer } from '../battle/characters/battle-trainer.js'
 import { EVENT_KEYS } from '../types/event-keys.js'
 import { AudioManager } from '../utils/audio-manager.js'
-import { BGM_ASSET_KEYS, SFX_ASSET_KEYS, TRAINER_SPRITES } from '../assets/asset-keys.js'
+import { BATTLE_ASSET_KEYS, BGM_ASSET_KEYS, MON_BALLS, SFX_ASSET_KEYS, TRAINER_SPRITES } from '../assets/asset-keys.js'
 import { BattlePlayer } from '../battle/characters/battle-player.js'
 import { DATA_MANAGER_STORE_KEYS, dataManager } from '../utils/data-manager.js'
 import { BattleMon } from '../battle/mons/battle-mon.js'
@@ -26,7 +26,7 @@ import { loadMonAssets } from '../utils/load-assets.js'
 import { LearnAttackManager } from '../common/learn-attack-mananger.js'
 import { STATUS_EFFECT } from '../types/status-effect.js'
 import { exhaustiveGuard } from '../utils/guard.js'
-import { BGM_ASSETS_PATH } from '../utils/consts.js'
+import { BACKGROUND_ASSETS_PATH, BATTLE_ASSETS_PATH, BGM_ASSETS_PATH, MON_BALL_ANIMS_ASSETS_PATH, SFX_ASSETS_PATH } from '../utils/consts.js'
 
 
 /** @enum {object} */
@@ -150,7 +150,23 @@ export class BattleScene extends Phaser.Scene {
     if (!this.#opponentIsWildMon()) {
       this.#victoryBgmKey = BGM_ASSET_KEYS.TRAINER_VICTORY
     }
-  
+
+    this.load.audio(SFX_ASSET_KEYS.BALL_WIGGLE, `${SFX_ASSETS_PATH}/BALL_WIGGLE.wav`)
+    this.load.audio(SFX_ASSET_KEYS.BALL_TOSS, `${SFX_ASSETS_PATH}/BALL_TOSS.wav`)
+    this.load.audio(SFX_ASSET_KEYS.BALL_POOF, `${SFX_ASSETS_PATH}/BALL_POOF.wav`)
+    this.load.audio(BGM_ASSET_KEYS.EVOLUTION, `${BGM_ASSETS_PATH}/EVOLUTION.mp3`)
+    this.load.audio(BGM_ASSET_KEYS.MON_CAUGHT, `${BGM_ASSETS_PATH}/MON_CAUGHT.mp3`)
+
+    this.load.image(BATTLE_ASSET_KEYS.BATTLE_MENU_OPTIONS_BACKGROUND, `${BACKGROUND_ASSETS_PATH}/battle-menu-options.png`)
+    this.load.image(BATTLE_ASSET_KEYS.PLAYER_BATTLE_DETAILS_BACKGROUND, `/${BACKGROUND_ASSETS_PATH}/player-battle-details.png`)
+    this.load.image(BATTLE_ASSET_KEYS.ENEMY_BATTLE_DETAILS_BACKGROUND, `${BACKGROUND_ASSETS_PATH}/enemy-battle-details.png`)
+
+    this.load.audio(SFX_ASSET_KEYS.TAKE_DAMAGE, `${SFX_ASSETS_PATH}/TAKE_DAMAGE.wav`)
+    this.load.audio(SFX_ASSET_KEYS.SUPER_EFFECTIVE, `${SFX_ASSETS_PATH}/SUPER_EFFECTIVE.wav`)
+    this.load.audio(SFX_ASSET_KEYS.NOT_VERY_EFFECTIVE, `${SFX_ASSETS_PATH}/NOT_VERY_EFFECTIVE.wav`)
+    this.load.audio(SFX_ASSET_KEYS.FAINT_THUD, `${SFX_ASSETS_PATH}/FAINT_THUD.wav`)
+    this.load.audio(SFX_ASSET_KEYS.RUN, `${SFX_ASSETS_PATH}/RUN.wav`)
+
     this.load.audio(BGM_ASSET_KEYS[this.#victoryBgmKey], [`${BGM_ASSETS_PATH}/${this.#victoryBgmKey}.flac`])
   }
 

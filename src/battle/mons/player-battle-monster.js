@@ -1,8 +1,7 @@
-import { BATTLE_ASSET_KEYS, MON_BACK_ASSET_KEYS, MON_BALLS, SFX_ASSET_KEYS } from "../../assets/asset-keys.js";
-import { createExpandBallAnimation } from "../../utils/animations.js";
-import { AudioManager } from "../../utils/audio-manager.js";
-import { DATA_MANAGER_STORE_KEYS, dataManager } from "../../utils/data-manager.js";
-import { BattleMon } from "./battle-mon.js";
+import { BATTLE_ASSET_KEYS, MON_BACK_ASSET_KEYS, MON_BALLS, SFX_ASSET_KEYS } from "../../assets/asset-keys.js"
+import { AudioManager } from "../../utils/audio-manager.js"
+import { DATA_MANAGER_STORE_KEYS, dataManager } from "../../utils/data-manager.js"
+import { BattleMon } from "./battle-mon.js"
 
 /**
  * @type {import("../../types/typedef.js").Coordinate}
@@ -51,21 +50,20 @@ export class PlayerBattleMon extends BattleMon {
     this._phaserHealthBarGameContainer.setAlpha(0)
     this._phaserMonImageGameObject.setAlpha(0)
 
-    if (this._skipBattleAnimations) {
-      this._phaserHealthBarGameContainer.setAlpha(1)
-      this._phaserMonImageGameObject.setAlpha(1)
-      callback()
-      return
-    }
+    // if (this._skipBattleAnimations) {
+    //   this._phaserHealthBarGameContainer.setAlpha(1)
+    //   this._phaserMonImageGameObject.setAlpha(1)
+    //   callback()
+    //   return
+    // }
 
-    const coords = {
-      x: PLAYER_IMAGE_POSITION.x + (this._phaserMonImageGameObject.width / 2) + 10,
-      y: PLAYER_IMAGE_POSITION.y + (this._phaserMonImageGameObject.height / 2) + 10,
-    }
+    const x = PLAYER_IMAGE_POSITION.x + (this._phaserMonImageGameObject.width / 2) + 10
+    const y = PLAYER_IMAGE_POSITION.y + (this._phaserMonImageGameObject.height / 2) + 10
+    this.#monBallExpandSpriteAnimation = this._scene.add.sprite(x, y, MON_BALLS.BALL_POOF, 0).setScale(1.5)
 
-    this.#monBallExpandSpriteAnimation = createExpandBallAnimation(this._scene, coords).setScale(1.5)
     this.#audioManager.playSfx(SFX_ASSET_KEYS.BALL_POOF, { primaryAudio: true })
-    this.#monBallExpandSpriteAnimation.play(MON_BALLS.MON_BALL_EXPAND_ANIMATION)
+    this.#monBallExpandSpriteAnimation.play(MON_BALLS.BALL_POOF)
+
     this.#monBallExpandSpriteAnimation.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
       this.#monBallExpandSpriteAnimation.setAlpha(0)
       this._scene.time.delayedCall(300, () => {
@@ -89,7 +87,7 @@ export class PlayerBattleMon extends BattleMon {
     const endXPos = -200
     this._scene.tweens.add({
       delay: 500,
-      duration: 300,
+      duration: 200,
       x: {
         from: PLAYER_IMAGE_POSITION.x,
         to: endXPos

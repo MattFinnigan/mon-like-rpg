@@ -1,7 +1,7 @@
-import { ATTACK_ASSET_KEYS, BATTLE_ASSET_KEYS, BGM_ASSET_KEYS, CHARACTER_ASSET_KEYS, DATA_ASSET_KEYS, HEALTH_BAR_ASSET_KEYS, PARTY_MON_SPRITES, SFX_ASSET_KEYS, SYSTEM_ASSET_KEYS, TRAINER_GRAY_SPRITES, TRAINER_SPRITES, UI_ASSET_KEYS, WORLD_ASSET_KEYS } from '../assets/asset-keys.js'
+import { ATTACK_ASSET_KEYS, BATTLE_ASSET_KEYS, BGM_ASSET_KEYS, CHARACTER_ASSET_KEYS, DATA_ASSET_KEYS, HEALTH_BAR_ASSET_KEYS, MON_BALLS, PARTY_MON_SPRITES, SFX_ASSET_KEYS, SYSTEM_ASSET_KEYS, TRAINER_GRAY_SPRITES, TRAINER_SPRITES, UI_ASSET_KEYS, WORLD_ASSET_KEYS } from '../assets/asset-keys.js'
 import Phaser from '../lib/phaser.js'
 import { AudioManager } from '../utils/audio-manager.js'
-import { ATTACK_ANIMS_PATH, BACKGROUND_ASSETS_PATH, BATTLE_ASSETS_PATH, BGM_ASSETS_PATH, CHAR_ASSETS_PATH, DATA_ASSETS_PATH, MAP_ASSETS_PATH, NPC_ASSETS_PATH, PARTY_MON_ASSETS_PATH, SFX_ASSETS_PATH, UI_ASSETS_PATH, UI_DIALOG_ASSETS_PATH } from '../utils/consts.js'
+import { ATTACK_ANIMS_PATH, BACKGROUND_ASSETS_PATH, BATTLE_ASSETS_PATH, BGM_ASSETS_PATH, CHAR_ASSETS_PATH, DATA_ASSETS_PATH, MAP_ASSETS_PATH, MON_BALL_ANIMS_ASSETS_PATH, NPC_ASSETS_PATH, PARTY_MON_ASSETS_PATH, SFX_ASSETS_PATH, UI_ASSETS_PATH, UI_DIALOG_ASSETS_PATH } from '../utils/consts.js'
 import { dataManager } from '../utils/data-manager.js'
 import { DataUtils } from '../utils/data-utils.js'
 import { SCENE_KEYS } from './scene-keys.js'
@@ -77,6 +77,14 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image(UI_ASSET_KEYS.DIALOG_BORDER_TOP, `/${UI_DIALOG_ASSETS_PATH}/border-top.png`)
     this.load.image(UI_ASSET_KEYS.DIALOG_BORDER_TOP_LEFT, `/${UI_DIALOG_ASSETS_PATH}/border-top-left.png`)
     this.load.image(UI_ASSET_KEYS.DIALOG_BORDER_TOP_RIGHT, `/${UI_DIALOG_ASSETS_PATH}/border-top-right.png`)
+    this.load.spritesheet(MON_BALLS.MON_BALLS_SHEET_1, `${BATTLE_ASSETS_PATH}/balls.png`, {
+      frameWidth: 48,
+      frameHeight: 48
+    })
+    this.load.spritesheet(MON_BALLS.BALL_POOF, `${MON_BALL_ANIMS_ASSETS_PATH}/BALL_POOF.png`, {
+      frameWidth: 137,
+      frameHeight: 133
+    })
 
     this.load.image(UI_ASSET_KEYS.CURSOR, `${UI_ASSETS_PATH}/cursor.png`)
     this.load.image(UI_ASSET_KEYS.ARROW, `${UI_ASSETS_PATH}/arrow.png`)
@@ -158,9 +166,6 @@ export class PreloadScene extends Phaser.Scene {
     this.load.audio(SFX_ASSET_KEYS.RUN, `${SFX_ASSETS_PATH}/RUN.wav`)
     this.load.audio(SFX_ASSET_KEYS.ITEM_OBTAINED, `${SFX_ASSETS_PATH}/ITEM_OBTAINED.wav`)
     this.load.audio(SFX_ASSET_KEYS.LEVEL_UP, `${SFX_ASSETS_PATH}/LEVEL_UP.mp3`)
-
-    this.load.audio(BGM_ASSET_KEYS.EVOLUTION, `${BGM_ASSETS_PATH}/EVOLUTION.mp3`)
-    this.load.audio(BGM_ASSET_KEYS.MON_CAUGHT, `${BGM_ASSETS_PATH}/MON_CAUGHT.mp3`)
   
     this.registry.set('audio', new AudioManager(this))
   }
@@ -176,14 +181,16 @@ export class PreloadScene extends Phaser.Scene {
         ? this.anims.generateFrameNumbers(animation.assetKey, { frames: animation.frames })
         : this.anims.generateFrameNumbers(animation.assetKey)
 
-      this.anims.create({
+      const anim = {
         key: animation.key,
         frames: frames,
         frameRate: animation.frameRate,
         repeat: animation.repeat,
         delay: animation.delay,
         yoyo: animation.yoyo
-      })
+      }
+
+      this.anims.create(anim)
     })
 
   }
