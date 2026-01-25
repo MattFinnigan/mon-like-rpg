@@ -50,12 +50,12 @@ export class PlayerBattleMon extends BattleMon {
     this._phaserHealthBarGameContainer.setAlpha(0)
     this._phaserMonImageGameObject.setAlpha(0)
 
-    // if (this._skipBattleAnimations) {
-    //   this._phaserHealthBarGameContainer.setAlpha(1)
-    //   this._phaserMonImageGameObject.setAlpha(1)
-    //   callback()
-    //   return
-    // }
+    if (this._skipBattleAnimations) {
+      this._phaserHealthBarGameContainer.setAlpha(1)
+      this._phaserMonImageGameObject.setAlpha(1)
+      callback()
+      return
+    }
 
     const x = PLAYER_IMAGE_POSITION.x + (this._phaserMonImageGameObject.width / 2) + 10
     const y = PLAYER_IMAGE_POSITION.y + (this._phaserMonImageGameObject.height / 2) + 10

@@ -31,16 +31,31 @@ export class IceShard extends Attack {
 
     this._isAnimationPlaying = true
     this._attackGameObject.setAlpha(1)
-    this._attackGameObject.play(ATTACK_ASSET_KEYS.ICE_SHARD_START)
-    this._attackGameObject.once(Phaser.Animations.Events.ANIMATION_COMPLETE_KEY + ATTACK_ASSET_KEYS.ICE_SHARD_START, () => {
-      this._attackGameObject.play(ATTACK_ASSET_KEYS.ICE_SHARD)
-      this._attackGameObject.once(Phaser.Animations.Events.ANIMATION_COMPLETE_KEY + ATTACK_ASSET_KEYS.ICE_SHARD, () => {
-        this._isAnimationPlaying = false
-        this._attackGameObject.setAlpha(0).setFrame(0)
-        if (callback) {
-          callback()
-        }
+    
+    const promises = [
+      new Promise(resolve => {
+        this._audioManager.playSfx(ATTACK_ASSET_KEYS.ICE_SHARD, {
+          primaryAudio: true,
+          callback: () => resolve()
+        })
+      }),
+      new Promise (resolve => {
+        this._attackGameObject.play(ATTACK_ASSET_KEYS.ICE_SHARD_START)
+        this._attackGameObject.once(Phaser.Animations.Events.ANIMATION_COMPLETE_KEY + ATTACK_ASSET_KEYS.ICE_SHARD_START, () => {
+          this._attackGameObject.play(ATTACK_ASSET_KEYS.ICE_SHARD)
+          this._attackGameObject.once(Phaser.Animations.Events.ANIMATION_COMPLETE_KEY + ATTACK_ASSET_KEYS.ICE_SHARD, () => {
+            this._isAnimationPlaying = false
+            resolve()
+          })
+        })
       })
+    ]
+
+    Promise.all(promises).then(() => {
+      this._attackGameObject.setAlpha(0).setFrame(0)
+      if (callback) {
+        callback()
+      }
     })
   }  
 }

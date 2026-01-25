@@ -4,17 +4,39 @@ import { MON_TYPES } from "../types/mon-types.js"
 import { getMonStats } from "./battle-utils.js"
 
 export class DataUtils {
+  /**
+   * 
+   * @param {Phaser.Scene} scene 
+   * @param {number} attackId 
+   * @returns {import("../types/typedef.js").Attack}
+   */
   static getMonAttack (scene, attackId) {
     const data = scene.cache.json.get(DATA_ASSET_KEYS.ATTACKS)
     const attk = data.find(attk => attk.id === attackId)
     return attk
   }
   
-
+  /**
+   * 
+   * @param {Phaser.Scene} scene
+   * @returns {object}
+   */
   static getAnimations (scene) {
     /** @type {import("../types/typedef.js").Animation[]} */
     const data = scene.cache.json.get(DATA_ASSET_KEYS.ANIMATIONS)
     return data
+  }
+
+  /**
+   * 
+   * @param {Phaser.Scene} scene
+   * @param {string} animKey
+   * @returns {object}
+   */
+  static getAttackAnimation (scene, animKey) {
+    /** @type {import("../types/typedef.js").Animation[]} */
+    const data = scene.cache.json.get(DATA_ASSET_KEYS.ATTACK_ANIMATIONS)
+    return data.find(attk => attk.key === animKey)
   }
 
   /**

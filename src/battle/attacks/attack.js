@@ -1,4 +1,5 @@
 import Phaser from "../../lib/phaser.js"
+import { AudioManager } from "../../utils/audio-manager.js"
 
 export class Attack {
   /** @protected @type {Phaser.Scene} */
@@ -9,6 +10,8 @@ export class Attack {
   _isAnimationPlaying
   /** @protected @type {Phaser.GameObjects.Sprite|Phaser.GameObjects.Container|undefined} */
   _attackGameObject
+  /** @protected @type {AudioManager} */
+  _audioManager
 
   /**
    * 
@@ -20,6 +23,7 @@ export class Attack {
     this._position = position
     this._isAnimationPlaying = false
     this._attackGameObject = undefined
+    this._audioManager = this._scene.registry.get('audio')
   }
 
   /**

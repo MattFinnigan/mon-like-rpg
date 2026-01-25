@@ -17,7 +17,7 @@ import { Player } from '../world/characters/player.js';
 import { DialogUi } from '../common/dialog-ui.js';
 import { SCENE_KEYS } from "./scene-keys.js";
 import { exhaustiveGuard } from '../utils/guard.js';
-import { loadMonAssets, loadTrainerSprites } from '../utils/load-assets.js';
+import { loadBattleAssets, loadMonAssets, loadTrainerSprites } from '../utils/load-assets.js';
 import { generateWildMon } from '../utils/encounter-utils.js';
 import { Menu, MENU_OPTIONS } from '../world/menu/menu.js';
 import { ItemMenu } from '../common/item-menu.js';
@@ -435,19 +435,18 @@ export class WorldScene extends Phaser.Scene {
       }
       const playerData = this.#getPlayerDataFromStore()
 
-      const partyBaseMons = playerData.partyMons.map(mon => DataUtils.getBaseMonDetails(this, mon.baseMonIndex))
-      let baseMonsToPreload = partyBaseMons
+      const partyBaseMons = playerData.partyMons
+      let monsToPreload = partyBaseMons
       let enemyTrainerAssetKey = null
 
       switch (data.type) {
         case OPPONENT_TYPES.WILD_ENCOUNTER:
           battleConfig.generatedMon = generateWildMon(this, data.encounterArea)
-          baseMonsToPreload.push(battleConfig.generatedMon.baseMon)
+          monsToPreload.push(battleConfig.generatedMon.baseMon)
           break
         case OPPONENT_TYPES.TRAINER:
         case OPPONENT_TYPES.GYM_LEADER:
-          const enemyBaseMons = data.trainer.partyMons.map(mon => DataUtils.getBaseMonDetails(this, mon.baseMonIndex))
-          baseMonsToPreload = baseMonsToPreload.concat(enemyBaseMons)
+          monsToPreload = monsToPreload.concat(data.trainer.partyMons)
           enemyTrainerAssetKey = data.trainer.assetKey
           break
         default:
@@ -455,7 +454,7 @@ export class WorldScene extends Phaser.Scene {
           break
       }
 
-      this.#preloadBattleSceneAssets(baseMonsToPreload, enemyTrainerAssetKey).then(() => {
+      this.#preloadBattleSceneAssets(monsToPreload, enemyTrainerAssetKey).then(() => {
         resolve(battleConfig)
       })
     })
@@ -476,19 +475,19 @@ export class WorldScene extends Phaser.Scene {
   }
 
   /**
-   * 
-   * @param {import('../types/typedef.js').BaseMon[]} baseMons 
+   * loads battle assets during tranisition
+   * @param {import('../types/typedef.js').Mon[]} mons 
    * @param {string} enemyTrainerAssetKey 
    * @returns {Promise}
    */
-  #preloadBattleSceneAssets (baseMons, enemyTrainerAssetKey = null) {
+  #preloadBattleSceneAssets (mons, enemyTrainerAssetKey = null) {
     return new Promise(resolve => {
       this.load.once('complete', () => {
         resolve()
       })
 
-      baseMons.forEach(baseMon => {
-        loadMonAssets(this, baseMon)
+      mons.forEach(mon => {
+        loadMonAssets(this, mon)
       })
   
       if (enemyTrainerAssetKey) {
@@ -496,6 +495,7 @@ export class WorldScene extends Phaser.Scene {
       }
 
       loadTrainerSprites(this, TRAINER_SPRITES.RED)
+      loadBattleAssets(this)
 
       this.load.start()
     })

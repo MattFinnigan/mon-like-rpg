@@ -50,20 +50,36 @@ export class Slash extends Attack {
     }
 
     this._isAnimationPlaying = true
-    this._attackGameObject.setAlpha(1)
-    this._attackGameObject1.play(ATTACK_ASSET_KEYS.SLASH)
-    this._attackGameObject2.play(ATTACK_ASSET_KEYS.SLASH)
-    this._attackGameObject3.play(ATTACK_ASSET_KEYS.SLASH)
 
-    this._attackGameObject1.once(Phaser.Animations.Events.ANIMATION_COMPLETE_KEY + ATTACK_ASSET_KEYS.SLASH, () => {
-      this._isAnimationPlaying = false
-      this._attackGameObject.setAlpha(0)
-      this._attackGameObject1.setFrame(0)
-      this._attackGameObject2.setFrame(1)
-      this._attackGameObject3.setFrame(2)
+    const promises = [
+      new Promise(resolve => {
+        this._audioManager.playSfx(ATTACK_ASSET_KEYS.SLASH, {
+          primaryAudio: true,
+          callback: () => resolve()
+        })
+      }),
+      new Promise(resolve => {
+        this._attackGameObject.setAlpha(1)
+        this._attackGameObject1.play(ATTACK_ASSET_KEYS.SLASH)
+        this._attackGameObject2.play(ATTACK_ASSET_KEYS.SLASH)
+        this._attackGameObject3.play(ATTACK_ASSET_KEYS.SLASH)
+
+        this._attackGameObject1.once(Phaser.Animations.Events.ANIMATION_COMPLETE_KEY + ATTACK_ASSET_KEYS.SLASH, () => {
+          this._isAnimationPlaying = false
+          this._attackGameObject.setAlpha(0)
+          this._attackGameObject1.setFrame(0)
+          this._attackGameObject2.setFrame(1)
+          this._attackGameObject3.setFrame(2)
+          resolve()
+        })
+      })
+    ]
+
+    Promise.all(promises).then(() => {
       if (callback) {
         callback()
       }
     })
+
   }  
 }

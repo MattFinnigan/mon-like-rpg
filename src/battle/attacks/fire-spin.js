@@ -41,10 +41,24 @@ export class FireSpin extends Attack {
     this._attackGameObject.setAlpha(1)
     this._attackGameObject1.play(ATTACK_ASSET_KEYS.FIRE_SPIN)
 
-    this._attackGameObject1.once(Phaser.Animations.Events.ANIMATION_COMPLETE_KEY + ATTACK_ASSET_KEYS.FIRE_SPIN, () => {
-      this._isAnimationPlaying = false
-      this._attackGameObject.setAlpha(0)
-      this._attackGameObject1.setFrame(0)
+    const promises = [
+      new Promise(resolve => {
+        this._audioManager.playSfx(ATTACK_ASSET_KEYS.FIRE_SPIN, {
+          primaryAudio: true,
+          callback: () => resolve()
+        })
+      }),
+      new Promise(resolve => {
+        this._attackGameObject1.once(Phaser.Animations.Events.ANIMATION_COMPLETE_KEY + ATTACK_ASSET_KEYS.FIRE_SPIN, () => {
+          this._isAnimationPlaying = false
+          this._attackGameObject.setAlpha(0)
+          this._attackGameObject1.setFrame(0)
+          resolve()
+        })
+      })
+    ]
+
+    Promise.all(promises).then(() => {
       if (callback) {
         callback()
       }

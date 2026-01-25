@@ -1,0 +1,35 @@
+[
+  {
+    "key": "ICE_SHARD_START",
+    "frameRate": 9,
+    "repeat": 0,
+    "delay": 0,
+    "yoyo": false,
+    "assetKey": "ICE_SHARD_START"
+  },
+  {
+    "key": "ICE_SHARD",
+    "frameRate": 6,
+    "repeat": 0,
+    "delay": 0,
+    "yoyo": false,
+    "assetKey": "ICE_SHARD"
+  },
+  {
+    "key": "SLASH",
+    "frameRate": 12,
+    "repeat": 0,
+    "delay": 0,
+    "yoyo": false,
+    "assetKey": "SLASH"
+  },
+  {
+    "key": "FIRE_SPIN",
+    "frameRate": 10,
+    "frames": [0, 1, 2, 3, 4, 5, 6, 2, 1, 0],
+    "repeat": 0,
+    "delay": 0,
+    "yoyo": true,
+    "assetKey": "FIRE_SPIN"
+  }
+]

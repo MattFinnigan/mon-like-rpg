@@ -32,7 +32,7 @@ export class AttackManager {
   /** @type {Slash} */
   #slashAttack
   /** @type {FireSpin} */
-  #fireWheelAttack
+  #fireSpinAttack
   /** @type {Splash} */
   #splashAttack
   /** @type {ThunderWave} */
@@ -59,10 +59,10 @@ export class AttackManager {
    * @returns {void}
    */
   playAttackAnimation (attackAnim, target, callback, noDamageTaken) {
-    if (this.#skipBattleAnimations || noDamageTaken) {
-      callback()
-      return
-    }
+    // if (this.#skipBattleAnimations || noDamageTaken) {
+    //   callback()
+    //   return
+    // }
 
     let x = 500
     let y = 100
@@ -87,31 +87,31 @@ export class AttackManager {
         this.#slashAttack.playAnimation(callback)
         break
       case ATTACK_KEYS.FIRE_SPIN:
-        if (!this.#fireWheelAttack) {
-          this.#fireWheelAttack = new FireSpin(this.#scene, { x, y })
+        if (!this.#fireSpinAttack) {
+          this.#fireSpinAttack = new FireSpin(this.#scene, { x, y })
         }
-        this.#fireWheelAttack.gameObject.setPosition(x, y)
-        this.#fireWheelAttack.playAnimation(callback)
+        this.#fireSpinAttack.gameObject.setPosition(x, y)
+        this.#fireSpinAttack.playAnimation(callback)
         break
       case ATTACK_KEYS.SPLASH:
         if (!this.#splashAttack) {
           this.#splashAttack = new Splash(this.#scene, { x, y })
         }
-        this.#splashAttack.gameObject.setPosition(x, y)
+        // this.#splashAttack.gameObject.setPosition(x, y)
         this.#splashAttack.playAnimation(callback)
         break
       case ATTACK_KEYS.THUNDER_WAVE:
         if (!this.#thunderWaveAttack) {
           this.#thunderWaveAttack = new ThunderWave(this.#scene, { x, y })
         }
-        this.#thunderWaveAttack.gameObject.setPosition(x, y)
+        // this.#thunderWaveAttack.gameObject.setPosition(x, y)
         this.#thunderWaveAttack.playAnimation(callback)
         break
       case ATTACK_KEYS.CONFUSE_RAY:
         if (!this.#confuseRayAttack) {
           this.#confuseRayAttack = new ConfuseRay(this.#scene, { x, y })
         }
-        this.#confuseRayAttack.gameObject.setPosition(x, y)
+        // this.#confuseRayAttack.gameObject.setPosition(x, y)
         this.#confuseRayAttack.playAnimation(callback)
         break
       default:
