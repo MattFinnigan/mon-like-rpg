@@ -436,7 +436,7 @@ export class WorldScene extends Phaser.Scene {
       const playerData = this.#getPlayerDataFromStore()
 
       const partyBaseMons = playerData.partyMons
-      let monsToPreload = partyBaseMons
+      let monsToPreload = [...partyBaseMons]
       let enemyTrainerAssetKey = null
 
       switch (data.type) {
