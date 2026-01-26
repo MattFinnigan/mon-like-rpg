@@ -35,7 +35,8 @@ const attksLoaded = []
 /**
  * 
  * @param {Phaser.Scene} scene 
- * @param {number} attkId 
+ * @param {number} attkId
+ * @returns {boolean}
  */
 export function loadAttackAssets(scene, attkId) {
 if (!attksLoaded.includes(attkId)) {
@@ -83,7 +84,9 @@ if (!attksLoaded.includes(attkId)) {
       }
     })
     attksLoaded.push(attkId)
+    return false
   }
+  return true
 }
 
 /**

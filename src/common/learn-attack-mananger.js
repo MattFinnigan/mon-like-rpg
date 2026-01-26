@@ -160,15 +160,23 @@ export class LearnAttackManager {
    * @param {boolean} [replaceMove=false]
    */
   #learnMove (callback, replaceMove = false) {
-    if (this.#phaserMoveReplaceContainer) {
-      this.#phaserMoveReplaceContainer.setAlpha(0)
-    }
+    const msgs = []
+    let newAttackIds = []
 
     this.#waitForOverrideChoice = false
     this.#waitForOverrideOrNot = false
 
-    const msgs = []
-    let newAttackIds = []
+    if (this.#phaserMoveReplaceContainer) {
+      this.#phaserMoveReplaceContainer.setAlpha(0)
+    }
+
+    const finishUp = () => {
+      this.#dialogUi.showDialogModalAndWaitForInput(msgs, () => {
+        this.#reset()
+        callback(newAttackIds)
+      })
+    }
+
     const partyMons = dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS).map(mon => {
       if (mon.id === this.#currentMon.id) {
         if (replaceMove) {
@@ -188,16 +196,17 @@ export class LearnAttackManager {
     msgs.push(`${this.#currentMon.name} learned ${this.#learningNewAttack.name}!`)
     this.#audioManager.playSfx(SFX_ASSET_KEYS.ITEM_OBTAINED, { primaryAudio: true })
 
-    loadAttackAssets(this.#scene, this.#learningNewAttack.id)
+    const alreadyLoaded = loadAttackAssets(this.#scene, this.#learningNewAttack.id)
+    if (alreadyLoaded) {
+      finishUp()
+      return
+    }
+
     this.#scene.load.start()
-
     this.#scene.load.on('complete', () => {
-      this.#dialogUi.showDialogModalAndWaitForInput(msgs, () => {
-        this.#reset()
-        callback(newAttackIds)
-      })
+      finishUp()
     })
-
+    
   }
 
   /**
