@@ -5,6 +5,7 @@ import { DIRECTION } from '../types/direction.js'
 import { AudioManager } from '../utils/audio-manager.js'
 import { DATA_MANAGER_STORE_KEYS, dataManager } from '../utils/data-manager.js'
 import { DataUtils } from '../utils/data-utils.js'
+import { loadAttackAssets } from '../utils/load-assets.js'
 import { DialogUi } from './dialog-ui.js'
 
 export class LearnAttackManager {
@@ -185,13 +186,18 @@ export class LearnAttackManager {
 
     this.#waitForMoveLearnedConfirm = true
     msgs.push(`${this.#currentMon.name} learned ${this.#learningNewAttack.name}!`)
-    
     this.#audioManager.playSfx(SFX_ASSET_KEYS.ITEM_OBTAINED, { primaryAudio: true })
 
-    this.#dialogUi.showDialogModalAndWaitForInput(msgs, () => {
-      this.#reset()
-      callback(newAttackIds)
+    loadAttackAssets(this.#scene, this.#learningNewAttack.id)
+    this.#scene.load.start()
+
+    this.#scene.load.on('complete', () => {
+      this.#dialogUi.showDialogModalAndWaitForInput(msgs, () => {
+        this.#reset()
+        callback(newAttackIds)
+      })
     })
+
   }
 
   /**

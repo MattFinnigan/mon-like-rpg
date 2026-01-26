@@ -18,7 +18,6 @@ export function loadBaseMonAssets (scene, baseMon) {
   scene.load.audio(key, [`${MON_CRIES_ASSETS_PATH}/${monNum}.ogg`])
 }
 
-const attksLoaded = []
 /**
  * 
  * @param {Phaser.Scene} scene 
@@ -27,54 +26,64 @@ const attksLoaded = []
 export function loadMonAssets (scene, mon) {
   const baseMon = DataUtils.getBaseMonDetails(scene, mon.baseMonIndex)
   loadBaseMonAssets(scene, baseMon)
-  // attks
   mon.attackIds.forEach(attkId => {
-    if (!attksLoaded.includes(attkId)) {
-      const attk = DataUtils.getMonAttack(scene, attkId)
-      // sfx - bit daft going by animationName TODO
-      scene.load.audio(attk.animationName, `${ATTACK_SFX_ASSETS_PATH}/${attk.animationName}.wav`)
-
-      attk.assetKeys.forEach(assetKey => {
-        let frameWidth = null
-        let frameHeight = null
-        switch (assetKey) {
-          case ATTACK_ASSET_KEYS.ICE_SHARD_START:
-            case ATTACK_ASSET_KEYS.ICE_SHARD:
-            frameWidth = 32
-            frameHeight = 32
-            break
-          case ATTACK_ASSET_KEYS.SLASH:
-            frameWidth = 48
-            frameHeight = 48
-            break
-          case ATTACK_ASSET_KEYS.FIRE_SPIN:
-            frameWidth = 137
-            frameHeight = 177
-            break
-          case ATTACK_ASSET_KEYS.ELECTRIC:
-            frameWidth = 131
-            frameHeight = 126
-            break
-          case ATTACK_ASSET_KEYS.SPLASH:
-            break
-          case ATTACK_ASSET_KEYS.RAY:
-            frameWidth = 49
-            frameHeight = 91
-            break
-          default:
-            exhaustiveGuard(assetKey)
-            break
-        }
-        if (frameWidth && frameHeight) {
-          scene.load.spritesheet(assetKey, `${ATTACK_ANIMS_PATH}/${assetKey}.png`, {
-            frameWidth: frameWidth,
-            frameHeight: frameHeight
-          })
-        }
-      })
-      attksLoaded.push(attkId)
-    }
+    loadAttackAssets(scene, attkId)
   })
+}
+
+const attksLoaded = []
+/**
+ * 
+ * @param {Phaser.Scene} scene 
+ * @param {number} attkId 
+ */
+export function loadAttackAssets(scene, attkId) {
+if (!attksLoaded.includes(attkId)) {
+    const attk = DataUtils.getMonAttack(scene, attkId)
+    // sfx - bit daft going by animationName TODO
+    scene.load.audio(attk.animationName, `${ATTACK_SFX_ASSETS_PATH}/${attk.animationName}.wav`)
+
+    attk.assetKeys.forEach(assetKey => {
+      let frameWidth = null
+      let frameHeight = null
+      // this is going to get long.. todo
+      switch (assetKey) {
+        case ATTACK_ASSET_KEYS.ICE_SHARD_START:
+          case ATTACK_ASSET_KEYS.ICE_SHARD:
+          frameWidth = 32
+          frameHeight = 32
+          break
+        case ATTACK_ASSET_KEYS.SLASH:
+          frameWidth = 48
+          frameHeight = 48
+          break
+        case ATTACK_ASSET_KEYS.FIRE_SPIN:
+          frameWidth = 137
+          frameHeight = 177
+          break
+        case ATTACK_ASSET_KEYS.ELECTRIC:
+          frameWidth = 131
+          frameHeight = 126
+          break
+        case ATTACK_ASSET_KEYS.SPLASH:
+          break
+        case ATTACK_ASSET_KEYS.RAY:
+          frameWidth = 49
+          frameHeight = 91
+          break
+        default:
+          exhaustiveGuard(assetKey)
+          break
+      }
+      if (frameWidth && frameHeight) {
+        scene.load.spritesheet(assetKey, `${ATTACK_ANIMS_PATH}/${assetKey}.png`, {
+          frameWidth: frameWidth,
+          frameHeight: frameHeight
+        })
+      }
+    })
+    attksLoaded.push(attkId)
+  }
 }
 
 /**
