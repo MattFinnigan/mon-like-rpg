@@ -387,7 +387,7 @@ export class BattleMon extends MonCore  {
    * @param {() => void} callback
    */
   playBurntAnim (callback) {
-    const sprite = this._scene.add.sprite(this._phaserMonImageGameObject.x + 65, this._phaserMonImageGameObject.y + 150, STATUS_EFFECT_ASSET_KEYS.BURNT, 0).setScale(1.5)
+    const sprite = this._scene.add.sprite(this._phaserMonImageGameObject.x + 65, this._phaserMonImageGameObject.y + 160, STATUS_EFFECT_ASSET_KEYS.BURNT, 0).setScale(1.5)
     sprite.play(STATUS_EFFECT_ASSET_KEYS.BURNT)
 
     const promises = [

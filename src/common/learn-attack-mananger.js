@@ -170,13 +170,6 @@ export class LearnAttackManager {
       this.#phaserMoveReplaceContainer.setAlpha(0)
     }
 
-    const finishUp = () => {
-      this.#dialogUi.showDialogModalAndWaitForInput(msgs, () => {
-        this.#reset()
-        callback(newAttackIds)
-      })
-    }
-
     const partyMons = dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS).map(mon => {
       if (mon.id === this.#currentMon.id) {
         if (replaceMove) {
@@ -197,16 +190,22 @@ export class LearnAttackManager {
     this.#audioManager.playSfx(SFX_ASSET_KEYS.ITEM_OBTAINED, { primaryAudio: true })
 
     const alreadyLoaded = loadAttackAssets(this.#scene, this.#learningNewAttack.id)
-    if (alreadyLoaded) {
-      finishUp()
-      return
-    }
+    console.log(alreadyLoaded)
 
-    this.#scene.load.start()
-    this.#scene.load.on('complete', () => {
-      finishUp()
-    })
-    
+    if (alreadyLoaded) {
+      this.#dialogUi.showDialogModalAndWaitForInput(msgs, () => {
+        this.#reset()
+        callback(newAttackIds)
+      })
+    } else {
+      this.#scene.load.start()
+      this.#scene.load.on('complete', () => {
+        this.#dialogUi.showDialogModalAndWaitForInput(msgs, () => {
+          this.#reset()
+          callback(newAttackIds)
+        })
+      })
+    }
   }
 
   /**

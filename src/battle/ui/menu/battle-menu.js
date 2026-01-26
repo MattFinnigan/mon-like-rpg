@@ -291,17 +291,18 @@ export class BattleMenu {
    * @param {number} [config.delayCallbackMs=0]
    */
   updateInfoPanelMessagesNoInputRequired (message, config) {
-    const { callback, skipAnimation = false, delayCallbackMs = 0 } = config
+    const skipAnimation = config?.skipAnimation || SKIP_ANIMATIONS
+    const delayCallbackMs = config?.delayCallbackMs || 0
 
     this.#queuedMessageAnimationPlaying = true
     this.#battleTextGameObjectLine1.setText('').setAlpha(1)
 
-    if (skipAnimation || SKIP_ANIMATIONS) {
+    if (skipAnimation) {
       this.#battleTextGameObjectLine1.setText(message)
       this.#waitingForPlayerInput = false
       this.#queuedMessageAnimationPlaying = false
-      if (callback) {
-        callback()
+      if (config?.callback) {
+        config.callback()
       }
       return
     }
@@ -310,8 +311,8 @@ export class BattleMenu {
         this.#scene.time.delayedCall(delayCallbackMs, () => {
           this.#waitingForPlayerInput = false
           this.#queuedMessageAnimationPlaying = false
-          if (callback) {
-            callback()
+          if (config?.callback) {
+            config.callback()
           }
         })
       }

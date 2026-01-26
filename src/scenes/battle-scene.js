@@ -38,7 +38,6 @@ const BATTLE_STATES = Object.freeze({
   ENEMY_MON_OUT: 'ENEMY_MON_OUT',
   PLAYER_MON_OUT: 'PLAYER_MON_OUT',
   PLAYER_DECISION_AWAIT_INPUT: 'PLAYER_DECISION_AWAIT_INPUT',
-  ENEMY_DECISION: 'ENEMY_DECISION',
   BATTLE: 'BATTLE',
   POST_ATTACK_AWAIT_INPUT: 'POST_ATTACK_AWAIT_INPUT',
   FINISHED: 'FINISHED',
@@ -57,12 +56,24 @@ const BATTLE_STATES = Object.freeze({
   WILD_ENEMY_MON_FAINTED_AWAIT_INPUT: 'WILD_ENEMY_MON_FAINTED_AWAIT_INPUT',
   PLAYER_MON_FAINTED: 'PLAYER_MON_FAINTED',
   PLAYER_MON_FAINTED_AWAIT_INPUT: 'PLAYER_MON_FAINTED_AWAIT_INPUT',
+  WAIT_FOR_OTHERS_DECISION: 'WAIT_FOR_OTHERS_DECISION',
+  POST_BATTLE_CHECKS: 'POST_BATTLE_CHECKS'
 })
 
 /** @enum {object} */
 const BATTLE_PLAYERS = Object.freeze({
   PLAYER: 'PLAYER',
   ENEMY: 'ENEMY'
+})
+
+/** @typedef {keyof typeof TURN_ACTION_TYPES} TurnActionType */ 
+
+/** @enum {object} */
+const TURN_ACTION_TYPES = Object.freeze({
+  ATTACK: 'ATTACK',
+  ITEM: 'ITEM',
+  SWITCH: 'SWITCH',
+  RUN: 'RUN'
 })
 
 /**
@@ -72,6 +83,14 @@ const BATTLE_PLAYERS = Object.freeze({
  * @property {import('../types/direction.js').Direction} direction
  */
 
+/**
+ * @typedef {object} TurnDecision
+ * @property {BATTLE_PLAYERS} actor
+ * @property {TurnActionType} type
+ * @property {number} [attackIndex]
+ * @property {import('../types/typedef.js').Item} [item]
+ * @property {PartyMon} [switchTo]
+ */
 
 export class BattleScene extends Phaser.Scene {
   /** @type {BattleMenu} */
@@ -108,8 +127,6 @@ export class BattleScene extends Phaser.Scene {
   #victoryBgmKey
   /** @type {import('../types/typedef.js').PostAttackResult} */
   #lastAttackResult
-  /** @type {BATTLE_PLAYERS[]} */
-  #playersThatHadATurn
   /** @type {import('../types/typedef.js').Item} */
   #activePlayerItem
   /** @type {PartyMon} */
@@ -122,6 +139,10 @@ export class BattleScene extends Phaser.Scene {
   #learnAttackManager
   /** @type {import('../types/typedef.js').ItemUsedResult} */
   #itemUsedResult
+  /** @type {{ PLAYER: TurnDecision, ENEMY: TurnDecision }} */
+  #turnDecisions
+  /** @type {TurnDecision[]} */
+  #turnQueue
 
   /**
    * @type {object}
@@ -138,11 +159,16 @@ export class BattleScene extends Phaser.Scene {
     this.#activePlayerItem = null
     this.#player = null
     this.#playerMons = []
-    this.#playersThatHadATurn = []
     this.#activePlayerSwitchMon = null
     this.#evolutionPendingMons = []
     this.#postExperienceGainMsgs = []
     this.#itemUsedResult = null
+
+    this.#turnDecisions = {
+      PLAYER: null,
+      ENEMY: null
+    }
+    this.#turnQueue = []
   }
   
   /**
@@ -190,9 +216,18 @@ export class BattleScene extends Phaser.Scene {
   update () {
     this.#battleStateMachine.update()
 
+    if (this.#battleStateMachine.currentStateName === BATTLE_STATES.WAIT_FOR_OTHERS_DECISION) {
+      if (this.#turnDecisions.PLAYER && this.#turnDecisions.ENEMY) {
+        this.#turnQueue = this.#determineTurnOrder()
+        this.#battleStateMachine.setState(BATTLE_STATES.BATTLE)
+      }
+      return
+    }
+
     if (!this.#battleStateMachine.currentStateName.endsWith('_AWAIT_INPUT')) {
       return
     }
+
     const input = this.#getFrameInput(this.#controls)
     this.#handleInputForState(input)
   }
@@ -239,10 +274,35 @@ export class BattleScene extends Phaser.Scene {
 
     this.#battleMenu.handlePlayerInput('OK')
 
-    if (!this.#playerJustSelectedAnAttack() && !this.#playerJustSelectedAnItem() && !this.#playerJustSelectedAMonToSwitch()) {
+    if (this.#playerJustSelectedAnAttack()) {
+      this.#turnDecisions.PLAYER = {
+        actor: BATTLE_PLAYERS.PLAYER,
+        type: TURN_ACTION_TYPES.ATTACK,
+        attackIndex: this.#activePlayerAttackIndex
+      }
+      this.#battleStateMachine.setState(BATTLE_STATES.WAIT_FOR_OTHERS_DECISION)
       return
     }
-    this.#changeToEnemysTurnToPlay()
+
+    if (this.#playerJustSelectedAnItem()) {
+      this.#turnDecisions.PLAYER = {
+        actor: BATTLE_PLAYERS.PLAYER,
+        type: TURN_ACTION_TYPES.ITEM,
+        item: this.#activePlayerItem
+      }
+      this.#battleStateMachine.setState(BATTLE_STATES.WAIT_FOR_OTHERS_DECISION)
+      return
+    }
+
+    if (this.#playerJustSelectedAMonToSwitch()) {
+      this.#turnDecisions.PLAYER = {
+        actor: BATTLE_PLAYERS.PLAYER,
+        type: TURN_ACTION_TYPES.SWITCH,
+        switchTo: this.#activePlayerSwitchMon
+      }
+      this.#battleStateMachine.setState(BATTLE_STATES.WAIT_FOR_OTHERS_DECISION)
+      return
+    }
   }
 
   /**
@@ -294,6 +354,13 @@ export class BattleScene extends Phaser.Scene {
     }
   }
 
+  #prepareForBattleStateSequence() {
+    this.#battleMenu.hideMonAttackSubMenu()
+    this.#battleMenu.hideItemMenu()
+    this.#battleMenu.hidePartyMenu()
+    this.#lastAttackResult = null
+  }
+
 
   #createBattleStateMachine () {
     this.#battleStateMachine = new StateMachine('battle', this)
@@ -302,7 +369,7 @@ export class BattleScene extends Phaser.Scene {
       name: BATTLE_STATES.INTRO,
       onEnter: () => {
         this.#createBattleTrainers()
-        this.#bringOutPlayerTrainer()
+        this.#battlePlayer.playCharacterAppearAnimation()
 
         if (this.#opponentIsWildMon()) {
           this.#battleStateMachine.setState(BATTLE_STATES.WILD_MON_OUT)
@@ -327,7 +394,6 @@ export class BattleScene extends Phaser.Scene {
     this.#battleStateMachine.addState({
       name: BATTLE_STATES.ENEMY_CHOOSE_MON,
       onEnter: () => {
-        this.#resetTurnTracker()
         this.#enemyChooseNextMon()
 
         if (!this.#activeEnemyMon) {
@@ -384,7 +450,6 @@ export class BattleScene extends Phaser.Scene {
     this.#battleStateMachine.addState({
       name: BATTLE_STATES.PLAYER_CHOOSE_MON,
       onEnter: () => {
-        this.#resetTurnTracker()
         this.#playerChooseNextMon()
 
         if (!this.#activePlayerMon) {
@@ -429,63 +494,53 @@ export class BattleScene extends Phaser.Scene {
       name: BATTLE_STATES.PLAYER_DECISION_AWAIT_INPUT,
       onEnter: () => {
         this.#battleMenu.showMainBattleMenu()
+        this.#listenForEnemyDecision()
       }
     })
 
     this.#battleStateMachine.addState({
-      name: BATTLE_STATES.ENEMY_DECISION,
+      name: BATTLE_STATES.WAIT_FOR_OTHERS_DECISION,
       onEnter: () => {
-        this.#battleStateMachine.setState(BATTLE_STATES.BATTLE)
+        this.#prepareForBattleStateSequence()
+        this.#battleMenu.updateInfoPanelMessagesNoInputRequired('Waiting for other player...')
       }
     })
 
     this.#battleStateMachine.addState({
       name: BATTLE_STATES.BATTLE,
       onEnter: () => {
-        this.#lastAttackResult = null
+        this.#prepareForBattleStateSequence()
 
-        this.#battleMenu.hideItemMenu()
-        this.#battleMenu.hidePartyMenu()
+        if (!this.#turnQueue.length) {
+          this.#battleStateMachine.setState(BATTLE_STATES.POST_BATTLE_CHECKS)
+          return
+        }
 
-        if (this.#enemyHadATurn() && this.#playerHadATurn()) {
-          this.#resetTurnTracker()
+        this.#executeDecision(this.#turnQueue.shift())
+      }
+    })
 
-          this.#checkPostBattleTurnMonStatusEffect(this.#activePlayerMon, () => {
+    this.#battleStateMachine.addState({
+      name: BATTLE_STATES.POST_BATTLE_CHECKS,
+      onEnter: () => {
+        this.#turnDecisions.PLAYER = null
+        this.#turnDecisions.ENEMY = null
 
-            if (this.#activePlayerMon.isFainted) {
-              this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_MON_FAINTED)
+        this.#checkPostBattleTurnMonStatusEffect(this.#activePlayerMon, () => {
+          if (this.#activePlayerMon.isFainted) {
+            this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_MON_FAINTED)
+            return
+          }
+
+          this.#checkPostBattleTurnMonStatusEffect(this.#activeEnemyMon, () => {
+            if (this.#activeEnemyMon.isFainted) {
+              this.#battleStateMachine.setState(BATTLE_STATES.ENEMY_MON_FAINTED)
               return
             }
 
-            this.#checkPostBattleTurnMonStatusEffect(this.#activeEnemyMon, () => {
-
-              if (this.#activeEnemyMon.isFainted) {
-                this.#battleStateMachine.setState(BATTLE_STATES.ENEMY_MON_FAINTED)
-                return
-              }
-
-              this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_DECISION_AWAIT_INPUT)
-            })
+            this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_DECISION_AWAIT_INPUT)
           })
-          return
-        }
-
-        if (!this.#enemyHadATurn() && !this.#playerHadATurn()) {
-          this.#determineAndTakeFirstTurn()
-          return
-        }
-
-        if (this.#enemyHadATurn()) {
-          this.#playersThatHadATurn.push(BATTLE_PLAYERS.PLAYER)
-          this.#playPlayersTurnSequence()
-          return
-        }
-
-        if (this.#playerHadATurn()) {
-          this.#playersThatHadATurn.push(BATTLE_PLAYERS.ENEMY)
-          this.#playEnemysTurnSequence()
-          return
-        }
+        })
       }
     })
 
@@ -566,7 +621,7 @@ export class BattleScene extends Phaser.Scene {
       onEnter: () => {
         const { msg, wasSuccessful } = this.#itemUsedResult
         this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([msg], () => {
-          // check if enemy mon was captureD
+          // check if enemy mon was captured
           if (this.#activePlayerItem.typeKey === ITEM_TYPE_KEY.BALL && wasSuccessful) {
             this.#addWildMonToParty()
             this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
@@ -639,7 +694,6 @@ export class BattleScene extends Phaser.Scene {
     this.#battleStateMachine.addState({
       name: BATTLE_STATES.FINISHED,
       onEnter: () => {
-        this.#resetTurnTracker()
         this.#resetBattleMons()
         this.#transitionToNextScene()
       }
@@ -862,20 +916,25 @@ export class BattleScene extends Phaser.Scene {
     })
   }
 
-  /**
-   * 
-   * @returns {import('../types/typedef.js').Attack}
-   */
-  #getEnemyAttack () {
-    return this.#activeEnemyMon.attacks[Phaser.Math.Between(0, this.#activeEnemyMon.attacks.length - 1)]
+  // web socklet listener for multiplayer..? TODO
+  #listenForEnemyDecision () {
+    if (this.#activeEnemyMon.isFainted) {
+      return
+    }
+    const simMultiplayer = true
+
+    this.time.delayedCall(simMultiplayer ? 3000 : 0, () => {
+      // query battle trainer for smart decision, etc TODO
+      this.#turnDecisions.ENEMY = {
+        actor: BATTLE_PLAYERS.ENEMY,
+        type: TURN_ACTION_TYPES.ATTACK,
+        attackIndex: Phaser.Math.Between(0, this.#activeEnemyMon.attacks.length - 1)
+      }
+    })
   }
 
 
   #enemyAttack() {
-    if (this.#activeEnemyMon.isFainted) {
-      return
-    }
-
     this.#checkPreAttackMonStatusEffect(this.#activeEnemyMon, (canAttack) => {
 
       if (!canAttack) {
@@ -883,7 +942,7 @@ export class BattleScene extends Phaser.Scene {
         return
       }
 
-      const attack = this.#getEnemyAttack()
+      const attack = this.#activeEnemyMon.attacks[this.#turnDecisions.ENEMY.attackIndex]
       this.#announceAttack(this.#activeEnemyMon, attack, () => {
         this.#attackManager.playAttackSequence(
           this.#activeEnemyMon,
@@ -1004,35 +1063,16 @@ export class BattleScene extends Phaser.Scene {
     })
   }
 
-  #playPlayersTurnSequence () {
-    if (this.#activePlayerMon.isFainted) {
-      return
-    }
-
-    if (this.#playerAttackWasSelected()) {
-      this.#playerAttack()
-      return
-    }
-    if (this.#playerItemWasSelected()) {
-      this.#playerUseItem()
-      return
-    }
-    if (this.#playerMonToSwitchWasSelected()) {
-      this.#playerSwitchMon()
-      return
-    }
-  }
-
   #playerUseItem () {
     this.#itemUsedResult = null
     this.#battleMenu.hideItemMenu()
-    this.#battleMenu.updateInfoPanelMessagesNoInputRequired(`${this.#battlePlayer.name} used ${this.#activePlayerItem.name}.`, {
+    this.#battleMenu.updateInfoPanelMessagesNoInputRequired(`${this.#battlePlayer.name} used ${this.#turnDecisions.PLAYER.item.name}.`, {
       delayCallbackMs: 500,
       callback: () => {
         playItemEffect(this, {
           mon: this.#activePlayerMon,
           enemyMon: this.#activeEnemyMon,
-          item: this.#activePlayerItem,
+          item: this.#turnDecisions.PLAYER.item,
           callback: (res) => {
             this.#itemUsedResult = res
             this.#battleStateMachine.setState(BATTLE_STATES.ITEM_USED_AWAIT_INPUT)
@@ -1047,21 +1087,13 @@ export class BattleScene extends Phaser.Scene {
     this.#battleMenu.updateInfoPanelMessagesNoInputRequired(`Come back, ${this.#activePlayerMon.name}.`, {
       callback: () => {
         this.#activePlayerMon.playMonSwitchedOutAnimation(() => {
-          this.#activePlayerMon = this.#playerMons.find(battleMon => battleMon.id === this.#activePlayerSwitchMon.id)
+          this.#activePlayerMon = this.#playerMons.find(battleMon => battleMon.id === this.#turnDecisions.PLAYER.switchTo.id)
           this.#activePlayerSwitchMon = null
           this.#setPlayerMonToBattleMenu()
           this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_SWITCH)
         })
       }
     })
-  }
-
-  #playEnemysTurnSequence () {
-    if (this.#activeEnemyMon.isFainted) {
-      return
-    }
-    // query battle trainer for smart decision, etc TODO
-    this.#enemyAttack()
   }
       
   #setUpBattleMons () {
@@ -1108,14 +1140,6 @@ export class BattleScene extends Phaser.Scene {
    */
   #playerJustSelectedAnAttack () {
     this.#activePlayerAttackIndex = this.#battleMenu.selectedAttack
-    return this.#playerAttackWasSelected()
-  }
-
-  /**
-   * 
-   * @returns {boolean}
-   */
-  #playerAttackWasSelected () {
     return !!this.#activePlayerMon.attacks[this.#activePlayerAttackIndex]
   }
 
@@ -1125,14 +1149,6 @@ export class BattleScene extends Phaser.Scene {
    */
   #playerJustSelectedAMonToSwitch () {
     this.#activePlayerSwitchMon = this.#battleMenu.selectedMonToSwitchTo
-    return this.#playerMonToSwitchWasSelected()
-  }
-
-  /**
-   * 
-   * @returns {boolean}
-   */
-  #playerMonToSwitchWasSelected () {
     return !!this.#activePlayerSwitchMon
   }
 
@@ -1142,20 +1158,7 @@ export class BattleScene extends Phaser.Scene {
    */
   #playerJustSelectedAnItem () {
     this.#activePlayerItem = this.#battleMenu.selectedItem
-    return this.#playerItemWasSelected()
-  }
-
-  /**
-   * 
-   * @returns {boolean}
-   */
-  #playerItemWasSelected () {
     return !!this.#activePlayerItem
-  }
-
-  #changeToEnemysTurnToPlay () {
-    this.#battleMenu.hideMonAttackSubMenu()
-    this.#battleStateMachine.setState(BATTLE_STATES.ENEMY_DECISION)
   }
 
   /**
@@ -1179,10 +1182,6 @@ export class BattleScene extends Phaser.Scene {
     })
   }
 
-  #bringOutPlayerTrainer () {
-    this.#battlePlayer.playCharacterAppearAnimation()
-  }
-
   /**
    * 
    * @param {() => void} callback 
@@ -1201,10 +1200,6 @@ export class BattleScene extends Phaser.Scene {
     this.#activeEnemyMon = null
     this.#enemyBattleTrainer.showRemainingMons()
     this.#activeEnemyMon = this.#opponentMons.find(mon => !mon.isFainted)
-  }
-
-  #resetTurnTracker () {
-    this.#playersThatHadATurn = []
   }
 
   /**
@@ -1270,31 +1265,69 @@ export class BattleScene extends Phaser.Scene {
     return this.#battlePlayer.characterSpriteShowing
   }
 
-  /**
-   * 
-   * @returns {boolean}
-   */
-  #enemyWonFirstTurn () {
-    return this.#activeEnemyMon.monStats.speed > this.#activePlayerMon.monStats.speed
-  }
+  #determineTurnOrder () {
+    const player = this.#turnDecisions.PLAYER
+    const enemy = this.#turnDecisions.ENEMY
 
-  #determineAndTakeFirstTurn () {
-    if (this.#enemyWonFirstTurn()) {
-      this.#playersThatHadATurn.push(BATTLE_PLAYERS.ENEMY)
-      this.#playEnemysTurnSequence()
-      return
+    // non-attacks go first
+    if (player.type !== TURN_ACTION_TYPES.ATTACK && enemy.type === TURN_ACTION_TYPES.ATTACK) {
+      return [player, enemy]
     }
-    this.#playersThatHadATurn.push(BATTLE_PLAYERS.PLAYER)
-    this.#playPlayersTurnSequence()
-    return
+    if (enemy.type !== TURN_ACTION_TYPES.ATTACK && player.type === TURN_ACTION_TYPES.ATTACK) {
+      return [enemy, player]
+    }
+
+    // both non-attack, go by submission order
+    if (player.type !== TURN_ACTION_TYPES.ATTACK && enemy.type !== TURN_ACTION_TYPES.ATTACK) {
+      return [player, enemy] // by timestamp-based for multiplayer TODO
+    }
+
+    // both attacking, go by speed
+    if (this.#activePlayerMon.monStats.speed > this.#activeEnemyMon.monStats.speed) {
+      return [player, enemy]
+    }
+    if (this.#activeEnemyMon.monStats.speed > this.#activePlayerMon.monStats.speed) {
+      return [enemy, player]
+    }
+
+    // tie breaker
+    return Phaser.Math.Between(0, 1) === 0 ? [player, enemy] : [enemy, player]
   }
 
-  #enemyHadATurn () {
-    return this.#playersThatHadATurn.includes(BATTLE_PLAYERS.ENEMY)
-  }
+  /**
+   * @param {TurnDecision} decision 
+   */
+  #executeDecision (decision) {
+    switch (decision.type) {
+      case TURN_ACTION_TYPES.ATTACK:
+        if (decision.actor === BATTLE_PLAYERS.PLAYER) {
+          this.#playerAttack()
+          return
+        }
+        this.#enemyAttack()
+        break
+      case TURN_ACTION_TYPES.ITEM:
+        if (decision.actor === BATTLE_PLAYERS.PLAYER) {
+          this.#playerUseItem()
+          return
+        }
+        // this.#enemyUseItem()
+        break
+      case 'SWITCH':
+        if (decision.actor === BATTLE_PLAYERS.PLAYER) {
+          this.#playerSwitchMon()
+        return
+        }
+        // this.#enemySwitchMon()
+        break
 
-  #playerHadATurn () {
-    return this.#playersThatHadATurn.includes(BATTLE_PLAYERS.PLAYER)
+      case 'RUN':
+        this.#battleStateMachine.setState(BATTLE_STATES.RUN_ATTEMPT_AWAIT_INPUT)
+        break
+      default:
+        exhaustiveGuard(decision.type)
+        break
+    }
   }
 
   /**
