@@ -502,7 +502,7 @@ export class BattleScene extends Phaser.Scene {
       name: BATTLE_STATES.WAIT_FOR_OTHERS_DECISION,
       onEnter: () => {
         this.#prepareForBattleStateSequence()
-        this.#battleMenu.updateInfoPanelMessagesNoInputRequired('Waiting for other player...')
+        this.#battleMenu.updateInfoPanelMessagesNoInputRequired('Waiting for other player...', { skipAnimation: true })
       }
     })
 
@@ -619,14 +619,20 @@ export class BattleScene extends Phaser.Scene {
     this.#battleStateMachine.addState({
       name: BATTLE_STATES.ITEM_USED_AWAIT_INPUT,
       onEnter: () => {
-        const { msg, wasSuccessful } = this.#itemUsedResult
+        const { msg, wasSuccessful, wasUsed } = this.#itemUsedResult
         this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([msg], () => {
+          if (!wasUsed) {
+            this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_DECISION_AWAIT_INPUT)
+            return
+          }
+
           // check if enemy mon was captured
           if (this.#activePlayerItem.typeKey === ITEM_TYPE_KEY.BALL && wasSuccessful) {
             this.#addWildMonToParty()
             this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
             return
           }
+
           this.#battleStateMachine.setState(BATTLE_STATES.BATTLE)
         }, SKIP_ANIMATIONS)
       }
