@@ -95,7 +95,7 @@ export class WorldScene extends Phaser.Scene {
 
   init () {
     this.#resetSceneChangingFlags()
-    this.#bgmKey = BGM_ASSET_KEYS.ROUTE_24
+    this.#bgmKey = BGM_ASSET_KEYS.CELADON_CITY
   }
 
   preload () {

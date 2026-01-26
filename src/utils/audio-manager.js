@@ -1,4 +1,4 @@
-import { VOLUME } from "../../config.js"
+import { BGM_VOLUME, VOLUME } from "../../config.js"
 
 export class AudioManager {
   /** @type {Phaser.Scene} */
@@ -33,7 +33,7 @@ export class AudioManager {
       this.#scene.sound.removeByKey(key)
     }
     this.#bgm = this.#scene.sound.add(key)
-    this.#bgm.setVolume(VOLUME)
+    this.#bgm.setVolume(BGM_VOLUME)
     this.#bgm.play({ loop: true })
   }
 
@@ -59,7 +59,7 @@ export class AudioManager {
   playSfx (key, config) {
     let sfxVolume = VOLUME / 3
     if (this.#bgm?.isPlaying && config?.primaryAudio) {
-      this.#bgm.setVolume(VOLUME / 2)
+      this.#bgm.setVolume(BGM_VOLUME / 2)
     }
     this.#sfxIsPlaying = true
     this.#sfx = this.#scene.sound.add(key)
@@ -68,7 +68,7 @@ export class AudioManager {
     this.#sfx.once('complete', () => {
       this.#sfxIsPlaying = false
       if (this.#bgm?.isPlaying) {
-        this.#bgm.setVolume(VOLUME)
+        this.#bgm.setVolume(BGM_VOLUME)
       }
       if (config?.callback) {
         config.callback()
