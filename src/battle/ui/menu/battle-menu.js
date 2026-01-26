@@ -275,27 +275,28 @@ export class BattleMenu {
    * @param {boolean} [skipAnimation=false]
    */
   updateInfoPanelMessagesAndWaitForInput (messages, callback, skipAnimation = false) {
-    this.#scene.time.delayedCall(100, () => {
-      this.#queuedInfoPanelMessages = messages
-      this.#queuedInfoPanelCallback = callback
-      this.#queuedMessageSkipAnimation = SKIP_ANIMATIONS || skipAnimation
+    this.#queuedInfoPanelMessages = messages
+    this.#queuedInfoPanelCallback = callback
+    this.#queuedMessageSkipAnimation = SKIP_ANIMATIONS || skipAnimation
 
-      this.#updateInfoPaneWithMessage()
-    })
+    this.#updateInfoPaneWithMessage()
   }
 
   /**
    * 
-   * @param {string} message 
-   * @param {() => void} [callback]
-   * @param {boolean} [skipAnimation=false]
+   * @param {string} message
+   * @param {object} [config]
+   * @param {() => void} [config.callback]
+   * @param {boolean} [config.skipAnimation=false]
+   * @param {number} [config.delayCallbackMs=0]
    */
-  updateInfoPanelMessagesNoInputRequired (message, callback, skipAnimation = false) {
+  updateInfoPanelMessagesNoInputRequired (message, config) {
+    const { callback, skipAnimation = false, delayCallbackMs = 0 } = config
+
     this.#queuedMessageAnimationPlaying = true
     this.#battleTextGameObjectLine1.setText('').setAlpha(1)
-    skipAnimation = skipAnimation || SKIP_ANIMATIONS
 
-    if (skipAnimation) {
+    if (skipAnimation || SKIP_ANIMATIONS) {
       this.#battleTextGameObjectLine1.setText(message)
       this.#waitingForPlayerInput = false
       this.#queuedMessageAnimationPlaying = false
@@ -304,15 +305,15 @@ export class BattleMenu {
       }
       return
     }
-
     animateText(this.#scene, this.#battleTextGameObjectLine1, message, {
-      delay: 25,
       callback: () => {
-        this.#waitingForPlayerInput = false
-        this.#queuedMessageAnimationPlaying = false
-        if (callback) {
-          callback()
-        }
+        this.#scene.time.delayedCall(delayCallbackMs, () => {
+          this.#waitingForPlayerInput = false
+          this.#queuedMessageAnimationPlaying = false
+          if (callback) {
+            callback()
+          }
+        })
       }
     })
   }
@@ -344,7 +345,6 @@ export class BattleMenu {
     
     this.#queuedMessageAnimationPlaying = true
     animateText(this.#scene, this.#battleTextGameObjectLine1, messageToDisplay, {
-      delay: 25,
       callback: () => {
         this.#waitingForPlayerInput = true
         this.#queuedMessageAnimationPlaying = false

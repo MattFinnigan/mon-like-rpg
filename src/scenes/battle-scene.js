@@ -11,7 +11,7 @@ import { Controls } from '../utils/controls.js'
 import { BattleTrainer } from '../battle/characters/battle-trainer.js'
 import { EVENT_KEYS } from '../types/event-keys.js'
 import { AudioManager } from '../utils/audio-manager.js'
-import { BATTLE_ASSET_KEYS, BGM_ASSET_KEYS, MON_BALLS, SFX_ASSET_KEYS, TRAINER_SPRITES } from '../assets/asset-keys.js'
+import { BGM_ASSET_KEYS, SFX_ASSET_KEYS, TRAINER_SPRITES } from '../assets/asset-keys.js'
 import { BattlePlayer } from '../battle/characters/battle-player.js'
 import { DATA_MANAGER_STORE_KEYS, dataManager } from '../utils/data-manager.js'
 import { BattleMon } from '../battle/mons/battle-mon.js'
@@ -26,33 +26,37 @@ import { loadBaseMonAssets } from '../utils/load-assets.js'
 import { LearnAttackManager } from '../common/learn-attack-mananger.js'
 import { STATUS_EFFECT } from '../types/status-effect.js'
 import { exhaustiveGuard } from '../utils/guard.js'
-import { BACKGROUND_ASSETS_PATH, BATTLE_ASSETS_PATH, BGM_ASSETS_PATH, MON_BALL_ANIMS_ASSETS_PATH, SFX_ASSETS_PATH } from '../utils/consts.js'
+import { BGM_ASSETS_PATH} from '../utils/consts.js'
 
 
 /** @enum {object} */
 const BATTLE_STATES = Object.freeze({
   INTRO: 'INTRO',
-  PRE_BATTLE_INFO: 'PRE_BATTLE_INFO',
+  INTRO_AWAIT_INPUT: 'INTRO_AWAIT_INPUT',
   WILD_MON_OUT: 'WILD_MON_OUT',
+  WILD_MON_OUT_AWAIT_INPUT: 'WILD_MON_OUT_AWAIT_INPUT',
   ENEMY_MON_OUT: 'ENEMY_MON_OUT',
   PLAYER_MON_OUT: 'PLAYER_MON_OUT',
-  PLAYERS_PLAY: 'PLAYERS_PLAY',
-  ENEMYS_PLAY: 'ENEMYS_PLAY',
+  PLAYER_DECISION_AWAIT_INPUT: 'PLAYER_DECISION_AWAIT_INPUT',
+  ENEMY_DECISION: 'ENEMY_DECISION',
   BATTLE: 'BATTLE',
-  POST_ATTACK: 'POST_ATTACK',
+  POST_ATTACK_AWAIT_INPUT: 'POST_ATTACK_AWAIT_INPUT',
   FINISHED: 'FINISHED',
-  RUN_ATTEMPT: 'RUN_ATTEMPT',
+  RUN_ATTEMPT_AWAIT_INPUT: 'RUN_ATTEMPT_AWAIT_INPUT',
   ENEMY_CHOOSE_MON: 'ENEMY_CHOOSE_MON',
   PLAYER_CHOOSE_MON: 'PLAYER_CHOOSE_MON',
-  PLAYER_VICTORY: 'PLAYER_VICTORY',
+  PLAYER_VICTORY_AWAIT_INPUT: 'PLAYER_VICTORY_AWAIT_INPUT',
   PLAYER_DEFEATED: 'PLAYER_DEFEATED',
-  ITEM_USED: 'ITEM_USED',
-  POST_ITEM_USED: 'POST_ITEM_USED',
+  PLAYER_DEFEATED_AWAIT_INPUT: 'PLAYER_DEFEATED_AWAIT_INPUT',
+  ITEM_USED_AWAIT_INPUT: 'ITEM_USED_AWAIT_INPUT',
   PLAYER_SWITCH: 'PLAYER_SWITCH',
-  GAINING_EXPERIENCE: 'GAINING_EXPERIENCE',
-  POST_EXPERIENCE_GAINED: 'POST_EXPERIENCE_GAINED',
-  STATUS_EFFECT_CHECK: 'STATUS_EFFECT_CHECK',
-  MON_FAINTED: 'MON_FAINTED'
+  GAIN_EXP: 'GAIN_EXP',
+  GAIN_EXP_AWAIT_INPUT: 'GAIN_EXP_AWAIT_INPUT',
+  ENEMY_MON_FAINTED: 'ENEMY_MON_FAINTED',
+  ENEMY_MON_FAINTED_AWAIT_INPUT: 'ENEMY_MON_FAINTED_AWAIT_INPUT',
+  WILD_ENEMY_MON_FAINTED_AWAIT_INPUT: 'WILD_ENEMY_MON_FAINTED_AWAIT_INPUT',
+  PLAYER_MON_FAINTED: 'PLAYER_MON_FAINTED',
+  PLAYER_MON_FAINTED_AWAIT_INPUT: 'PLAYER_MON_FAINTED_AWAIT_INPUT',
 })
 
 /** @enum {object} */
@@ -60,6 +64,13 @@ const BATTLE_PLAYERS = Object.freeze({
   PLAYER: 'PLAYER',
   ENEMY: 'ENEMY'
 })
+
+/**
+ * @typedef {object} FrameInput
+ * @property {boolean} ok
+ * @property {boolean} cancel
+ * @property {import('../types/direction.js').Direction} direction
+ */
 
 
 export class BattleScene extends Phaser.Scene {
@@ -105,9 +116,12 @@ export class BattleScene extends Phaser.Scene {
   #activePlayerSwitchMon
   /** @type {import('../types/typedef.js').Mon[]} */
   #evolutionPendingMons
+  /** @type {string[]} */
   #postExperienceGainMsgs
   /** @type {LearnAttackManager} */
   #learnAttackManager
+  /** @type {import('../types/typedef.js').ItemUsedResult} */
+  #itemUsedResult
 
   /**
    * @type {object}
@@ -128,6 +142,7 @@ export class BattleScene extends Phaser.Scene {
     this.#activePlayerSwitchMon = null
     this.#evolutionPendingMons = []
     this.#postExperienceGainMsgs = []
+    this.#itemUsedResult = null
   }
   
   /**
@@ -168,62 +183,469 @@ export class BattleScene extends Phaser.Scene {
     this.#createBattleStateMachine()
 
     this.events.on(EVENT_KEYS.BATTLE_RUN_ATTEMPT, () => {
-      this.#battleStateMachine.setState(BATTLE_STATES.RUN_ATTEMPT)
+      this.#battleStateMachine.setState(BATTLE_STATES.RUN_ATTEMPT_AWAIT_INPUT)
     })
   }
 
   update () {
     this.#battleStateMachine.update()
-    const wasSpaceKeyPresed = this.#controls.wasSpaceKeyPressed()
-    const wasBackKeyPressed = this.#controls.wasBackKeyPressed()
-    const selectedDirection = this.#controls.getDirectionKeyJustPressed()
-  
-    if (this.#learnAttackManager.learningNewAttack) {
-      if (wasSpaceKeyPresed) {
-        this.#learnAttackManager.handlePlayerInput('OK')
-        return
-      }
 
-      if (wasBackKeyPressed) {
-        this.#learnAttackManager.handlePlayerInput('CANCEL')
-        return
-      }
-
-      if (selectedDirection !== DIRECTION.NONE) {
-        this.#learnAttackManager.handlePlayerInput(selectedDirection)
-      }
+    if (!this.#battleStateMachine.currentStateName.endsWith('_AWAIT_INPUT')) {
       return
     }
-    
-    if (wasSpaceKeyPresed && this.#needsOkInputToContinue()) {
-      this.#battleMenu.handlePlayerInput('OK')
-      return
-    }
+    const input = this.#getFrameInput(this.#controls)
+    this.#handleInputForState(input)
+  }
 
-    if (!this.#waitingForPlayerToTakeTurn()) {
-      return
+  /**
+   * 
+   * @param {FrameInput} input
+   */
+  #handleInputForState (input) {
+    switch (this.#battleStateMachine.currentStateName) {
+      case BATTLE_STATES.PLAYER_DECISION_AWAIT_INPUT:
+        this.#routePlayersDecisionInput(input)
+        break
+      case BATTLE_STATES.GAIN_EXP_AWAIT_INPUT:
+        if (this.#learnAttackManager.learningNewAttack) {
+          this.#routeLearnAttackInput(input)
+          return
+        }
+        this.#routeBattleMenuDialogOk(input)
+        break
+      default:
+        this.#routeBattleMenuDialogOk(input)
+        break
     }
+  }
 
-    if (wasBackKeyPressed) {
+  /**
+   * @param {FrameInput} input 
+   */
+  #routePlayersDecisionInput (input) {
+    if (input.cancel) {
       this.#battleMenu.handlePlayerInput('CANCEL')
       return
     }
 
-    
-    if (selectedDirection !== DIRECTION.NONE) {
-      this.#battleMenu.handlePlayerInput(selectedDirection)
-    }
-
-    if (wasSpaceKeyPresed) {
-      this.#battleMenu.handlePlayerInput('OK')
-
-      if (!this.#playerJustSelectedAnAttack() && !this.#playerJustSelectedAnItem() && !this.#playerJustSelectedAMonToSwitch()) {
-        return
-      }
-
-      this.#changeToEnemysTurnToPlay()
+    if (input.direction !== DIRECTION.NONE) {
+      this.#battleMenu.handlePlayerInput(input.direction)
       return
     }
+
+    if (!input.ok) {
+      return
+    }
+
+    this.#battleMenu.handlePlayerInput('OK')
+
+    if (!this.#playerJustSelectedAnAttack() && !this.#playerJustSelectedAnItem() && !this.#playerJustSelectedAMonToSwitch()) {
+      return
+    }
+    this.#changeToEnemysTurnToPlay()
+  }
+
+  /**
+   * 
+   * @param {FrameInput} input
+   * @returns {boolean}
+   */
+  #routeLearnAttackInput (input) {
+    if (this.#learnAttackManager.learningNewAttack) {
+      if (input.ok) {
+        this.#learnAttackManager.handlePlayerInput('OK')
+        return true
+      }
+
+      if (input.cancel) {
+        this.#learnAttackManager.handlePlayerInput('CANCEL')
+        return true
+      }
+
+      if (input.direction !== DIRECTION.NONE) {
+        this.#learnAttackManager.handlePlayerInput(input.direction)
+      }
+      return true
+    }
+    return false
+  }
+
+  /**
+   * 
+   * @param {FrameInput} input
+   * @returns {boolean}
+   */
+  #routeBattleMenuDialogOk (input) {
+    if (input.ok || input.cancel) {
+      this.#battleMenu.handlePlayerInput('OK')
+      return
+    }
+  }
+
+  /**
+   * 
+   * @returns {FrameInput}
+   */
+  #getFrameInput (controls) {
+    return {
+      ok: controls.wasSpaceKeyPressed(),
+      cancel: controls.wasBackKeyPressed(),
+      direction: controls.getDirectionKeyJustPressed()
+    }
+  }
+
+
+  #createBattleStateMachine () {
+    this.#battleStateMachine = new StateMachine('battle', this)
+  
+    this.#battleStateMachine.addState({
+      name: BATTLE_STATES.INTRO,
+      onEnter: () => {
+        this.#createBattleTrainers()
+        this.#bringOutPlayerTrainer()
+
+        if (this.#opponentIsWildMon()) {
+          this.#battleStateMachine.setState(BATTLE_STATES.WILD_MON_OUT)
+          return
+        }
+
+        this.#enemyBattleTrainer.playCharacterAppearAnimation(() => {
+          this.#battleStateMachine.setState(BATTLE_STATES.INTRO_AWAIT_INPUT)
+        })
+      }
+    })
+  
+    this.#battleStateMachine.addState({
+      name: BATTLE_STATES.INTRO_AWAIT_INPUT,
+      onEnter: () => {
+        this.#introduceEnemyTrainer(() => {
+          this.#battleStateMachine.setState(BATTLE_STATES.ENEMY_CHOOSE_MON)
+        })
+      }
+    })
+
+    this.#battleStateMachine.addState({
+      name: BATTLE_STATES.ENEMY_CHOOSE_MON,
+      onEnter: () => {
+        this.#resetTurnTracker()
+        this.#enemyChooseNextMon()
+
+        if (!this.#activeEnemyMon) {
+          this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_VICTORY_AWAIT_INPUT)
+          return
+        }
+
+        let simulateTimeToChoose = 750
+        if (this.#battleJustStarted()) {
+          simulateTimeToChoose = 100
+        }
+        
+        this.time.delayedCall(simulateTimeToChoose, () => {
+          this.#battleStateMachine.setState(BATTLE_STATES.ENEMY_MON_OUT)
+        })
+      }
+    })
+
+    this.#battleStateMachine.addState({
+      name: BATTLE_STATES.ENEMY_MON_OUT,
+      onEnter: () => {
+        this.#attackManager.enemyMonImageGameObject = this.#activeEnemyMon.phaserMonImageGameObject
+        this.#hideEnemyTrainer(() => {
+          this.#introduceEnemyMon(() => {
+            if (!this.#activePlayerMon) {
+              this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_CHOOSE_MON)
+              return
+            }
+            this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_DECISION_AWAIT_INPUT)
+          })
+        })
+      }
+    })
+
+    this.#battleStateMachine.addState({
+      name: BATTLE_STATES.WILD_MON_OUT,
+      onEnter: () => {
+        this.#attackManager.enemyMonImageGameObject = this.#activeEnemyMon.phaserMonImageGameObject
+        this.#activeEnemyMon.playMonAppearAnimation(() => {
+          this.#battleStateMachine.setState(BATTLE_STATES.WILD_MON_OUT_AWAIT_INPUT)
+        })
+      }
+    })
+
+    this.#battleStateMachine.addState({
+      name: BATTLE_STATES.WILD_MON_OUT_AWAIT_INPUT,
+      onEnter: () => {
+        this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`Wild ${this.#activeEnemyMon.name} appeared!`], () => {
+          this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_CHOOSE_MON)
+        }, SKIP_ANIMATIONS)
+      }
+    })
+
+    this.#battleStateMachine.addState({
+      name: BATTLE_STATES.PLAYER_CHOOSE_MON,
+      onEnter: () => {
+        this.#resetTurnTracker()
+        this.#playerChooseNextMon()
+
+        if (!this.#activePlayerMon) {
+          this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_DEFEATED)
+          return
+        }
+        
+        let simulateTimeToChoose = 750
+        if (this.#battleJustStarted()) {
+          simulateTimeToChoose = 100
+        }
+        
+        this.time.delayedCall(simulateTimeToChoose, () => {
+          this.#setPlayerMonToBattleMenu()
+          this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_MON_OUT)
+        })
+      }
+    })
+
+    this.#battleStateMachine.addState({
+      name: BATTLE_STATES.PLAYER_MON_OUT,
+      onEnter: () => {
+        this.#attackManager.playerMonImageGameObject = this.#activePlayerMon.phaserMonImageGameObject
+        this.#hidePlayerTrainer(() => {
+          this.#introducePlayerMon(() => {
+            this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_DECISION_AWAIT_INPUT)
+          })
+        })
+      }
+    })
+
+    this.#battleStateMachine.addState({
+      name: BATTLE_STATES.PLAYER_SWITCH,
+      onEnter: () => {
+        this.#introducePlayerMon(() => {
+          this.#battleStateMachine.setState(BATTLE_STATES.BATTLE)
+        })
+      }
+    })
+
+    this.#battleStateMachine.addState({
+      name: BATTLE_STATES.PLAYER_DECISION_AWAIT_INPUT,
+      onEnter: () => {
+        this.#battleMenu.showMainBattleMenu()
+      }
+    })
+
+    this.#battleStateMachine.addState({
+      name: BATTLE_STATES.ENEMY_DECISION,
+      onEnter: () => {
+        this.#battleStateMachine.setState(BATTLE_STATES.BATTLE)
+      }
+    })
+
+    this.#battleStateMachine.addState({
+      name: BATTLE_STATES.BATTLE,
+      onEnter: () => {
+        this.#lastAttackResult = null
+
+        this.#battleMenu.hideItemMenu()
+        this.#battleMenu.hidePartyMenu()
+
+        if (this.#enemyHadATurn() && this.#playerHadATurn()) {
+          this.#resetTurnTracker()
+
+          this.#checkPostBattleTurnMonStatusEffect(this.#activePlayerMon, () => {
+
+            if (this.#activePlayerMon.isFainted) {
+              this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_MON_FAINTED)
+              return
+            }
+
+            this.#checkPostBattleTurnMonStatusEffect(this.#activeEnemyMon, () => {
+
+              if (this.#activeEnemyMon.isFainted) {
+                this.#battleStateMachine.setState(BATTLE_STATES.ENEMY_MON_FAINTED)
+                return
+              }
+
+              this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_DECISION_AWAIT_INPUT)
+            })
+          })
+          return
+        }
+
+        if (!this.#enemyHadATurn() && !this.#playerHadATurn()) {
+          this.#determineAndTakeFirstTurn()
+          return
+        }
+
+        if (this.#enemyHadATurn()) {
+          this.#playersThatHadATurn.push(BATTLE_PLAYERS.PLAYER)
+          this.#playPlayersTurnSequence()
+          return
+        }
+
+        if (this.#playerHadATurn()) {
+          this.#playersThatHadATurn.push(BATTLE_PLAYERS.ENEMY)
+          this.#playEnemysTurnSequence()
+          return
+        }
+      }
+    })
+
+    this.#battleStateMachine.addState({
+      name: BATTLE_STATES.POST_ATTACK_AWAIT_INPUT,
+      onEnter: () => {
+        this.#announceAttackEffects(() => {
+          if (this.#activeEnemyMon.isFainted) {
+            this.#battleStateMachine.setState(BATTLE_STATES.ENEMY_MON_FAINTED)
+            return
+          }
+
+          if (this.#activePlayerMon.isFainted) {
+            this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_MON_FAINTED)
+            return
+          }
+          
+          this.#battleStateMachine.setState(BATTLE_STATES.BATTLE)
+        })
+      }
+    })
+
+    this.#battleStateMachine.addState({
+      name: BATTLE_STATES.ENEMY_MON_FAINTED,
+      onEnter: () => {
+        this.#activeEnemyMon.playDeathAnimation(() => {
+          if (this.#opponentIsWildMon()) {
+            this.#audioManager.playBgm(this.#victoryBgmKey)
+            this.#battleStateMachine.setState(BATTLE_STATES.WILD_ENEMY_MON_FAINTED_AWAIT_INPUT)
+            return
+          }
+          this.#enemyBattleTrainer.redrawRemainingMonsGameObject()
+          this.#battleStateMachine.setState(BATTLE_STATES.ENEMY_MON_FAINTED_AWAIT_INPUT)
+        })
+      }
+    })
+
+    this.#battleStateMachine.addState({
+      name: BATTLE_STATES.WILD_ENEMY_MON_FAINTED_AWAIT_INPUT,
+      onEnter: () => {
+        this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`Wild ${this.#activeEnemyMon.name} fainted!`], () => {
+          this.#battleStateMachine.setState(BATTLE_STATES.GAIN_EXP)
+        }, SKIP_ANIMATIONS)
+      }
+    })
+
+    this.#battleStateMachine.addState({
+      name: BATTLE_STATES.ENEMY_MON_FAINTED_AWAIT_INPUT,
+      onEnter: () => {
+        this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`Foe's ${this.#activeEnemyMon.name} fainted!`], () => {
+          this.#battleStateMachine.setState(BATTLE_STATES.GAIN_EXP)
+        }, SKIP_ANIMATIONS)
+      }
+    })
+
+    this.#battleStateMachine.addState({
+      name: BATTLE_STATES.PLAYER_MON_FAINTED,
+      onEnter: () => {
+        this.#battlePlayer.redrawRemainingMonsGameObject(true)
+        this.#activePlayerMon.playDeathAnimation(() => {
+          this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_MON_FAINTED_AWAIT_INPUT)
+        })
+      }
+    })
+
+    this.#battleStateMachine.addState({
+      name: BATTLE_STATES.PLAYER_MON_FAINTED_AWAIT_INPUT,
+      onEnter: () => {
+        this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`${this.#activePlayerMon.name} fainted!`], () => {
+          this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_CHOOSE_MON)
+        }, SKIP_ANIMATIONS)
+      }
+    })
+
+
+    this.#battleStateMachine.addState({
+      name: BATTLE_STATES.ITEM_USED_AWAIT_INPUT,
+      onEnter: () => {
+        const { msg, wasSuccessful } = this.#itemUsedResult
+        this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([msg], () => {
+          // check if enemy mon was captureD
+          if (this.#activePlayerItem.typeKey === ITEM_TYPE_KEY.BALL && wasSuccessful) {
+            this.#addWildMonToParty()
+            this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
+            return
+          }
+          this.#battleStateMachine.setState(BATTLE_STATES.BATTLE)
+        }, SKIP_ANIMATIONS)
+      }
+    })
+
+    this.#battleStateMachine.addState({
+      name: BATTLE_STATES.GAIN_EXP,
+      onEnter: () => {
+        this.#getAndSetExpGainedMsgs(() => {
+          this.#battleStateMachine.setState(BATTLE_STATES.GAIN_EXP_AWAIT_INPUT)
+        })
+      }
+    })
+
+    this.#battleStateMachine.addState({
+      name: BATTLE_STATES.GAIN_EXP_AWAIT_INPUT,
+      onEnter: () => {
+        this.#postExperienceGainedSequence()
+      }
+    })
+
+    this.#battleStateMachine.addState({
+      name: BATTLE_STATES.PLAYER_VICTORY_AWAIT_INPUT,
+      onEnter: () => {
+        this.#audioManager.playBgm(this.#victoryBgmKey)
+        this.#announcePlayerVictory(() => {
+          this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
+        })
+      }
+    })
+
+    this.#battleStateMachine.addState({
+      name: BATTLE_STATES.PLAYER_DEFEATED,
+      onEnter: () => {
+        this.#updatePlayerPartyMons()
+        this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_DEFEATED_AWAIT_INPUT)
+      }
+    })
+
+    this.#battleStateMachine.addState({
+      name: BATTLE_STATES.PLAYER_DEFEATED_AWAIT_INPUT,
+      onEnter: () => {
+        this.#annoucePlayerDefeat(() => {
+          this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
+        })
+      }
+    })
+
+    this.#battleStateMachine.addState({
+      name: BATTLE_STATES.RUN_ATTEMPT_AWAIT_INPUT,
+      onEnter: () => {
+        if (this.#runAttemptSucceeded()) {
+          this.#audioManager.playSfx(SFX_ASSET_KEYS.RUN, { primaryAudio: true })
+          this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(['Got away safely...'], () => {
+            this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
+          }, SKIP_ANIMATIONS)
+        } else {
+          this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`Couldn't get away!`], () => {
+            this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_DECISION_AWAIT_INPUT)
+          }, SKIP_ANIMATIONS)
+        }
+      }
+    })
+
+    this.#battleStateMachine.addState({
+      name: BATTLE_STATES.FINISHED,
+      onEnter: () => {
+        this.#resetTurnTracker()
+        this.#resetBattleMons()
+        this.#transitionToNextScene()
+      }
+    })
+
+    this.#battleStateMachine.setState(BATTLE_STATES.INTRO)
   }
 
   /**
@@ -233,7 +655,7 @@ export class BattleScene extends Phaser.Scene {
    * @param {() => void} callback
    */
   #announceAttack (mon, attk, callback) {
-    this.#battleMenu.updateInfoPanelMessagesNoInputRequired(`${mon.name} used ${attk.name}!`, callback, SKIP_ANIMATIONS)
+    this.#battleMenu.updateInfoPanelMessagesNoInputRequired(`${mon.name} used ${attk.name}!`, { callback })
   }
 
   /**
@@ -262,7 +684,10 @@ export class BattleScene extends Phaser.Scene {
         exhaustiveGuard(status)
         break
     }
-    this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([msg], callback, SKIP_ANIMATIONS)
+    this.#battleMenu.updateInfoPanelMessagesNoInputRequired(msg, {
+      callback,
+      delayCallbackMs: 1000
+    })
   }
 
   /**
@@ -285,11 +710,10 @@ export class BattleScene extends Phaser.Scene {
     let msg = ''
 
     const showMessage = () => {
-      this.#battleMenu.updateInfoPanelMessagesNoInputRequired(msg, () => {
-        this.time.delayedCall(500, () => {
-          callback()
-        })
-      }, SKIP_ANIMATIONS)
+      this.#battleMenu.updateInfoPanelMessagesNoInputRequired(msg, {
+        callback,
+        delayCallbackMs: 800
+      })
     }
 
     switch (statusEffect) {
@@ -328,11 +752,10 @@ export class BattleScene extends Phaser.Scene {
     let msg = ''
 
     const showMessage = () => {
-      this.#battleMenu.updateInfoPanelMessagesNoInputRequired(msg, () => {
-        this.time.delayedCall(500, () => {
-          callback(canAttack)
-        })
-      }, SKIP_ANIMATIONS)
+      this.#battleMenu.updateInfoPanelMessagesNoInputRequired(msg, {
+        callback: () => callback(canAttack),
+        delayCallbackMs: 800
+      })
     }
 
     switch (statusEffect) {
@@ -390,11 +813,8 @@ export class BattleScene extends Phaser.Scene {
    * @param {() => void} callback
    */
   #playEnemyApplyStatusEffect (callback) {
-    this.#battleStateMachine.setState(BATTLE_STATES.STATUS_EFFECT_CHECK)
     this.#activeEnemyMon.applyStatusEffect(this.#lastAttackResult.statusEffect, () => {
-      this.#announceStatusEffectApplied(this.#activeEnemyMon, this.#lastAttackResult.statusEffect, () => {
-        callback()
-      })
+      this.#announceStatusEffectApplied(this.#activeEnemyMon, this.#lastAttackResult.statusEffect, () => callback())
     })
   }
 
@@ -402,11 +822,8 @@ export class BattleScene extends Phaser.Scene {
    * @param {() => void} callback
    */
   #playPlayerApplyStatusEffect (callback) {
-    this.#battleStateMachine.setState(BATTLE_STATES.STATUS_EFFECT_CHECK)
     this.#activePlayerMon.applyStatusEffect(this.#lastAttackResult.statusEffect, () => {
-      this.#announceStatusEffectApplied(this.#activePlayerMon, this.#lastAttackResult.statusEffect, () => {
-        callback()
-      })
+      this.#announceStatusEffectApplied(this.#activePlayerMon, this.#lastAttackResult.statusEffect, () => callback())
     })
   }
 
@@ -414,7 +831,7 @@ export class BattleScene extends Phaser.Scene {
     this.#checkPreAttackMonStatusEffect(this.#activePlayerMon, (canAttack) => {
 
       if (!canAttack) {
-        this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK)
+        this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK_AWAIT_INPUT)
         return
       }
 
@@ -432,12 +849,11 @@ export class BattleScene extends Phaser.Scene {
               callback: () => {
                 if (this.#lastAttackResult.statusEffect) {
                   this.#playEnemyApplyStatusEffect(() => {
-                    this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK)
+                    this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK_AWAIT_INPUT)
                   })
                   return
                 }
-
-                this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK)
+                this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK_AWAIT_INPUT)
               }
             })
           }
@@ -463,7 +879,7 @@ export class BattleScene extends Phaser.Scene {
     this.#checkPreAttackMonStatusEffect(this.#activeEnemyMon, (canAttack) => {
 
       if (!canAttack) {
-        this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK)
+        this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK_AWAIT_INPUT)
         return
       }
 
@@ -481,11 +897,11 @@ export class BattleScene extends Phaser.Scene {
               callback: () => {
                 if (this.#lastAttackResult.statusEffect) {
                   this.#playPlayerApplyStatusEffect(() => {
-                    this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK)
+                    this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK_AWAIT_INPUT)
                   })
                   return
                 }
-                this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK)
+                this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK_AWAIT_INPUT)
               }
             })
           }
@@ -555,24 +971,13 @@ export class BattleScene extends Phaser.Scene {
     this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(postAttackMsgs, callback, SKIP_ANIMATIONS)
   }
 
-  #playEnemyFaintedSequence () {
-    this.#activeEnemyMon.playDeathAnimation(() => {
-      if (this.#opponentIsWildMon()) {
-        this.#audioManager.playBgm(this.#victoryBgmKey)
-        this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`Wild ${this.#activeEnemyMon.name} fainted!`], () => {
-          this.#battleStateMachine.setState(BATTLE_STATES.GAINING_EXPERIENCE)
-        }, SKIP_ANIMATIONS)
-        return
-      }
+  /**
+   * 
+   * @param {() => void} callback 
+   */
+  #getAndSetExpGainedMsgs (callback) {
+    this.#postExperienceGainMsgs = []
 
-      this.#enemyBattleTrainer.redrawRemainingMonsGameObject()
-      this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`Foe's ${this.#activeEnemyMon.name} fainted!`], () => {
-        this.#battleStateMachine.setState(BATTLE_STATES.GAINING_EXPERIENCE)
-      }, SKIP_ANIMATIONS)
-    })
-  }
-
-  #setExperienceGainedGetMessages () {
     const expGained = calculateExperienceGained(this.#activeEnemyMon.currentLevel)
     const msgs = [`${this.#activePlayerMon.name} gained ${expGained} experience points!`]
     this.#activePlayerMon.gainExperience(expGained, (didLevelUp, evolved) => {
@@ -584,36 +989,8 @@ export class BattleScene extends Phaser.Scene {
         }
       }
       this.#postExperienceGainMsgs = msgs
-      this.#battleStateMachine.setState(BATTLE_STATES.POST_EXPERIENCE_GAINED)
+      callback()
     })
-  }
-
-  #playPlayerFaintedSequence () {
-    this.#battlePlayer.redrawRemainingMonsGameObject(true)
-    this.#activePlayerMon.playDeathAnimation(() => {
-      this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`${this.#activePlayerMon.name} fainted!`], () => {
-        this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_CHOOSE_MON)
-      }, SKIP_ANIMATIONS)
-    })
-  }
-  
-  /**
-   * @param {() => void} callback
-   * @returns {boolean}
-   */
-  #checkMonFaintedStatuses (callback) {
-    if (this.#activeEnemyMon.isFainted) {
-      this.#battleStateMachine.setState(BATTLE_STATES.MON_FAINTED)
-      this.#playEnemyFaintedSequence()
-      return
-    }
-
-    if (this.#activePlayerMon.isFainted) {
-      this.#battleStateMachine.setState(BATTLE_STATES.MON_FAINTED)
-      this.#playPlayerFaintedSequence()
-      return
-    }
-    callback()
   }
 
   #transitionToNextScene () {
@@ -625,278 +1002,6 @@ export class BattleScene extends Phaser.Scene {
     this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
       this.scene.start(SCENE_KEYS.WORLD_SCENE)
     })
-  }
-
-  #createBattleStateMachine () {
-    this.#battleStateMachine = new StateMachine('battle', this)
-  
-    this.#battleStateMachine.addState({
-      name: BATTLE_STATES.INTRO,
-      onEnter: () => {
-        this.#createBattleTrainers()
-        this.#bringOutPlayerTrainer()
-
-        if (this.#opponentIsWildMon()) {
-          this.#battleStateMachine.setState(BATTLE_STATES.WILD_MON_OUT)
-          return
-        }
-
-        this.#enemyBattleTrainer.playCharacterAppearAnimation(() => {
-          this.#battleStateMachine.setState(BATTLE_STATES.PRE_BATTLE_INFO)
-        })
-
-        
-      }
-    })
-  
-    this.#battleStateMachine.addState({
-      name: BATTLE_STATES.PRE_BATTLE_INFO,
-      onEnter: () => {
-        this.#introduceEnemyTrainer()
-      }
-    })
-
-    this.#battleStateMachine.addState({
-      name: BATTLE_STATES.ENEMY_CHOOSE_MON,
-      onEnter: () => {
-        this.#resetTurnTracker()
-        this.#enemyChooseNextMon()
-
-        if (!this.#activeEnemyMon) {
-          this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_VICTORY)
-          return
-        }
-
-        let simulateTimeToChoose = 750
-        if (this.#battleJustStarted()) {
-          simulateTimeToChoose = 100
-        }
-        
-        this.time.delayedCall(simulateTimeToChoose, () => {
-          this.#battleStateMachine.setState(BATTLE_STATES.ENEMY_MON_OUT)
-        })
-      }
-    })
-
-    this.#battleStateMachine.addState({
-      name: BATTLE_STATES.ENEMY_MON_OUT,
-      onEnter: () => {
-        this.#attackManager.enemyMonImageGameObject = this.#activeEnemyMon.phaserMonImageGameObject
-        this.#hideEnemyTrainer(() => {
-          this.#introduceEnemyMon(() => {
-            if (!this.#activePlayerMon) {
-              this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_CHOOSE_MON)
-              return
-            }
-            this.#battleStateMachine.setState(BATTLE_STATES.PLAYERS_PLAY)
-          })
-        })
-      }
-    })
-
-    this.#battleStateMachine.addState({
-      name: BATTLE_STATES.WILD_MON_OUT,
-      onEnter: () => {
-        this.#attackManager.enemyMonImageGameObject = this.#activeEnemyMon.phaserMonImageGameObject
-        this.#announceWildMon()
-      }
-    })
-
-    this.#battleStateMachine.addState({
-      name: BATTLE_STATES.PLAYER_CHOOSE_MON,
-      onEnter: () => {
-        this.#resetTurnTracker()
-        this.#playerChooseNextMon()
-
-        if (!this.#activePlayerMon) {
-          this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_DEFEATED)
-          return
-        }
-        
-        let simulateTimeToChoose = 750
-        if (this.#battleJustStarted()) {
-          simulateTimeToChoose = 100
-        }
-        
-        this.time.delayedCall(simulateTimeToChoose, () => {
-          this.#setPlayerMonToBattleMenu()
-          this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_MON_OUT)
-        })
-      }
-    })
-
-    this.#battleStateMachine.addState({
-      name: BATTLE_STATES.PLAYER_MON_OUT,
-      onEnter: () => {
-        this.#attackManager.playerMonImageGameObject = this.#activePlayerMon.phaserMonImageGameObject
-        this.#hidePlayerTrainer(() => {
-          this.#introducePlayerMon(() => {
-            this.#battleStateMachine.setState(BATTLE_STATES.PLAYERS_PLAY)
-          })
-        })
-      }
-    })
-
-    this.#battleStateMachine.addState({
-      name: BATTLE_STATES.PLAYER_SWITCH,
-      onEnter: () => {
-        this.#introducePlayerMon(() => {
-          this.#battleStateMachine.setState(BATTLE_STATES.BATTLE)
-        })
-      }
-    })
-
-    this.#battleStateMachine.addState({
-      name: BATTLE_STATES.PLAYERS_PLAY,
-      onEnter: () => {
-        this.#battleMenu.showMainBattleMenu()
-      }
-    })
-
-    this.#battleStateMachine.addState({
-      name: BATTLE_STATES.ENEMYS_PLAY,
-      onEnter: () => {
-        this.#battleStateMachine.setState(BATTLE_STATES.BATTLE)
-      }
-    })
-
-    this.#battleStateMachine.addState({
-      name: BATTLE_STATES.BATTLE,
-      onEnter: () => {
-        this.#lastAttackResult = null
-
-        this.#battleMenu.hideItemMenu()
-        this.#battleMenu.hidePartyMenu()
-
-        if (this.#allPlayersHadATurn()) {
-          this.#resetTurnTracker()
-          this.#checkPostBattleTurnMonStatusEffect(this.#activePlayerMon, () => {
-            this.#checkMonFaintedStatuses(() => {
-              this.#checkPostBattleTurnMonStatusEffect(this.#activeEnemyMon, () => {
-                this.#checkMonFaintedStatuses(() => {
-                  this.#battleStateMachine.setState(BATTLE_STATES.PLAYERS_PLAY)
-                })
-              })
-            })
-          })
-          return
-        }
-
-        if (!this.#enemyHadATurn() && !this.#playerHadATurn()) {
-          this.#determineAndTakeFirstTurn()
-          return
-        }
-
-        if (this.#enemyHadATurn()) {
-          this.#playersThatHadATurn.push(BATTLE_PLAYERS.PLAYER)
-          this.#playPlayersTurnSequence()
-          return
-        }
-
-        if (this.#playerHadATurn()) {
-          this.#playersThatHadATurn.push(BATTLE_PLAYERS.ENEMY)
-          this.#enemyAttack()
-          return
-        }
-      }
-    })
-
-    this.#battleStateMachine.addState({
-      name: BATTLE_STATES.POST_ATTACK,
-      onEnter: () => {
-        this.#announceAttackEffects(() => {
-          this.#checkMonFaintedStatuses(() => {
-            this.#battleStateMachine.setState(BATTLE_STATES.BATTLE)
-          })
-        })
-      }
-    })
-
-    this.#battleStateMachine.addState({
-      name: BATTLE_STATES.STATUS_EFFECT_CHECK
-    })
-
-    this.#battleStateMachine.addState({
-      name: BATTLE_STATES.MON_FAINTED
-    })
-
-    this.#battleStateMachine.addState({
-      name: BATTLE_STATES.ITEM_USED
-    })
-
-    this.#battleStateMachine.addState({
-      name: BATTLE_STATES.POST_ITEM_USED,
-      onEnter: () => {
-        this.#battleStateMachine.setState(BATTLE_STATES.BATTLE)
-      }
-    })
-
-    this.#battleStateMachine.addState({
-      name: BATTLE_STATES.GAINING_EXPERIENCE,
-      onEnter: () => {
-        this.#setExperienceGainedGetMessages()
-      }
-    })
-
-    this.#battleStateMachine.addState({
-      name: BATTLE_STATES.POST_EXPERIENCE_GAINED,
-      onEnter: () => {
-        this.#postExperienceGainedSequence()
-      }
-    })
-
-    this.#battleStateMachine.addState({
-      name: BATTLE_STATES.PLAYER_VICTORY,
-      onEnter: () => {
-        this.#audioManager.playBgm(this.#victoryBgmKey)
-        this.#announcePlayerVictory(() => {
-          this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
-        })
-      }
-    })
-
-    this.#battleStateMachine.addState({
-      name: BATTLE_STATES.PLAYER_DEFEATED,
-      onEnter: () => {
-        this.#annoucePlayerDefeat(() => {
-          const updated = dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS).map(mon => {
-            const hp = getMonStats(DataUtils.getBaseMonDetails(this, mon.baseMonIndex), mon).hp
-            mon.currentHp = hp
-            return mon
-          })
-          dataManager.store.set(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS, updated)
-          this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
-        })
-        return
-      }
-    })
-
-    this.#battleStateMachine.addState({
-      name: BATTLE_STATES.RUN_ATTEMPT,
-      onEnter: () => {
-        if (this.#runAttemptSucceeded()) {
-          this.#audioManager.playSfx(SFX_ASSET_KEYS.RUN, { primaryAudio: true })
-          this.#battleMenu.updateInfoPanelMessagesAndWaitForInput(['Got away safely...'], () => {
-            this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
-          }, SKIP_ANIMATIONS)
-        } else {
-          this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`Couldn't get away!`], () => {
-            this.#battleMenu.showMainBattleMenu()
-          }, SKIP_ANIMATIONS)
-        }
-      }
-    })
-
-    this.#battleStateMachine.addState({
-      name: BATTLE_STATES.FINISHED,
-      onEnter: () => {
-        this.#resetTurnTracker()
-        this.#resetBattleMons()
-        this.#transitionToNextScene()
-      }
-    })
-
-    this.#battleStateMachine.setState(BATTLE_STATES.INTRO)
   }
 
   #playPlayersTurnSequence () {
@@ -918,42 +1023,45 @@ export class BattleScene extends Phaser.Scene {
     }
   }
 
-  #playerSwitchMon () {
-    this.#battleMenu.hidePartyMenu()
-    this.#battleMenu.updateInfoPanelMessagesNoInputRequired(`Come back, ${this.#activePlayerMon.name}.`, () => {
-      this.#activePlayerMon.playMonSwitchedOutAnimation(() => {
-      
-        this.#activePlayerMon = this.#playerMons.find(battleMon => battleMon.id === this.#activePlayerSwitchMon.id)
-        this.#activePlayerSwitchMon = null
-        this.#setPlayerMonToBattleMenu()
-        this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_SWITCH)
-      })
+  #playerUseItem () {
+    this.#itemUsedResult = null
+    this.#battleMenu.hideItemMenu()
+    this.#battleMenu.updateInfoPanelMessagesNoInputRequired(`${this.#battlePlayer.name} used ${this.#activePlayerItem.name}.`, {
+      delayCallbackMs: 500,
+      callback: () => {
+        playItemEffect(this, {
+          mon: this.#activePlayerMon,
+          enemyMon: this.#activeEnemyMon,
+          item: this.#activePlayerItem,
+          callback: (res) => {
+            this.#itemUsedResult = res
+            this.#battleStateMachine.setState(BATTLE_STATES.ITEM_USED_AWAIT_INPUT)
+          }
+        })
+      }
     })
   }
 
-  #playerUseItem () {
-    this.#battleMenu.hideItemMenu()
-    this.#battleMenu.updateInfoPanelMessagesNoInputRequired(`${this.#battlePlayer.name} used ${this.#activePlayerItem.name}.`, () => {
-      playItemEffect(this, {
-        mon: this.#activePlayerMon,
-        enemyMon: this.#activeEnemyMon,
-        item: this.#activePlayerItem,
-        callback: (res) => {
-          const { msg, wasSuccessful } = res
-          this.#battleStateMachine.setState(BATTLE_STATES.ITEM_USED)
+  #playerSwitchMon () {
+    this.#battleMenu.hidePartyMenu()
+    this.#battleMenu.updateInfoPanelMessagesNoInputRequired(`Come back, ${this.#activePlayerMon.name}.`, {
+      callback: () => {
+        this.#activePlayerMon.playMonSwitchedOutAnimation(() => {
+          this.#activePlayerMon = this.#playerMons.find(battleMon => battleMon.id === this.#activePlayerSwitchMon.id)
+          this.#activePlayerSwitchMon = null
+          this.#setPlayerMonToBattleMenu()
+          this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_SWITCH)
+        })
+      }
+    })
+  }
 
-          this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([msg], () => {
-            // check if enemy mon was captures
-            if (this.#activePlayerItem.typeKey === ITEM_TYPE_KEY.BALL && wasSuccessful) {
-              this.#addWildMonToParty()
-              this.#battleStateMachine.setState(BATTLE_STATES.FINISHED)
-              return
-            }
-            this.#battleStateMachine.setState(BATTLE_STATES.POST_ITEM_USED)
-          }, SKIP_ANIMATIONS)
-        }
-      })
-    }, SKIP_ANIMATIONS)
+  #playEnemysTurnSequence () {
+    if (this.#activeEnemyMon.isFainted) {
+      return
+    }
+    // query battle trainer for smart decision, etc TODO
+    this.#enemyAttack()
   }
       
   #setUpBattleMons () {
@@ -992,24 +1100,6 @@ export class BattleScene extends Phaser.Scene {
       partyMons: dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS),
       inventory: dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_INVENTORY),
     }
-  }
-
-  #needsOkInputToContinue () {
-    const state = this.#battleStateMachine.currentStateName
-    return state === BATTLE_STATES.PRE_BATTLE_INFO ||
-      state === BATTLE_STATES.POST_ATTACK ||
-      state === BATTLE_STATES.STATUS_EFFECT_CHECK ||
-      state === BATTLE_STATES.ITEM_USED ||
-      state === BATTLE_STATES.PLAYER_DEFEATED ||
-      state === BATTLE_STATES.PLAYER_VICTORY ||
-      state === BATTLE_STATES.RUN_ATTEMPT ||
-      state === BATTLE_STATES.POST_EXPERIENCE_GAINED ||
-      state === BATTLE_STATES.WILD_MON_OUT ||
-      state === BATTLE_STATES.MON_FAINTED
-  }
-
-  #waitingForPlayerToTakeTurn () {
-    return this.#battleStateMachine.currentStateName === BATTLE_STATES.PLAYERS_PLAY
   }
 
   /**
@@ -1065,7 +1155,7 @@ export class BattleScene extends Phaser.Scene {
 
   #changeToEnemysTurnToPlay () {
     this.#battleMenu.hideMonAttackSubMenu()
-    this.#battleStateMachine.setState(BATTLE_STATES.ENEMYS_PLAY)
+    this.#battleStateMachine.setState(BATTLE_STATES.ENEMY_DECISION)
   }
 
   /**
@@ -1093,11 +1183,13 @@ export class BattleScene extends Phaser.Scene {
     this.#battlePlayer.playCharacterAppearAnimation()
   }
 
-  #introduceEnemyTrainer () {
+  /**
+   * 
+   * @param {() => void} callback 
+   */
+  #introduceEnemyTrainer (callback) {
     this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`${this.#enemyBattleTrainer.trainerType.toUpperCase()} ${this.#enemyBattleTrainer.name.toUpperCase()} wants to fight!`], () => {
-      this.#enemyBattleTrainer.playCharacterDisappearAnimation(() => {
-        this.#battleStateMachine.setState(BATTLE_STATES.ENEMY_CHOOSE_MON)
-      })
+      this.#enemyBattleTrainer.playCharacterDisappearAnimation(() => callback())
     }, SKIP_ANIMATIONS)
   }
 
@@ -1129,20 +1221,14 @@ export class BattleScene extends Phaser.Scene {
    * @param {() => void} callback 
    */
   #introduceEnemyMon (callback) {
-    this.#battleMenu.updateInfoPanelMessagesNoInputRequired(`${this.#enemyBattleTrainer.name.toUpperCase()} sent out ${this.#activeEnemyMon.name}!`, () => {
-      this.time.delayedCall(500, () => {
+    this.#battleMenu.updateInfoPanelMessagesNoInputRequired(`${this.#enemyBattleTrainer.name.toUpperCase()} sent out ${this.#activeEnemyMon.name}!`, {
+      delayCallbackMs: 500,
+      callback: () => {
         this.#activeEnemyMon.playMonAppearAnimation(callback, true)
-      })
-    }, SKIP_ANIMATIONS)          
+      }
+    })          
   }
 
-  #announceWildMon () {
-    this.#activeEnemyMon.playMonAppearAnimation(() => {
-      this.#battleMenu.updateInfoPanelMessagesAndWaitForInput([`Wild ${this.#activeEnemyMon.name} appeared!`], () => {
-        this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_CHOOSE_MON)
-      }, SKIP_ANIMATIONS)
-    })
-  }
 
   #playerChooseNextMon () {
     if (this.#activePlayerMon) {
@@ -1172,23 +1258,16 @@ export class BattleScene extends Phaser.Scene {
    * @param {() => void} callback 
    */
   #introducePlayerMon (callback) {
-    this.#battleMenu.updateInfoPanelMessagesNoInputRequired(`Go! ${this.#activePlayerMon.name}!`, () => {
-      this.time.delayedCall(500, () => {
+    this.#battleMenu.updateInfoPanelMessagesNoInputRequired(`Go! ${this.#activePlayerMon.name}!`, {
+      delayCallbackMs: 500,
+      callback: () => {
         this.#activePlayerMon.playMonAppearAnimation(callback)
-      })
-    }, SKIP_ANIMATIONS)
+      }
+    })
   }
 
   #battleJustStarted () {
     return this.#battlePlayer.characterSpriteShowing
-  }
-
-  /**
-   * 
-   * @returns {boolean}
-   */
-  #allPlayersHadATurn () {
-    return this.#enemyHadATurn() && this.#playerHadATurn()
   }
 
   /**
@@ -1202,7 +1281,7 @@ export class BattleScene extends Phaser.Scene {
   #determineAndTakeFirstTurn () {
     if (this.#enemyWonFirstTurn()) {
       this.#playersThatHadATurn.push(BATTLE_PLAYERS.ENEMY)
-      this.#enemyAttack()
+      this.#playEnemysTurnSequence()
       return
     }
     this.#playersThatHadATurn.push(BATTLE_PLAYERS.PLAYER)
@@ -1326,5 +1405,14 @@ export class BattleScene extends Phaser.Scene {
         this.#battleStateMachine.setState(BATTLE_STATES.ENEMY_CHOOSE_MON)
       })
     })
+  }
+
+  #updatePlayerPartyMons () {
+    const updated = dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS).map(mon => {
+      const hp = getMonStats(DataUtils.getBaseMonDetails(this, mon.baseMonIndex), mon).hp
+      mon.currentHp = hp
+      return mon
+    })
+    dataManager.store.set(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS, updated)
   }
 }

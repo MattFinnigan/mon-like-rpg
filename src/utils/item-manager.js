@@ -11,11 +11,7 @@ import { DATA_MANAGER_STORE_KEYS, dataManager } from "./data-manager.js"
  * @param {Phaser.Scene} scene
  * @param {object} config
  * @param {import("../types/typedef").Item} config.item
- * @param {(result: {
- *   wasUsed: boolean,
- *   msg: string,
- *   wasSuccessful?: boolean
- * }) => void} config.callback
+ * @param {(result: import("../types/typedef").ItemUsedResult) => void} config.callback
  * @param {MonCore} [config.mon] 
  * @param {MonCore} [config.enemyMon] 
  */

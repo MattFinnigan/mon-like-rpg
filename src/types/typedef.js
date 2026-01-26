@@ -206,3 +206,10 @@ import Phaser from "../lib/phaser.js";
  * @typedef Inventory
  * @type {InventoryItem[]}
  */
+
+/**
+ * @typedef {object} ItemUsedResult
+ * @property {boolean} wasUsed
+ * @property {string} msg
+ * @property {boolean} [wasSuccessful]
+ */
