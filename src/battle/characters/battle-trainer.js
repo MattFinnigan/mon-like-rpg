@@ -1,12 +1,12 @@
-import { TRAINER_GRAY_SPRITES, TRAINER_SPRITES } from "../../assets/asset-keys.js"
+import { TRAINER_SPRITES } from "../../assets/asset-keys.js"
 import { BattleMon } from "../mons/battle-mon.js"
 import { BattleCharacter } from "./battle-character.js"
 /**
  * @type {import("../../types/typedef.js").Coordinate}
  */
 const ENEMY_IMAGE_POSITION = Object.freeze({
-  x: 430,
-  y: 5
+  x: 490,
+  y: 120
 })
 
 export class BattleTrainer extends BattleCharacter {
@@ -61,7 +61,6 @@ export class BattleTrainer extends BattleCharacter {
     this.#phaserTrainerImageGameObject.setAlpha(1)
 
     if (this._skipBattleAnimations) {
-      this.#phaserTrainerImageGameObject.setTexture(TRAINER_SPRITES[this._assetKey])
       this.#phaserTrainerImageGameObject.setX(endXPos)
       this.showRemainingMons()
       callback()
@@ -79,7 +78,6 @@ export class BattleTrainer extends BattleCharacter {
       onComplete: () => {
         this.showRemainingMons()
         this.#phaserTrainerImageGameObject.setPosition(ENEMY_IMAGE_POSITION.x, ENEMY_IMAGE_POSITION.y)
-        this.#phaserTrainerImageGameObject.setTexture(TRAINER_SPRITES[this._assetKey])
         callback()
       }
     })
@@ -103,7 +101,6 @@ export class BattleTrainer extends BattleCharacter {
     this.#phaserTrainerImageGameObject.setAlpha(1)
 
     if (this._skipBattleAnimations) {
-      this.#phaserTrainerImageGameObject.setTexture(TRAINER_SPRITES[this._assetKey])
       this.#phaserTrainerImageGameObject.setX(endXPos)
       this.hideRemainingMons()
       callback()
@@ -120,7 +117,6 @@ export class BattleTrainer extends BattleCharacter {
       targets: this.#phaserTrainerImageGameObject,
       onComplete: () => {
         this.hideRemainingMons()
-        this.#phaserTrainerImageGameObject.setTexture(TRAINER_SPRITES[this._assetKey])
         callback()
       }
     })
@@ -143,8 +139,6 @@ export class BattleTrainer extends BattleCharacter {
   }
 
   #createTrainerGameObject () {
-    this.#phaserTrainerImageGameObject = this._scene.add.image(ENEMY_IMAGE_POSITION.x, ENEMY_IMAGE_POSITION.y, TRAINER_GRAY_SPRITES[this._assetKey + '_GRAY'])
-      .setOrigin(0)
-      .setAlpha(0)
+    this.#phaserTrainerImageGameObject = this._scene.add.image(ENEMY_IMAGE_POSITION.x, ENEMY_IMAGE_POSITION.y, TRAINER_SPRITES[this._assetKey]).setAlpha(0)
   }
 }

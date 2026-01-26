@@ -6,7 +6,7 @@
     "repeat": -1,
     "delay": 0,
     "yoyo": true,
-    "assetKey": "PLAYER"
+    "assetKey": "SHEET_1"
   },
   {
     "key": "PLAYER_LEFT",
@@ -15,7 +15,7 @@
     "repeat": -1,
     "delay": 0,
     "yoyo": true,
-    "assetKey": "PLAYER"
+    "assetKey": "SHEET_1"
   },
   {
     "key": "PLAYER_RIGHT",
@@ -24,7 +24,7 @@
     "repeat": -1,
     "delay": 0,
     "yoyo": true,
-    "assetKey": "PLAYER"
+    "assetKey": "SHEET_1"
   },
   {
     "key": "PLAYER_UP",
@@ -33,7 +33,7 @@
     "repeat": -1,
     "delay": 0,
     "yoyo": true,
-    "assetKey": "PLAYER"
+    "assetKey": "SHEET_1"
   },
   {
     "key": "NPC2_DOWN",
@@ -42,7 +42,7 @@
     "repeat": -1,
     "delay": 0,
     "yoyo": true,
-    "assetKey": "NPC_SHEET_1"
+    "assetKey": "SHEET_16"
   },
   {
     "key": "NPC2_LEFT",
@@ -51,7 +51,7 @@
     "repeat": -1,
     "delay": 0,
     "yoyo": true,
-    "assetKey": "NPC_SHEET_1"
+    "assetKey": "SHEET_16"
   },
   {
     "key": "NPC2_RIGHT",
@@ -60,7 +60,7 @@
     "repeat": -1,
     "delay": 0,
     "yoyo": true,
-    "assetKey": "NPC_SHEET_1"
+    "assetKey": "SHEET_16"
   },
   {
     "key": "NPC2_UP",
@@ -69,7 +69,7 @@
     "repeat": -1,
     "delay": 0,
     "yoyo": true,
-    "assetKey": "NPC_SHEET_1"
+    "assetKey": "SHEET_16"
   },
   {
     "key": "NPC1_DOWN",
@@ -78,7 +78,7 @@
     "repeat": -1,
     "delay": 0,
     "yoyo": true,
-    "assetKey": "NPC_SHEET_2"
+    "assetKey": "SHEET_17"
   },
   {
     "key": "NPC1_LEFT",
@@ -87,7 +87,7 @@
     "repeat": -1,
     "delay": 0,
     "yoyo": true,
-    "assetKey": "NPC_SHEET_2"
+    "assetKey": "SHEET_17"
   },
   {
     "key": "NPC1_RIGHT",
@@ -96,7 +96,7 @@
     "repeat": -1,
     "delay": 0,
     "yoyo": true,
-    "assetKey": "NPC_SHEET_2"
+    "assetKey": "SHEET_17"
   },
   {
     "key": "NPC1_UP",
@@ -105,7 +105,7 @@
     "repeat": -1,
     "delay": 0,
     "yoyo": true,
-    "assetKey": "NPC_SHEET_2"
+    "assetKey": "SHEET_17"
   },
   {
     "key": "NPC10_DOWN",
@@ -114,7 +114,7 @@
     "repeat": -1,
     "delay": 0,
     "yoyo": true,
-    "assetKey": "NPC_SHEET_3"
+    "assetKey": "SHEET_15"
   },
   {
     "key": "NPC10_LEFT",
@@ -123,7 +123,7 @@
     "repeat": -1,
     "delay": 0,
     "yoyo": true,
-    "assetKey": "NPC_SHEET_3"
+    "assetKey": "SHEET_15"
   },
   {
     "key": "NPC10_RIGHT",
@@ -132,7 +132,7 @@
     "repeat": -1,
     "delay": 0,
     "yoyo": true,
-    "assetKey": "NPC_SHEET_3"
+    "assetKey": "SHEET_15"
   },
   {
     "key": "NPC10_UP",
@@ -141,7 +141,7 @@
     "repeat": -1,
     "delay": 0,
     "yoyo": true,
-    "assetKey": "NPC_SHEET_3"
+    "assetKey": "SHEET_15"
   },
   {
     "key": "BALL_WIGGLE",

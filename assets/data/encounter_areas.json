@@ -2,7 +2,7 @@
   "1": {
     "encounterRate": 0.25,
     "mons": [
-      { "rate": 4, "baseMonIndex": 0, "minLevel": 1, "maxLevel": 20 },
+      { "rate": 400, "baseMonIndex": 129, "minLevel": 1, "maxLevel": 20 },
       { "rate": 3, "baseMonIndex": 1, "minLevel": 20, "maxLevel": 35 },
       { "rate": 2, "baseMonIndex": 2, "minLevel": 40, "maxLevel": 60 },
       { "rate": 1, "baseMonIndex": 151, "minLevel": 10, "maxLevel": 25 }

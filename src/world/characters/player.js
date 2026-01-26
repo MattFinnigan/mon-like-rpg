@@ -16,7 +16,7 @@ export class Player extends Character {
   constructor (config) {
     super({
       ...config,
-      assetKey: CHARACTER_ASSET_KEYS.PLAYER,
+      assetKey: CHARACTER_ASSET_KEYS.SHEET_1,
       origin: { x: 0.15, y: 0.45 },
       idleFrameConfig: {
         DOWN: 1,
@@ -27,7 +27,7 @@ export class Player extends Character {
       }
     })
   }
-
+  
   /**
    * 
    * @param {import("../../types/direction.js").Direction} direction

@@ -164,6 +164,17 @@ export class Character {
 
   /**
    * 
+   * @param {number} x 
+   * @param {number} y 
+   */
+  teleportCharacter (x, y) {
+    this._targetPosition = { x, y }
+    this._previousTargetPosition = { x, y }
+    this._phaserGameObject.setPosition(x, y)
+  }
+
+  /**
+   * 
    * @returns {boolean}
    */
   _isBlockingTile () {

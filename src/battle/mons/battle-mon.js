@@ -323,7 +323,10 @@ export class BattleMon extends MonCore  {
    * @param {import("../../types/typedef.js").Coordinate} pos 
    */
   #createMonGameObject (pos) {
-    this._phaserMonImageGameObject = this._scene.add.image(pos.x, pos.y, this._battleSpriteAssetKey, this._baseMonDetails.assetFrame).setOrigin(0).setAlpha(0).setDepth(-1)
+    this._phaserMonImageGameObject = this._scene.add.image(pos.x, pos.y, this._battleSpriteAssetKey, this._baseMonDetails.assetFrame)
+      .setAlpha(0)
+      .setDepth(-1)
+      .setScale(1.3)
   }
 
   #createMonDetailsGameObject () {
@@ -387,7 +390,7 @@ export class BattleMon extends MonCore  {
    * @param {() => void} callback
    */
   playBurntAnim (callback) {
-    const sprite = this._scene.add.sprite(this._phaserMonImageGameObject.x + 65, this._phaserMonImageGameObject.y + 160, STATUS_EFFECT_ASSET_KEYS.BURNT, 0).setScale(1.5)
+    const sprite = this._scene.add.sprite(this._phaserMonImageGameObject.x - 35, this._phaserMonImageGameObject.y + 40, STATUS_EFFECT_ASSET_KEYS.BURNT, 0).setScale(1.5)
     sprite.play(STATUS_EFFECT_ASSET_KEYS.BURNT)
 
     const promises = [
@@ -416,11 +419,11 @@ export class BattleMon extends MonCore  {
   playParalyzedAnim (callback) {
     const promises = [
       new Promise(resolve => {
-        const leftInnerSprite = this._scene.add.sprite(this._phaserMonImageGameObject.x + 25, this._phaserMonImageGameObject.y + 100, STATUS_EFFECT_ASSET_KEYS.PARALYZED, 0).setScale(1.75)
-        const rightInnerSprite = this._scene.add.sprite(this._phaserMonImageGameObject.x + 200, this._phaserMonImageGameObject.y + 100, STATUS_EFFECT_ASSET_KEYS.PARALYZED, 1).setScale(1.75)
+        const leftInnerSprite = this._scene.add.sprite(this._phaserMonImageGameObject.x - 85, this._phaserMonImageGameObject.y, STATUS_EFFECT_ASSET_KEYS.PARALYZED, 0).setScale(1.75)
+        const rightInnerSprite = this._scene.add.sprite(this._phaserMonImageGameObject.x + 85, this._phaserMonImageGameObject.y, STATUS_EFFECT_ASSET_KEYS.PARALYZED, 1).setScale(1.75)
 
-        const leftOuterSprite = this._scene.add.sprite(this._phaserMonImageGameObject.x, this._phaserMonImageGameObject.y + 100, STATUS_EFFECT_ASSET_KEYS.PARALYZED, 2).setScale(1.75).setAlpha(0)
-        const rightOuterSprite = this._scene.add.sprite(this._phaserMonImageGameObject.x + 240, this._phaserMonImageGameObject.y + 100, STATUS_EFFECT_ASSET_KEYS.PARALYZED, 3).setScale(1.75).setAlpha(0)
+        const leftOuterSprite = this._scene.add.sprite(this._phaserMonImageGameObject.x - 105, this._phaserMonImageGameObject.y + 10, STATUS_EFFECT_ASSET_KEYS.PARALYZED, 2).setScale(1.75).setAlpha(0)
+        const rightOuterSprite = this._scene.add.sprite(this._phaserMonImageGameObject.x + 105, this._phaserMonImageGameObject.y + 10, STATUS_EFFECT_ASSET_KEYS.PARALYZED, 3).setScale(1.75).setAlpha(0)
 
         const flashes = 5
         const flashDuration = 49
@@ -471,8 +474,8 @@ export class BattleMon extends MonCore  {
   playConfusedAnim (callback) {
     const promises = [
       new Promise(resolve => {
-        const sprite1 = this._scene.add.sprite(this._phaserMonImageGameObject.x + 100, this._phaserMonImageGameObject.y + 20, STATUS_EFFECT_ASSET_KEYS.CONFUSED, 0).setScale(1)
-        const sprite2 = this._scene.add.sprite(this._phaserMonImageGameObject.x + 155, this._phaserMonImageGameObject.y + 28, STATUS_EFFECT_ASSET_KEYS.CONFUSED, 0)
+        const sprite1 = this._scene.add.sprite(this._phaserMonImageGameObject.x, this._phaserMonImageGameObject.y - 90, STATUS_EFFECT_ASSET_KEYS.CONFUSED, 0).setScale(1)
+        const sprite2 = this._scene.add.sprite(this._phaserMonImageGameObject.x + 70, this._phaserMonImageGameObject.y - 75, STATUS_EFFECT_ASSET_KEYS.CONFUSED, 0)
           .setScale(1)
           .setAlpha(0)
           .setAngle(35)

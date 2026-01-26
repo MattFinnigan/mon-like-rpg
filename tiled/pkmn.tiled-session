@@ -153,38 +153,81 @@
         },
         "aus.tmx": {
             "expandedGroupLayers": [
-                18,
-                22
+                22,
+                18
             ],
             "expandedObjectLayers": [
-                18,
-                26,
-                31,
-                33,
                 30,
-                35,
-                25,
-                17,
-                19,
-                21,
+                18,
                 34,
+                17,
+                21,
+                33,
+                19,
+                31,
+                25,
+                35,
+                26,
                 28
             ],
-            "scale": 1.5,
-            "selectedLayer": 10,
+            "scale": 2,
+            "selectedLayer": 19,
             "viewCenter": {
-                "x": 6586,
-                "y": 4026.9999999999995
+                "x": 6468.5,
+                "y": 11442.5
             }
         },
-        "aus.tmx#GSCd_Ba": {
+        "aus.tmx#GSCd_A1": {
+            "scaleInDock": 0.5,
+            "scaleInEditor": 1
+        },
+        "aus.tmx#GSCd_A2": {
             "scaleInDock": 0.5
         },
-        "aus.tmx#RBY-LB_A1": {
+        "aus.tmx#GSCd_A2a": {
+            "scaleInDock": 0.5
+        },
+        "aus.tmx#GSCd_A2b": {
+            "scaleInDock": 0.25
+        },
+        "aus.tmx#GSCd_A4": {
+            "scaleInDock": 0.33
+        },
+        "aus.tmx#GSCd_A4a": {
+            "scaleInDock": 0.33
+        },
+        "aus.tmx#GSCd_A5": {
+            "scaleInDock": 0.5
+        },
+        "aus.tmx#GSCd_B": {
+            "scaleInDock": 0.33
+        },
+        "aus.tmx#GSCd_Ba": {
+            "scaleInDock": 0.33
+        },
+        "aus.tmx#GSCd_C": {
+            "scaleInDock": 0.33
+        },
+        "aus.tmx#GSCd_Ca": {
+            "scaleInDock": 0.33
+        },
+        "aus.tmx#GSCd_D": {
+            "scaleInDock": 0.33
+        },
+        "aus.tmx#GSCd_D copy": {
             "scaleInDock": 0.75
         },
+        "aus.tmx#GSCd_Da": {
+            "scaleInDock": 0.33
+        },
+        "aus.tmx#GSCd_Ea": {
+            "scaleInDock": 0.33
+        },
+        "aus.tmx#RBY-LB_A1": {
+            "scaleInDock": 1
+        },
         "aus.tmx#RBY-LB_A2": {
-            "scaleInDock": 0.75
+            "scaleInDock": 1
         },
         "aus.tmx#RBY-LB_A2_B": {
             "scaleInDock": 1
@@ -194,11 +237,14 @@
         },
         "aus.tmx#RBY-LB_B": {
             "dynamicWrapping": false,
-            "scaleInDock": 0.5,
+            "scaleInDock": 1,
             "scaleInEditor": 1
         },
         "aus.tmx#Yr6_AustraliaSinceFederation_22": {
             "dynamicWrapping": true,
+            "scaleInDock": 1
+        },
+        "aus.tmx#black": {
             "scaleInDock": 1
         },
         "aus.tmx#collision": {
@@ -212,9 +258,9 @@
         },
         "map.tmx": {
             "expandedGroupLayers": [
+                23,
                 18,
-                25,
-                23
+                25
             ],
             "expandedObjectLayers": [
                 18,
@@ -223,8 +269,8 @@
             "scale": 2,
             "selectedLayer": 11,
             "viewCenter": {
-                "x": 861,
-                "y": 2319
+                "x": 832.25,
+                "y": 2365
             }
         },
         "map.tmx#RBY-BP_A1": {
@@ -332,7 +378,7 @@
     },
     "last.exportedFilePath": "/Users/mattfinnigan/Documents/code/Web/pkmn/assets/data",
     "last.externalTilesetPath": "/Users/mattfinnigan/Documents/code/Web/pkmn/tiled",
-    "last.imagePath": "/Users/mattfinnigan/Documents/code/Web/pkmn/tiled/tilesets",
+    "last.imagePath": "/Users/mattfinnigan/Documents/code/Web/pkmn/tiled/tilesets/GSC Day",
     "last.objectTypesPath": "/Users/mattfinnigan/Downloads/monster-tamer-tiled-assets/custom_types_2.json",
     "map.height": 50,
     "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",

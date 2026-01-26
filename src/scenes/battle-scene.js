@@ -927,7 +927,7 @@ export class BattleScene extends Phaser.Scene {
     if (this.#activeEnemyMon.isFainted) {
       return
     }
-    const simMultiplayer = true
+    const simMultiplayer = false
 
     this.time.delayedCall(simMultiplayer ? 3000 : 0, () => {
       // query battle trainer for smart decision, etc TODO
@@ -1183,7 +1183,7 @@ export class BattleScene extends Phaser.Scene {
       })
     }
     this.#battlePlayer = new BattlePlayer(this, this.#player, this.#playerMons, {
-      assetKey: TRAINER_SPRITES.RED,
+      assetKey: TRAINER_SPRITES.ETHAN3,
       skipBattleAnimations: SKIP_ANIMATIONS
     })
   }

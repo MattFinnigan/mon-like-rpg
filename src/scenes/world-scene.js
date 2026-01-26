@@ -400,7 +400,7 @@ export class WorldScene extends Phaser.Scene {
       const npc = new NPC(this, {
         scene: this,
         name: npcObject.name,
-        assetKey: CHARACTER_ASSET_KEYS['NPC_SHEET_' + npcSheet],
+        assetKey: CHARACTER_ASSET_KEYS['SHEET_' + npcSheet],
         position: savedNpcPositions[i] || { x: npcObject.x, y: npcObject.y - TILE_SIZE },
         direction: savedNpcDirections[i] || DIRECTION[npcFacing],
         frame: parseInt(npcFrame, 10),
@@ -494,7 +494,7 @@ export class WorldScene extends Phaser.Scene {
         loadTrainerSprites(this, enemyTrainerAssetKey)
       }
 
-      loadTrainerSprites(this, TRAINER_SPRITES.RED)
+      loadTrainerSprites(this, TRAINER_SPRITES.ETHAN3)
       loadBattleAssets(this)
 
       this.load.start()
@@ -761,6 +761,10 @@ export class WorldScene extends Phaser.Scene {
             this.#partyMenu.show()
             break
           case MENU_OPTIONS.EXIT:
+            this.#menu.hide()
+            break
+          case MENU_OPTIONS.TELEPORT:
+            this.#player.teleportCharacter(112 * TILE_SIZE, 180 * TILE_SIZE)
             this.#menu.hide()
             break  
           case MENU_OPTIONS.POKEDEX:

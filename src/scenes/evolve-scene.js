@@ -88,10 +88,8 @@ export class EvolveScene extends Phaser.Scene {
   #createEvolvingMonsGameObjects() {
     const evolvingFromBase = DataUtils.getBaseMonDetails(this, this.#currentEvolvingFrom.baseMonIndex)
     this.#phaserCurrentEvolvingFromGameImage = this.add.image(0, 0, MON_ASSET_KEYS[evolvingFromBase.assetKey])
-      .setFlipX(true)
       .setOrigin(0)
     this.#phaserCurrentEvolvingToGameImage = this.add.image(0, 0, MON_GRAY_ASSET_KEYS[this.#currentEvolvingTo.assetKey + '_GRAY'])
-      .setFlipX(true)
       .setOrigin(0)
       .setAlpha(0)
     this.#phaserEvolvingMonContainer.add([

@@ -22,15 +22,12 @@ export class Slash extends Attack {
     super(scene, position)
 
     this._attackGameObject1 = this._scene.add.sprite(0, 0, ATTACK_ASSET_KEYS.SLASH, 0)
-      .setOrigin(0.6, 0.35)
       .setScale(4)
 
     this._attackGameObject2 = this._scene.add.sprite(30, 0, ATTACK_ASSET_KEYS.SLASH, 1)
-      .setOrigin(0.6, 0.35)
       .setScale(4)
   
     this._attackGameObject3 = this._scene.add.sprite(-30, 0, ATTACK_ASSET_KEYS.SLASH, 2)
-      .setOrigin(0.6, 0.35)
       .setScale(4)
 
     this._attackGameObjectContainer = this._scene.add.container(this._position.x, this._position.y, [

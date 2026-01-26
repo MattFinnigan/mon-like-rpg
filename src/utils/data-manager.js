@@ -27,7 +27,7 @@ const initalState = {
   player: {
     position: {
       x: 112 * TILE_SIZE,
-      y: 80 * TILE_SIZE
+      y: 180 * TILE_SIZE
     },
     direction: DIRECTION.DOWN,
     name: 'YOU',
@@ -96,7 +96,7 @@ const devInitialState = {
   player: {
     position: {
       x: 112 * TILE_SIZE,
-      y: 80 * TILE_SIZE
+      y: 180 * TILE_SIZE
     },
     direction: DIRECTION.DOWN,
     name: 'YOU',
@@ -133,7 +133,7 @@ const devInitialState = {
       },
       {
         id: 2,
-        baseMonIndex: 3,
+        baseMonIndex: 150,
         name: 'TANK',
         currentHp: 900000,
         currentLevel: 1,

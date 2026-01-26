@@ -7,8 +7,8 @@ import { BattleMon } from "./battle-mon.js"
  * @type {import("../../types/typedef.js").Coordinate}
  */
 const PLAYER_IMAGE_POSITION = Object.freeze({
-  x: 20,
-  y: 160
+  x: 160,
+  y: 285
 })
 
 export class PlayerBattleMon extends BattleMon {
@@ -57,8 +57,8 @@ export class PlayerBattleMon extends BattleMon {
       return
     }
 
-    const x = PLAYER_IMAGE_POSITION.x + (this._phaserMonImageGameObject.width / 2) + 10
-    const y = PLAYER_IMAGE_POSITION.y + (this._phaserMonImageGameObject.height / 2) + 10
+    const x = PLAYER_IMAGE_POSITION.x
+    const y = PLAYER_IMAGE_POSITION.y
     this.#monBallExpandSpriteAnimation = this._scene.add.sprite(x, y, MON_BALLS.BALL_POOF, 0).setScale(1.5)
 
     this.#audioManager.playSfx(SFX_ASSET_KEYS.BALL_POOF, { primaryAudio: true })

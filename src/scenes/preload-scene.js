@@ -1,7 +1,7 @@
-import { ATTACK_ASSET_KEYS, BATTLE_ASSET_KEYS, BGM_ASSET_KEYS, CHARACTER_ASSET_KEYS, DATA_ASSET_KEYS, HEALTH_BAR_ASSET_KEYS, MON_BALLS, PARTY_MON_SPRITES, SFX_ASSET_KEYS, STATUS_EFFECT_ASSET_KEYS, SYSTEM_ASSET_KEYS, TRAINER_GRAY_SPRITES, TRAINER_SPRITES, UI_ASSET_KEYS, WORLD_ASSET_KEYS } from '../assets/asset-keys.js'
+import { ATTACK_ASSET_KEYS, BATTLE_ASSET_KEYS, BGM_ASSET_KEYS, CHARACTER_ASSET_KEYS, DATA_ASSET_KEYS, HEALTH_BAR_ASSET_KEYS, MON_BALLS, SFX_ASSET_KEYS, STATUS_EFFECT_ASSET_KEYS, SYSTEM_ASSET_KEYS, TRAINER_SPRITES, UI_ASSET_KEYS, WORLD_ASSET_KEYS } from '../assets/asset-keys.js'
 import Phaser from '../lib/phaser.js'
 import { AudioManager } from '../utils/audio-manager.js'
-import { ATTACK_ANIMS_PATH, BACKGROUND_ASSETS_PATH, BATTLE_ASSETS_PATH, BGM_ASSETS_PATH, CHAR_ASSETS_PATH, DATA_ASSETS_PATH, MAP_ASSETS_PATH, MON_BALL_ANIMS_ASSETS_PATH, NPC_ASSETS_PATH, PARTY_MON_ASSETS_PATH, SFX_ASSETS_PATH, STATUS_EFFECT_ASSETS_PATH, STATUS_EFFECT_SFX_ASSETS_PATH, UI_ASSETS_PATH, UI_DIALOG_ASSETS_PATH } from '../utils/consts.js'
+import { ATTACK_ANIMS_PATH, BACKGROUND_ASSETS_PATH, BATTLE_ASSETS_PATH, BGM_ASSETS_PATH, CHARACTER_ASSETS_PATH, DATA_ASSETS_PATH, MAP_ASSETS_PATH, MON_BALL_ANIMS_ASSETS_PATH, PARTY_MON_ASSETS_PATH, SFX_ASSETS_PATH, STATUS_EFFECT_ASSETS_PATH, STATUS_EFFECT_SFX_ASSETS_PATH, UI_ASSETS_PATH, UI_DIALOG_ASSETS_PATH } from '../utils/consts.js'
 import { dataManager } from '../utils/data-manager.js'
 import { DataUtils } from '../utils/data-utils.js'
 import { SCENE_KEYS } from './scene-keys.js'
@@ -102,35 +102,35 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image(HEALTH_BAR_ASSET_KEYS.RIGHT_CAP, `/${BATTLE_ASSETS_PATH}/hp_right_cap.png`)
     
     // character, npcs world sprites
-    this.load.spritesheet(CHARACTER_ASSET_KEYS.PLAYER, `${CHAR_ASSETS_PATH}/character.png`, {
+    this.load.spritesheet(CHARACTER_ASSET_KEYS.SHEET_1, `${CHARACTER_ASSETS_PATH}/1.png`, {
       frameWidth: 72,
       frameHeight: 96
     })
-    this.load.spritesheet(CHARACTER_ASSET_KEYS.NPC_SHEET_1, `${NPC_ASSETS_PATH}/npc1.png`, {
+    this.load.spritesheet(CHARACTER_ASSET_KEYS.SHEET_12, `${CHARACTER_ASSETS_PATH}/12.png`, {
       frameWidth: 72,
       frameHeight: 96
     })
-    this.load.spritesheet(CHARACTER_ASSET_KEYS.NPC_SHEET_2, `${NPC_ASSETS_PATH}/npc2.png`, {
+    this.load.spritesheet(CHARACTER_ASSET_KEYS.SHEET_14, `${CHARACTER_ASSETS_PATH}/14.png`, {
       frameWidth: 72,
       frameHeight: 96
     })
-    this.load.spritesheet(CHARACTER_ASSET_KEYS.NPC_SHEET_3, `${NPC_ASSETS_PATH}/npc3.png`, {
+    this.load.spritesheet(CHARACTER_ASSET_KEYS.SHEET_15, `${CHARACTER_ASSETS_PATH}/15.png`, {
       frameWidth: 72,
       frameHeight: 96
     })
-    this.load.spritesheet(CHARACTER_ASSET_KEYS.NPC_SHEET_4, `${NPC_ASSETS_PATH}/npc4.png`, {
+    this.load.spritesheet(CHARACTER_ASSET_KEYS.SHEET_16, `${CHARACTER_ASSETS_PATH}/16.png`, {
       frameWidth: 72,
       frameHeight: 96
     })
-    this.load.spritesheet(CHARACTER_ASSET_KEYS.NPC_SHEET_5, `${NPC_ASSETS_PATH}/npc5.png`, {
+    this.load.spritesheet(CHARACTER_ASSET_KEYS.SHEET_17, `${CHARACTER_ASSETS_PATH}/17.png`, {
       frameWidth: 72,
       frameHeight: 96
     })
-    this.load.spritesheet(CHARACTER_ASSET_KEYS.NPC_SHEET_6, `${NPC_ASSETS_PATH}/npc6.png`, {
+    this.load.spritesheet(CHARACTER_ASSET_KEYS.SHEET_18, `${CHARACTER_ASSETS_PATH}/18.png`, {
       frameWidth: 72,
       frameHeight: 96
     })
-    this.load.spritesheet(PARTY_MON_SPRITES.PARTY_MON_SPRITES_SHEET_1, `${PARTY_MON_ASSETS_PATH}/sheet1.png`, {
+    this.load.spritesheet(CHARACTER_ASSET_KEYS.SHEET_22, `${CHARACTER_ASSETS_PATH}/22.png`, {
       frameWidth: 72,
       frameHeight: 96
     })

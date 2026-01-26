@@ -1,12 +1,12 @@
-import { TRAINER_GRAY_SPRITES, TRAINER_SPRITES } from "../../assets/asset-keys.js"
+import { TRAINER_SPRITES } from "../../assets/asset-keys.js"
 import { BattleMon } from "../mons/battle-mon.js"
 import { BattleCharacter } from "./battle-character.js"
 /**
  * @type {import("../../types/typedef.js").Coordinate}
  */
 const PLAYER_IMAGE_POSITION = Object.freeze({
-  x: 40,
-  y: 190
+  x: 160,
+  y: 300
 })
 
 export class BattlePlayer extends BattleCharacter {
@@ -58,7 +58,6 @@ export class BattlePlayer extends BattleCharacter {
     this.#phaserPlayerImageGameObject.setAlpha(1)
 
     if (this._skipBattleAnimations) {
-      this.#phaserPlayerImageGameObject.setTexture(TRAINER_SPRITES[this._assetKey])
       this.#phaserPlayerImageGameObject.setX(endXPos)
       this.showRemainingMons()
       if (callback) {
@@ -76,7 +75,6 @@ export class BattlePlayer extends BattleCharacter {
       },
       targets: this.#phaserPlayerImageGameObject,
       onComplete: () => {
-        this.#phaserPlayerImageGameObject.setTexture(TRAINER_SPRITES[this._assetKey])
         this.showRemainingMons()
         if (callback) {
           callback()
@@ -103,7 +101,6 @@ export class BattlePlayer extends BattleCharacter {
     this.#phaserPlayerImageGameObject.setAlpha(1)
 
     if (this._skipBattleAnimations) {
-      this.#phaserPlayerImageGameObject.setTexture(TRAINER_SPRITES[this._assetKey])
       this.#phaserPlayerImageGameObject.setX(endXPos)
       this.hideRemainingMons()
       callback()
@@ -120,7 +117,6 @@ export class BattlePlayer extends BattleCharacter {
       targets: this.#phaserPlayerImageGameObject,
       onComplete: () => {
         this.hideRemainingMons()
-        this.#phaserPlayerImageGameObject.setTexture(TRAINER_SPRITES[this._assetKey])
         callback()
       }
     })
@@ -143,7 +139,7 @@ export class BattlePlayer extends BattleCharacter {
   }
 
   #createTrainerGameObject () {
-    this.#phaserPlayerImageGameObject = this._scene.add.image(0, 0, TRAINER_GRAY_SPRITES[this._assetKey + '_GRAY']).setOrigin(0).setAlpha(0).setScale(2.25)
+    this.#phaserPlayerImageGameObject = this._scene.add.image(0, 0, TRAINER_SPRITES[this._assetKey]).setAlpha(0).setScale(1.25)
     this._phaserMonDetailsBackgroundImageGameObject.setFlipX(true)
   }
 }

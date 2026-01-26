@@ -14,6 +14,7 @@ export const MENU_OPTIONS = Object.freeze({
   POKEMON: 'POKEMON',
   ITEM: 'ITEM',
   SAVE: 'SAVE',
+  TELEPORT: 'TELEPORT',
   OPTIONS: 'OPTIONS',
   EXIT: 'EXIT'
 })
@@ -51,7 +52,7 @@ export class Menu {
     this.#scene = scene
     this.#padding = 20
     this.#width = 275
-    this.#availaleMenuOptions = [MENU_OPTIONS.POKEMON, MENU_OPTIONS.ITEM, MENU_OPTIONS.SAVE, MENU_OPTIONS.EXIT]
+    this.#availaleMenuOptions = [MENU_OPTIONS.POKEMON, MENU_OPTIONS.ITEM, MENU_OPTIONS.SAVE, MENU_OPTIONS.TELEPORT, MENU_OPTIONS.EXIT]
     this.#height = this.#padding * 2 + this.#availaleMenuOptions.length * 50
 
     this.#menuOptionsTextGameObjects = []

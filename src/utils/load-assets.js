@@ -1,5 +1,5 @@
-import { ATTACK_ASSET_KEYS, BATTLE_ASSET_KEYS, BGM_ASSET_KEYS, MON_ASSET_KEYS, MON_BACK_ASSET_KEYS, MON_GRAY_ASSET_KEYS, SFX_ASSET_KEYS, TRAINER_GRAY_SPRITES, TRAINER_SPRITES } from "../assets/asset-keys.js"
-import { ATTACK_ANIMS_PATH, ATTACK_SFX_ASSETS_PATH, BACKGROUND_ASSETS_PATH, BGM_ASSETS_PATH, MON_BACK_SPRITES_ASSETS_PATH, MON_CRIES_ASSETS_PATH, MON_GRAY_SPRITES_ASSETS_PATH, MON_SPRITES_ASSETS_PATH, SFX_ASSETS_PATH, TRAINER_GRAY_ASSETS_PATH, TRAINER_SPRITES_ASSETS_PATH } from "./consts.js"
+import { ATTACK_ASSET_KEYS, BATTLE_ASSET_KEYS, BGM_ASSET_KEYS, MON_ASSET_KEYS, MON_BACK_ASSET_KEYS, MON_GRAY_ASSET_KEYS, SFX_ASSET_KEYS, TRAINER_SPRITES } from "../assets/asset-keys.js"
+import { ATTACK_ANIMS_PATH, ATTACK_SFX_ASSETS_PATH, BACKGROUND_ASSETS_PATH, BGM_ASSETS_PATH, MON_CRIES_ASSETS_PATH, MON_SPRITES_ASSETS_PATH, SFX_ASSETS_PATH, TRAINER_SPRITES_ASSETS_PATH } from "./consts.js"
 import { DataUtils } from "./data-utils.js"
 import { exhaustiveGuard } from "./guard.js"
 
@@ -12,9 +12,9 @@ export function loadBaseMonAssets (scene, baseMon) {
   const monNum = baseMon.baseMonIndex + 1
   const key = MON_ASSET_KEYS[baseMon.assetKey]
 
-  scene.load.image(key, `${MON_SPRITES_ASSETS_PATH}/${monNum}.png`)
-  scene.load.image(MON_BACK_ASSET_KEYS[key + '_BACK'], `${MON_BACK_SPRITES_ASSETS_PATH}/${monNum}.png`)
-  scene.load.image(MON_GRAY_ASSET_KEYS[key + '_GRAY'], `${MON_GRAY_SPRITES_ASSETS_PATH}/${monNum}.png`)
+  scene.load.image(key, `${MON_SPRITES_ASSETS_PATH}/fronts/${monNum} GSC-C.png`)
+  scene.load.image(MON_BACK_ASSET_KEYS[key + '_BACK'], `${MON_SPRITES_ASSETS_PATH}/backs/${monNum} GSC-B.png`)
+  scene.load.image(MON_GRAY_ASSET_KEYS[key + '_GRAY'], `${MON_SPRITES_ASSETS_PATH}/gray/${monNum} GSC-C.png`)
   scene.load.audio(key, [`${MON_CRIES_ASSETS_PATH}/${monNum}.ogg`])
 }
 
@@ -95,8 +95,7 @@ if (!attksLoaded.includes(attkId)) {
  * @param {string} assetKey 
  */
 export function loadTrainerSprites (scene, assetKey) {
-  scene.load.image(TRAINER_SPRITES[assetKey], `${TRAINER_SPRITES_ASSETS_PATH}/RBY Y${assetKey.toLowerCase()}.png`)
-  scene.load.image(TRAINER_GRAY_SPRITES[assetKey + '_GRAY'], `${TRAINER_GRAY_ASSETS_PATH}/RBY ${assetKey.toLowerCase()} BW.png`)
+  scene.load.image(TRAINER_SPRITES[assetKey], `${TRAINER_SPRITES_ASSETS_PATH}/GSC ${assetKey.toLowerCase()}.png`)
 }
 
 export function loadBattleAssets (scene) {

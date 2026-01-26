@@ -190,22 +190,15 @@ export class LearnAttackManager {
     this.#audioManager.playSfx(SFX_ASSET_KEYS.ITEM_OBTAINED, { primaryAudio: true })
 
     const alreadyLoaded = loadAttackAssets(this.#scene, this.#learningNewAttack.id)
-    console.log(alreadyLoaded)
 
-    if (alreadyLoaded) {
-      this.#dialogUi.showDialogModalAndWaitForInput(msgs, () => {
-        this.#reset()
-        callback(newAttackIds)
-      })
-    } else {
+    if (!alreadyLoaded) {
       this.#scene.load.start()
-      this.#scene.load.on('complete', () => {
-        this.#dialogUi.showDialogModalAndWaitForInput(msgs, () => {
-          this.#reset()
-          callback(newAttackIds)
-        })
-      })
     }
+
+    this.#dialogUi.showDialogModalAndWaitForInput(msgs, () => {
+      this.#reset()
+      callback(newAttackIds)
+    })
   }
 
   /**

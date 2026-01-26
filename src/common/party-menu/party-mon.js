@@ -1,4 +1,4 @@
-import { PARTY_MON_SPRITES } from "../../assets/asset-keys.js"
+import { CHARACTER_ASSET_KEYS } from "../../assets/asset-keys.js"
 import { DATA_MANAGER_STORE_KEYS, dataManager } from "../../utils/data-manager.js"
 import { HealthBar } from "../health-bar.js"
 import { MonCore } from "../mon-core.js"
@@ -40,7 +40,7 @@ export class PartyMon extends MonCore {
     this.#phaserLvlTextGameObject = this.#scene.add.bitmapText(350, 10, 'gb-font-thick', `Lv${this._monDetails.currentLevel}`, 30).setOrigin(0)
 
     this.#container = this.#scene.add.container(50, 0, [
-      this.#scene.add.image(25, 5, PARTY_MON_SPRITES.PARTY_MON_SPRITES_SHEET_1, this._baseMonDetails.partySpriteAssetKey)
+      this.#scene.add.image(25, 5, CHARACTER_ASSET_KEYS.SHEET_16, this._baseMonDetails.partySpriteAssetKey)
         .setScale(1.25),
       this.#scene.add.bitmapText(65, 0, 'gb-font', this._monDetails.name, 40).setOrigin(0),
       this.#scene.add.bitmapText(75, 40, 'gb-font-thick', `HP:`, 20).setOrigin(0),

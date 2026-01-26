@@ -7,8 +7,8 @@ import { BattleMon } from "./battle-mon.js";
  * @type {import("../../types/typedef.js").Coordinate}
  */
 const ENEMY_IMAGE_POSITION = Object.freeze({
-  x: 396,
-  y: 5
+  x: 490,
+  y: 120
 })
 
 export class EnemyBattleMon extends BattleMon {
@@ -25,7 +25,7 @@ export class EnemyBattleMon extends BattleMon {
    */
   constructor (config) {
     super(config, ENEMY_IMAGE_POSITION)
-    this._phaserMonImageGameObject.setFlipX(true)
+    this._phaserMonImageGameObject
     this.#monBallSprite = this._scene.add.sprite(0, 0, MON_BALLS.MON_BALLS_SHEET_1, 1).setScale(1.25)
     this.#monBallExpandSprite = this._scene.add.sprite(0, 0, MON_BALLS.BALL_POOF, 0).setScale(1.5).setAlpha(0)
 
@@ -134,8 +134,8 @@ export class EnemyBattleMon extends BattleMon {
   
     const startPos = { x: 224, y: 300 }
     const endPos = { 
-      x: ENEMY_IMAGE_POSITION.x + 112, 
-      y: ENEMY_IMAGE_POSITION.y + 180 
+      x: ENEMY_IMAGE_POSITION.x,
+      y: ENEMY_IMAGE_POSITION.y + 50
     }
 
     const controlPoint = {
@@ -169,7 +169,7 @@ export class EnemyBattleMon extends BattleMon {
     })
 
     const playBallHitExlpodeAnim = () => {
-      this.#monBallExpandSprite.setPosition(endPos.x, endPos.y - 20)
+      this.#monBallExpandSprite.setPosition(endPos.x, endPos.y)
       this.#monBallExpandSprite.setAlpha(1)
       this._phaserMonImageGameObject.setAlpha(0)
       this.#monBallSprite.setAlpha(0)
@@ -210,7 +210,7 @@ export class EnemyBattleMon extends BattleMon {
     const startXPos = -50
     const endXPos = ENEMY_IMAGE_POSITION.x
     const assetKey = MON_ASSET_KEYS[this._phaserMonImageGameObject.texture.key]
-    this._phaserMonImageGameObject.setTexture(MON_GRAY_ASSET_KEYS[assetKey + '_GRAY']).setFlipX(true)
+    this._phaserMonImageGameObject.setTexture(MON_GRAY_ASSET_KEYS[assetKey + '_GRAY'])
 
     this._phaserMonImageGameObject.setPosition(startXPos, ENEMY_IMAGE_POSITION.y).setAlpha(1)
 
