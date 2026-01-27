@@ -29,7 +29,8 @@ import { BGM_ASSETS_PATH } from '../utils/consts.js';
 const CUSTOM_TILED_TYPES = Object.freeze({
   NPC: 'npc',
   NPC_PATH: 'npc_path',
-  ENCOUNTER: 'encounter'
+  ENCOUNTER: 'encounter',
+  PORTAL: 'portal'
 })
 
 const TILED_NPC_PROPERTY = Object.freeze({
@@ -86,6 +87,8 @@ export class WorldScene extends Phaser.Scene {
   #partyMenu
   /** @type {() => void} */
   #onPartyMonSelection
+  /** @type {Phaser.Tilemaps.TilemapLayer} */
+  #portalLayer
 
   constructor () {
     super({
@@ -108,7 +111,7 @@ export class WorldScene extends Phaser.Scene {
     console.log(`[${WorldScene.name}:create] invoked`)
 
     const map = this.make.tilemap({ key: WORLD_ASSET_KEYS.WORLD_MAIN_LEVEL })
-  
+
     this.#createWorldLayers(map)
     this.#createBackgroundSetCamera()
     this.#createNPCs(map)
@@ -122,7 +125,7 @@ export class WorldScene extends Phaser.Scene {
     this.cameras.main.fadeIn(500, 255, 255, 255)
     this.#audioManager = this.registry.get('audio')
     this.#audioManager.playBgm(this.#bgmKey)
-
+    
     this.#menu = new Menu(this)
     this.#partyMenu = new PartyMenu(this)
     this.#partyMenu.depth = 3
@@ -302,7 +305,22 @@ export class WorldScene extends Phaser.Scene {
   
     return tileLandedOn.properties.area
   }
+
+  /**
+   * 
+   * @returns {import('../types/typedef.js').Coordinate|undefined}
+   */
+  #getPortalCoords () {
+    /** @type {Phaser.Tilemaps.Tile} */
+    const tileLandedOn = this.#portalLayer.getTileAtWorldXY(this.#player.sprite.x, this.#player.sprite.y, true)
+    const isOnPortal = tileLandedOn.index !== -1
+    if (!isOnPortal) {
+      return undefined
+    }
   
+    return { x: tileLandedOn.properties.x, y: tileLandedOn.properties.y }
+  }
+
   /**
    * 
    * @param {import('../types/typedef.js').EncounterAreaConfig} config
@@ -315,16 +333,23 @@ export class WorldScene extends Phaser.Scene {
   #handlePlayerMovementUpdate () {
     this.#savePlayerPosition()
 
-    if (!this.#encounterLayer) {
-      return
+    if (this.#encounterLayer) {
+      const areaId = this.#getEncounterAreaId()
+      if (areaId) {
+        const encounterArea = DataUtils.getEncoutnerConfig(this, areaId)
+        this.#wildMonEncountered = this.#determineWildMonEncountered(encounterArea)
+        if (this.#wildMonEncountered) {
+          this.#playWildMonEncounteredSequence(encounterArea)
+        }
+        return
+      }
     }
 
-    const areaId = this.#getEncounterAreaId()
-    if (areaId) {
-      const encounterArea = DataUtils.getEncoutnerConfig(this, areaId)
-      this.#wildMonEncountered = this.#determineWildMonEncountered(encounterArea)
-      if (this.#wildMonEncountered) {
-        this.#playWildMonEncounteredSequence(encounterArea)
+    if (this.#portalLayer) {
+      const coords = this.#getPortalCoords()
+      if (coords) {
+        this.#player.teleportCharacter(coords.x, coords.y)
+        return
       }
     }
   }
@@ -537,6 +562,20 @@ export class WorldScene extends Phaser.Scene {
       return
     }
     this.#encounterLayer.setAlpha(TILED_COLLISION_ALPHA).setDepth(2)
+
+    console.log(map.getTileLayerNames())
+    // portal
+    const portalTiles = map.addTilesetImage('portal', WORLD_ASSET_KEYS.WORLD_PORTAL_ZONE)
+    if (!portalTiles) {
+      console.log(`[${WorldScene.name}:create] encounted error while creating Portal TILESET using data from tiled`)
+      return
+    }
+    this.#portalLayer = map.createLayer('Portal', portalTiles, 0, 0)
+    if (!this.#portalLayer) {
+      console.log(`[${WorldScene.name}:create] encounted error while creating Portal LAYER using data from tiled`)
+      return
+    }
+    this.#portalLayer.setAlpha(TILED_COLLISION_ALPHA).setDepth(2)
 
     // interactives
     this.#signLayer = map.getObjectLayer('Signs')

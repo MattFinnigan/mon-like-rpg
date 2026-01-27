@@ -239,6 +239,16 @@
             ]
         },
         {
+            "id": 14,
+            "name": "portal_type",
+            "storageType": "string",
+            "type": "enum",
+            "values": [
+                "door"
+            ],
+            "valuesAsFlags": false
+        },
+        {
             "color": "#ffa0a0a4",
             "drawFill": true,
             "id": 10,
@@ -260,6 +270,42 @@
                 "tileset",
                 "wangcolor",
                 "wangset"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
+            "id": 13,
+            "members": [
+                {
+                    "name": "type",
+                    "propertyType": "portal_type",
+                    "type": "string",
+                    "value": "door"
+                },
+                {
+                    "name": "x",
+                    "type": "int",
+                    "value": 0
+                },
+                {
+                    "name": "y",
+                    "type": "int",
+                    "value": 0
+                }
+            ],
+            "name": "portal",
+            "type": "class",
+            "useAs": [
+                "property",
+                "map",
+                "layer",
+                "object",
+                "tile",
+                "tileset",
+                "wangcolor",
+                "wangset",
+                "project"
             ]
         }
     ]

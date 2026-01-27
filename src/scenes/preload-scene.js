@@ -96,6 +96,7 @@ export class PreloadScene extends Phaser.Scene {
 
     this.load.image(WORLD_ASSET_KEYS.WORLD_COLLISION, `/${MAP_ASSETS_PATH}/collision.png`)
     this.load.image(WORLD_ASSET_KEYS.WORLD_ENCOUNTER_ZONE, `/${MAP_ASSETS_PATH}/encounter.png`)
+    this.load.image(WORLD_ASSET_KEYS.WORLD_PORTAL_ZONE, `/${MAP_ASSETS_PATH}/portal.png`)
   
     this.load.image(HEALTH_BAR_ASSET_KEYS.LEFT_CAP, `/${BATTLE_ASSETS_PATH}/hp_left_cap.png`)
     this.load.image(HEALTH_BAR_ASSET_KEYS.MIDDLE, `/${BATTLE_ASSETS_PATH}/hp_mid.png`)
@@ -103,6 +104,18 @@ export class PreloadScene extends Phaser.Scene {
     
     // character, npcs world sprites
     this.load.spritesheet(CHARACTER_ASSET_KEYS.SHEET_1, `${CHARACTER_ASSETS_PATH}/1.png`, {
+      frameWidth: 72,
+      frameHeight: 96
+    })
+    this.load.spritesheet(CHARACTER_ASSET_KEYS.SHEET_7, `${CHARACTER_ASSETS_PATH}/7.png`, {
+      frameWidth: 72,
+      frameHeight: 96
+    })
+    this.load.spritesheet(CHARACTER_ASSET_KEYS.SHEET_8, `${CHARACTER_ASSETS_PATH}/8.png`, {
+      frameWidth: 72,
+      frameHeight: 96
+    })
+    this.load.spritesheet(CHARACTER_ASSET_KEYS.SHEET_9, `${CHARACTER_ASSETS_PATH}/9.png`, {
       frameWidth: 72,
       frameHeight: 96
     })

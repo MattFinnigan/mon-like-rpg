@@ -192,8 +192,8 @@ export class Character {
    */
   teleportCharacter (x, y) {
     this._targetPosition = { x, y }
-    this._previousTargetPosition = { x, y }
     this._phaserGameObject.setPosition(x, y)
+    this._moveSprite(this._direction)
   }
 
   /**
@@ -213,7 +213,6 @@ export class Character {
     if (res && !this.#audioManager.sfxIsPlaying) {
       this.#audioManager.playSfx(SFX_ASSET_KEYS.COLLISION, { primaryAudio: true })
     }
-
     return res
   }
 

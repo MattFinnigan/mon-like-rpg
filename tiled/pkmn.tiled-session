@@ -153,28 +153,39 @@
         },
         "aus.tmx": {
             "expandedGroupLayers": [
+                18,
                 22,
-                18
+                46,
+                44,
+                47
             ],
             "expandedObjectLayers": [
-                30,
-                18,
-                34,
-                17,
+                38,
+                49,
+                25,
+                42,
                 21,
-                33,
+                40,
                 19,
                 31,
-                25,
-                35,
+                33,
+                18,
                 26,
-                28
+                52,
+                35,
+                39,
+                28,
+                17,
+                51,
+                34,
+                30,
+                47
             ],
             "scale": 2,
-            "selectedLayer": 19,
+            "selectedLayer": 31,
             "viewCenter": {
-                "x": 6468.5,
-                "y": 11442.5
+                "x": 1018,
+                "y": 1568.5
             }
         },
         "aus.tmx#GSCd_A1": {
@@ -188,56 +199,56 @@
             "scaleInDock": 0.5
         },
         "aus.tmx#GSCd_A2b": {
-            "scaleInDock": 0.25
+            "scaleInDock": 0.5
         },
         "aus.tmx#GSCd_A4": {
-            "scaleInDock": 0.33
+            "scaleInDock": 0.5
         },
         "aus.tmx#GSCd_A4a": {
-            "scaleInDock": 0.33
+            "scaleInDock": 0.5
         },
         "aus.tmx#GSCd_A5": {
             "scaleInDock": 0.5
         },
         "aus.tmx#GSCd_B": {
-            "scaleInDock": 0.33
+            "scaleInDock": 0.5
         },
         "aus.tmx#GSCd_Ba": {
-            "scaleInDock": 0.33
+            "scaleInDock": 0.5
         },
         "aus.tmx#GSCd_C": {
-            "scaleInDock": 0.33
+            "scaleInDock": 0.5
         },
         "aus.tmx#GSCd_Ca": {
-            "scaleInDock": 0.33
+            "scaleInDock": 0.5
         },
         "aus.tmx#GSCd_D": {
-            "scaleInDock": 0.33
+            "scaleInDock": 0.5
         },
         "aus.tmx#GSCd_D copy": {
-            "scaleInDock": 0.75
+            "scaleInDock": 0.5
         },
         "aus.tmx#GSCd_Da": {
-            "scaleInDock": 0.33
+            "scaleInDock": 0.5
         },
         "aus.tmx#GSCd_Ea": {
-            "scaleInDock": 0.33
+            "scaleInDock": 0.5
         },
         "aus.tmx#RBY-LB_A1": {
-            "scaleInDock": 1
+            "scaleInDock": 0.5
         },
         "aus.tmx#RBY-LB_A2": {
-            "scaleInDock": 1
+            "scaleInDock": 0.5
         },
         "aus.tmx#RBY-LB_A2_B": {
-            "scaleInDock": 1
+            "scaleInDock": 0.5
         },
         "aus.tmx#RBY-LB_A5": {
-            "scaleInDock": 1
+            "scaleInDock": 0.5
         },
         "aus.tmx#RBY-LB_B": {
             "dynamicWrapping": false,
-            "scaleInDock": 1,
+            "scaleInDock": 0.5,
             "scaleInEditor": 1
         },
         "aus.tmx#Yr6_AustraliaSinceFederation_22": {
@@ -245,32 +256,36 @@
             "scaleInDock": 1
         },
         "aus.tmx#black": {
-            "scaleInDock": 1
+            "scaleInDock": 0.5
         },
         "aus.tmx#collision": {
-            "scaleInDock": 1
+            "scaleInDock": 0.5
         },
         "aus.tmx#encounter": {
-            "scaleInDock": 1
+            "scaleInDock": 0.5,
+            "scaleInEditor": 1
+        },
+        "aus.tmx#portal": {
+            "scaleInDock": 1.5
         },
         "encounter.tsx": {
             "scaleInDock": 1
         },
         "map.tmx": {
             "expandedGroupLayers": [
-                23,
+                25,
                 18,
-                25
+                23
             ],
             "expandedObjectLayers": [
-                18,
-                21
+                21,
+                18
             ],
             "scale": 2,
             "selectedLayer": 11,
             "viewCenter": {
-                "x": 832.25,
-                "y": 2365
+                "x": 836.5,
+                "y": 2369
             }
         },
         "map.tmx#RBY-BP_A1": {
@@ -393,8 +408,8 @@
     "project": "pkmn.tiled-project",
     "property.type": "directions",
     "recentFiles": [
-        "map.tmx",
         "aus.tmx",
+        "map.tmx",
         "/Users/mattfinnigan/Documents/code/Web/pkmn/assets/data/level.json",
         "untitled.tmx",
         "/Users/mattfinnigan/Documents/tiled_demo/demo.tmx"

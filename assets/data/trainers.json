@@ -88,5 +88,41 @@
     "assetKey": "POKEMANIAC",
     "partyMons": [24, 13, 11],
     "defeatedMsg": "Wait... is that a Waddi Tree?!?"
+  },
+  "11": {
+    "name": "MILTON",
+    "trainerType": "SPEAKER OF THE HOUSE",
+    "rewardOnVictory": 1500,
+    "payOutOnDefeat": 1000,
+    "assetKey": "FIREBREATHER",
+    "partyMons": [24],
+    "defeatedMsg": "..."
+  },
+  "12": {
+    "name": "ALBO",
+    "trainerType": "PRIME MINISTER",
+    "rewardOnVictory": 1500,
+    "payOutOnDefeat": 1000,
+    "assetKey": "ALBO",
+    "partyMons": [24],
+    "defeatedMsg": "..."
+  },
+  "13": {
+    "name": "SUSAN",
+    "trainerType": "OPP. LEADER",
+    "rewardOnVictory": 1500,
+    "payOutOnDefeat": 1000,
+    "assetKey": "KRIS",
+    "partyMons": [24],
+    "defeatedMsg": "..."
+  },
+  "14": {
+    "name": "ADAM",
+    "trainerType": "CIVILIAN",
+    "rewardOnVictory": 1500,
+    "payOutOnDefeat": 1000,
+    "assetKey": "PRYCE",
+    "partyMons": [24],
+    "defeatedMsg": "..."
   }
 }
