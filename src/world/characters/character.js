@@ -55,6 +55,8 @@ export class Character {
   _otherCharactersToCheckForCollisionsWith
   /** @type {AudioManager} */
   #audioManager
+  /** @type {boolean} */
+  #isVisible
 
   /**
    * 
@@ -77,6 +79,7 @@ export class Character {
     this._phaserGameObject = this._scene.add.sprite(config.position.x, config.position.y, config.assetKey, this._getIdleFrame()).setOrigin(this._origin.x, this._origin.y).setScale(1.25)
     this._spriteGridMovementFinishedCallback = config.spriteGridMovementFinishedCallback
     this.#audioManager = this._scene.registry.get('audio')
+    this.#isVisible = true
   }
 
   /** @type {Phaser.GameObjects.Sprite} */
@@ -109,6 +112,21 @@ export class Character {
    * @returns {void}
    */
   update (time) {
+    if (this.#isVisible && !this._isInCameraView()) {
+      this.#isVisible = false
+      this._phaserGameObject.setActive(false).setVisible(false)
+      return
+    }
+  
+    if (!this.#isVisible && this._isInCameraView()) {
+      this.#isVisible = true
+      this._phaserGameObject.setActive(true).setVisible(true)
+      return
+    }
+
+    if (this._isInCameraView() && !this._phaserGameObject.active && !this._phaserGameObject.visible)
+      this._phaserGameObject.setActive(true).setVisible(true)
+
     if (this._isMoving) {
       return
     }
@@ -130,6 +148,11 @@ export class Character {
       default:
         exhaustiveGuard(this._direction)
     }
+  }
+
+  _isInCameraView () {
+    const bounds = this._phaserGameObject.getBounds()
+    return Phaser.Geom.Rectangle.Overlaps(this._scene.cameras.main.worldView, bounds)
   }
 
   _getIdleFrame () {

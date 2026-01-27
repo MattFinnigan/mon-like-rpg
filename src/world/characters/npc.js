@@ -290,17 +290,18 @@ export class NPC extends Character {
     if (this.#movementPattern === NPC_MOVEMENT_PATTERN.IDLE) {
       return 0
     }
+    return Phaser.Math.Between(1000, 3000)
 
-    switch (this.#movementPattern) {
-      case NPC_MOVEMENT_PATTERN.CLOCKWISE:
-        return Phaser.Math.Between(1000, 3000)
-      case NPC_MOVEMENT_PATTERN.LEFT_RIGHT:
-      case NPC_MOVEMENT_PATTERN.UP_DOWN:
-        return 300
-      default:
-        exhaustiveGuard(this.#movementPattern)
-        break
-    } 
+    // switch (this.#movementPattern) {
+    //   case NPC_MOVEMENT_PATTERN.CLOCKWISE:
+    //     return Phaser.Math.Between(1000, 3000)
+    //   case NPC_MOVEMENT_PATTERN.LEFT_RIGHT:
+    //   case NPC_MOVEMENT_PATTERN.UP_DOWN:
+    //     return 500
+    //   default:
+    //     exhaustiveGuard(this.#movementPattern)
+    //     break
+    // } 
     // return Phaser.Math.Between(3500, 5000)
   }
 }
