@@ -1,6 +1,7 @@
 import Phaser from "../../lib/phaser.js"
 import { ATTACK_ASSET_KEYS } from "../../assets/asset-keys.js"
 import { Attack } from "./attack.js"
+import { BattleMon } from "../mons/battle-mon.js"
 
 export class IceShard extends Attack {
   /** @protected @type {Phaser.GameObjects.Sprite} */
@@ -8,13 +9,12 @@ export class IceShard extends Attack {
 
   /**
    * 
-   * @param {Phaser.Scene} scene 
-   * @param {import("../../types/typedef").Coordinate} position 
+   * @param {Phaser.Scene} scene
    */
-  constructor (scene, position) {
-    super(scene, position)
+  constructor (scene) {
+    super(scene)
 
-    this._attackGameObjectContainer = this._scene.add.sprite(this._position.x, this._position.y, ATTACK_ASSET_KEYS.ICE_SHARD, 2)
+    this._attackGameObjectContainer = this._scene.add.sprite(0, 0, ATTACK_ASSET_KEYS.ICE_SHARD, 2)
       .setOrigin(0.5)
       .setScale(4)
       .setAlpha(0)
@@ -24,15 +24,18 @@ export class IceShard extends Attack {
   }
 
   /**
-   * @param {() => void} [callback]
+   * @param {() => void} callback
+   * @param {Phaser.GameObjects.Image} attacker
+   * @param {Phaser.GameObjects.Image} defender
    * @returns {void}
    */
-  playAnimation (callback) {
+  playAnimation (attacker, defender, callback) {
     if (this._isAnimationPlaying) {
       return
     }
-
+    
     this._isAnimationPlaying = true
+    this._attackGameObjectContainer.setPosition(defender.x, defender.y)
     this._attackGameObjectContainer.setAlpha(1)
     this._attackGameObjectContainer.play(ATTACK_ASSET_KEYS.ICE_SHARD_START)
 

@@ -4,32 +4,22 @@ import { Attack } from "./attack.js"
 import { ATTACK_KEYS } from "./attack-keys.js"
 
 export class Splash extends Attack {
-  /** @type {Phaser.GameObjects.Image} */
-  #monImageGameObject
 
   /**
    * 
    * @param {Phaser.Scene} scene 
-   * @param {import("../../types/typedef.js").Coordinate} position
-   * @param {Phaser.GameObjects.Image} monImageGameObject
    */
-  constructor (scene, position, monImageGameObject) {
-    super(scene, position)
-    this.#monImageGameObject = monImageGameObject
+  constructor (scene) {
+    super(scene)
   }
 
   /**
-   * @param {Phaser.GameObjects.Image} val
-   */
-  set monImageGameObject (val) {
-    this.#monImageGameObject = val
-  }
-
-  /**
-   * @param {() => void} [callback]
+   * @param {() => void} callback
+   * @param {Phaser.GameObjects.Image} attacker
+   * @param {Phaser.GameObjects.Image} defender
    * @returns {void}
    */
-  playAnimation (callback) {
+  playAnimation (attacker, defender, callback) {
     if (this._isAnimationPlaying) {
       return
     }
@@ -44,9 +34,9 @@ export class Splash extends Attack {
       new Promise(resolve => {
         const flailRight = () => {
           this._scene.tweens.add({
-            targets: this.#monImageGameObject,
+            targets: attacker,
             angle: -8,
-            y: this.#monImageGameObject.y + 32,
+            y: attacker.y + 32,
             duration: 100,
             yoyo: true,
             onComplete: () => {
@@ -57,7 +47,7 @@ export class Splash extends Attack {
 
         const flailLeft = () => {
           this._scene.tweens.add({
-            targets: this.#monImageGameObject,
+            targets: attacker,
             angle: 8,
             duration: 100,
             yoyo: true,

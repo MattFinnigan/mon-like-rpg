@@ -484,6 +484,7 @@ export class BattleScene extends Phaser.Scene {
     this.#battleStateMachine.addState({
       name: BATTLE_STATES.PLAYER_SWITCH,
       onEnter: () => {
+        this.#attackManager.playerMonImageGameObject = this.#activePlayerMon.phaserMonImageGameObject
         this.#introducePlayerMon(() => {
           this.#battleStateMachine.setState(BATTLE_STATES.BATTLE)
         })

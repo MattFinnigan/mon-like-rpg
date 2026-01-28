@@ -1,16 +1,14 @@
-import { exhaustiveGuard } from "../../utils/guard.js"
 import { ATTACK_KEYS } from "./attack-keys.js"
 import { IceShard } from "./ice-shard.js"
 import { Slash } from "./slash.js"
 import { FireSpin } from './fire-spin.js'
 import { BattleMon } from "../mons/battle-mon.js"
 import { MON_TYPES } from "../../types/mon-types.js"
-import { SKIP_ANIMATIONS } from "../../../config.js"
-import { STATUS_EFFECT } from "../../types/status-effect.js"
 import Phaser from "../../lib/phaser.js"
 import { Splash } from "./splash.js"
 import { ThunderWave } from "./thunder-wave.js"
 import { ConfuseRay } from "./confuse-ray.js"
+import { Attack } from "./attack.js"
 /**
  * @typedef {keyof typeof ATTACK_TARGET} AttackTarget
  */
@@ -21,6 +19,32 @@ export const ATTACK_TARGET = Object.freeze({
   ENEMY: 'ENEMY'
 })
 
+export const ATTACK_DEFINITIONS = {
+  [ATTACK_KEYS.ICE_SHARD]: {
+    /** @param {Phaser.Scene} scene */
+    create: (scene) => new IceShard(scene,)
+  },
+  [ATTACK_KEYS.SPLASH]: {
+    /** @param {Phaser.Scene} scene */
+    create: (scene) => new Splash(scene)
+  },
+  [ATTACK_KEYS.CONFUSE_RAY]: {
+    /** @param {Phaser.Scene} scene */
+    create: (scene) => new ConfuseRay(scene)
+  },
+  [ATTACK_KEYS.SLASH]: {
+    /** @param {Phaser.Scene} scene */
+    create: (scene) => new Slash(scene)
+  },
+  [ATTACK_KEYS.THUNDER_WAVE]: {
+    /** @param {Phaser.Scene} scene */
+    create: (scene) => new ThunderWave(scene)
+  },
+  [ATTACK_KEYS.FIRE_SPIN]: {
+    /** @param {Phaser.Scene} scene */
+    create: (scene) => new FireSpin(scene)
+  }
+}
 
 export class AttackManager {
   /** @type {Phaser.Scene} */
@@ -31,18 +55,8 @@ export class AttackManager {
   #enemyMonImageGameObject
   /** @type {boolean} */
   #skipBattleAnimations
-  /** @type {IceShard} */
-  #iceShardAttack
-  /** @type {Slash} */
-  #slashAttack
-  /** @type {FireSpin} */
-  #fireSpinAttack
-  /** @type {Splash} */
-  #splashAttack
-  /** @type {ThunderWave} */
-  #thunderWaveAttack
-  /** @type {ConfuseRay} */
-  #confuseRayAttack
+  /** @type {Map<import("./attack-keys").AttackKeys, any>} */
+  #attackInstances = new Map()
 
   /**
    * 
@@ -59,7 +73,6 @@ export class AttackManager {
    */
   set playerMonImageGameObject (gameObj) {
     this.#playerMonImageGameObject = gameObj
-    
   }
 
   /**
@@ -68,83 +81,43 @@ export class AttackManager {
   set enemyMonImageGameObject (gameObj) {
     this.#enemyMonImageGameObject = gameObj
   }
-
+  
+  /**
+   * 
+   * @param {import("./attack-keys.js").AttackKeys} key 
+   * @param {() => Attack} factory 
+   * @returns {Attack}
+   */
+  #getAttackInstance (key, factory) {
+    if (!this.#attackInstances.has(key)) {
+      this.#attackInstances.set(key, factory())
+    }
+    return this.#attackInstances.get(key)
+  }
 
   /**
    * 
-   * @param {import("./attack-keys").AttackKeys} attackAnim 
-   * @param {string} target 
+   * @param {import("./attack-keys").AttackKeys} key 
+   * @param {'PLAYER'|'ENEMY'} target 
    * @param {() => void} callback
    * @returns {void}
    */
-  #playAttackAnimation (attackAnim, target, callback) {
-    const PLAYER_COORDS = {
-      x: 150,
-      y: 300
+  #playAttackAnimation (key, target, callback) {
+    const def = ATTACK_DEFINITIONS[key]
+
+    if (!def) {
+      new Error(`Attack definition for ${key} not found.`)
+      return
     }
 
-    const ENEMY_COORDS = {
-      x: 500,
-      y: 100
-    }
-  
-    let x = ENEMY_COORDS.x
-    let y = ENEMY_COORDS.y
-    let attackerMonGameObject = this.#playerMonImageGameObject
-  
-    if (target === ATTACK_TARGET.PLAYER) {
-      x = PLAYER_COORDS.x
-      y = PLAYER_COORDS.y
-      attackerMonGameObject = this.#enemyMonImageGameObject
-    }
+    const attack = this.#getAttackInstance(key, () => {
+      return def.create(this.#scene)
+    })
 
-    switch (attackAnim) {
-      case ATTACK_KEYS.ICE_SHARD:
-        if (!this.#iceShardAttack) {
-          this.#iceShardAttack = new IceShard(this.#scene, { x, y })
-        }
-        this.#iceShardAttack.gameObjectContainer.setPosition(x, y)
-        this.#iceShardAttack.playAnimation(callback)
-        break
-      case ATTACK_KEYS.SLASH:
-        if (!this.#slashAttack) {
-          this.#slashAttack = new Slash(this.#scene, { x, y })
-        }
-        this.#slashAttack.gameObjectContainer.setPosition(x, y)
-        this.#slashAttack.playAnimation(callback)
-        break
-      case ATTACK_KEYS.FIRE_SPIN:
-        if (!this.#fireSpinAttack) {
-          this.#fireSpinAttack = new FireSpin(this.#scene, { x, y })
-        }
-        this.#fireSpinAttack.gameObjectContainer.setPosition(x, y)
-        this.#fireSpinAttack.playAnimation(callback)
-        break
-      case ATTACK_KEYS.SPLASH:
-        if (!this.#splashAttack) {
-          this.#splashAttack = new Splash(this.#scene, { x, y }, attackerMonGameObject)
-        }
-        this.#splashAttack.monImageGameObject = attackerMonGameObject
-        this.#splashAttack.playAnimation(callback)
-        break
-      case ATTACK_KEYS.THUNDER_WAVE:
-        if (!this.#thunderWaveAttack) {
-          this.#thunderWaveAttack = new ThunderWave(this.#scene, { x, y })
-        }
-        this.#thunderWaveAttack.gameObjectContainer.setPosition(x, y)
-        this.#thunderWaveAttack.playAnimation(callback)
-        break
-      case ATTACK_KEYS.CONFUSE_RAY:
-        if (!this.#confuseRayAttack) {
-          this.#confuseRayAttack = new ConfuseRay(this.#scene, PLAYER_COORDS, ENEMY_COORDS, target)
-        }
-        this.#confuseRayAttack.target = target
-        this.#confuseRayAttack.playAnimation(callback)
-        break
-      default:
-        exhaustiveGuard(attackAnim)
-    }
+    const attacker = target === ATTACK_TARGET.PLAYER ? this.#enemyMonImageGameObject : this.#playerMonImageGameObject
+    const defender = target === ATTACK_TARGET.ENEMY ? this.#enemyMonImageGameObject : this.#playerMonImageGameObject
 
+    attack.playAnimation(attacker, defender, callback)
   }
   
   /**
@@ -152,7 +125,7 @@ export class AttackManager {
    * @param {BattleMon} attacker 
    * @param {BattleMon} defender 
    * @param {import("../../types/typedef.js").Attack} attack 
-   * @param {string} target 
+   * @param {'PLAYER'|'ENEMY'} target 
    * @param {(result: import("../../types/typedef.js").PostAttackResult) => void} callback 
    */
   playAttackSequence (attacker, defender, attack, target, callback) {

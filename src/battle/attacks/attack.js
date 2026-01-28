@@ -5,8 +5,6 @@ import { DataUtils } from "../../utils/data-utils.js"
 export class Attack {
   /** @protected @type {Phaser.Scene} */
   _scene
-  /** @protected @type {import("../../types/typedef").Coordinate} */
-  _position
   /** @protected @type {boolean} */
   _isAnimationPlaying
   /** @protected @type {Phaser.GameObjects.Sprite|Phaser.GameObjects.Container|undefined} */
@@ -17,11 +15,9 @@ export class Attack {
   /**
    * 
    * @param {Phaser.Scene} scene 
-   * @param {import("../../types/typedef").Coordinate} position 
    */
-  constructor (scene, position) {
+  constructor (scene) {
     this._scene = scene
-    this._position = position
     this._isAnimationPlaying = false
     this._attackGameObject = undefined
     this._audioManager = this._scene.registry.get('audio')
@@ -36,9 +32,11 @@ export class Attack {
 
   /**
    * @param {() => void} callback
+   * @param {Phaser.GameObjects.Image} attacker
+   * @param {Phaser.GameObjects.Image} defender
    * @returns {void}
    */
-  playAnimation (callback) {
+  playAnimation (attacker, defender, callback) {
     throw new Error('playAnimation is not implemented')
   }
 

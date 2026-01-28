@@ -182,10 +182,10 @@
                 47
             ],
             "scale": 2,
-            "selectedLayer": 31,
+            "selectedLayer": 17,
             "viewCenter": {
-                "x": 1018,
-                "y": 1568.5
+                "x": 6445,
+                "y": 10608
             }
         },
         "aus.tmx#GSCd_A1": {
@@ -408,8 +408,8 @@
     "project": "pkmn.tiled-project",
     "property.type": "directions",
     "recentFiles": [
-        "aus.tmx",
         "map.tmx",
+        "aus.tmx",
         "/Users/mattfinnigan/Documents/code/Web/pkmn/assets/data/level.json",
         "untitled.tmx",
         "/Users/mattfinnigan/Documents/tiled_demo/demo.tmx"

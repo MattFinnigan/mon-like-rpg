@@ -12,15 +12,14 @@ export class ThunderWave extends Attack {
   /**
    * 
    * @param {Phaser.Scene} scene 
-   * @param {import("../../types/typedef.js").Coordinate} position 
    */
-  constructor (scene, position) {
-    super(scene, position)
+  constructor (scene) {
+    super(scene)
 
     this._attackGameObject1 = this._scene.add.sprite(0, 0, ATTACK_ASSET_KEYS.ELECTRIC, 0)
       .setOrigin(0.5, 0.3).setScale(1.5)
 
-    this._attackGameObjectContainer = this._scene.add.container(this._position.x, this._position.y, [
+    this._attackGameObjectContainer = this._scene.add.container(0, 0, [
       this._attackGameObject1
     ]).setAlpha(0)
 
@@ -28,15 +27,18 @@ export class ThunderWave extends Attack {
   }
 
   /**
-   * @param {() => void} [callback]
+   * @param {() => void} callback
+   * @param {Phaser.GameObjects.Image} attacker
+   * @param {Phaser.GameObjects.Image} defender
    * @returns {void}
    */
-  playAnimation (callback) {
+  playAnimation (attacker, defender, callback) {
     if (this._isAnimationPlaying) {
       return
     }
-
+    
     this._isAnimationPlaying = true
+    this._attackGameObjectContainer.setPosition(defender.x, defender.y)
     this._attackGameObjectContainer.setAlpha(1)
     this._attackGameObject1.play(ATTACK_KEYS.THUNDER_WAVE)
 

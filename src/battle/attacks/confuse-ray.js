@@ -15,27 +15,15 @@ export class ConfuseRay extends Attack {
   _attackGameObject3
     /** @protected @type {Phaser.GameObjects.Sprite} */
   _attackGameObject4
-  /** @type {import("../../types/typedef.js").Coordinate} */
-  #playerCoords
-  /** @type {import("../../types/typedef.js").Coordinate} */
-  #enemyCoords
-  /** @type {string} */
-  #target
   /** @type {Phaser.GameObjects.Sprite[]} */
   #frames
 
   /**
    * 
    * @param {Phaser.Scene} scene
-   * @param {import("../../types/typedef.js").Coordinate} playerCoords
-   * @param {import("../../types/typedef.js").Coordinate} enemyCoords
-   * @param {string} target
    */
-  constructor (scene, playerCoords, enemyCoords, target) {
-    super(scene, target === ATTACK_TARGET.PLAYER ? enemyCoords : playerCoords)
-    this.#enemyCoords = enemyCoords
-    this.#playerCoords = playerCoords
-    this.#target = target
+  constructor (scene) {
+    super(scene)
 
     this._attackGameObject1 = this._scene.add.sprite(0, 0, ATTACK_ASSET_KEYS.RAY, 3)
       .setOrigin(0).setAlpha(0)
@@ -65,17 +53,12 @@ export class ConfuseRay extends Attack {
   }
 
   /**
-   * @param {string} val
-   */
-  set target (val) {
-    this.#target = val
-  }
-
-  /**
-   * @param {() => void} [callback]
+   * @param {() => void} callback
+   * @param {Phaser.GameObjects.Image} attacker
+   * @param {Phaser.GameObjects.Image} defender
    * @returns {void}
    */
-  playAnimation (callback) {
+  playAnimation (attacker, defender, callback) {
     if (this._isAnimationPlaying) {
       return
     }
@@ -87,7 +70,7 @@ export class ConfuseRay extends Attack {
           callback: () => resolve()
         })
       }),
-      this.#playConfuseRayAnimation()
+      this.#playConfuseRayAnimation(attacker, defender)
     ]
 
     Promise.all(promises).then(() => {
@@ -98,28 +81,23 @@ export class ConfuseRay extends Attack {
   }
 
   /**
+   * @param {Phaser.GameObjects.Image} attacker
+   * @param {Phaser.GameObjects.Image} defender
    * @returns {Promise}
    */
-  #playConfuseRayAnimation () {
+  #playConfuseRayAnimation (attacker, defender) {
     return new Promise(resolve => {
-      this._isAnimationPlaying = true
       this._attackGameObjectContainer.setAlpha(1)
       let remaining = this.#frames.length
 
       let targetCoords = {
-        x: this.#enemyCoords.x - 60,
-        y: this.#enemyCoords.y - 35
+        x: defender.x,
+        y: defender.y - 35
       }
 
       let originCoords = {
-        x: this.#playerCoords.x + 60,
-        y: this.#playerCoords.y - 35
-      }
-
-      if (this.#target === ATTACK_TARGET.PLAYER) {
-        const temp = targetCoords
-        targetCoords = originCoords
-        originCoords = temp
+        x: attacker.x,
+        y: attacker.y - 35
       }
       
       this.#frames.forEach((frame, i) => {

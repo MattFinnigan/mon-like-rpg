@@ -15,11 +15,10 @@ export class Slash extends Attack {
 
   /**
    * 
-   * @param {Phaser.Scene} scene 
-   * @param {import("../../types/typedef").Coordinate} position 
+   * @param {Phaser.Scene} scene
    */
-  constructor (scene, position) {
-    super(scene, position)
+  constructor (scene) {
+    super(scene)
 
     this._attackGameObject1 = this._scene.add.sprite(0, 0, ATTACK_ASSET_KEYS.SLASH, 0)
       .setScale(4)
@@ -30,7 +29,7 @@ export class Slash extends Attack {
     this._attackGameObject3 = this._scene.add.sprite(-30, 0, ATTACK_ASSET_KEYS.SLASH, 2)
       .setScale(4)
 
-    this._attackGameObjectContainer = this._scene.add.container(this._position.x, this._position.y, [
+    this._attackGameObjectContainer = this._scene.add.container(0, 0, [
       this._attackGameObject1,
       this._attackGameObject2,
       this._attackGameObject3
@@ -39,16 +38,21 @@ export class Slash extends Attack {
     super.createAttackAnimation(ATTACK_ASSET_KEYS.SLASH)
   }
 
+
   /**
-   * @param {() => void} [callback]
+   * @param {() => void} callback
+   * @param {Phaser.GameObjects.Image} attacker
+   * @param {Phaser.GameObjects.Image} defender
    * @returns {void}
    */
-  playAnimation (callback) {
+  playAnimation (attacker, defender, callback) {
     if (this._isAnimationPlaying) {
+      callback()
       return
     }
 
     this._isAnimationPlaying = true
+    this._attackGameObjectContainer.setPosition(defender.x, defender.y)
     this._attackGameObjectContainer.setAlpha(1)
     this._attackGameObject1.play(ATTACK_ASSET_KEYS.SLASH)
     this._attackGameObject2.play(ATTACK_ASSET_KEYS.SLASH)
