@@ -1,0 +1,159 @@
+import Phaser from "../../lib/phaser.js"
+import { ATTACK_ASSET_KEYS } from "../../assets/asset-keys.js"
+import { Attack } from "./attack.js"
+import { ATTACK_KEYS } from "./attack-keys.js"
+import { ATTACK_TARGET } from "./attack-manager.js"
+
+export class SolarBeam extends Attack {
+  /** @protected @type {Phaser.GameObjects.Container} */
+  _attackGameObjectContainer
+  /** @protected @type {Phaser.GameObjects.Sprite} */
+  _attackGameObject1
+  /** @protected @type {Phaser.GameObjects.Sprite} */
+  _attackGameObject2
+  /** @protected @type {Phaser.GameObjects.Sprite} */
+  _attackGameObject3
+    /** @protected @type {Phaser.GameObjects.Sprite} */
+  _attackGameObject4
+  /** @type {Phaser.GameObjects.Sprite[]} */
+  #frames
+
+  /**
+   * 
+   * @param {Phaser.Scene} scene
+   */
+  constructor (scene) {
+    super(scene)
+
+    this._attackGameObject1 = this._scene.add.sprite(0, 0, ATTACK_ASSET_KEYS.RAY, 3)
+      .setOrigin(0).setAlpha(0)
+
+    this._attackGameObject2 = this._scene.add.sprite(0, 0, ATTACK_ASSET_KEYS.RAY, 2)
+      .setOrigin(0).setAlpha(0)
+  
+    this._attackGameObject3 = this._scene.add.sprite(0, 0, ATTACK_ASSET_KEYS.RAY, 1)
+      .setOrigin(0).setAlpha(0)
+
+    this._attackGameObject4 = this._scene.add.sprite(0, 0, ATTACK_ASSET_KEYS.RAY, 0)
+      .setOrigin(0).setAlpha(0)
+
+    this.#frames = [
+      this._attackGameObject1,
+      this._attackGameObject2,
+      this._attackGameObject3,
+      this._attackGameObject4
+    ]
+
+    this._attackGameObjectContainer = this._scene.add.container(0, 0, [
+      this._attackGameObject1,
+      this._attackGameObject2,
+      this._attackGameObject3,
+      this._attackGameObject4
+    ]).setAlpha(0)
+  }
+
+  /**
+   * @param {() => void} callback
+   * @param {Phaser.GameObjects.Image} attacker
+   * @param {Phaser.GameObjects.Image} defender
+   * @returns {void}
+   */
+  playAnimation (attacker, defender, callback) {
+    if (this._isAnimationPlaying) {
+      return
+    }
+
+    const promises = [
+      new Promise(resolve => {
+        this._audioManager.playSfx(ATTACK_KEYS.SOLAR_BEAM, {
+          primaryAudio: true,
+          callback: () => resolve()
+        })
+      }),
+      this.#playSolarBeamAnimation(attacker, defender)
+    ]
+
+    Promise.all(promises).then(() => {
+      if (callback) {
+        callback()
+      }
+    })
+  }
+
+  /**
+   * @param {Phaser.GameObjects.Image} attacker
+   * @param {Phaser.GameObjects.Image} defender
+   * @returns {Promise}
+   */
+  #playSolarBeamAnimation (attacker, defender) {
+    return new Promise(resolve => resolve())
+    // return new Promise(resolve => {
+    //   this._attackGameObjectContainer.setAlpha(1)
+    //   let remaining = this.#frames.length
+
+    //   let targetCoords = {
+    //     x: defender.x,
+    //     y: defender.y - 35
+    //   }
+
+    //   let originCoords = {
+    //     x: attacker.x,
+    //     y: attacker.y - 35
+    //   }
+      
+    //   this.#frames.forEach((frame, i) => {
+    //     frame.setPosition(originCoords.x, originCoords.y)
+    //     const delay = i * 60
+
+    //     this._scene.tweens.add({
+    //       targets: frame,
+    //       delay,
+    //       duration: 350,
+    //       x: targetCoords.x,
+    //       y: targetCoords.y,
+    //       onStart: () => {
+    //         frame.setAlpha(1)
+    //       },
+    //       onComplete: () => {
+    //         remaining--
+    //         frame.setAlpha(0)
+    //         if (remaining === 0) {
+    //           this._scene.time.delayedCall(delay, () => {
+    //             this._isAnimationPlaying = false
+    //             this._attackGameObjectContainer.setAlpha(0)
+    //             return resolve()
+    //           })
+    //         }
+    //       }
+    //     })
+    //   })
+    // })
+  }
+
+  /**
+   * @param {() => void} callback
+   * @param {Phaser.GameObjects.Image} attacker
+   * @param {Phaser.GameObjects.Image} defender
+   * @returns {void}
+   */
+  playChargingAnimation (attacker, defender, callback) {
+    if (this._isAnimationPlaying) {
+      return
+    }
+    callback()
+    // const promises = [
+    //   new Promise(resolve => {
+    //     this._audioManager.playSfx(ATTACK_KEYS.SOLAR_BEAM, {
+    //       primaryAudio: true,
+    //       callback: () => resolve()
+    //     })
+    //   })
+    // ]
+
+    // Promise.all(promises).then(() => {
+    //   if (callback) {
+    //     callback()
+    //   }
+    // })
+  }
+}

@@ -7,6 +7,7 @@ import { MonCore } from "../../common/mon-core.js"
 import { ExpBar } from "../../common/exp-bar.js"
 import { STATUS_EFFECT } from "../../types/status-effect.js"
 import { exhaustiveGuard } from "../../utils/guard.js"
+import { Attack } from "../attacks/attack.js"
 
 export class BattleMon extends MonCore  {
   /** @protected @type {Phaser.Scene} */
@@ -39,6 +40,16 @@ export class BattleMon extends MonCore  {
   _statusEffectRemovalAttempts
   /** @type {AudioManager} */
   #audioManager
+  /** @type {import("../../types/typedef.js").Attack} */
+  #lastAttackUsed
+  /** @type {boolean} */
+  #isCharging
+  /** @type {number} */
+  #turnsLeftToFinishCharging
+  /** @type {number} */
+  #turnsLeftToFinishCoolingDown
+  /** @type {boolean} */
+  #isCoolingDown
 
   /**
    * 
@@ -54,6 +65,12 @@ export class BattleMon extends MonCore  {
     this.#showHpNumsExpBar = showHpNumsExpBar
     this._statusEffectRemovalAttempts = 0
     this.#audioManager = this._scene.registry.get('audio')
+
+    this.#lastAttackUsed = undefined
+    this.#turnsLeftToFinishCharging = 0
+    this.#turnsLeftToFinishCoolingDown = 0
+    this.#isCharging = false
+    this.#isCoolingDown = false
 
     this.#createMonGameObject(pos)
     this.#createMonDetailsGameObject()
@@ -108,6 +125,51 @@ export class BattleMon extends MonCore  {
   /** @returns {Phaser.GameObjects.Image} */
   get phaserMonImageGameObject () {
     return this._phaserMonImageGameObject
+  }
+
+  /** @type {import("../../types/typedef.js").Attack|undefined} */
+  get lastAttackUsed () {
+    return this.#lastAttackUsed
+  }
+
+  /** @param {import("../../types/typedef.js").Attack} val */
+  set lastAttackUsed (val) {
+    this.#lastAttackUsed = val
+  }
+
+  /** @type {number} */
+  get turnsLeftToFinishCharging () {
+    return this.#turnsLeftToFinishCharging
+  }
+
+  /** @param {number} val */
+  set turnsLeftToFinishCharging (val) {
+    this.#turnsLeftToFinishCharging = val
+  }
+
+  /** @type {number} */
+  get turnsLeftToFinishCoolingDown () {
+    return this.#turnsLeftToFinishCoolingDown
+  }
+
+  /** @param {number} val */
+  set turnsLeftToFinishCoolingDown (val) {
+    this.#turnsLeftToFinishCoolingDown = val
+  }
+
+  /** @type {boolean} */
+  get isCharging () {
+    return this.#isCharging
+  }
+
+  /** @param {boolean} val */
+  set isCharging (val) {
+    this.#isCharging = val
+  }
+
+  /** @type {boolean} */
+  get isCoolingDown () {
+    return this.#isCoolingDown
   }
 
   /**
@@ -173,13 +235,13 @@ export class BattleMon extends MonCore  {
         callback()
         break
       case STATUS_EFFECT.BURN:
-        this.playBurntAnim(() => {
+        this.#playBurntAnim(() => {
           this._monLvlGameText.setText('BRN')
           callback()
         })
         break
       case STATUS_EFFECT.CONFUSE:
-        this.playConfusedAnim(() => {
+        this.#playConfusedAnim(() => {
           this._monLvlGameText.setText('CONF')
           callback()
         })
@@ -202,7 +264,7 @@ export class BattleMon extends MonCore  {
    *  statusEffect: import("../../types/status-effect.js").StatusEffect
    * }}
    */
-  rollStatusEffectRemoval () {
+  #rollStatusEffectRemoval () {
     const statusEffect = this._currentStatusEffect
     let result = false
     
@@ -389,7 +451,7 @@ export class BattleMon extends MonCore  {
   /**
    * @param {() => void} callback
    */
-  playBurntAnim (callback) {
+  #playBurntAnim (callback) {
     const sprite = this._scene.add.sprite(this._phaserMonImageGameObject.x - 35, this._phaserMonImageGameObject.y + 40, STATUS_EFFECT_ASSET_KEYS.BURNT, 0).setScale(1.5)
     sprite.play(STATUS_EFFECT_ASSET_KEYS.BURNT)
 
@@ -416,7 +478,7 @@ export class BattleMon extends MonCore  {
   /**
    * @param {() => void} callback
    */
-  playParalyzedAnim (callback) {
+  #playParalyzedAnim (callback) {
     const promises = [
       new Promise(resolve => {
         const leftInnerSprite = this._scene.add.sprite(this._phaserMonImageGameObject.x - 85, this._phaserMonImageGameObject.y, STATUS_EFFECT_ASSET_KEYS.PARALYZED, 0).setScale(1.75)
@@ -471,7 +533,7 @@ export class BattleMon extends MonCore  {
   /**
    * @param {() => void} callback
    */
-  playConfusedAnim (callback) {
+  #playConfusedAnim (callback) {
     const promises = [
       new Promise(resolve => {
         const sprite1 = this._scene.add.sprite(this._phaserMonImageGameObject.x, this._phaserMonImageGameObject.y - 90, STATUS_EFFECT_ASSET_KEYS.CONFUSED, 0).setScale(1)
@@ -501,5 +563,142 @@ export class BattleMon extends MonCore  {
     Promise.all(promises).then(() => {
       callback()
     })
+  }
+
+  /**
+   * 
+   * @param {(canAttack: boolean, msg?: string) => void} callback
+   */
+  checkMonCanAttack (callback) {
+    this.#checkPreAttackMonStatusEffect((statusEffectPreventedAttack, statusMsg) => {
+      if (!statusEffectPreventedAttack) {
+        // nullify any charging moves in progress
+        this.#lastAttackUsed = undefined
+        this.#turnsLeftToFinishCharging = 0
+        this.#isCharging = false
+        callback(false, statusMsg)
+        return
+      }
+
+      if (this.#isCoolingDown) {
+        callback(false, `${this.name} ${this.#lastAttackUsed.coolDownMessage}`)
+        return
+      }
+
+      callback(true)
+    })
+  }
+
+  /**
+   * 
+   * @param {(canAttack: boolean, msg?: string) => void} callback
+   */
+  #checkPreAttackMonStatusEffect (callback) {
+    /** @type {import("../../types/status-effect.js").StatusEffect[]} */
+    const preAttackStatusEffects = [
+      STATUS_EFFECT.FREEZE,
+      STATUS_EFFECT.CONFUSE,
+      STATUS_EFFECT.PARALYSE
+    ]
+    
+    if (!preAttackStatusEffects.includes(this.currentStatusEffect)) {
+      callback(true)
+      return
+    }
+
+    const { result, statusEffect } = this.#rollStatusEffectRemoval()
+    let canAttack = result
+    let msg = ''
+
+    switch (statusEffect) {
+      case STATUS_EFFECT.FREEZE:
+        msg = result
+          ? `${this.name} thawed out!`
+          : `${this.name} is frozen solid...`
+        callback(canAttack, msg)
+        break
+      case STATUS_EFFECT.CONFUSE:
+        if (result) {
+          msg = `${this.name} snapped out of their confusion!`
+          callback(canAttack, msg)
+          return
+        }
+
+        const hitSelf = Phaser.Math.Between(0, 1) === 1
+        
+        if (hitSelf) {
+          this.#playConfusedAnim(() => {
+            msg = `${this.name} hurt itself in confusion...`
+            canAttack = false
+            this.playMonTakeDamageSequence(this.maxHealth * 0.10,  {
+              sfxAssetKey: SFX_ASSET_KEYS.TAKE_DAMAGE,
+              callback: () => callback(canAttack, msg)
+            })
+          })
+          return
+        }
+        callback(true)
+        break
+      case STATUS_EFFECT.PARALYSE:
+        canAttack = Phaser.Math.Between(0, 1) === 1
+        if (!canAttack) {
+          this.#playParalyzedAnim(() => {
+            msg = `${this.name} couldn't move!`
+            callback(canAttack, msg)
+          })
+          return
+        }
+        callback(true)
+        break
+    }
+  }
+
+  /**
+   * 
+   * @param {(hadEffect: boolean, msg?: string) => void} callback
+   */
+  checkPostBattleTurnMonStatusEffect (callback) {
+    /** @type {import("../../types/status-effect.js").StatusEffect[]} */
+    const postBattleStatusEffects = [
+      STATUS_EFFECT.BURN
+    ]
+    
+    if (!postBattleStatusEffects.includes(this.currentStatusEffect)) {
+      callback(false)
+      return
+    }
+
+    const { statusEffect } = this.#rollStatusEffectRemoval()
+    let msg = ''
+
+    switch (statusEffect) {
+      case STATUS_EFFECT.BURN:
+        this.#playBurntAnim(() => {
+          msg = `${this.name} was hurt by their burn.`
+          this.playMonTakeDamageSequence(this.maxHealth * 0.10,  {
+            skipAnimation: true,
+            callback: () => callback(true, msg)
+          })
+        })
+        break
+      }
+  }
+
+  /** @returns {boolean} */
+  updateMonsCooldownStatus () {
+    if (this.#lastAttackUsed && this.#lastAttackUsed.turnsOnCooldown) {
+      if (!this.#isCoolingDown) {
+        this.#isCoolingDown = true
+        this.#turnsLeftToFinishCoolingDown = this.#lastAttackUsed.turnsOnCooldown - 1
+        return false
+      }
+
+      if (this.#turnsLeftToFinishCoolingDown) {
+        this.#turnsLeftToFinishCoolingDown = this.#turnsLeftToFinishCoolingDown - 1
+        return false
+      }
+    }
+    this.#isCoolingDown = false
+    return true
   }
 }

@@ -11,7 +11,10 @@
     "selfStatusEffects": [],
     "opponentStatusEffect": { "name": "FREEZE", "chancePercentage": 20 },
     "powerPoints": 10,
-    "accuracy": 100
+    "accuracy": 100,
+    "turnsToCharge": 0,
+    "turnsOnCooldown": 0,
+    "turnsIsInEffect": 0
   },
   {
     "id": 2,
@@ -25,7 +28,10 @@
     "selfStatusEffects": [],
     "opponentStatusEffect": null,
     "powerPoints": 35,
-    "accuracy": 100
+    "accuracy": 100,
+    "turnsToCharge": 0,
+    "turnsOnCooldown": 0,
+    "turnsIsInEffect": 0
   },
   {
     "id": 3,
@@ -39,7 +45,10 @@
     "selfStatusEffects": [],
     "opponentStatusEffect": { "name": "BURN", "chancePercentage": 100 },
     "powerPoints": 10,
-    "accuracy": 100
+    "accuracy": 100,
+    "turnsToCharge": 0,
+    "turnsOnCooldown": 0,
+    "turnsIsInEffect": 0
   },
   {
     "id": 4,
@@ -53,7 +62,10 @@
     "selfStatusEffects": [],
     "opponentStatusEffect": null,
     "powerPoints": 39,
-    "accuracy": 100
+    "accuracy": 100,
+    "turnsToCharge": 0,
+    "turnsOnCooldown": 0,
+    "turnsIsInEffect": 0
   },
   {
     "id": 5,
@@ -67,7 +79,10 @@
     "selfStatusEffects": [],
     "opponentStatusEffect": { "name": "CONFUSE", "chancePercentage": 100 },
     "powerPoints": 15,
-    "accuracy": 70
+    "accuracy": 70,
+    "turnsToCharge": 0,
+    "turnsOnCooldown": 0,
+    "turnsIsInEffect": 0
   },
   {
     "id": 6,
@@ -81,6 +96,45 @@
     "selfStatusEffects": [],
     "opponentStatusEffect": { "name": "PARALYSE", "chancePercentage": 100 },
     "powerPoints": 15,
-    "accuracy": 90
+    "accuracy": 90,
+    "turnsToCharge": 0,
+    "turnsOnCooldown": 0,
+    "turnsIsInEffect": 0
+  },
+  {
+    "id": 7,
+    "name": "HYPER BEAM",
+    "animationName": "HYPER_BEAM",
+    "assetKeys": ["RAY"],
+    "typeKey": "NORMAL",
+    "power": 100,
+    "criticalHitModifier": 1,
+    "usesMonSplStat": false,
+    "selfStatusEffects": [],
+    "opponentStatusEffect": null,
+    "powerPoints": 10,
+    "accuracy": 90,
+    "turnsToCharge": 0,
+    "turnsOnCooldown": 1,
+    "turnsIsInEffect": 0,
+    "coolDownMessage": "needs to recharge!"
+  },
+  {
+    "id": 8,
+    "name": "SOLAR BEAM",
+    "animationName": "SOLAR_BEAM",
+    "assetKeys": ["RAY"],
+    "typeKey": "GRASS",
+    "power": 100,
+    "criticalHitModifier": 1,
+    "usesMonSplStat": true,
+    "selfStatusEffects": [],
+    "opponentStatusEffect": null,
+    "powerPoints": 10,
+    "accuracy": 90,
+    "turnsToCharge": 1,
+    "turnsOnCooldown": 0,
+    "turnsIsInEffect": 0,
+    "chargingMessage": "is taking in sunlight..."
   }
 ]

@@ -132,6 +132,11 @@ export class BattleMenu {
     return undefined
   }
 
+  /** @type {boolean} */
+  get selectedFight () {
+    return this.#activeBattleMenu === ACTIVE_BATTLE_MENU.BATTLE_MOVE_SELECT
+  }
+
   /**
    * @param {PlayerBattleMon} activePlayerMon
    */

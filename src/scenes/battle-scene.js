@@ -274,6 +274,17 @@ export class BattleScene extends Phaser.Scene {
 
     this.#battleMenu.handlePlayerInput('OK')
 
+    // skip move select - mon is charging or cooling down
+    if (this.#playerJustSelectedFight() && (this.#activePlayerMon.isCharging || this.#activePlayerMon.isCoolingDown)) {
+      this.#turnDecisions.PLAYER = {
+        actor: BATTLE_PLAYERS.PLAYER,
+        type: TURN_ACTION_TYPES.ATTACK,
+        attackIndex: 0
+      }
+      this.#battleStateMachine.setState(BATTLE_STATES.WAIT_FOR_OTHERS_DECISION)
+      return
+    }
+    
     if (this.#playerJustSelectedAnAttack()) {
       this.#turnDecisions.PLAYER = {
         actor: BATTLE_PLAYERS.PLAYER,
@@ -503,7 +514,7 @@ export class BattleScene extends Phaser.Scene {
       name: BATTLE_STATES.WAIT_FOR_OTHERS_DECISION,
       onEnter: () => {
         this.#prepareForBattleStateSequence()
-        this.#battleMenu.updateInfoPanelMessagesNoInputRequired('Waiting for other player...', { skipAnimation: true })
+        // this.#battleMenu.updateInfoPanelMessagesNoInputRequired('Waiting for other player...', { skipAnimation: true })
       }
     })
 
@@ -527,21 +538,50 @@ export class BattleScene extends Phaser.Scene {
         this.#turnDecisions.PLAYER = null
         this.#turnDecisions.ENEMY = null
 
-        this.#checkPostBattleTurnMonStatusEffect(this.#activePlayerMon, () => {
-          if (this.#activePlayerMon.isFainted) {
-            this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_MON_FAINTED)
-            return
-          }
-
-          this.#checkPostBattleTurnMonStatusEffect(this.#activeEnemyMon, () => {
-            if (this.#activeEnemyMon.isFainted) {
-              this.#battleStateMachine.setState(BATTLE_STATES.ENEMY_MON_FAINTED)
+        this.#activeEnemyMon.updateMonsCooldownStatus()
+        this.#activePlayerMon.updateMonsCooldownStatus()
+    
+        const checkEnemyMon = () => {
+          this.#activeEnemyMon.checkPostBattleTurnMonStatusEffect((hadEffect, msg) => {
+            if (!hadEffect) {
+              this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_DECISION_AWAIT_INPUT)
               return
             }
 
-            this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_DECISION_AWAIT_INPUT)
+            this.#battleMenu.updateInfoPanelMessagesNoInputRequired(msg, {
+              delayCallbackMs: 800,
+              callback: () => {
+                if (this.#activeEnemyMon.isFainted) {
+                  this.#battleStateMachine.setState(BATTLE_STATES.ENEMY_MON_FAINTED)
+                  return
+                }
+                this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_DECISION_AWAIT_INPUT)
+              }
+            })
           })
-        })
+        }
+
+        const checkPlayerMon = () => {
+          this.#activePlayerMon.checkPostBattleTurnMonStatusEffect((hadEffect, msg) => {
+            if (!hadEffect) {
+              checkEnemyMon()
+              return
+            }
+
+            this.#battleMenu.updateInfoPanelMessagesNoInputRequired(msg, {
+              delayCallbackMs: 800,
+              callback: () => {
+                if (this.#activePlayerMon.isFainted) {
+                  this.#battleStateMachine.setState(BATTLE_STATES.PLAYER_MON_FAINTED)
+                  return
+                }
+                checkEnemyMon()
+              }
+            })
+          })
+        }
+
+        checkPlayerMon()
       }
     })
 
@@ -712,16 +752,6 @@ export class BattleScene extends Phaser.Scene {
   /**
    * 
    * @param {BattleMon} mon 
-   * @param {import('../types/typedef.js').Attack} attk
-   * @param {() => void} callback
-   */
-  #announceAttack (mon, attk, callback) {
-    this.#battleMenu.updateInfoPanelMessagesNoInputRequired(`${mon.name} used ${attk.name}!`, { callback })
-  }
-
-  /**
-   * 
-   * @param {BattleMon} mon 
    * @param {import('../types/status-effect.js').StatusEffect} status 
    * @param {() => void} callback 
    */
@@ -753,120 +783,12 @@ export class BattleScene extends Phaser.Scene {
 
   /**
    * 
-   * @param {BattleMon} mon
-   * @param {() => void} callback
-   */
-  #checkPostBattleTurnMonStatusEffect (mon, callback) {
-    /** @type {import('../types/status-effect.js').StatusEffect[]} */
-    const postBattleStatusEffects = [
-      STATUS_EFFECT.BURN
-    ]
-    
-    if (!postBattleStatusEffects.includes(mon.currentStatusEffect)) {
-      callback()
-      return
-    }
-
-    const { statusEffect } = mon.rollStatusEffectRemoval()
-    let msg = ''
-
-    const showMessage = () => {
-      this.#battleMenu.updateInfoPanelMessagesNoInputRequired(msg, {
-        callback,
-        delayCallbackMs: 800
-      })
-    }
-
-    switch (statusEffect) {
-      case STATUS_EFFECT.BURN:
-        mon.playBurntAnim(() => {
-          msg = `${mon.name} was hurt by their burn.`
-          mon.playMonTakeDamageSequence(mon.maxHealth * 0.10,  {
-            skipAnimation: true,
-            callback: () => showMessage()
-          })
-        })
-        break
-      }
-  }
-
-  /**
-   * 
-   * @param {BattleMon} mon
-   * @param {(canAttack: boolean) => void} callback
-   */
-  #checkPreAttackMonStatusEffect (mon, callback) {
-    /** @type {import('../types/status-effect.js').StatusEffect[]} */
-    const preAttackStatusEffects = [
-      STATUS_EFFECT.FREEZE,
-      STATUS_EFFECT.CONFUSE,
-      STATUS_EFFECT.PARALYSE
-    ]
-    
-    if (!preAttackStatusEffects.includes(mon.currentStatusEffect)) {
-      callback(true)
-      return
-    }
-
-    const { result, statusEffect } = mon.rollStatusEffectRemoval()
-    let canAttack = result
-    let msg = ''
-
-    const showMessage = () => {
-      this.#battleMenu.updateInfoPanelMessagesNoInputRequired(msg, {
-        callback: () => callback(canAttack),
-        delayCallbackMs: 800
-      })
-    }
-
-    switch (statusEffect) {
-      case STATUS_EFFECT.FREEZE:
-        msg = result
-          ? `${mon.name} thawed out!`
-          : `${mon.name} is frozen solid...`
-        showMessage()
-        break
-      case STATUS_EFFECT.CONFUSE:
-        if (result) {
-          msg = `${mon.name} snapped out of their confusion!`
-          showMessage()
-          return
-        }
-
-        const hitSelf = Phaser.Math.Between(0, 1) === 1
-        
-        if (hitSelf) {
-          mon.playConfusedAnim(() => {
-            msg = `${mon.name} hurt itself in confusion...`
-            canAttack = false
-            mon.playMonTakeDamageSequence(mon.maxHealth * 0.10,  {
-              sfxAssetKey: SFX_ASSET_KEYS.TAKE_DAMAGE,
-              callback: () => showMessage()
-            })
-          })
-          return
-        }
-        callback(true)
-        break
-      case STATUS_EFFECT.PARALYSE:
-        canAttack = Phaser.Math.Between(0, 1) === 1
-        if (!canAttack) {
-          mon.playParalyzedAnim(() => {
-            msg = `${mon.name} couldn't move!`
-            showMessage()
-          })
-          return
-        }
-        callback(true)
-        break
-    }
-  }
-
-  /**
-   * 
    * @returns {import('../types/typedef.js').Attack}
    */
   #getPlayerAttack () {
+    if (this.#activePlayerMon.isCharging) {
+      return this.#activePlayerMon.lastAttackUsed
+    }
     return this.#activePlayerMon.attacks[this.#activePlayerAttackIndex]
   }
 
@@ -889,37 +811,42 @@ export class BattleScene extends Phaser.Scene {
   }
 
   #playerAttack () {
-    this.#checkPreAttackMonStatusEffect(this.#activePlayerMon, (canAttack) => {
+    this.#activePlayerMon.checkMonCanAttack((canAttack, msg) => {
 
       if (!canAttack) {
-        this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK_AWAIT_INPUT)
+        this.#battleMenu.updateInfoPanelMessagesNoInputRequired(msg, {
+          callback: () => {
+            this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK_AWAIT_INPUT)
+          },
+          delayCallbackMs: 800
+        })
         return
       }
 
       const attack = this.#getPlayerAttack()
-      this.#announceAttack(this.#activePlayerMon, attack, () => {
-        this.#attackManager.playAttackSequence(
-          this.#activePlayerMon,
-          this.#activeEnemyMon,
-          attack,
-          ATTACK_TARGET.ENEMY,
-          (result) => {
-            this.#lastAttackResult = result
-            this.#activeEnemyMon.playMonTakeDamageSequence(this.#lastAttackResult.damage.damageTaken,  {
-              sfxAssetKey: this.#determinePostAttackSoundEffect(),
-              callback: () => {
-                if (this.#lastAttackResult.statusEffect) {
-                  this.#playEnemyApplyStatusEffect(() => {
-                    this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK_AWAIT_INPUT)
-                  })
-                  return
-                }
-                this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK_AWAIT_INPUT)
+      this.#attackManager.playAttackSequence(
+        this.#activePlayerMon,
+        this.#activeEnemyMon,
+        attack,
+        ATTACK_TARGET.ENEMY,
+        this.#battleMenu,
+        (result) => {
+          this.#activePlayerMon.lastAttackUsed = attack
+          this.#lastAttackResult = result
+          this.#activeEnemyMon.playMonTakeDamageSequence(this.#lastAttackResult.damage.damageTaken,  {
+            sfxAssetKey: this.#determinePostAttackSoundEffect(),
+            callback: () => {
+              if (this.#lastAttackResult.statusEffect) {
+                this.#playEnemyApplyStatusEffect(() => {
+                  this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK_AWAIT_INPUT)
+                })
+                return
               }
-            })
-          }
-        )
-      })
+              this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK_AWAIT_INPUT)
+            }
+          })
+        }
+      )
     })
   }
 
@@ -942,37 +869,42 @@ export class BattleScene extends Phaser.Scene {
 
 
   #enemyAttack() {
-    this.#checkPreAttackMonStatusEffect(this.#activeEnemyMon, (canAttack) => {
+    this.#activeEnemyMon.checkMonCanAttack((canAttack, msg) => {
 
       if (!canAttack) {
-        this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK_AWAIT_INPUT)
+        this.#battleMenu.updateInfoPanelMessagesNoInputRequired(msg, {
+          callback: () => {
+            this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK_AWAIT_INPUT)
+          },
+          delayCallbackMs: 800
+        })
         return
       }
 
       const attack = this.#activeEnemyMon.attacks[this.#turnDecisions.ENEMY.attackIndex]
-      this.#announceAttack(this.#activeEnemyMon, attack, () => {
-        this.#attackManager.playAttackSequence(
-          this.#activeEnemyMon,
-          this.#activePlayerMon,
-          attack,
-          ATTACK_TARGET.PLAYER,
-          (result) => {
-            this.#lastAttackResult = result
-            this.#activePlayerMon.playMonTakeDamageSequence(this.#lastAttackResult.damage.damageTaken,  {
-              sfxAssetKey: this.#determinePostAttackSoundEffect(),
-              callback: () => {
-                if (this.#lastAttackResult.statusEffect) {
-                  this.#playPlayerApplyStatusEffect(() => {
-                    this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK_AWAIT_INPUT)
-                  })
-                  return
-                }
-                this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK_AWAIT_INPUT)
+      this.#attackManager.playAttackSequence(
+        this.#activeEnemyMon,
+        this.#activePlayerMon,
+        attack,
+        ATTACK_TARGET.PLAYER,
+        this.#battleMenu,
+        (result) => {
+          this.#activeEnemyMon.lastAttackUsed = attack
+          this.#lastAttackResult = result
+          this.#activePlayerMon.playMonTakeDamageSequence(this.#lastAttackResult.damage.damageTaken,  {
+            sfxAssetKey: this.#determinePostAttackSoundEffect(),
+            callback: () => {
+              if (this.#lastAttackResult.statusEffect) {
+                this.#playPlayerApplyStatusEffect(() => {
+                  this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK_AWAIT_INPUT)
+                })
+                return
               }
-            })
-          }
-        )
-      })
+              this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK_AWAIT_INPUT)
+            }
+          })
+        }
+      )
     })
   }
 
@@ -1005,6 +937,15 @@ export class BattleScene extends Phaser.Scene {
       return
     }
 
+    const attackIsntDamaging = this.#lastAttackResult.statusEffect ||
+      this.#lastAttackResult.isCharging ||
+      this.#lastAttackResult.battleStatsEffect
+    
+    if (attackIsntDamaging) {
+      callback()
+      return
+    }
+
     let postAttackMsgs = []
     const {
       wasCriticalHit,
@@ -1030,7 +971,7 @@ export class BattleScene extends Phaser.Scene {
 
     if (wasImmune) {
       postAttackMsgs.push(`But nothing happened!`)
-    } else if (!damageTaken && !this.#lastAttackResult.statusEffect) {
+    } else if (!damageTaken) {
       postAttackMsgs.push(`But it did nothing!`)
     }
 
@@ -1139,6 +1080,14 @@ export class BattleScene extends Phaser.Scene {
       partyMons: dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_PARTY_MONS),
       inventory: dataManager.store.get(DATA_MANAGER_STORE_KEYS.PLAYER_INVENTORY),
     }
+  }
+
+  /**
+   * 
+   * @returns {boolean}
+   */
+  #playerJustSelectedFight () {
+    return this.#battleMenu.selectedFight
   }
 
   /**

@@ -118,6 +118,11 @@ import Phaser from "../lib/phaser.js";
  * @property {OpponentStatusEffect} opponentStatusEffect
  * @property {number} powerPoints
  * @property {number} accuracy
+ * @property {number} turnsToCharge
+ * @property {number} turnsOnCooldown
+ * @property {number} turnsInEffect
+ * @property {string} [chargingMessage]
+ * @property {string} [coolDownMessage]
  */
 
 /**
@@ -166,7 +171,9 @@ import Phaser from "../lib/phaser.js";
 /**
  * @typedef {object} PostAttackResult
  * @property {PostAttackDamageResult} damage
- * @property {import("./status-effect.js").StatusEffect} statusEffect
+ * @property {import("./status-effect.js").StatusEffect} [statusEffect]
+ * @property {boolean} [isCharging]
+ * @property {boolean} [battleStatsEffect]
  */
 
 /**

@@ -104,7 +104,7 @@ const devInitialState = {
       {
         id: 1123123,
         baseMonIndex: 3,
-        name: '123',
+        name: 'TANK',
         currentHp: 900000,
         currentLevel: 8,
         attackEV: 14,
@@ -115,6 +115,21 @@ const devInitialState = {
         hpEV: 22,
         attackIds: [3, 4, 5, 6],
         currentExp: 506.6
+      },
+      {
+        id: 2,
+        baseMonIndex: 150,
+        name: 'TANK2',
+        currentHp: 900000,
+        currentLevel: 1,
+        attackEV: 1,
+        defenseEV: 29,
+        splAttackEV: 1,
+        splDefenseEV: 16,
+        speedEV: 1,
+        hpEV: 35,
+        attackIds: [2, 8, 7],
+        currentExp: 1
       },
       {
         id: 1,
@@ -128,23 +143,8 @@ const devInitialState = {
         splDefenseEV: 8,
         speedEV: 19,
         hpEV: 22,
-        attackIds: [1, 2, 3],
+        attackIds: [1, 2, 3, 8],
         currentExp: 799999
-      },
-      {
-        id: 2,
-        baseMonIndex: 150,
-        name: 'TANK',
-        currentHp: 900000,
-        currentLevel: 1,
-        attackEV: 1,
-        defenseEV: 29,
-        splAttackEV: 1,
-        splDefenseEV: 16,
-        speedEV: 1,
-        hpEV: 35,
-        attackIds: [2],
-        currentExp: 1
       },
       {
         id: 3,

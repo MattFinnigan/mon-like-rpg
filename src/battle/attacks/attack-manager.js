@@ -9,6 +9,9 @@ import { Splash } from "./splash.js"
 import { ThunderWave } from "./thunder-wave.js"
 import { ConfuseRay } from "./confuse-ray.js"
 import { Attack } from "./attack.js"
+import { HyperBeam } from "./hyper-beam.js"
+import { SolarBeam } from "./solar-beam.js"
+import { BattleMenu } from "../ui/menu/battle-menu.js"
 /**
  * @typedef {keyof typeof ATTACK_TARGET} AttackTarget
  */
@@ -43,6 +46,14 @@ export const ATTACK_DEFINITIONS = {
   [ATTACK_KEYS.FIRE_SPIN]: {
     /** @param {Phaser.Scene} scene */
     create: (scene) => new FireSpin(scene)
+  },
+  [ATTACK_KEYS.HYPER_BEAM]: {
+    /** @param {Phaser.Scene} scene */
+    create: (scene) => new HyperBeam(scene)
+  },
+  [ATTACK_KEYS.SOLAR_BEAM]: {
+    /** @param {Phaser.Scene} scene */
+    create: (scene) => new SolarBeam(scene)
   }
 }
 
@@ -97,12 +108,16 @@ export class AttackManager {
 
   /**
    * 
-   * @param {import("./attack-keys").AttackKeys} key 
-   * @param {'PLAYER'|'ENEMY'} target 
-   * @param {() => void} callback
+   * @param {import("./attack-keys").AttackKeys} key
+   * @param {object} config
+   * @param {() => void} config.onAnimFinish
+   * @param {'PLAYER'|'ENEMY'} config.target
+   * @param {boolean} [config.isCharging]
    * @returns {void}
    */
-  #playAttackAnimation (key, target, callback) {
+  #playAttackAnimation (key, config) {
+    const { onAnimFinish, target, isCharging } = config
+    
     const def = ATTACK_DEFINITIONS[key]
 
     if (!def) {
@@ -117,7 +132,11 @@ export class AttackManager {
     const attacker = target === ATTACK_TARGET.PLAYER ? this.#enemyMonImageGameObject : this.#playerMonImageGameObject
     const defender = target === ATTACK_TARGET.ENEMY ? this.#enemyMonImageGameObject : this.#playerMonImageGameObject
 
-    attack.playAnimation(attacker, defender, callback)
+    if (isCharging) {
+      attack.playChargingAnimation(attacker, defender, onAnimFinish)
+      return
+    }
+    attack.playAnimation(attacker, defender, onAnimFinish)
   }
   
   /**
@@ -125,27 +144,85 @@ export class AttackManager {
    * @param {BattleMon} attacker 
    * @param {BattleMon} defender 
    * @param {import("../../types/typedef.js").Attack} attack 
-   * @param {'PLAYER'|'ENEMY'} target 
-   * @param {(result: import("../../types/typedef.js").PostAttackResult) => void} callback 
+   * @param {'PLAYER'|'ENEMY'} target
+   * @param {BattleMenu} battleMenu
+   * @param {(result: import("../../types/typedef.js").PostAttackResult) => void} onAttackSequenceFinish 
    */
-  playAttackSequence (attacker, defender, attack, target, callback) {
-    const damageRes = this.#calculateAttackDamage(attacker, defender, attack)
-    const result = {
-      damage: damageRes,
-      statusEffect: !damageRes.wasImmune ? this.#determineStatusEffect(defender, attack) : null
-    }
-
-    const waitTime = result.damage.damageTaken > 0 ? 500 : 0
-    this.#scene.time.delayedCall(waitTime, () => {
-      if (this.#skipBattleAnimations || (result.damage.damageTaken === 0 && !result.statusEffect && attack.name !== ATTACK_KEYS.SPLASH)) {
-        callback(result)
+  playAttackSequence (attacker, defender, attack, target, battleMenu, onAttackSequenceFinish) {
+    if (attack.turnsToCharge) {
+      if (!attacker.isCharging) {
+        attacker.isCharging = true
+        attacker.turnsLeftToFinishCharging = attack.turnsToCharge
+        this.#handleChargingAttack(attacker, attack, target, battleMenu, onAttackSequenceFinish)
         return
       }
-      this.#playAttackAnimation(
-        attack.animationName,
-        target,
-        () => callback(result)
-      )
+
+      if (attacker.turnsLeftToFinishCharging) {
+        this.#handleChargingAttack(attacker, attack, target, battleMenu, onAttackSequenceFinish)
+        return
+      }
+    }
+    attacker.isCharging = false
+
+    const isNoDamageAttk = attack.selfStatusEffects.length || attack.animationName === ATTACK_KEYS.SPLASH
+
+    battleMenu.updateInfoPanelMessagesNoInputRequired(`${attacker.name} used ${attack.name}!`, {
+      callback: () => {
+        const damageRes = this.#calculateAttackDamage(attacker, defender, attack)
+        const result = {
+          damage: damageRes,
+          statusEffect: !damageRes.wasImmune ? this.#determineStatusEffect(defender, attack) : null
+        }
+
+        const waitTime = result.damage.damageTaken > 0 ? 500 : 0
+        this.#scene.time.delayedCall(waitTime, () => {
+          if (this.#skipBattleAnimations || (result.damage.damageTaken === 0 && !isNoDamageAttk)) {
+            onAttackSequenceFinish(result)
+            return
+          }
+          this.#playAttackAnimation(attack.animationName, {
+            target,
+            onAnimFinish: () => onAttackSequenceFinish(result)
+          })
+        })
+      }
+    })
+  }
+
+  /**
+   * 
+   * @param {BattleMon} attacker 
+   * @param {import("../../types/typedef.js").Attack} attack 
+   * @param {'PLAYER'|'ENEMY'} target
+   * @param {BattleMenu} battleMenu
+   * @param {(result: import("../../types/typedef.js").PostAttackResult) => void} onAttackSequenceFinish 
+   */
+  #handleChargingAttack (attacker, attack, target, battleMenu, onAttackSequenceFinish) {
+    const result = {
+      damage: {
+        damageTaken: 0,
+        wasCriticalHit: false,
+        wasSuperEffective: false,
+        wasImmune: false,
+        wasResistant: false,
+      },
+      isCharging: true
+    }
+
+    attacker.turnsLeftToFinishCharging = attacker.turnsLeftToFinishCharging - 1
+
+    this.#playAttackAnimation(attack.animationName, {
+      target,
+      isCharging: true,
+      onAnimFinish: () => {
+        battleMenu.updateInfoPanelMessagesNoInputRequired(`${attacker.name} ${attack.chargingMessage}`, {
+          callback: () => {
+            this.#scene.time.delayedCall(500, () => {
+              onAttackSequenceFinish(result)
+            })
+          }
+        })
+      }
     })
   }
 
@@ -203,9 +280,9 @@ export class AttackManager {
       critMod = 2
     }
     
-    if (wasSuperEffective) {
+    if (wasSuperEffective && !wasResistant) {
       typeMod = 2
-    } else if (wasResistant) {
+    } else if (wasResistant && !wasSuperEffective) {
       typeMod = 0.5
     } else if (wasImmune) {
       typeMod = 0
@@ -214,9 +291,9 @@ export class AttackManager {
     const res = {
       damageTaken: Math.floor((((2 * aLevel * critMod) / 50 + 2) * (attkPwr / 10) * (effectiveAttack / effectiveDefense)) * stabMod * typeMod),
       wasCriticalHit,
-      wasSuperEffective,
+      wasSuperEffective: wasSuperEffective && !wasResistant,
       wasImmune,
-      wasResistant
+      wasResistant: wasResistant && !wasSuperEffective
     }
     return res
   }

@@ -41,6 +41,14 @@ export class Attack {
   }
 
   /**
+   * @param {() => void} callback
+   * @param {Phaser.GameObjects.Image} attacker
+   * @param {Phaser.GameObjects.Image} defender
+   * @returns {void}
+   */
+  playChargingAnimation (attacker, defender, callback) {}
+
+  /**
    * @param {string} assetKey 
    */
   createAttackAnimation (assetKey) {
