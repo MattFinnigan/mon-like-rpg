@@ -6,7 +6,7 @@ import { WorldScene } from './scenes/world-scene.js'
 import { EvolveScene } from './scenes/evolve-scene.js'
 
 const game = new Phaser.Game({
-  type: Phaser.CANVAS,
+  type: Phaser.AUTO,
   pixelArt: true,
   scale: {
     parent: 'game-container',

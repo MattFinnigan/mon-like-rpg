@@ -12,7 +12,7 @@ import { DataUtils } from '../utils/data-utils.js';
 import { getTargetPositionFromGameObjectPositionAndDirection } from '../utils/grid-utils.js';
 import { createBattleSceneTransition, createWildEncounterSceneTransition } from '../utils/scene-transition.js';
 import { PLACEHOLDER_TEXT } from '../utils/text-utils.js';
-import { NPC } from '../world/characters/npc.js';
+import { NPC, NPC_ACTION_TYPES } from '../world/characters/npc.js';
 import { Player } from '../world/characters/player.js';
 import { DialogUi } from '../common/dialog-ui.js';
 import { SCENE_KEYS } from "./scene-keys.js";
@@ -25,6 +25,7 @@ import { PartyMenu } from '../common/party-menu/party-menu.js';
 import { ITEM_TYPE_KEY } from '../types/items.js';
 import { playItemEffect } from '../utils/item-manager.js';
 import { BGM_ASSETS_PATH } from '../utils/consts.js';
+import { FpsCounter } from '../common/fps-counter.js';
 
 const CUSTOM_TILED_TYPES = Object.freeze({
   NPC: 'npc',
@@ -89,6 +90,8 @@ export class WorldScene extends Phaser.Scene {
   #onPartyMonSelection
   /** @type {Phaser.Tilemaps.TilemapLayer} */
   #portalLayer
+  /** @type {FpsCounter} */
+  #fpsCounter
 
   constructor () {
     super({
@@ -132,11 +135,13 @@ export class WorldScene extends Phaser.Scene {
     this.#itemMenu = new ItemMenu(this)
     this.#dialogUi = new DialogUi(this)
     this.#controls = new Controls(this)
+    this.#fpsCounter = new FpsCounter(this)
 
     this.#setUpEventListeners()
   }
 
   update (time) {
+    this.#fpsCounter.update()
     if (this.#wildMonEncountered) {
       this.#player.update(time)
       return
@@ -251,7 +256,7 @@ export class WorldScene extends Phaser.Scene {
       this.#npcPlayerIsInteractingWith = nearbyNpc
       this.#dialogUi.showDialogModalAndWaitForInput(nearbyNpc.messages, () => {
         this.#finishDialog()
-        if (nearbyNpc.actionPending) {
+        if (nearbyNpc.action !== NPC_ACTION_TYPES.NONE) {
           nearbyNpc.doAction()
         }
       })

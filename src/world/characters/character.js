@@ -124,9 +124,10 @@ export class Character {
       return
     }
 
-    if (this._isInCameraView() && !this._phaserGameObject.active && !this._phaserGameObject.visible)
+    if (this._isInCameraView() && !this._phaserGameObject.active && !this._phaserGameObject.visible) {
       this._phaserGameObject.setActive(true).setVisible(true)
-
+    }
+      
     if (this._isMoving) {
       return
     }

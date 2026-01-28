@@ -11,7 +11,7 @@ import { EVENT_KEYS } from "../../types/event-keys.js";
  */
 
 /** @enum {NPCAction} */
-const NPC_ACTION_TYPES = Object.freeze({
+export const NPC_ACTION_TYPES = Object.freeze({
   NONE: 'NONE',
   TRADE: 'TRADE',
   ITEM: 'ITEM',
@@ -124,11 +124,9 @@ export class NPC extends Character {
     this.#isTalkingToPlayer = val
   }
 
-  /**
-   * @returns {boolean}
-   */
-  get actionPending () {
-    return this.#actionPending
+  /** @type {NPCAction} */
+  get action () {
+    return this.#action
   }
 
   /**
@@ -166,13 +164,7 @@ export class NPC extends Character {
    * @returns {void}
    */
   update (time) {
-    if (this._isMoving || this.#actionPending) {
-      return
-    }
-    if (this.#isTalkingToPlayer) {
-      if (!this.#actionPending && this.#action !== NPC_ACTION_TYPES.NONE) {
-        this.#actionPending = true
-      }
+    if (this._isMoving || this.#isTalkingToPlayer || this.#actionPending) {
       return
     }
 
@@ -262,6 +254,7 @@ export class NPC extends Character {
   }
 
   doAction () {
+    this.#actionPending = true
     switch (this.#action) {
       case NPC_ACTION_TYPES.BATTLE:
         this.#scene.events.emit(EVENT_KEYS.TRAINER_BATTLE_START, {
