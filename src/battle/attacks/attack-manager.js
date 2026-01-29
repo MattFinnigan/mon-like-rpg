@@ -12,6 +12,10 @@ import { Attack } from "./attack.js"
 import { HyperBeam } from "./hyper-beam.js"
 import { SolarBeam } from "./solar-beam.js"
 import { BattleMenu } from "../ui/menu/battle-menu.js"
+import { DefenseCurl } from "./defense-curl.js"
+import { TailWhip } from "./tail-whip.js"
+import { MON_BATTLE_STAT } from "../../types/mon-battle-stats.js"
+import { Barrier } from "./barrier.js"
 /**
  * @typedef {keyof typeof ATTACK_TARGET} AttackTarget
  */
@@ -54,6 +58,18 @@ export const ATTACK_DEFINITIONS = {
   [ATTACK_KEYS.SOLAR_BEAM]: {
     /** @param {Phaser.Scene} scene */
     create: (scene) => new SolarBeam(scene)
+  },
+  [ATTACK_KEYS.DEFENSE_CURL]: {
+    /** @param {Phaser.Scene} scene */
+    create: (scene) => new DefenseCurl(scene)
+  },
+  [ATTACK_KEYS.TAIL_WHIP]: {
+    /** @param {Phaser.Scene} scene */
+    create: (scene) => new TailWhip(scene)
+  },
+  [ATTACK_KEYS.BARRIER]: {
+    /** @param {Phaser.Scene} scene */
+    create: (scene) => new Barrier(scene)
   }
 }
 
@@ -169,25 +185,50 @@ export class AttackManager {
     battleMenu.updateInfoPanelMessagesNoInputRequired(`${attacker.name} used ${attack.name}!`, {
       callback: () => {
         const damageRes = this.#calculateAttackDamage(attacker, defender, attack)
+
         const result = {
+          isNotDamaging: attack.power === 0,
           damage: damageRes,
           statusEffect: !damageRes.wasImmune ? this.#determineStatusEffect(defender, attack) : null
         }
 
         const waitTime = result.damage.damageTaken > 0 ? 500 : 0
         this.#scene.time.delayedCall(waitTime, () => {
-          if (this.#skipBattleAnimations || (result.damage.damageTaken === 0 && attack.power !== 0)) {
-            onAttackSequenceFinish(result)
+          if (this.#skipBattleAnimations || (result.damage.damageTaken === 0 && !result.isNotDamaging)) {
+            this.#battleStatEffectChecks(attacker, defender, attack, battleMenu, () => onAttackSequenceFinish(result))
             return
           }
           this.#playAttackAnimation(attack.animationName, {
             target,
-            onAnimFinish: () => onAttackSequenceFinish(result)
+            onAnimFinish: () => this.#battleStatEffectChecks(attacker, defender, attack, battleMenu, () => onAttackSequenceFinish(result))
           })
         })
       }
     })
   }
+
+  /**
+   * 
+   * @param {BattleMon} attacker 
+   * @param {BattleMon} defender 
+   * @param {import("../../types/typedef.js").Attack} attack 
+   * @param {BattleMenu} battleMenu
+   * @param {() => void} callback 
+   */
+  #battleStatEffectChecks (attacker, defender, attack, battleMenu, callback) {
+    const promises = []
+
+    if (attack.selfBattleStatEffects) {
+      promises.push(this.#handleBattleStatEffects(attack, attacker, attack.selfBattleStatEffects, battleMenu))
+    }
+
+    if (attack.opponentBattleStatEffects) {
+      promises.push(this.#handleBattleStatEffects(attack, defender, attack.opponentBattleStatEffects, battleMenu))
+    }
+
+    Promise.all(promises).then(() => callback())
+  }
+  
 
   /**
    * 
@@ -199,6 +240,7 @@ export class AttackManager {
    */
   #handleChargingAttack (attacker, attack, target, battleMenu, onAttackSequenceFinish) {
     const result = {
+      isNotDamaging: true,
       damage: {
         damageTaken: 0,
         wasCriticalHit: false,
@@ -233,17 +275,17 @@ export class AttackManager {
    * @returns {import("../../types/status-effect.js").StatusEffect|null}
    */
   #determineStatusEffect (defender, attack) {
-    if (!attack.opponentStatusEffect || defender.currentStatusEffect) {
+    if (!attack.statusEffect || defender.currentStatusEffect) {
       return null
     }
 
-    const willBeApplied = Phaser.Math.Between(1, 100) <= attack.opponentStatusEffect.chancePercentage
+    const willBeApplied = Phaser.Math.Between(1, 100) <= attack.statusEffect.chancePercentage
   
     if (!willBeApplied) {
       return null
     }
 
-    return attack.opponentStatusEffect.name
+    return attack.statusEffect.name
   }
 
   /**
@@ -256,12 +298,13 @@ export class AttackManager {
    */
   #calculateAttackDamage (attacker, defender, attackMove) {
     const aLevel = attacker.currentLevel
-    const aStats = attacker.monStats
+    const aStats = attacker.getStatsWithBattleModifiers()
+    const dStats = defender.getStatsWithBattleModifiers()
     const attkPwr = attackMove.power
     const attackMoveType = MON_TYPES[attackMove.typeKey] 
-
+    
     const effectiveAttack = attackMove.usesMonSplStat ? aStats.splAttack : aStats.attack
-    const effectiveDefense = attackMove.usesMonSplStat ? defender.monStats.splDefense : defender.monStats.defense
+    const effectiveDefense = attackMove.usesMonSplStat ? dStats.splDefense : dStats.defense
     const stabMod = attacker.types.find(t => attackMoveType.name === t.name) ? 1.5 : 1
     let critMod = 1
     let typeMod = 1
@@ -296,5 +339,51 @@ export class AttackManager {
       wasResistant: wasResistant && !wasSuperEffective
     }
     return res
+  }
+
+  /**
+   * @param {import("../../types/typedef.js").Attack} attack
+   * @param {BattleMon} targetMon
+   * @param {import("../../types/typedef.js").BattleStatEffect[]} effects
+   * @param {BattleMenu} battleMenu
+   * @returns {Promise}
+   */
+  #handleBattleStatEffects (attack, targetMon, effects, battleMenu) {
+    return new Promise(resolve => {
+      const msgs = []
+      effects.forEach(effect => {
+        const willBeApplied = Phaser.Math.Between(1, 100) <= effect.chancePercentage
+        if (!willBeApplied) {
+          return
+        }
+
+        const direction = effect.amount < 0 ? 'decreased' : 'increased'
+
+        let dramatic = effect.amount < -3 || effect.amount > 3
+
+        targetMon.addStatModifer({
+          ...effect,
+          source: attack.animationName
+        })
+
+        msgs.push(`${targetMon.name}'s ${effect.statKey} ${direction}${dramatic ? ' dramatically!' : '.'}`)
+      })
+
+      if (msgs) {
+        const promises = []
+        msgs.forEach(m => {
+          promises.push(new Promise(resolve => {
+            battleMenu.updateInfoPanelMessagesNoInputRequired(m, {
+              callback: () => resolve(),
+              delayCallbackMs: 1000
+            })
+          }))
+        })
+
+        Promise.all(promises).then(() => resolve())
+        return
+      }
+      resolve()
+    })
   }
 }

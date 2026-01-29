@@ -298,7 +298,7 @@ export class BattleMenu {
     this.#queuedMessageAnimationPlaying = true
     this.#battleTextGameObjectLine1.setText('').setAlpha(1)
 
-    if (skipAnimation) {
+    if (skipAnimation && !delayCallbackMs) {
       this.#battleTextGameObjectLine1.setText(message)
       this.#waitingForPlayerInput = false
       this.#queuedMessageAnimationPlaying = false

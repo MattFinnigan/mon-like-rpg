@@ -537,9 +537,6 @@ export class BattleScene extends Phaser.Scene {
       onEnter: () => {
         this.#turnDecisions.PLAYER = null
         this.#turnDecisions.ENEMY = null
-
-        this.#activeEnemyMon.updateMonsCooldownStatus()
-        this.#activePlayerMon.updateMonsCooldownStatus()
     
         const checkEnemyMon = () => {
           this.#activeEnemyMon.checkPostBattleTurnMonStatusEffect((hadEffect, msg) => {
@@ -581,6 +578,23 @@ export class BattleScene extends Phaser.Scene {
           })
         }
 
+        let msgs = this.#activeEnemyMon.onTurnPassed()
+        msgs = msgs.concat(this.#activePlayerMon.onTurnPassed())
+
+        if (msgs) {
+          const promises = []
+          msgs.forEach(m => {
+            promises.push(new Promise(resolve => {
+              this.#battleMenu.updateInfoPanelMessagesNoInputRequired(m, {
+                callback: () => resolve(),
+                delayCallbackMs: 1000
+              })
+            }))
+          })
+
+          Promise.all(promises).then(() => checkPlayerMon())
+          return
+        }
         checkPlayerMon()
       }
     })
@@ -936,12 +950,8 @@ export class BattleScene extends Phaser.Scene {
       callback()
       return
     }
-
-    const attackIsntDamaging = this.#lastAttackResult.statusEffect ||
-      this.#lastAttackResult.isCharging ||
-      this.#lastAttackResult.battleStatsEffect
     
-    if (attackIsntDamaging) {
+    if (this.#lastAttackResult.isNotDamaging) {
       callback()
       return
     }
@@ -1240,10 +1250,10 @@ export class BattleScene extends Phaser.Scene {
     }
 
     // both attacking, go by speed
-    if (this.#activePlayerMon.monStats.speed > this.#activeEnemyMon.monStats.speed) {
+    if (this.#activePlayerMon.getStatsWithBattleModifiers().speed > this.#activeEnemyMon.getStatsWithBattleModifiers().speed) {
       return [player, enemy]
     }
-    if (this.#activeEnemyMon.monStats.speed > this.#activePlayerMon.monStats.speed) {
+    if (this.#activeEnemyMon.getStatsWithBattleModifiers().speed > this.#activePlayerMon.getStatsWithBattleModifiers().speed) {
       return [enemy, player]
     }
 

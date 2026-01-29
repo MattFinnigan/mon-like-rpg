@@ -98,7 +98,7 @@ import Phaser from "../lib/phaser.js";
  */
 
 /**
- * @typedef {object} OpponentStatusEffect
+ * @typedef {object} AttackStatusEffect
  * @property {import("./status-effect.js").StatusEffect} name
  * @property {number} chancePercentage percentage per landed attk
  */
@@ -114,8 +114,7 @@ import Phaser from "../lib/phaser.js";
  * @property {number} power
  * @property {number} criticalHitModifier
  * @property {number} usesMonSplStat flag to uses attack mon's special attack, defener's special defense
- * @property {array} selfStatusEffects
- * @property {OpponentStatusEffect} opponentStatusEffect
+ * @property {AttackStatusEffect} statusEffect
  * @property {number} powerPoints
  * @property {number} accuracy
  * @property {number} turnsToCharge
@@ -123,6 +122,8 @@ import Phaser from "../lib/phaser.js";
  * @property {number} turnsInEffect
  * @property {string} [chargingMessage]
  * @property {string} [coolDownMessage]
+ * @property {BattleStatEffect[]} selfBattleStatEffects
+ * @property {BattleStatEffect[]} opponentBattleStatEffects
  */
 
 /**
@@ -173,7 +174,9 @@ import Phaser from "../lib/phaser.js";
  * @property {PostAttackDamageResult} damage
  * @property {import("./status-effect.js").StatusEffect} [statusEffect]
  * @property {boolean} [isCharging]
- * @property {boolean} [battleStatsEffect]
+ * @property {BattleStatEffect[]} [attackerBattleStatsEffects]
+ * @property {BattleStatEffect[]} [defenderBattleStatsEffects]
+ * @property {boolean} isNotDamaging
  */
 
 /**
@@ -219,4 +222,12 @@ import Phaser from "../lib/phaser.js";
  * @property {boolean} wasUsed
  * @property {string} msg
  * @property {boolean} [wasSuccessful]
+ */
+
+/**
+ * @typedef {object} BattleStatEffect
+ * @property {import("./mon-battle-stats.js").MonBattleStat} statKey
+ * @property {number} chancePercentage
+ * @property {number} amount
+ * @property {number|undefined} [turnsInEffect=undefined] undefined = indefinite
  */

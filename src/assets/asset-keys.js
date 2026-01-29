@@ -51,7 +51,6 @@ export const ATTACK_ASSET_KEYS = Object.freeze({
   FIRE_SPIN: 'FIRE_SPIN',
   ELECTRIC: 'ELECTRIC',
   RAY: 'RAY',
-  SPLASH: 'SPLASH',
   HYPER_BEAM: 'HYPER_BEAM',
   SOLAR_BEAM: 'SOLAR_BEAM'
 })

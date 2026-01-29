@@ -66,8 +66,6 @@ if (!attksLoaded.includes(attkId)) {
           frameWidth = 131
           frameHeight = 126
           break
-        case ATTACK_ASSET_KEYS.SPLASH:
-          break
         case ATTACK_ASSET_KEYS.RAY:
           frameWidth = 49
           frameHeight = 91

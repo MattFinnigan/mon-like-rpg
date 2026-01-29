@@ -132,6 +132,21 @@ const devInitialState = {
         currentExp: 1
       },
       {
+        id: 99999,
+        baseMonIndex: 150,
+        name: 'TANK3',
+        currentHp: 900000,
+        currentLevel: 1,
+        attackEV: 1,
+        defenseEV: 29,
+        splAttackEV: 1,
+        splDefenseEV: 16,
+        speedEV: 1,
+        hpEV: 35,
+        attackIds: [9, 10, 11, 4],
+        currentExp: 1
+      },
+      {
         id: 1,
         baseMonIndex: 149,
         name: 'DEV GOD MON',

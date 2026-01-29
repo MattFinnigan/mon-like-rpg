@@ -8,6 +8,13 @@ import { ExpBar } from "../../common/exp-bar.js"
 import { STATUS_EFFECT } from "../../types/status-effect.js"
 import { exhaustiveGuard } from "../../utils/guard.js"
 import { Attack } from "../attacks/attack.js"
+import { ATTACK_KEYS } from "../attacks/attack-keys.js"
+import { MON_BATTLE_STAT } from "../../types/mon-battle-stats.js"
+
+/**
+ * @typedef {import('../../types/typedef.js').BattleStatEffect & { source: string }} BattleStatEffectWithSource
+ */
+
 
 export class BattleMon extends MonCore  {
   /** @protected @type {Phaser.Scene} */
@@ -50,6 +57,8 @@ export class BattleMon extends MonCore  {
   #turnsLeftToFinishCoolingDown
   /** @type {boolean} */
   #isCoolingDown
+  /** @type {BattleStatEffectWithSource[]} */
+  #statModifiers
 
   /**
    * 
@@ -71,6 +80,7 @@ export class BattleMon extends MonCore  {
     this.#turnsLeftToFinishCoolingDown = 0
     this.#isCharging = false
     this.#isCoolingDown = false
+    this.#statModifiers = []
 
     this.#createMonGameObject(pos)
     this.#createMonDetailsGameObject()
@@ -171,6 +181,7 @@ export class BattleMon extends MonCore  {
   get isCoolingDown () {
     return this.#isCoolingDown
   }
+
 
   /**
    * 
@@ -717,22 +728,58 @@ export class BattleMon extends MonCore  {
       }
   }
 
-  /** @returns {boolean} */
-  updateMonsCooldownStatus () {
+  /**
+   * @returns {string[]}
+   */
+  onTurnPassed () {
+    const msgs = []
+    this.#checkMonCooldownStatus()
+
+    this.#statModifiers.forEach((mod, i) => {
+      if (mod.turnsInEffect) {
+        mod.turnsInEffect--
+        if (mod.turnsInEffect === 0) {
+          msgs.push(`${this.name}'s ${mod.source} effects have worn off.`)
+          this.#statModifiers.splice(i, 1)
+        }
+      }
+    })
+
+    return msgs
+  }
+
+  /**
+   * 
+   * @param {BattleStatEffectWithSource} effect 
+   */
+  addStatModifer (effect) {
+    if (effect.turnsInEffect) {
+      // reset the counter
+      const existing = this.#statModifiers.find(existing => existing.source === effect.source)
+      if (existing) {
+        existing.turnsInEffect = effect.turnsInEffect
+        return
+      }
+    }
+
+    this.#statModifiers.push(effect)
+  }
+
+  #checkMonCooldownStatus () {
     if (this.#lastAttackUsed && this.#lastAttackUsed.turnsOnCooldown) {
       if (!this.#isCoolingDown) {
         this.#isCoolingDown = true
         this.#turnsLeftToFinishCoolingDown = this.#lastAttackUsed.turnsOnCooldown - 1
-        return false
+        return
       }
 
       if (this.#turnsLeftToFinishCoolingDown) {
         this.#turnsLeftToFinishCoolingDown = this.#turnsLeftToFinishCoolingDown - 1
-        return false
+        return
       }
     }
     this.#isCoolingDown = false
-    return true
+    return
   }
 
   recalcMonStats () {
@@ -742,5 +789,37 @@ export class BattleMon extends MonCore  {
     this._currentHealth += diff
     
     this._healthBar.updateMaxHealth(this._maxHealth)
+  }
+
+  /**
+   * @returns {import("../../types/typedef.js").MonStats}
+   */
+  getStatsWithBattleModifiers () {
+    const res = { ...this._monStats }
+
+    this.#statModifiers.forEach(effect => {
+      switch (effect.statKey) {
+        case MON_BATTLE_STAT.ATTACK:
+          res.attack = res.attack + effect.amount
+          break
+        case MON_BATTLE_STAT.DEFENSE:
+          res.defense = res.defense + effect.amount
+          break
+        case MON_BATTLE_STAT.SPEED:
+          res.speed = res.speed + effect.amount
+          break
+        case MON_BATTLE_STAT.SPL_ATTACK:
+          res.splAttack = res.splAttack + effect.amount
+          break
+        case MON_BATTLE_STAT.SPL_DEFENSE:
+          res.splDefense = res.splDefense + effect.amount
+          break
+        default:
+          exhaustiveGuard(effect.statKey)
+          break
+      }
+    })
+
+    return res
   }
 }
