@@ -11,6 +11,8 @@ export class Attack {
   _attackGameObjectContainer
   /** @protected @type {AudioManager} */
   _audioManager
+  /** @type {'PLAYER' | 'ENEMY'} */
+  #target
 
   /**
    * 
@@ -28,6 +30,16 @@ export class Attack {
   */
   get gameObjectContainer () {
     return this._attackGameObjectContainer
+  }
+
+  /** @returns {'PLAYER' | 'ENEMY'} */
+  get target () {
+    return this.#target
+  }
+
+  /** @param {'PLAYER' | 'ENEMY'} val */
+  set target (val) {
+    this.#target = val
   }
 
   /**

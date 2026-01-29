@@ -72,6 +72,11 @@ if (!attksLoaded.includes(attkId)) {
           frameWidth = 49
           frameHeight = 91
           break
+        case ATTACK_ASSET_KEYS.HYPER_BEAM:
+        case ATTACK_ASSET_KEYS.SOLAR_BEAM:
+          frameWidth = 235
+          frameHeight = 153
+          break
         default:
           exhaustiveGuard(assetKey)
           break

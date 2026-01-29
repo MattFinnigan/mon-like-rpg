@@ -231,8 +231,10 @@ export class BattleMon extends MonCore  {
 
     switch (status) {
       case STATUS_EFFECT.FREEZE:
-        this._monLvlGameText.setText('FRZN')
-        callback()
+        this.#playFrozenAnim(() => {
+          this._monLvlGameText.setText('FRZN')
+          callback()
+        })
         break
       case STATUS_EFFECT.BURN:
         this.#playBurntAnim(() => {
@@ -566,6 +568,33 @@ export class BattleMon extends MonCore  {
   }
 
   /**
+   * @param {() => void} callback
+   */
+  #playFrozenAnim (callback) {
+    const sprite = this._scene.add.sprite(this._phaserMonImageGameObject.x, this._phaserMonImageGameObject.y + 40, STATUS_EFFECT_ASSET_KEYS.FROZEN)
+    sprite.play(STATUS_EFFECT_ASSET_KEYS.FROZEN)
+
+    const promises = [
+      new Promise(resolve => {
+        sprite.once(Phaser.Animations.Events.ANIMATION_COMPLETE_KEY + STATUS_EFFECT_ASSET_KEYS.FROZEN, () => {
+          sprite.setAlpha(0)
+          resolve()
+        })
+      }),
+      new Promise(resolve => {
+        this.#audioManager.playSfx(STATUS_EFFECT_ASSET_KEYS.FROZEN, {
+          primaryAudio: true,
+          callback: () => resolve()
+        })
+      })
+    ]
+
+    Promise.all(promises).then(() => {
+      callback()
+    })
+  }
+
+  /**
    * 
    * @param {(canAttack: boolean, msg?: string) => void} callback
    */
@@ -615,6 +644,10 @@ export class BattleMon extends MonCore  {
         msg = result
           ? `${this.name} thawed out!`
           : `${this.name} is frozen solid...`
+        if (!result) {
+          this.#playFrozenAnim(() => callback(canAttack, msg))
+          return
+        }
         callback(canAttack, msg)
         break
       case STATUS_EFFECT.CONFUSE:

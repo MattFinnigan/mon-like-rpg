@@ -51,7 +51,9 @@ export const ATTACK_ASSET_KEYS = Object.freeze({
   FIRE_SPIN: 'FIRE_SPIN',
   ELECTRIC: 'ELECTRIC',
   RAY: 'RAY',
-  SPLASH: 'SPLASH'
+  SPLASH: 'SPLASH',
+  HYPER_BEAM: 'HYPER_BEAM',
+  SOLAR_BEAM: 'SOLAR_BEAM'
 })
 
 export const WORLD_ASSET_KEYS = Object.freeze({
@@ -141,7 +143,8 @@ export const SFX_ASSET_KEYS = Object.freeze({
 export const STATUS_EFFECT_ASSET_KEYS = Object.freeze({
   CONFUSED: 'CONFUSED',
   BURNT: 'BURNT',
-  PARALYZED: 'PARALYZED'
+  PARALYZED: 'PARALYZED',
+  FROZEN: 'FROZEN'
 })
 
 export const MON_BALLS = Object.freeze({

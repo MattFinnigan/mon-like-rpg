@@ -11,8 +11,7 @@
     "baseSplDefense": 65,
     "baseSpeed": 45,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "GRASS",
       "POISON"
@@ -32,8 +31,7 @@
     "baseSplDefense": 80,
     "baseSpeed": 60,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "GRASS",
       "POISON"
@@ -53,8 +51,7 @@
     "baseSplDefense": 100,
     "baseSpeed": 80,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "GRASS",
       "POISON"
@@ -74,8 +71,7 @@
     "baseSplDefense": 50,
     "baseSpeed": 65,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "FIRE"
     ],
@@ -94,8 +90,7 @@
     "baseSplDefense": 65,
     "baseSpeed": 80,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "FIRE"
     ],
@@ -114,8 +109,7 @@
     "baseSplDefense": 85,
     "baseSpeed": 100,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "FIRE",
       "FLYING"
@@ -135,8 +129,7 @@
     "baseSplDefense": 64,
     "baseSpeed": 43,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "WATER"
     ],
@@ -155,8 +148,7 @@
     "baseSplDefense": 80,
     "baseSpeed": 58,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "WATER"
     ],
@@ -175,8 +167,7 @@
     "baseSplDefense": 105,
     "baseSpeed": 78,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "WATER"
     ],
@@ -195,8 +186,7 @@
     "baseSplDefense": 20,
     "baseSpeed": 45,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "BUG"
     ],
@@ -215,8 +205,7 @@
     "baseSplDefense": 25,
     "baseSpeed": 30,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "BUG"
     ],
@@ -235,8 +224,7 @@
     "baseSplDefense": 80,
     "baseSpeed": 70,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "BUG",
       "FLYING"
@@ -256,8 +244,7 @@
     "baseSplDefense": 20,
     "baseSpeed": 50,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "BUG",
       "POISON"
@@ -277,8 +264,7 @@
     "baseSplDefense": 25,
     "baseSpeed": 35,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "BUG",
       "POISON"
@@ -298,8 +284,7 @@
     "baseSplDefense": 80,
     "baseSpeed": 75,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "BUG",
       "POISON"
@@ -319,8 +304,7 @@
     "baseSplDefense": 35,
     "baseSpeed": 56,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "NORMAL",
       "FLYING"
@@ -340,8 +324,7 @@
     "baseSplDefense": 50,
     "baseSpeed": 71,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "NORMAL",
       "FLYING"
@@ -361,8 +344,7 @@
     "baseSplDefense": 70,
     "baseSpeed": 101,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "NORMAL",
       "FLYING"
@@ -382,8 +364,7 @@
     "baseSplDefense": 35,
     "baseSpeed": 72,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "NORMAL"
     ],
@@ -402,8 +383,7 @@
     "baseSplDefense": 70,
     "baseSpeed": 97,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "NORMAL"
     ],
@@ -422,8 +402,7 @@
     "baseSplDefense": 31,
     "baseSpeed": 70,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "NORMAL",
       "FLYING"
@@ -443,8 +422,7 @@
     "baseSplDefense": 61,
     "baseSpeed": 100,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "NORMAL",
       "FLYING"
@@ -464,8 +442,7 @@
     "baseSplDefense": 54,
     "baseSpeed": 55,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "POISON"
     ],
@@ -484,8 +461,7 @@
     "baseSplDefense": 79,
     "baseSpeed": 80,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "POISON"
     ],
@@ -504,8 +480,7 @@
     "baseSplDefense": 50,
     "baseSpeed": 90,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "ELECTRIC"
     ],
@@ -524,8 +499,7 @@
     "baseSplDefense": 80,
     "baseSpeed": 110,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "ELECTRIC"
     ],
@@ -544,8 +518,7 @@
     "baseSplDefense": 30,
     "baseSpeed": 40,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "GROUND"
     ],
@@ -564,8 +537,7 @@
     "baseSplDefense": 55,
     "baseSpeed": 65,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "GROUND"
     ],
@@ -584,8 +556,7 @@
     "baseSplDefense": 40,
     "baseSpeed": 41,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "POISON"
     ],
@@ -604,8 +575,7 @@
     "baseSplDefense": 55,
     "baseSpeed": 56,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "POISON"
     ],
@@ -624,8 +594,7 @@
     "baseSplDefense": 85,
     "baseSpeed": 76,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "POISON",
       "GROUND"
@@ -645,8 +614,7 @@
     "baseSplDefense": 40,
     "baseSpeed": 50,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "POISON"
     ],
@@ -665,8 +633,7 @@
     "baseSplDefense": 55,
     "baseSpeed": 65,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "POISON"
     ],
@@ -685,8 +652,7 @@
     "baseSplDefense": 75,
     "baseSpeed": 85,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "POISON",
       "GROUND"
@@ -706,8 +672,7 @@
     "baseSplDefense": 65,
     "baseSpeed": 35,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "NORMAL"
     ],
@@ -726,8 +691,7 @@
     "baseSplDefense": 90,
     "baseSpeed": 60,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "NORMAL"
     ],
@@ -746,8 +710,7 @@
     "baseSplDefense": 65,
     "baseSpeed": 65,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "FIRE"
     ],
@@ -766,8 +729,7 @@
     "baseSplDefense": 100,
     "baseSpeed": 100,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "FIRE"
     ],
@@ -786,8 +748,7 @@
     "baseSplDefense": 25,
     "baseSpeed": 20,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "NORMAL"
     ],
@@ -806,8 +767,7 @@
     "baseSplDefense": 50,
     "baseSpeed": 45,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "NORMAL"
     ],
@@ -826,8 +786,7 @@
     "baseSplDefense": 40,
     "baseSpeed": 55,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "POISON",
       "FLYING"
@@ -847,8 +806,7 @@
     "baseSplDefense": 75,
     "baseSpeed": 90,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "POISON",
       "FLYING"
@@ -868,8 +826,7 @@
     "baseSplDefense": 65,
     "baseSpeed": 30,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "GRASS",
       "POISON"
@@ -889,8 +846,7 @@
     "baseSplDefense": 75,
     "baseSpeed": 40,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "GRASS",
       "POISON"
@@ -910,8 +866,7 @@
     "baseSplDefense": 90,
     "baseSpeed": 50,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "GRASS",
       "POISON"
@@ -931,8 +886,7 @@
     "baseSplDefense": 55,
     "baseSpeed": 25,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "BUG",
       "GRASS"
@@ -952,8 +906,7 @@
     "baseSplDefense": 80,
     "baseSpeed": 30,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "BUG",
       "GRASS"
@@ -973,8 +926,7 @@
     "baseSplDefense": 55,
     "baseSpeed": 45,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "BUG",
       "POISON"
@@ -994,8 +946,7 @@
     "baseSplDefense": 75,
     "baseSpeed": 90,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "BUG",
       "POISON"
@@ -1015,8 +966,7 @@
     "baseSplDefense": 45,
     "baseSpeed": 95,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "GROUND"
     ],
@@ -1035,8 +985,7 @@
     "baseSplDefense": 70,
     "baseSpeed": 120,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "GROUND"
     ],
@@ -1055,8 +1004,7 @@
     "baseSplDefense": 40,
     "baseSpeed": 90,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "NORMAL"
     ],
@@ -1075,8 +1023,7 @@
     "baseSplDefense": 65,
     "baseSpeed": 115,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "NORMAL"
     ],
@@ -1095,8 +1042,7 @@
     "baseSplDefense": 50,
     "baseSpeed": 55,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "WATER"
     ],
@@ -1115,8 +1061,7 @@
     "baseSplDefense": 80,
     "baseSpeed": 85,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "WATER"
     ],
@@ -1135,8 +1080,7 @@
     "baseSplDefense": 45,
     "baseSpeed": 70,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "FIGHTING"
     ],
@@ -1155,8 +1099,7 @@
     "baseSplDefense": 70,
     "baseSpeed": 95,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "FIGHTING"
     ],
@@ -1175,8 +1118,7 @@
     "baseSplDefense": 50,
     "baseSpeed": 60,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "FIRE"
     ],
@@ -1195,8 +1137,7 @@
     "baseSplDefense": 80,
     "baseSpeed": 95,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "FIRE"
     ],
@@ -1215,8 +1156,7 @@
     "baseSplDefense": 40,
     "baseSpeed": 90,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "WATER"
     ],
@@ -1235,8 +1175,7 @@
     "baseSplDefense": 50,
     "baseSpeed": 90,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "WATER"
     ],
@@ -1255,8 +1194,7 @@
     "baseSplDefense": 90,
     "baseSpeed": 70,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "WATER",
       "FIGHTING"
@@ -1276,8 +1214,7 @@
     "baseSplDefense": 55,
     "baseSpeed": 90,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "PSYCHIC"
     ],
@@ -1296,8 +1233,7 @@
     "baseSplDefense": 70,
     "baseSpeed": 105,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "PSYCHIC"
     ],
@@ -1316,8 +1252,7 @@
     "baseSplDefense": 95,
     "baseSpeed": 120,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "PSYCHIC"
     ],
@@ -1336,8 +1271,7 @@
     "baseSplDefense": 35,
     "baseSpeed": 35,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "FIGHTING"
     ],
@@ -1356,8 +1290,7 @@
     "baseSplDefense": 60,
     "baseSpeed": 45,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "FIGHTING"
     ],
@@ -1376,8 +1309,7 @@
     "baseSplDefense": 85,
     "baseSpeed": 55,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "FIGHTING"
     ],
@@ -1396,8 +1328,7 @@
     "baseSplDefense": 30,
     "baseSpeed": 40,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "GRASS",
       "POISON"
@@ -1417,8 +1348,7 @@
     "baseSplDefense": 45,
     "baseSpeed": 55,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "GRASS",
       "POISON"
@@ -1438,8 +1368,7 @@
     "baseSplDefense": 70,
     "baseSpeed": 70,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "GRASS",
       "POISON"
@@ -1459,8 +1388,7 @@
     "baseSplDefense": 100,
     "baseSpeed": 70,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "WATER",
       "POISON"
@@ -1480,8 +1408,7 @@
     "baseSplDefense": 120,
     "baseSpeed": 100,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "WATER",
       "POISON"
@@ -1501,8 +1428,7 @@
     "baseSplDefense": 30,
     "baseSpeed": 20,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "ROCK",
       "GROUND"
@@ -1522,8 +1448,7 @@
     "baseSplDefense": 45,
     "baseSpeed": 35,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "ROCK",
       "GROUND"
@@ -1543,8 +1468,7 @@
     "baseSplDefense": 65,
     "baseSpeed": 45,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "ROCK",
       "GROUND"
@@ -1564,8 +1488,7 @@
     "baseSplDefense": 65,
     "baseSpeed": 90,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "FIRE"
     ],
@@ -1584,8 +1507,7 @@
     "baseSplDefense": 80,
     "baseSpeed": 105,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "FIRE"
     ],
@@ -1604,8 +1526,7 @@
     "baseSplDefense": 40,
     "baseSpeed": 15,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "WATER",
       "PSYCHIC"
@@ -1625,8 +1546,7 @@
     "baseSplDefense": 80,
     "baseSpeed": 30,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "WATER",
       "PSYCHIC"
@@ -1646,8 +1566,7 @@
     "baseSplDefense": 55,
     "baseSpeed": 45,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "ELECTRIC"
     ],
@@ -1666,8 +1585,7 @@
     "baseSplDefense": 70,
     "baseSpeed": 70,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "ELECTRIC"
     ],
@@ -1686,8 +1604,7 @@
     "baseSplDefense": 62,
     "baseSpeed": 60,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "NORMAL",
       "FLYING"
@@ -1707,8 +1624,7 @@
     "baseSplDefense": 35,
     "baseSpeed": 75,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "NORMAL",
       "FLYING"
@@ -1728,8 +1644,7 @@
     "baseSplDefense": 60,
     "baseSpeed": 100,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "NORMAL",
       "FLYING"
@@ -1749,8 +1664,7 @@
     "baseSplDefense": 70,
     "baseSpeed": 45,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "WATER"
     ],
@@ -1769,8 +1683,7 @@
     "baseSplDefense": 95,
     "baseSpeed": 70,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "WATER",
       "ICE"
@@ -1790,8 +1703,7 @@
     "baseSplDefense": 50,
     "baseSpeed": 25,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "POISON"
     ],
@@ -1810,8 +1722,7 @@
     "baseSplDefense": 100,
     "baseSpeed": 50,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "POISON"
     ],
@@ -1830,8 +1741,7 @@
     "baseSplDefense": 25,
     "baseSpeed": 40,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "WATER"
     ],
@@ -1850,8 +1760,7 @@
     "baseSplDefense": 45,
     "baseSpeed": 70,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "WATER",
       "ICE"
@@ -1871,8 +1780,7 @@
     "baseSplDefense": 35,
     "baseSpeed": 80,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "GHOST",
       "POISON"
@@ -1892,8 +1800,7 @@
     "baseSplDefense": 55,
     "baseSpeed": 95,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "GHOST",
       "POISON"
@@ -1913,8 +1820,7 @@
     "baseSplDefense": 75,
     "baseSpeed": 110,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "GHOST",
       "POISON"
@@ -1934,8 +1840,7 @@
     "baseSplDefense": 45,
     "baseSpeed": 70,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "ROCK",
       "GROUND"
@@ -1955,8 +1860,7 @@
     "baseSplDefense": 90,
     "baseSpeed": 42,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "PSYCHIC"
     ],
@@ -1975,8 +1879,7 @@
     "baseSplDefense": 115,
     "baseSpeed": 67,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "PSYCHIC"
     ],
@@ -1995,8 +1898,7 @@
     "baseSplDefense": 25,
     "baseSpeed": 50,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "WATER"
     ],
@@ -2015,8 +1917,7 @@
     "baseSplDefense": 50,
     "baseSpeed": 75,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "WATER"
     ],
@@ -2035,8 +1936,7 @@
     "baseSplDefense": 55,
     "baseSpeed": 100,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "ELECTRIC"
     ],
@@ -2055,8 +1955,7 @@
     "baseSplDefense": 80,
     "baseSpeed": 140,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "ELECTRIC"
     ],
@@ -2075,8 +1974,7 @@
     "baseSplDefense": 45,
     "baseSpeed": 40,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "GRASS",
       "PSYCHIC"
@@ -2096,8 +1994,7 @@
     "baseSplDefense": 65,
     "baseSpeed": 55,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "GRASS",
       "PSYCHIC"
@@ -2117,8 +2014,7 @@
     "baseSplDefense": 50,
     "baseSpeed": 35,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "GROUND"
     ],
@@ -2137,8 +2033,7 @@
     "baseSplDefense": 80,
     "baseSpeed": 45,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "GROUND"
     ],
@@ -2157,8 +2052,7 @@
     "baseSplDefense": 110,
     "baseSpeed": 87,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "FIGHTING"
     ],
@@ -2177,8 +2071,7 @@
     "baseSplDefense": 110,
     "baseSpeed": 76,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "FIGHTING"
     ],
@@ -2197,8 +2090,7 @@
     "baseSplDefense": 75,
     "baseSpeed": 30,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "NORMAL"
     ],
@@ -2217,8 +2109,7 @@
     "baseSplDefense": 45,
     "baseSpeed": 35,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "POISON"
     ],
@@ -2237,8 +2128,7 @@
     "baseSplDefense": 70,
     "baseSpeed": 60,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "POISON"
     ],
@@ -2257,8 +2147,7 @@
     "baseSplDefense": 30,
     "baseSpeed": 25,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "GROUND",
       "ROCK"
@@ -2278,8 +2167,7 @@
     "baseSplDefense": 45,
     "baseSpeed": 40,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "GROUND",
       "ROCK"
@@ -2299,8 +2187,7 @@
     "baseSplDefense": 105,
     "baseSpeed": 50,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "NORMAL"
     ],
@@ -2319,8 +2206,7 @@
     "baseSplDefense": 40,
     "baseSpeed": 60,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "GRASS"
     ],
@@ -2339,8 +2225,7 @@
     "baseSplDefense": 80,
     "baseSpeed": 90,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "NORMAL"
     ],
@@ -2359,8 +2244,7 @@
     "baseSplDefense": 25,
     "baseSpeed": 60,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "WATER"
     ],
@@ -2379,8 +2263,7 @@
     "baseSplDefense": 45,
     "baseSpeed": 85,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "WATER"
     ],
@@ -2399,8 +2282,7 @@
     "baseSplDefense": 50,
     "baseSpeed": 63,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "WATER"
     ],
@@ -2419,8 +2301,7 @@
     "baseSplDefense": 80,
     "baseSpeed": 68,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "WATER"
     ],
@@ -2439,8 +2320,7 @@
     "baseSplDefense": 55,
     "baseSpeed": 85,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "WATER"
     ],
@@ -2459,8 +2339,7 @@
     "baseSplDefense": 85,
     "baseSpeed": 115,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "WATER",
       "PSYCHIC"
@@ -2480,8 +2359,7 @@
     "baseSplDefense": 120,
     "baseSpeed": 90,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "PSYCHIC"
     ],
@@ -2500,8 +2378,7 @@
     "baseSplDefense": 80,
     "baseSpeed": 105,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "BUG",
       "FLYING"
@@ -2521,8 +2398,7 @@
     "baseSplDefense": 95,
     "baseSpeed": 95,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "ICE",
       "PSYCHIC"
@@ -2542,8 +2418,7 @@
     "baseSplDefense": 85,
     "baseSpeed": 105,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "ELECTRIC"
     ],
@@ -2562,8 +2437,7 @@
     "baseSplDefense": 85,
     "baseSpeed": 93,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "FIRE"
     ],
@@ -2582,8 +2456,7 @@
     "baseSplDefense": 70,
     "baseSpeed": 85,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "BUG"
     ],
@@ -2602,8 +2475,7 @@
     "baseSplDefense": 70,
     "baseSpeed": 110,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "NORMAL"
     ],
@@ -2622,8 +2494,7 @@
     "baseSplDefense": 20,
     "baseSpeed": 80,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "WATER"
     ],
@@ -2642,8 +2513,7 @@
     "baseSplDefense": 100,
     "baseSpeed": 81,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "WATER",
       "FLYING"
@@ -2663,8 +2533,7 @@
     "baseSplDefense": 95,
     "baseSpeed": 60,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "WATER",
       "ICE"
@@ -2684,8 +2553,7 @@
     "baseSplDefense": 48,
     "baseSpeed": 48,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "NORMAL"
     ],
@@ -2704,8 +2572,7 @@
     "baseSplDefense": 65,
     "baseSpeed": 55,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "NORMAL"
     ],
@@ -2724,8 +2591,7 @@
     "baseSplDefense": 95,
     "baseSpeed": 65,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "WATER"
     ],
@@ -2744,8 +2610,7 @@
     "baseSplDefense": 95,
     "baseSpeed": 130,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "ELECTRIC"
     ],
@@ -2764,8 +2629,7 @@
     "baseSplDefense": 110,
     "baseSpeed": 65,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "FIRE"
     ],
@@ -2784,8 +2648,7 @@
     "baseSplDefense": 75,
     "baseSpeed": 40,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "NORMAL"
     ],
@@ -2804,8 +2667,7 @@
     "baseSplDefense": 55,
     "baseSpeed": 35,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "ROCK",
       "WATER"
@@ -2825,8 +2687,7 @@
     "baseSplDefense": 70,
     "baseSpeed": 55,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "ROCK",
       "WATER"
@@ -2846,8 +2707,7 @@
     "baseSplDefense": 45,
     "baseSpeed": 55,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "ROCK",
       "WATER"
@@ -2867,8 +2727,7 @@
     "baseSplDefense": 70,
     "baseSpeed": 80,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "ROCK",
       "WATER"
@@ -2888,8 +2747,7 @@
     "baseSplDefense": 75,
     "baseSpeed": 130,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "ROCK",
       "FLYING"
@@ -2909,8 +2767,7 @@
     "baseSplDefense": 110,
     "baseSpeed": 30,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "NORMAL"
     ],
@@ -2929,8 +2786,7 @@
     "baseSplDefense": 125,
     "baseSpeed": 85,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "ICE",
       "FLYING"
@@ -2950,8 +2806,7 @@
     "baseSplDefense": 90,
     "baseSpeed": 100,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "ELECTRIC",
       "FLYING"
@@ -2971,8 +2826,7 @@
     "baseSplDefense": 85,
     "baseSpeed": 90,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "FIRE",
       "FLYING"
@@ -2992,8 +2846,7 @@
     "baseSplDefense": 50,
     "baseSpeed": 50,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "DRAGON"
     ],
@@ -3012,8 +2865,7 @@
     "baseSplDefense": 70,
     "baseSpeed": 70,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "DRAGON"
     ],
@@ -3032,8 +2884,7 @@
     "baseSplDefense": 100,
     "baseSpeed": 80,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "DRAGON",
       "FLYING"
@@ -3053,8 +2904,7 @@
     "baseSplDefense": 90,
     "baseSpeed": 130,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "PSYCHIC"
     ],
@@ -3073,8 +2923,7 @@
     "baseSplDefense": 100,
     "baseSpeed": 100,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "PSYCHIC"
     ],
@@ -3093,8 +2942,7 @@
     "baseSplDefense": 65,
     "baseSpeed": 45,
     "learnSets": [],
-    "partySpriteSheet": 1,
-    "partySpriteAssetKey": 1,
+    "partySpriteAssetKey": 400,
     "types": [
       "PSYCHIC",
       "GHOST"

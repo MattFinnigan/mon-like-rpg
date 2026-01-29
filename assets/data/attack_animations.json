@@ -40,5 +40,23 @@
     "delay": 0,
     "yoyo": false,
     "assetKey": "ELECTRIC"
+  },
+  {
+    "key": "HYPER_BEAM",
+    "frameRate": 12,
+    "frames": [0, 1, 2, 3, 4],
+    "repeat": 0,
+    "delay": 0,
+    "yoyo": false,
+    "assetKey": "HYPER_BEAM"
+  },
+  {
+    "key": "SOLAR_BEAM",
+    "frameRate": 12,
+    "frames": [0, 1, 2, 3, 4],
+    "repeat": 0,
+    "delay": 0,
+    "yoyo": false,
+    "assetKey": "SOLAR_BEAM"
   }
 ]

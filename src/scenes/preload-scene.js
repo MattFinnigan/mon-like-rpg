@@ -107,6 +107,10 @@ export class PreloadScene extends Phaser.Scene {
       frameHeight: 112
     })
     this.load.image(STATUS_EFFECT_ASSET_KEYS.CONFUSED, `${STATUS_EFFECT_ASSETS_PATH}/CONFUSED.png`)
+    this.load.spritesheet(STATUS_EFFECT_ASSET_KEYS.FROZEN, `${STATUS_EFFECT_ASSETS_PATH}/FROZEN.png`, {
+      frameWidth: 174,
+      frameHeight: 100
+    })
 
     // sfx
     this.load.audio(SFX_ASSET_KEYS.MENU, `${SFX_ASSETS_PATH}/MENU.wav`)
@@ -125,6 +129,7 @@ export class PreloadScene extends Phaser.Scene {
     this.load.audio(STATUS_EFFECT_ASSET_KEYS.BURNT, `${STATUS_EFFECT_SFX_ASSETS_PATH}/BURNT.wav`)
     this.load.audio(STATUS_EFFECT_ASSET_KEYS.CONFUSED, `${STATUS_EFFECT_SFX_ASSETS_PATH}/CONFUSED.wav`)
     this.load.audio(STATUS_EFFECT_ASSET_KEYS.PARALYZED, `${STATUS_EFFECT_SFX_ASSETS_PATH}/PARALYZED.wav`)
+    this.load.audio(STATUS_EFFECT_ASSET_KEYS.FROZEN, `${STATUS_EFFECT_SFX_ASSETS_PATH}/FROZEN.wav`)
 
     this.registry.set('audio', new AudioManager(this))
   }
@@ -146,7 +151,8 @@ export class PreloadScene extends Phaser.Scene {
         frameRate: animation.frameRate,
         repeat: animation.repeat,
         delay: animation.delay,
-        yoyo: animation.yoyo
+        yoyo: animation.yoyo,
+        msPerFrame: animation.msPerFrame
       }
 
       this.anims.create(anim)

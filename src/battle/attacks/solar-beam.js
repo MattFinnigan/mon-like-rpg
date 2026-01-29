@@ -9,14 +9,6 @@ export class SolarBeam extends Attack {
   _attackGameObjectContainer
   /** @protected @type {Phaser.GameObjects.Sprite} */
   _attackGameObject1
-  /** @protected @type {Phaser.GameObjects.Sprite} */
-  _attackGameObject2
-  /** @protected @type {Phaser.GameObjects.Sprite} */
-  _attackGameObject3
-    /** @protected @type {Phaser.GameObjects.Sprite} */
-  _attackGameObject4
-  /** @type {Phaser.GameObjects.Sprite[]} */
-  #frames
 
   /**
    * 
@@ -25,31 +17,14 @@ export class SolarBeam extends Attack {
   constructor (scene) {
     super(scene)
 
-    this._attackGameObject1 = this._scene.add.sprite(0, 0, ATTACK_ASSET_KEYS.RAY, 3)
-      .setOrigin(0).setAlpha(0)
-
-    this._attackGameObject2 = this._scene.add.sprite(0, 0, ATTACK_ASSET_KEYS.RAY, 2)
-      .setOrigin(0).setAlpha(0)
-  
-    this._attackGameObject3 = this._scene.add.sprite(0, 0, ATTACK_ASSET_KEYS.RAY, 1)
-      .setOrigin(0).setAlpha(0)
-
-    this._attackGameObject4 = this._scene.add.sprite(0, 0, ATTACK_ASSET_KEYS.RAY, 0)
-      .setOrigin(0).setAlpha(0)
-
-    this.#frames = [
-      this._attackGameObject1,
-      this._attackGameObject2,
-      this._attackGameObject3,
-      this._attackGameObject4
-    ]
+    this._attackGameObject1 = this._scene.add.sprite(0, 0, ATTACK_ASSET_KEYS.SOLAR_BEAM, 0)
+      .setOrigin(0)
 
     this._attackGameObjectContainer = this._scene.add.container(0, 0, [
-      this._attackGameObject1,
-      this._attackGameObject2,
-      this._attackGameObject3,
-      this._attackGameObject4
+      this._attackGameObject1
     ]).setAlpha(0)
+
+    super.createAttackAnimation(ATTACK_ASSET_KEYS.SOLAR_BEAM)
   }
 
   /**
@@ -63,14 +38,41 @@ export class SolarBeam extends Attack {
       return
     }
 
+    let coords = {
+      x: attacker.x + 85,
+      y: attacker.y - 185
+    }
+
+    if (this.target === ATTACK_TARGET.PLAYER) {
+      this._attackGameObject1.setAngle(180)
+      coords.y = attacker.y + 155
+      coords.x = attacker.x - 55
+    } else {
+      this._attackGameObject1.setAngle(0)
+    }
+
+    this._isAnimationPlaying = true
+    this._attackGameObjectContainer.setPosition(coords.x, coords.y)
+    this._attackGameObjectContainer.setAlpha(1)
+    this._attackGameObject1.play(ATTACK_ASSET_KEYS.SOLAR_BEAM)
+
     const promises = [
       new Promise(resolve => {
         this._audioManager.playSfx(ATTACK_KEYS.SOLAR_BEAM, {
           primaryAudio: true,
-          callback: () => resolve()
+          callback: () => {
+            this._isAnimationPlaying = false
+            this._attackGameObjectContainer.setAlpha(0)
+            this._attackGameObject1.setFrame(0)
+            resolve()
+          }
         })
       }),
-      this.#playSolarBeamAnimation(attacker, defender)
+      new Promise(resolve => {
+        this._attackGameObject1.once(Phaser.Animations.Events.ANIMATION_COMPLETE_KEY + ATTACK_ASSET_KEYS.SOLAR_BEAM, () => {
+          resolve()
+        })
+      })
     ]
 
     Promise.all(promises).then(() => {
@@ -78,56 +80,6 @@ export class SolarBeam extends Attack {
         callback()
       }
     })
-  }
-
-  /**
-   * @param {Phaser.GameObjects.Image} attacker
-   * @param {Phaser.GameObjects.Image} defender
-   * @returns {Promise}
-   */
-  #playSolarBeamAnimation (attacker, defender) {
-    return new Promise(resolve => resolve())
-    // return new Promise(resolve => {
-    //   this._attackGameObjectContainer.setAlpha(1)
-    //   let remaining = this.#frames.length
-
-    //   let targetCoords = {
-    //     x: defender.x,
-    //     y: defender.y - 35
-    //   }
-
-    //   let originCoords = {
-    //     x: attacker.x,
-    //     y: attacker.y - 35
-    //   }
-      
-    //   this.#frames.forEach((frame, i) => {
-    //     frame.setPosition(originCoords.x, originCoords.y)
-    //     const delay = i * 60
-
-    //     this._scene.tweens.add({
-    //       targets: frame,
-    //       delay,
-    //       duration: 350,
-    //       x: targetCoords.x,
-    //       y: targetCoords.y,
-    //       onStart: () => {
-    //         frame.setAlpha(1)
-    //       },
-    //       onComplete: () => {
-    //         remaining--
-    //         frame.setAlpha(0)
-    //         if (remaining === 0) {
-    //           this._scene.time.delayedCall(delay, () => {
-    //             this._isAnimationPlaying = false
-    //             this._attackGameObjectContainer.setAlpha(0)
-    //             return resolve()
-    //           })
-    //         }
-    //       }
-    //     })
-    //   })
-    // })
   }
 
   /**

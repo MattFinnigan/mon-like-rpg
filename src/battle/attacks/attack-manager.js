@@ -129,6 +129,8 @@ export class AttackManager {
       return def.create(this.#scene)
     })
 
+    attack.target = target
+
     const attacker = target === ATTACK_TARGET.PLAYER ? this.#enemyMonImageGameObject : this.#playerMonImageGameObject
     const defender = target === ATTACK_TARGET.ENEMY ? this.#enemyMonImageGameObject : this.#playerMonImageGameObject
 
