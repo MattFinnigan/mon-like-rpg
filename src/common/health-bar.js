@@ -162,4 +162,13 @@ export class HealthBar {
     this.#healthbarTextGameObject = this.#scene.add.bitmapText(0, 60, 'gb-font-thick', `${this.#currentHp} / ${this.#maxHp}`, 30)
     this.#healthBarContainer.add(this.#healthbarTextGameObject)
   }
+
+  /** @param {number} hp */
+  updateMaxHealth (hp) {
+    const diff = hp - this.#maxHp
+    this.#maxHp = hp
+    this.#currentHp += diff
+
+    this.#healthbarTextGameObject.setText(`${this.#currentHp} / ${this.#maxHp}`)
+  }
 }

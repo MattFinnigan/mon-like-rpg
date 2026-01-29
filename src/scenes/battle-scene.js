@@ -991,6 +991,7 @@ export class BattleScene extends Phaser.Scene {
       if (didLevelUp) {
         this.#audioManager.playSfx(SFX_ASSET_KEYS.LEVEL_UP, { primaryAudio: true })
         msgs.unshift(`${this.#activePlayerMon.name} grew to level ${this.#activePlayerMon.currentLevel}!`)
+        this.#activePlayerMon.recalcMonStats()
         if (evolved) {
           this.#evolutionPendingMons.push(this.#activePlayerMon.monDetails)
         }

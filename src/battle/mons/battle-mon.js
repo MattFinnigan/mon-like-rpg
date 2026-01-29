@@ -734,4 +734,13 @@ export class BattleMon extends MonCore  {
     this.#isCoolingDown = false
     return true
   }
+
+  recalcMonStats () {
+    const oldMax = this._maxHealth
+    super.recalcMonStats()
+    const diff = this._maxHealth - oldMax
+    this._currentHealth += diff
+    
+    this._healthBar.updateMaxHealth(this._maxHealth)
+  }
 }

@@ -174,4 +174,9 @@ export class MonCore {
 
     this.#getMonAttacks()
   }
+
+  recalcMonStats () {
+    this._monStats = getMonStats(this._baseMonDetails, this._monDetails)
+    this._maxHealth = this._monStats.hp
+  }
 }
