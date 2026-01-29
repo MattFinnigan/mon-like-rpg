@@ -1,4 +1,4 @@
-import { SFX_ASSET_KEYS, UI_ASSET_KEYS } from "../assets/asset-keys.js"
+import { SFX_ASSET_KEYS, TEXTURE_ASSET_KEYS, UI_ASSET_KEYS } from "../assets/asset-keys.js"
 import { DIRECTION } from "../types/direction.js"
 import { AudioManager } from "./audio-manager.js"
 /**
@@ -219,10 +219,10 @@ export class Controls {
    * @returns 
    */
   #createArrow (x, y, angle, direction) {
-    const arrow = this.#scene.add.image(x, y, UI_ASSET_KEYS.ARROW)
+    const arrow = this.#scene.add.image(x, y, TEXTURE_ASSET_KEYS.SYSTEM, UI_ASSET_KEYS.ARROW_DOWN)
       .setAngle(angle)
       .setAlpha(this.#mobileButtonsAlpha)
-      .setScale(0.65)
+      .setScale(6)
       .setInteractive({ useHandCursor: true })
       .setScrollFactor(0, 0)
       .setDepth(999999)

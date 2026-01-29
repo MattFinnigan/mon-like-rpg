@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    html, 
+    body,
+    #grid {
+        margin: 0;
+        padding: 0;
+    }
+
+    #grid {
+      position: relative;
+      background-image: url('./characters.png');
+      height: 6912px;
+      width: 2592px;
+    }
+
+    .square {
+      position: absolute;
+      width: 72px;
+      height: 96px;
+      border: 1px solid black;
+    }
+  </style>
+</head>
+<body>
+  <div id="grid">
+  </div>
+  <script>
+    const width = 2592
+    const height = 6912
+    const spriteNum = (width / 72) * (height / 96)
+
+    const grid = document.querySelector('#grid')
+    const perRow = width / 72
+
+    let column = 0
+    let row = 0
+
+    for (let i = 0; i < spriteNum; i++) {
+      const sq = document.createElement('span')
+      sq.innerHTML = i
+      sq.className = 'square'
+      sq.style.left = column * 72 + 'px'
+      sq.style.top = row * 96 + 'px'
+      grid.appendChild(sq)
+
+      column++
+      if (column === perRow) {
+        column = 0
+        row++
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+{
+  "frames": {
+    "BORDER_TOP_LEFT": {
+      "frame": { "x": 0, "y": 0, "w": 32, "h": 32 }
+    },
+    "BORDER_TOP": {
+      "frame": { "x": 32, "y": 0, "w": 32, "h": 21 }
+    },
+    "BORDER_TOP_RIGHT": {
+      "frame": { "x": 64, "y": 0, "w": 32, "h": 32 }
+    },
+    "BORDER_BOTTOM_LEFT": {
+      "frame": { "x": 0, "y": 62, "w": 32, "h": 32 }
+    },
+    "BORDER_BOTTOM": {
+      "frame": { "x": 32, "y": 72, "w": 32, "h": 21 }
+    },
+    "BORDER_BOTTOM_RIGHT": {
+      "frame": { "x": 64, "y": 62, "w": 32, "h": 32 }
+    },
+    "BORDER_LEFT": {
+      "frame": { "x": 0, "y": 32, "w": 19, "h": 32 }
+    },
+    "BORDER_RIGHT": {
+      "frame": { "x": 72, "y": 32, "w": 24, "h": 32 }
+    },
+    "ARROW_DOWN": {
+      "frame": { "x": 38, "y": 56, "w": 19, "h": 15 }
+    }
+  },
+  "meta": {
+    "image": "system.png",
+    "format": "RGBA8888",
+    "size": { "w": 48, "h": 48 },
+    "scale": 1
+  }
+}

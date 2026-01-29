@@ -1,4 +1,4 @@
-import { UI_ASSET_KEYS } from "../assets/asset-keys.js"
+import { TEXTURE_ASSET_KEYS, UI_ASSET_KEYS } from "../assets/asset-keys.js"
 import { DIRECTION } from "../types/direction.js"
 import { DATA_MANAGER_STORE_KEYS, dataManager } from "../utils/data-manager.js"
 import { DataUtils } from "../utils/data-utils.js"
@@ -41,7 +41,7 @@ export class ItemMenu {
   constructor (scene) {
     this.#scene = scene
     this.#padding = 20
-    this.#width = 275
+    this.#width = 300
     this.#height = 555
     this.#selectedItemOptionIndex = 0
     this.#menuOptionsTextGameObjects = []
@@ -152,7 +152,7 @@ export class ItemMenu {
   #createItemMenuGameObjects () {    
     this.#getPlayerInvetory()
 
-    const uiBorderBackground = createDialogUIGameObjectContainer(this.#scene, { x: 0, y: 0 }, this.#width, this.#height)
+    const uiBorderBackground = createDialogUIGameObjectContainer(this.#scene, { x: 50, y: 0 }, this.#width, this.#height)
     this.#container = this.#scene.add.container(0, 0, [uiBorderBackground]).setDepth(2)
 
     for (let i = 0; i < this.#inventory.length; i++) {
@@ -171,7 +171,7 @@ export class ItemMenu {
   }
 
   #createUserInputCursor () {
-    this.#userInputCursor = this.#scene.add.image(20 + this.#padding, 28 + this.#padding, UI_ASSET_KEYS.CURSOR)
-    this.#userInputCursor.setScale(1.25)
+    this.#userInputCursor = this.#scene.add.image(20 + this.#padding, 28 + this.#padding, TEXTURE_ASSET_KEYS.SYSTEM, UI_ASSET_KEYS.ARROW_DOWN)
+    this.#userInputCursor.setScale(1.25).setAngle(270)
   }
 }

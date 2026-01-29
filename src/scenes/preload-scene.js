@@ -1,7 +1,7 @@
-import { ATTACK_ASSET_KEYS, BATTLE_ASSET_KEYS, BGM_ASSET_KEYS, CHARACTER_ASSET_KEYS, DATA_ASSET_KEYS, HEALTH_BAR_ASSET_KEYS, MON_BALLS, SFX_ASSET_KEYS, STATUS_EFFECT_ASSET_KEYS, SYSTEM_ASSET_KEYS, TRAINER_SPRITES, UI_ASSET_KEYS, WORLD_ASSET_KEYS } from '../assets/asset-keys.js'
+import { DATA_ASSET_KEYS, HEALTH_BAR_ASSET_KEYS, MON_BALLS, SFX_ASSET_KEYS, STATUS_EFFECT_ASSET_KEYS, TEXTURE_ASSET_KEYS, WORLD_ASSET_KEYS } from '../assets/asset-keys.js'
 import Phaser from '../lib/phaser.js'
 import { AudioManager } from '../utils/audio-manager.js'
-import { ATTACK_ANIMS_PATH, BACKGROUND_ASSETS_PATH, BATTLE_ASSETS_PATH, BGM_ASSETS_PATH, CHARACTER_ASSETS_PATH, DATA_ASSETS_PATH, MAP_ASSETS_PATH, MON_BALL_ANIMS_ASSETS_PATH, PARTY_MON_ASSETS_PATH, SFX_ASSETS_PATH, STATUS_EFFECT_ASSETS_PATH, STATUS_EFFECT_SFX_ASSETS_PATH, UI_ASSETS_PATH, UI_DIALOG_ASSETS_PATH } from '../utils/consts.js'
+import { BATTLE_ASSETS_PATH, DATA_ASSETS_PATH, MAP_ASSETS_PATH, MON_BALL_ANIMS_ASSETS_PATH, SFX_ASSETS_PATH, STATUS_EFFECT_ASSETS_PATH, STATUS_EFFECT_SFX_ASSETS_PATH } from '../utils/consts.js'
 import { dataManager } from '../utils/data-manager.js'
 import { DataUtils } from '../utils/data-utils.js'
 import { SCENE_KEYS } from './scene-keys.js'
@@ -68,16 +68,9 @@ export class PreloadScene extends Phaser.Scene {
     this.load.json(DATA_ASSET_KEYS.ITEMS, `${DATA_ASSETS_PATH}/items.json`)
     this.load.json(DATA_ASSET_KEYS.LEVEL_UP_MOVES, `${DATA_ASSETS_PATH}/level-up-moves.json`)
     
+    
     // common
-    this.load.image(SYSTEM_ASSET_KEYS.DIALOG_BACKGROUND, `/${BACKGROUND_ASSETS_PATH}/dialog.png`)
-    this.load.image(UI_ASSET_KEYS.DIALOG_BORDER_BOTTOM, `/${UI_DIALOG_ASSETS_PATH}/border-bottom.png`)
-    this.load.image(UI_ASSET_KEYS.DIALOG_BORDER_BOTTOM_LEFT, `/${UI_DIALOG_ASSETS_PATH}/border-bottom-left.png`)
-    this.load.image(UI_ASSET_KEYS.DIALOG_BORDER_BOTTOM_RIGHT, `/${UI_DIALOG_ASSETS_PATH}/border-bottom-right.png`)
-    this.load.image(UI_ASSET_KEYS.DIALOG_BORDER_LEFT, `/${UI_DIALOG_ASSETS_PATH}/border-left.png`)
-    this.load.image(UI_ASSET_KEYS.DIALOG_BORDER_RIGHT, `/${UI_DIALOG_ASSETS_PATH}/border-right.png`)
-    this.load.image(UI_ASSET_KEYS.DIALOG_BORDER_TOP, `/${UI_DIALOG_ASSETS_PATH}/border-top.png`)
-    this.load.image(UI_ASSET_KEYS.DIALOG_BORDER_TOP_LEFT, `/${UI_DIALOG_ASSETS_PATH}/border-top-left.png`)
-    this.load.image(UI_ASSET_KEYS.DIALOG_BORDER_TOP_RIGHT, `/${UI_DIALOG_ASSETS_PATH}/border-top-right.png`)
+    this.load.atlas(TEXTURE_ASSET_KEYS.SYSTEM, 'assets/images/system.png', `${DATA_ASSETS_PATH}/system.json`);
     this.load.spritesheet(MON_BALLS.MON_BALLS_SHEET_1, `${BATTLE_ASSETS_PATH}/balls.png`, {
       frameWidth: 48,
       frameHeight: 48
@@ -86,9 +79,6 @@ export class PreloadScene extends Phaser.Scene {
       frameWidth: 137,
       frameHeight: 133
     })
-
-    this.load.image(UI_ASSET_KEYS.CURSOR, `${UI_ASSETS_PATH}/cursor.png`)
-    this.load.image(UI_ASSET_KEYS.ARROW, `${UI_ASSETS_PATH}/arrow.png`)
 
     this.load.image(WORLD_ASSET_KEYS.WORLD_BACKGROUND, `/${MAP_ASSETS_PATH}/aus.png`)
     this.load.image(WORLD_ASSET_KEYS.WORLD_FOREGROUND, `/${MAP_ASSETS_PATH}/aus-foreground.png`)
@@ -103,47 +93,7 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image(HEALTH_BAR_ASSET_KEYS.RIGHT_CAP, `/${BATTLE_ASSETS_PATH}/hp_right_cap.png`)
     
     // character, npcs world sprites
-    this.load.spritesheet(CHARACTER_ASSET_KEYS.SHEET_1, `${CHARACTER_ASSETS_PATH}/1.png`, {
-      frameWidth: 72,
-      frameHeight: 96
-    })
-    this.load.spritesheet(CHARACTER_ASSET_KEYS.SHEET_7, `${CHARACTER_ASSETS_PATH}/7.png`, {
-      frameWidth: 72,
-      frameHeight: 96
-    })
-    this.load.spritesheet(CHARACTER_ASSET_KEYS.SHEET_8, `${CHARACTER_ASSETS_PATH}/8.png`, {
-      frameWidth: 72,
-      frameHeight: 96
-    })
-    this.load.spritesheet(CHARACTER_ASSET_KEYS.SHEET_9, `${CHARACTER_ASSETS_PATH}/9.png`, {
-      frameWidth: 72,
-      frameHeight: 96
-    })
-    this.load.spritesheet(CHARACTER_ASSET_KEYS.SHEET_12, `${CHARACTER_ASSETS_PATH}/12.png`, {
-      frameWidth: 72,
-      frameHeight: 96
-    })
-    this.load.spritesheet(CHARACTER_ASSET_KEYS.SHEET_14, `${CHARACTER_ASSETS_PATH}/14.png`, {
-      frameWidth: 72,
-      frameHeight: 96
-    })
-    this.load.spritesheet(CHARACTER_ASSET_KEYS.SHEET_15, `${CHARACTER_ASSETS_PATH}/15.png`, {
-      frameWidth: 72,
-      frameHeight: 96
-    })
-    this.load.spritesheet(CHARACTER_ASSET_KEYS.SHEET_16, `${CHARACTER_ASSETS_PATH}/16.png`, {
-      frameWidth: 72,
-      frameHeight: 96
-    })
-    this.load.spritesheet(CHARACTER_ASSET_KEYS.SHEET_17, `${CHARACTER_ASSETS_PATH}/17.png`, {
-      frameWidth: 72,
-      frameHeight: 96
-    })
-    this.load.spritesheet(CHARACTER_ASSET_KEYS.SHEET_18, `${CHARACTER_ASSETS_PATH}/18.png`, {
-      frameWidth: 72,
-      frameHeight: 96
-    })
-    this.load.spritesheet(CHARACTER_ASSET_KEYS.SHEET_22, `${CHARACTER_ASSETS_PATH}/22.png`, {
+    this.load.spritesheet(TEXTURE_ASSET_KEYS.CHARACTERS, `assets/images/characters.png`, {
       frameWidth: 72,
       frameHeight: 96
     })

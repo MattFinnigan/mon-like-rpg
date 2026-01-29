@@ -1,5 +1,5 @@
 import { SKIP_ANIMATIONS } from "../../config.js"
-import { SYSTEM_ASSET_KEYS, UI_ASSET_KEYS } from "../assets/asset-keys.js"
+import { SYSTEM_ASSET_KEYS, TEXTURE_ASSET_KEYS, UI_ASSET_KEYS } from "../assets/asset-keys.js"
 import { DIRECTION } from "../types/direction.js"
 import { DIALOG_DETAILS } from "../utils/consts.js"
 import { animateText, CANNOT_READ_SIGN_TEXT } from "../utils/text-utils.js"
@@ -66,8 +66,7 @@ export class DialogUi {
     this.#optionsContainerHeight = 150
 
 
-    const panel =  this.#scene.add.image(0, 0, SYSTEM_ASSET_KEYS.DIALOG_BACKGROUND).setOrigin(0)
-    this.#container = this.#scene.add.container(0, 0, [panel]).setDepth(1)
+    this.#container =  createDialogUIGameObjectContainer(this.#scene, { x: 0, y: 0 }, 640, 192).setDepth(1)
     this.#uiText = this.#scene.add.bitmapText(DIALOG_DETAILS.paddingLeft, DIALOG_DETAILS.paddingTop, 'gb-font', CANNOT_READ_SIGN_TEXT, 30).setMaxWidth(DIALOG_DETAILS.maxTextWidth(this.#scene.scale.width))
     this.#container.add(this.#uiText)
 
@@ -232,7 +231,7 @@ export class DialogUi {
   #createPlayerInputCursor () {
     const y = this.#uiText.y + DIALOG_DETAILS.paddingTop * 2
     const x = this.#scene.scale.width - (DIALOG_DETAILS.paddingLeft * 2)
-    this.#userInputCursor = this.#scene.add.image(x, y, UI_ASSET_KEYS.CURSOR, 0).setAngle(90)
+    this.#userInputCursor = this.#scene.add.image(x, y, TEXTURE_ASSET_KEYS.SYSTEM, UI_ASSET_KEYS.ARROW_DOWN)
     this.#userInputCursorTween = this.#scene.add.tween({
       delay: 0,
       duration: 500,
@@ -261,7 +260,7 @@ export class DialogUi {
 
     this.#phaserOptionsContainer = this.#scene.add.container(0, 0, [uiBorderBackground, ...options]).setDepth(3).setAlpha(0)
 
-    this.#optionsCursor = this.#scene.add.image(20, 40, UI_ASSET_KEYS.CURSOR, 0).setOrigin(0).setDepth(3)
+    this.#optionsCursor = this.#scene.add.image(20, 40, TEXTURE_ASSET_KEYS.SYSTEM, UI_ASSET_KEYS.ARROW_DOWN).setAngle(270).setScale(1.25).setOrigin(0).setDepth(3)
 
     this.#optionsCursorTween = this.#scene.add.tween({
       delay: 0,

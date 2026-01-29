@@ -1,5 +1,5 @@
 import { SKIP_ANIMATIONS, TILE_SIZE, TILED_COLLISION_ALPHA, WORLD_ZOOM } from '../../config.js';
-import { BGM_ASSET_KEYS, CHARACTER_ASSET_KEYS, DATA_ASSET_KEYS, SFX_ASSET_KEYS, TRAINER_SPRITES, WORLD_ASSET_KEYS } from '../assets/asset-keys.js';
+import { BGM_ASSET_KEYS, SFX_ASSET_KEYS, TEXTURE_ASSET_KEYS, TRAINER_SPRITES, WORLD_ASSET_KEYS } from '../assets/asset-keys.js';
 import { DIRECTION } from '../types/direction.js';
 import { EVENT_KEYS } from '../types/event-keys.js';
 import { OPPONENT_TYPES } from '../types/opponent-types.js';
@@ -416,7 +416,6 @@ export class WorldScene extends Phaser.Scene {
         npcPath[parseInt(obj.name, 10)] = { x: obj.x, y: obj.y - TILE_SIZE }
       })
 
-      const npcSheet = npcObject.properties.find(prop => prop.name === TILED_NPC_PROPERTY.SHEET)?.value || '1'
       const npcMessagesStr = npcObject.properties.find(prop => prop.name === TILED_NPC_PROPERTY.MESSAGE)?.value || ''
 
       const npcFrame = npcObject.properties.find(prop => prop.name === TILED_NPC_PROPERTY.FRAME)?.value || '0'
@@ -430,7 +429,7 @@ export class WorldScene extends Phaser.Scene {
       const npc = new NPC(this, {
         scene: this,
         name: npcObject.name,
-        assetKey: CHARACTER_ASSET_KEYS['SHEET_' + npcSheet],
+        assetKey: TEXTURE_ASSET_KEYS.CHARACTERS,
         position: savedNpcPositions[i] || { x: npcObject.x, y: npcObject.y - TILE_SIZE },
         direction: savedNpcDirections[i] || DIRECTION[npcFacing],
         frame: parseInt(npcFrame, 10),

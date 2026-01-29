@@ -73,8 +73,6 @@ export class NPC extends Character {
   #actionId
   /** @type {boolean} */
   #actionPending
-  /** @type {string} */
-  #name
   
   /**
    * 
@@ -86,9 +84,9 @@ export class NPC extends Character {
       origin: { x: 0.15, y: 0.45 },
       idleFrameConfig: {
         DOWN: config.frame,
-        LEFT: config.frame + 12,
-        RIGHT: config.frame + 24,
-        UP: config.frame + 36,
+        LEFT: config.frame + 36,
+        RIGHT: config.frame + 72,
+        UP: config.frame + 108,
         NONE: config.frame
       }
     })
@@ -100,7 +98,6 @@ export class NPC extends Character {
     this.#currentPathIndex = 0
     this.#movementPattern = config.movementPattern
     this.#lastMovementTime = this.#getMovementRate()
-    this.#name = config.name
     
     this.#action = config.action
     this.#actionId = config.actionId
@@ -242,8 +239,8 @@ export class NPC extends Character {
       case DIRECTION.LEFT:
       case DIRECTION.RIGHT:
       case DIRECTION.UP:
-        if (!this._phaserGameObject.anims.isPlaying || this._phaserGameObject.anims.currentAnim?.key !== `${this.#name}_${this._direction}`) {
-          this._phaserGameObject.play(`${this.#name}_${this._direction}`)
+        if (!this._phaserGameObject.anims.isPlaying || this._phaserGameObject.anims.currentAnim?.key !== `${this._name}_${this._direction}`) {
+          this._phaserGameObject.play(`${this._name}_${this._direction}`)
         }
       break
       case DIRECTION.NONE:

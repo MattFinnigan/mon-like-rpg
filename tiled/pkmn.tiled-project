@@ -172,11 +172,6 @@
                     "propertyType": "npc_movement",
                     "type": "string",
                     "value": "IDLE"
-                },
-                {
-                    "name": "sheet",
-                    "type": "int",
-                    "value": 1
                 }
             ],
             "name": "npc",
@@ -239,40 +234,6 @@
             ]
         },
         {
-            "id": 14,
-            "name": "portal_type",
-            "storageType": "string",
-            "type": "enum",
-            "values": [
-                "door"
-            ],
-            "valuesAsFlags": false
-        },
-        {
-            "color": "#ffa0a0a4",
-            "drawFill": true,
-            "id": 10,
-            "members": [
-                {
-                    "name": "message",
-                    "type": "string",
-                    "value": ""
-                }
-            ],
-            "name": "sign",
-            "type": "class",
-            "useAs": [
-                "property",
-                "map",
-                "layer",
-                "object",
-                "tile",
-                "tileset",
-                "wangcolor",
-                "wangset"
-            ]
-        },
-        {
             "color": "#ffa0a0a4",
             "drawFill": true,
             "id": 13,
@@ -306,6 +267,40 @@
                 "wangcolor",
                 "wangset",
                 "project"
+            ]
+        },
+        {
+            "id": 14,
+            "name": "portal_type",
+            "storageType": "string",
+            "type": "enum",
+            "values": [
+                "door"
+            ],
+            "valuesAsFlags": false
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
+            "id": 10,
+            "members": [
+                {
+                    "name": "message",
+                    "type": "string",
+                    "value": ""
+                }
+            ],
+            "name": "sign",
+            "type": "class",
+            "useAs": [
+                "property",
+                "map",
+                "layer",
+                "object",
+                "tile",
+                "tileset",
+                "wangcolor",
+                "wangset"
             ]
         }
     ]

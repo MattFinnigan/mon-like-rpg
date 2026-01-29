@@ -1,5 +1,5 @@
 import Phaser from '../../../lib/phaser.js'
-import { SYSTEM_ASSET_KEYS, BATTLE_ASSET_KEYS, UI_ASSET_KEYS } from '../../../assets/asset-keys.js'
+import { SYSTEM_ASSET_KEYS, BATTLE_ASSET_KEYS, UI_ASSET_KEYS, TEXTURE_ASSET_KEYS } from '../../../assets/asset-keys.js'
 import { DIRECTION } from '../../../types/direction.js'
 import { exhaustiveGuard } from '../../../utils/guard.js'
 import { ACTIVE_BATTLE_MENU, ATTACK_MOVE_OPTIONS, BATTLE_MENU_OPTIONS } from './battle-menu-options.js'
@@ -15,17 +15,13 @@ import { createDialogUIGameObjectContainer } from '../../../utils/ui-utils.js'
 
 
 const BATTLE_MENU_CURSOR_POS = Object.freeze({
-  x: 30,
-  y: 50
+  x: 25,
+  y: 75
 })
 
 const ATTACK_MENU_CURSOR_POS = Object.freeze({
   x: 28,
-  y: 50
-})
-
-const PLAYER_INPUT_CURSOR_POS = Object.freeze({
-  y: DIALOG_DETAILS.y + 50
+  y: 70
 })
 
 export class BattleMenu {
@@ -362,7 +358,11 @@ export class BattleMenu {
   #createMainBattleMenu () {
     const MENU_POS_Y = 300
     this.#createBattleDialogTextGameObjects()
-    this.#mainBattleCursorPhaserImageGameObject = this.#scene.add.image(BATTLE_MENU_CURSOR_POS.x, BATTLE_MENU_CURSOR_POS.y, UI_ASSET_KEYS.CURSOR, 0).setOrigin(0).setScale(1.35)
+    this.#mainBattleCursorPhaserImageGameObject = this.#scene.add.image(BATTLE_MENU_CURSOR_POS.x, BATTLE_MENU_CURSOR_POS.y, TEXTURE_ASSET_KEYS.SYSTEM, UI_ASSET_KEYS.ARROW_DOWN)
+      .setOrigin(0)
+      .setScale(1.35)
+      .setAngle(270)
+  
     this.#mainBattleMenuPhaserContainerGameObject = this.#scene.add.container(MENU_POS_Y, DIALOG_DETAILS.y, [
         this.#createMainInfoSubPane(),
         this.#scene.add.bitmapText(55, DIALOG_DETAILS.paddingTop, 'gb-font', BATTLE_MENU_OPTIONS.FIGHT, 40),
@@ -379,9 +379,10 @@ export class BattleMenu {
   }
   
   createMonAttackSubMenu () {
-    this.#attackCursorPhaserImageGameObject = this.#scene.add.image(ATTACK_MENU_CURSOR_POS.x, ATTACK_MENU_CURSOR_POS.y, UI_ASSET_KEYS.CURSOR, 0)
+    this.#attackCursorPhaserImageGameObject = this.#scene.add.image(ATTACK_MENU_CURSOR_POS.x, ATTACK_MENU_CURSOR_POS.y, TEXTURE_ASSET_KEYS.SYSTEM, UI_ASSET_KEYS.ARROW_DOWN)
       .setOrigin(0)
-      .setScale(1.35)
+      .setScale(1.25)
+      .setAngle(270)
 
     /** @type {string[]} */
     const attackNames = []
@@ -391,9 +392,9 @@ export class BattleMenu {
     const detailsWidth = 310
     const detailsHeight = 110
 
-    const uiBorderBackground = createDialogUIGameObjectContainer(this.#scene, { x: 3, y: -detailsHeight }, detailsWidth, detailsHeight)
-    const typeText = this.#scene.add.bitmapText(30, -detailsHeight + 25, 'gb-font', 'TYPE/', 30)
-    const ppText = this.#scene.add.bitmapText(30, -detailsHeight + 60, 'gb-font', 'PP/', 30)
+    const uiBorderBackground = createDialogUIGameObjectContainer(this.#scene, { x: 50, y: -detailsHeight }, detailsWidth, detailsHeight)
+    const typeText = this.#scene.add.bitmapText(40, -detailsHeight + 25, 'gb-font', 'TYPE/', 30)
+    const ppText = this.#scene.add.bitmapText(40, -detailsHeight + 60, 'gb-font', 'PP/', 30)
 
     const attk = this.#activePlayerMon.attacks[0]
     this.#moveSelectCurrentMoveType = this.#scene.add.bitmapText(135, -detailsHeight + 25, 'gb-font', attk.typeKey, 30)
@@ -416,11 +417,11 @@ export class BattleMenu {
   }
 
   #createMainInfoPane () {
-    return this.#scene.add.image(0, DIALOG_DETAILS.y, SYSTEM_ASSET_KEYS.DIALOG_BACKGROUND).setOrigin(0)
+    return createDialogUIGameObjectContainer(this.#scene, { x: 50, y: 384 }, 640, 192)
   }
 
   #createMainInfoSubPane () {
-    return this.#scene.add.image(0, 0, BATTLE_ASSET_KEYS.BATTLE_MENU_OPTIONS_BACKGROUND).setOrigin(0)
+    return createDialogUIGameObjectContainer(this.#scene, { x: 40, y: 0 }, 350, 192)
   }
 
   /**
@@ -517,10 +518,10 @@ export class BattleMenu {
         this.#mainBattleCursorPhaserImageGameObject.setPosition(190, BATTLE_MENU_CURSOR_POS.y)
         return
       case BATTLE_MENU_OPTIONS.ITEM:
-        this.#mainBattleCursorPhaserImageGameObject.setPosition(BATTLE_MENU_CURSOR_POS.x, 115)
+        this.#mainBattleCursorPhaserImageGameObject.setPosition(BATTLE_MENU_CURSOR_POS.x, 140)
         return
       case BATTLE_MENU_OPTIONS.RUN:
-        this.#mainBattleCursorPhaserImageGameObject.setPosition(190, 115)
+        this.#mainBattleCursorPhaserImageGameObject.setPosition(190, 140)
         return
       default:
         exhaustiveGuard(this.#selectedBattleMenuOption)
@@ -624,11 +625,11 @@ export class BattleMenu {
         break
       case ATTACK_MOVE_OPTIONS.MOVE_3:
         attk = this.#activePlayerMon.attacks[2]
-        this.#attackCursorPhaserImageGameObject.setPosition(ATTACK_MENU_CURSOR_POS.x, 115)
+        this.#attackCursorPhaserImageGameObject.setPosition(ATTACK_MENU_CURSOR_POS.x, 135)
         break
       case ATTACK_MOVE_OPTIONS.MOVE_4:
         attk = this.#activePlayerMon.attacks[3]
-        this.#attackCursorPhaserImageGameObject.setPosition(325, 115)
+        this.#attackCursorPhaserImageGameObject.setPosition(325, 135)
         break
       default:
         exhaustiveGuard(this.#selectedAttackMenuOption)
@@ -706,7 +707,7 @@ export class BattleMenu {
     const y = this.#scene.scale.height - 15 - DIALOG_DETAILS.paddingTop
     const x = this.#scene.scale.width - 19 - DIALOG_DETAILS.paddingLeft
 
-    this.#userInputCursorPhaserGameImageObject = this.#scene.add.image(x, y, UI_ASSET_KEYS.CURSOR, 0).setOrigin(0).setAngle(90)
+    this.#userInputCursorPhaserGameImageObject = this.#scene.add.image(x, y, TEXTURE_ASSET_KEYS.SYSTEM, UI_ASSET_KEYS.ARROW_DOWN).setOrigin(0)
     this.#userInputCursorPhaserGameImageObject.setAlpha(0)
 
     this.#userInputCursorPhaserTween = this.#scene.add.tween({

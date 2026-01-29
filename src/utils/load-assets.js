@@ -105,7 +105,6 @@ export function loadBattleAssets (scene) {
   scene.load.audio(BGM_ASSET_KEYS.EVOLUTION, `${BGM_ASSETS_PATH}/EVOLUTION.mp3`)
   scene.load.audio(BGM_ASSET_KEYS.MON_CAUGHT, `${BGM_ASSETS_PATH}/MON_CAUGHT.mp3`)
 
-  scene.load.image(BATTLE_ASSET_KEYS.BATTLE_MENU_OPTIONS_BACKGROUND, `${BACKGROUND_ASSETS_PATH}/battle-menu-options.png`)
   scene.load.image(BATTLE_ASSET_KEYS.PLAYER_BATTLE_DETAILS_BACKGROUND, `/${BACKGROUND_ASSETS_PATH}/player-battle-details.png`)
   scene.load.image(BATTLE_ASSET_KEYS.ENEMY_BATTLE_DETAILS_BACKGROUND, `${BACKGROUND_ASSETS_PATH}/enemy-battle-details.png`)
 

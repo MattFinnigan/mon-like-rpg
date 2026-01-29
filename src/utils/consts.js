@@ -8,12 +8,9 @@ export const DIALOG_DETAILS = Object.freeze({
 
 export const BACKGROUND_ASSETS_PATH = 'assets/images/backgrounds'
 export const ATTACK_ANIMS_PATH = 'assets/images/anims/attks'
-export const UI_ASSETS_PATH = 'assets/images/ui'
-export const CHARACTER_ASSETS_PATH = 'assets/images/character'
 export const MAP_ASSETS_PATH = 'assets/images/map'
 export const BGM_ASSETS_PATH = 'assets/audio/bgm'
 export const BATTLE_ASSETS_PATH = 'assets/images/battle'
-export const UI_DIALOG_ASSETS_PATH = 'assets/images/ui/dialog'
 export const PARTY_MON_ASSETS_PATH = 'assets/images/mons/party'
 export const DATA_ASSETS_PATH = 'assets/data'
 export const MON_BALL_ANIMS_ASSETS_PATH = 'assets/images/anims/ball'

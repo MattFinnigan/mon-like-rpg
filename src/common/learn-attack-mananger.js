@@ -1,4 +1,4 @@
-import { SFX_ASSET_KEYS, UI_ASSET_KEYS } from '../assets/asset-keys.js'
+import { SFX_ASSET_KEYS, TEXTURE_ASSET_KEYS, UI_ASSET_KEYS } from '../assets/asset-keys.js'
 import Phaser from '../lib/phaser.js'
 import { DIALOG_DETAILS } from '../types/dialog-ui.js'
 import { DIRECTION } from '../types/direction.js'
@@ -234,7 +234,7 @@ export class LearnAttackManager {
     })
 
     this.#phaserMoveReplaceContainer = this.#scene.add.container(containerX, containerY, [g, ...options]).setDepth(2).setAlpha(0)
-    this.#replaceMoveCursor = this.#scene.add.image(10, 20, UI_ASSET_KEYS.CURSOR, 0).setOrigin(0).setDepth(2)
+    this.#replaceMoveCursor = this.#scene.add.image(10, 20, TEXTURE_ASSET_KEYS.SYSTEM, UI_ASSET_KEYS.ARROW_DOWN).setOrigin(0).setDepth(2)
 
     this.#replaceMoveCursorTween = this.#scene.add.tween({
       delay: 0,

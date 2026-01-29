@@ -1,4 +1,4 @@
-import { SFX_ASSET_KEYS, UI_ASSET_KEYS } from '../../assets/asset-keys.js'
+import { SFX_ASSET_KEYS, TEXTURE_ASSET_KEYS, UI_ASSET_KEYS } from '../../assets/asset-keys.js'
 import { SCENE_KEYS } from '../../scenes/scene-keys.js'
 import { DIRECTION } from '../../types/direction.js'
 import { AudioManager } from '../../utils/audio-manager.js'
@@ -194,9 +194,9 @@ export class PartyMenu {
 
   #movePlayerInputCursor () {
     const { x, y } = this.#getCameraPosition()
-    let newY = y + (this.#cursorIndex * 65) + 18
+    let newY = y + (this.#cursorIndex * 65) + 36
     if (this.#partyStateMachine.currentStateName === PARTY_STATES.WAIT_FOR_MON_OPTION_SELECT) {
-      newY = y + (this.#cursorIndex * 50) + this.#selectedMonInputCusorOffsetY
+      newY = y + (this.#cursorIndex * 50) + this.#selectedMonInputCusorOffsetY + 30
     }
     this.#phaserUserInputCursorGameObject.setPosition(
       this.#phaserUserInputCursorGameObject.x,
@@ -425,12 +425,18 @@ export class PartyMenu {
 
   #createSelectedMonCursor () {
     const { x, y } = this.#getCameraPosition()
-    this.#phaserSelectedMonPlaceholderCursorGameObject = this.#scene.add.image(x + 15, y + 18, UI_ASSET_KEYS.CURSOR, 0).setScale(1.25).setOrigin(0)
+    this.#phaserSelectedMonPlaceholderCursorGameObject = this.#scene.add.image(x + 15, y + 36, TEXTURE_ASSET_KEYS.SYSTEM, UI_ASSET_KEYS.ARROW_DOWN)
+      .setScale(1.25)
+      .setAngle(270)
+      .setOrigin(0)
     this.#phaserSelectedMonPlaceholderCursorGameObject.setAlpha(0).setDepth(this.#depth)
   }
 
   #createPlayerInputCursor () {
-    this.#phaserUserInputCursorGameObject = this.#scene.add.image(0, 0, UI_ASSET_KEYS.CURSOR, 0).setScale(1.25).setOrigin(0)
+    this.#phaserUserInputCursorGameObject = this.#scene.add.image(0, 0, TEXTURE_ASSET_KEYS.SYSTEM, UI_ASSET_KEYS.ARROW_DOWN)
+      .setScale(1.25)
+      .setAngle(270)
+      .setOrigin(0)
     this.#phaserUserInputCursorGameObject.setAlpha(0).setDepth(1 + this.#depth)
 
     this.#phaserUserInputCursorTween = this.#scene.add.tween({
@@ -478,8 +484,8 @@ export class PartyMenu {
     this.#partyStateMachine.setState(PARTY_STATES.HIDDEN)
   }
 
-  #createSelectedMonMenu () {this.#selectedMonMenuOffsetY
-    const uiBorderBackground = createDialogUIGameObjectContainer(this.#scene, { x: 0, y: 0, }, 260, 282)
+  #createSelectedMonMenu () {
+    const uiBorderBackground = createDialogUIGameObjectContainer(this.#scene, { x: 40, y: 0, }, 260, 282)
 
     this.#phaserSelectedMonMenuGameObject = this.#scene.add.container(0, 0, [
       uiBorderBackground,
@@ -494,7 +500,7 @@ export class PartyMenu {
   #setCursorToPartySelect () {
     const { x, y } = this.#getCameraPosition()
     const startX = x + 15
-    this.#phaserUserInputCursorGameObject.setPosition(startX, y + 18)
+    this.#phaserUserInputCursorGameObject.setPosition(startX, y + 36)
 
     this.#phaserUserInputCursorTween = this.#scene.add.tween({
       delay: 0,
@@ -511,8 +517,8 @@ export class PartyMenu {
 
   #setCursorToMonMenu () {
     const { x, y } = this.#getCameraPosition()
-    const startX = x + 400
-    this.#phaserUserInputCursorGameObject.setPosition(startX, y + this.#selectedMonInputCusorOffsetY)
+    const startX = x + this.#selectedMonMenuOffsetX + 18
+    this.#phaserUserInputCursorGameObject.setPosition(startX, y + this.#selectedMonInputCusorOffsetY + 30)
 
     this.#phaserUserInputCursorTween = this.#scene.add.tween({
       delay: 0,

@@ -164,8 +164,6 @@ export class AttackManager {
     }
     attacker.isCharging = false
 
-    const isNoDamageAttk = attack.selfStatusEffects.length || attack.animationName === ATTACK_KEYS.SPLASH
-
     battleMenu.updateInfoPanelMessagesNoInputRequired(`${attacker.name} used ${attack.name}!`, {
       callback: () => {
         const damageRes = this.#calculateAttackDamage(attacker, defender, attack)
@@ -176,7 +174,7 @@ export class AttackManager {
 
         const waitTime = result.damage.damageTaken > 0 ? 500 : 0
         this.#scene.time.delayedCall(waitTime, () => {
-          if (this.#skipBattleAnimations || (result.damage.damageTaken === 0 && !isNoDamageAttk)) {
+          if (this.#skipBattleAnimations || (result.damage.damageTaken === 0 && attack.power !== 0)) {
             onAttackSequenceFinish(result)
             return
           }

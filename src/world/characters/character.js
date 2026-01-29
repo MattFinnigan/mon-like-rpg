@@ -4,7 +4,7 @@ import Phaser from "../../lib/phaser.js"
 import { getTargetPositionFromGameObjectPositionAndDirection } from "../../utils/grid-utils.js"
 import { exhaustiveGuard } from "../../utils/guard.js"
 import { AudioManager } from "../../utils/audio-manager.js"
-import { SFX_ASSET_KEYS } from "../../assets/asset-keys.js"
+import { SFX_ASSET_KEYS, TEXTURE_ASSET_KEYS } from "../../assets/asset-keys.js"
 
 /**
  * @typedef CharacterIdleFrameConfig
@@ -28,6 +28,7 @@ import { SFX_ASSET_KEYS } from "../../assets/asset-keys.js"
  * @property {CharacterIdleFrameConfig} idleFrameConfig
  * @property {Phaser.Tilemaps.TilemapLayer} [collisionLayer]
  * @property {Character[]} [otherCharactersToChckecForCollisionsWith=[]]
+ * @property {string} name
  */
 
 export class Character {
@@ -57,6 +58,8 @@ export class Character {
   #audioManager
   /** @type {boolean} */
   #isVisible
+  /** @type {string} */
+  _name
 
   /**
    * 
@@ -75,11 +78,14 @@ export class Character {
     this._origin = config.origin ? { ...config.origin } : { x: 0, y: 0 }
     this._collisionLayer = config.collisionLayer
     this._otherCharactersToCheckForCollisionsWith = config.otherCharactersToChckecForCollisionsWith || []
+    this._name = config.name
 
     this._phaserGameObject = this._scene.add.sprite(config.position.x, config.position.y, config.assetKey, this._getIdleFrame()).setOrigin(this._origin.x, this._origin.y).setScale(1.25)
     this._spriteGridMovementFinishedCallback = config.spriteGridMovementFinishedCallback
     this.#audioManager = this._scene.registry.get('audio')
     this.#isVisible = true
+
+    this.#createAnimations()
   }
 
   /** @type {Phaser.GameObjects.Sprite} */
@@ -285,5 +291,54 @@ export class Character {
     })
 
     return collidesWithACharacter
+  }
+
+  #createAnimations () {
+    if (this._scene.anims.get(`${this._name}_DOWN`)) {
+      return
+    }
+    const refFrame = this._idleFrameConfig.DOWN
+    const anims = [
+      {
+        key: `${this._name}_DOWN`,
+        frames: [this._idleFrameConfig.DOWN - 1, this._idleFrameConfig.DOWN, this._idleFrameConfig.DOWN + 1],
+        frameRate: 6,
+        repeat: -1,
+        delay: 0,
+        yoyo: true
+      },
+      {
+        key: `${this._name}_LEFT`,
+        frames: [refFrame + 35, refFrame + 36, refFrame + 37],
+        frameRate: 6,
+        repeat: -1,
+        delay: 0,
+        yoyo: true
+      },
+      {
+        key: `${this._name}_RIGHT`,
+        frames: [refFrame + 71, refFrame + 72, refFrame + 73],
+        frameRate: 6,
+        repeat: -1,
+        delay: 0,
+        yoyo: true
+      },
+      {
+        key: `${this._name}_UP`,
+        frames: [refFrame + 107, refFrame + 108, refFrame + 109],
+        frameRate: 6,
+        repeat: -1,
+        delay: 0,
+        yoyo: true
+      }
+    ]
+
+    anims.forEach(anim => {
+      const frames = this._scene.anims.generateFrameNumbers(TEXTURE_ASSET_KEYS.CHARACTERS, { frames: anim.frames })
+      this._scene.anims.create({
+        ...anim,
+        frames
+      })
+    })
   }
 }

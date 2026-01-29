@@ -155,37 +155,37 @@
             "expandedGroupLayers": [
                 18,
                 22,
+                47,
                 46,
-                44,
-                47
+                44
             ],
             "expandedObjectLayers": [
-                38,
-                49,
-                25,
-                42,
-                21,
-                40,
-                19,
-                31,
-                33,
-                18,
                 26,
+                42,
                 52,
-                35,
-                39,
-                28,
+                19,
+                25,
+                21,
                 17,
+                33,
+                38,
+                39,
+                35,
                 51,
-                34,
+                18,
                 30,
-                47
+                47,
+                40,
+                28,
+                34,
+                31,
+                49
             ],
-            "scale": 2,
-            "selectedLayer": 17,
+            "scale": 1.5,
+            "selectedLayer": 24,
             "viewCenter": {
-                "x": 6445,
-                "y": 10608
+                "x": 6897,
+                "y": 11372
             }
         },
         "aus.tmx#GSCd_A1": {
@@ -273,8 +273,8 @@
         },
         "map.tmx": {
             "expandedGroupLayers": [
-                25,
                 18,
+                25,
                 23
             ],
             "expandedObjectLayers": [
@@ -284,8 +284,8 @@
             "scale": 2,
             "selectedLayer": 11,
             "viewCenter": {
-                "x": 836.5,
-                "y": 2369
+                "x": 832,
+                "y": 2365.25
             }
         },
         "map.tmx#RBY-BP_A1": {

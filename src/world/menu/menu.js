@@ -1,4 +1,4 @@
-import { UI_ASSET_KEYS } from "../../assets/asset-keys.js"
+import { TEXTURE_ASSET_KEYS, UI_ASSET_KEYS } from "../../assets/asset-keys.js"
 import { DIRECTION } from "../../types/direction.js"
 import Phaser from "../../lib/phaser.js"
 import { exhaustiveGuard } from "../../utils/guard.js"
@@ -50,8 +50,8 @@ export class Menu {
    */
   constructor (scene) {
     this.#scene = scene
-    this.#padding = 20
-    this.#width = 275
+    this.#padding = 25
+    this.#width = 295
     this.#availaleMenuOptions = [MENU_OPTIONS.POKEMON, MENU_OPTIONS.ITEM, MENU_OPTIONS.SAVE, MENU_OPTIONS.TELEPORT, MENU_OPTIONS.EXIT]
     this.#height = this.#padding * 2 + this.#availaleMenuOptions.length * 50
 
@@ -67,8 +67,8 @@ export class Menu {
       this.#container.add(textObject)
     }
 
-    this.#userInputCursor = this.#scene.add.image(20 + this.#padding, 28 + this.#padding, UI_ASSET_KEYS.CURSOR)
-    this.#userInputCursor.setScale(1.25)
+    this.#userInputCursor = this.#scene.add.image(20 + this.#padding, 28 + this.#padding, TEXTURE_ASSET_KEYS.SYSTEM, UI_ASSET_KEYS.ARROW_DOWN)
+    this.#userInputCursor.setScale(1.25).setAngle(270)
     this.#container.add(this.#userInputCursor)
 
     this.hide()
