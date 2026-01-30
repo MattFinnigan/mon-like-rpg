@@ -24,7 +24,19 @@ export class SolarBeam extends Attack {
       this._attackGameObject1
     ]).setAlpha(0)
 
-    super.createAttackAnimation(ATTACK_ASSET_KEYS.SOLAR_BEAM)
+    this.#createAnimation()
+  }
+
+  #createAnimation () {
+    const anim = {
+      key: ATTACK_KEYS.SOLAR_BEAM,
+      frames: this._scene.anims.generateFrameNumbers(ATTACK_ASSET_KEYS.SOLAR_BEAM, { frames: [0, 1, 2, 3, 4]}),
+      frameRate: 12,
+      repeat: 0,
+      yoyo: false
+    }
+
+    this._scene.anims.create(anim)
   }
 
   /**

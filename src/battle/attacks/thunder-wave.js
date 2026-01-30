@@ -23,7 +23,19 @@ export class ThunderWave extends Attack {
       this._attackGameObject1
     ]).setAlpha(0)
 
-    super.createAttackAnimation(ATTACK_KEYS.THUNDER_WAVE)     
+    this.#createAnimation()
+  }
+
+  #createAnimation () {
+    const anim = {
+      key: ATTACK_KEYS.THUNDER_WAVE,
+      frames: this._scene.anims.generateFrameNumbers(ATTACK_ASSET_KEYS.ELECTRIC, { frames: [0, 1, 2, 3]}),
+      frameRate: 12,
+      repeat: 3,
+      yoyo: false
+    }
+
+    this._scene.anims.create(anim)
   }
 
   /**

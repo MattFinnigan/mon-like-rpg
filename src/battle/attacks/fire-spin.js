@@ -1,6 +1,7 @@
 import Phaser from "../../lib/phaser.js"
 import { ATTACK_ASSET_KEYS } from "../../assets/asset-keys.js"
 import { Attack } from "./attack.js"
+import { ATTACK_KEYS } from "./attack-keys.js"
 
 export class FireSpin extends Attack {
   /** @protected @type {Phaser.GameObjects.Container} */
@@ -22,7 +23,20 @@ export class FireSpin extends Attack {
       this._attackGameObject1
     ]).setAlpha(0)
 
-    super.createAttackAnimation(ATTACK_ASSET_KEYS.FIRE_SPIN)
+    this.#createAnimation()
+  }
+
+  #createAnimation () {
+    const anim = {
+      key: ATTACK_KEYS.FIRE_SPIN,
+      frames: this._scene.anims.generateFrameNumbers(ATTACK_ASSET_KEYS.FIRE_SPIN, { frames: [0, 1, 2, 3, 4, 5, 6, 2, 1, 0] }),
+      frameRate: 10,
+      repeat: 0,
+      delay: 0,
+      yoyo: true
+    }
+
+    this._scene.anims.create(anim)
   }
 
   /**

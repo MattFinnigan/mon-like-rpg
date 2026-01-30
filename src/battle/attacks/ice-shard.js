@@ -18,9 +18,32 @@ export class IceShard extends Attack {
       .setOrigin(0.5)
       .setScale(4)
       .setAlpha(0)
+  
+    this.#createAnimation()
+  }
 
-    super.createAttackAnimation(ATTACK_ASSET_KEYS.ICE_SHARD_START)
-    super.createAttackAnimation(ATTACK_ASSET_KEYS.ICE_SHARD)
+  #createAnimation () {
+    const start = {
+      key: ATTACK_ASSET_KEYS.ICE_SHARD_START,
+      frames: this._scene.anims.generateFrameNumbers(ATTACK_ASSET_KEYS.ICE_SHARD_START),
+      frameRate: 9,
+      repeat: 0,
+      delay: 0,
+      yoyo: false,
+      assetKey: ATTACK_ASSET_KEYS.ICE_SHARD_START
+    }
+
+    const anim = {
+      key: ATTACK_ASSET_KEYS.ICE_SHARD,
+      frames: this._scene.anims.generateFrameNumbers(ATTACK_ASSET_KEYS.ICE_SHARD),
+      frameRate: 9,
+      repeat: 0,
+      delay: 0,
+      yoyo: false
+    }
+
+    this._scene.anims.create(start)
+    this._scene.anims.create(anim)
   }
 
   /**

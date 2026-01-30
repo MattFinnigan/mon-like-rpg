@@ -59,7 +59,6 @@ export class PreloadScene extends Phaser.Scene {
 
     // json
     this.load.json(DATA_ASSET_KEYS.ATTACKS, `${DATA_ASSETS_PATH}/attacks.json`)
-    this.load.json(DATA_ASSET_KEYS.ATTACK_ANIMATIONS, `${DATA_ASSETS_PATH}/attack_animations.json`)
     this.load.json(DATA_ASSET_KEYS.ANIMATIONS, `${DATA_ASSETS_PATH}/animations.json`)
     this.load.json(DATA_ASSET_KEYS.BASE_MONS, `${DATA_ASSETS_PATH}/base-mons.json`)
     this.load.json(DATA_ASSET_KEYS.MONS, `${DATA_ASSETS_PATH}/mons.json`)

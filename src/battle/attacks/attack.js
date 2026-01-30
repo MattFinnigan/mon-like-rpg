@@ -1,6 +1,5 @@
 import Phaser from "../../lib/phaser.js"
 import { AudioManager } from "../../utils/audio-manager.js"
-import { DataUtils } from "../../utils/data-utils.js"
 
 export class Attack {
   /** @protected @type {Phaser.Scene} */
@@ -59,30 +58,4 @@ export class Attack {
    * @returns {void}
    */
   playChargingAnimation (attacker, defender, callback) {}
-
-  /**
-   * @param {string} assetKey 
-   */
-  createAttackAnimation (assetKey) {
-    if (!this._scene.anims.get(assetKey)) {
-      const animation = DataUtils.getAttackAnimation(this._scene, assetKey)
-      if (!animation) {
-        return
-      }
-      const frames = animation.frames
-        ? this._scene.anims.generateFrameNumbers(animation.assetKey, { frames: animation.frames })
-        : this._scene.anims.generateFrameNumbers(animation.assetKey)
-
-      const anim = {
-        key: animation.key,
-        frames: frames,
-        frameRate: animation.frameRate,
-        repeat: animation.repeat,
-        delay: animation.delay,
-        yoyo: animation.yoyo
-      }
-
-      this._scene.anims.create(anim)
-    }
-  }
 }

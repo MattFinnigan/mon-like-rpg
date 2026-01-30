@@ -2,6 +2,7 @@ import Phaser from "../../lib/phaser.js"
 import { ATTACK_ASSET_KEYS } from "../../assets/asset-keys.js"
 import { Attack } from "./attack.js"
 import { ATTACK_ANIMS_PATH } from "../../utils/consts.js"
+import { ATTACK_KEYS } from "./attack-keys.js"
 
 export class Slash extends Attack {
   /** @protected @type {Phaser.GameObjects.Container} */
@@ -35,7 +36,20 @@ export class Slash extends Attack {
       this._attackGameObject3
     ]).setAlpha(0)
 
-    super.createAttackAnimation(ATTACK_ASSET_KEYS.SLASH)
+    this.#createAnimation()
+  }
+
+  #createAnimation () {
+    const anim = {
+      key: ATTACK_KEYS.SLASH,
+      frames: this._scene.anims.generateFrameNumbers(ATTACK_ASSET_KEYS.SLASH),
+      frameRate: 12,
+      repeat: 0,
+      delay: 0,
+      yoyo: false
+    }
+
+    this._scene.anims.create(anim)
   }
 
 

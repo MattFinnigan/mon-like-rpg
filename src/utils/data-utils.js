@@ -29,18 +29,6 @@ export class DataUtils {
 
   /**
    * 
-   * @param {Phaser.Scene} scene
-   * @param {string} animKey
-   * @returns {object}
-   */
-  static getAttackAnimation (scene, animKey) {
-    /** @type {import("../types/typedef.js").Animation[]} */
-    const data = scene.cache.json.get(DATA_ASSET_KEYS.ATTACK_ANIMATIONS)
-    return data.find(attk => attk.key === animKey)
-  }
-
-  /**
-   * 
    * @param {Phaser.Scene} scene 
    * @param {number} id 
    * @returns {import("../types/typedef.js").Mon}
