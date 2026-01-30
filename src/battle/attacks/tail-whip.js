@@ -32,7 +32,23 @@ export class TailWhip extends Attack {
         })
       }),
       new Promise(resolve => {
-        this._scene.time.delayedCall(500, () => resolve())
+        const baseX = attacker.x
+        this._scene.add.tween({
+          targets: attacker,
+          x: {
+            from: baseX - 16,
+            to: baseX + 16,
+            finish: baseX
+          },
+          duration: 150,
+          yoyo: true,
+          repeat: 2,
+          easing: Phaser.Math.Easing.Sine.InOut,
+          onComplete: () => {
+            attacker.x = baseX
+            resolve()
+          }
+        })
       })
     ]
 

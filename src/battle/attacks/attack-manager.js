@@ -144,7 +144,7 @@ export class AttackManager {
   #playAttackAnimation (key, config) {
     const { onAnimFinish, target, isCharging } = config
     const def = ATTACK_DEFINITIONS[key]
-    console.log(def)
+
     if (!def) {
       new Error(`Attack definition for ${key} not found.`)
       return
@@ -204,10 +204,10 @@ export class AttackManager {
 
         const waitTime = result.damage.damageTaken > 0 ? 500 : 0
         this.#scene.time.delayedCall(waitTime, () => {
-          if (this.#skipBattleAnimations || (result.damage.damageTaken === 0 && !result.isNotDamaging)) {
-            this.#battleStatEffectChecks(attacker, defender, attack, battleMenu, () => onAttackSequenceFinish(result))
-            return
-          }
+          // if (this.#skipBattleAnimations || (result.damage.damageTaken === 0 && !result.isNotDamaging)) {
+          //   this.#battleStatEffectChecks(attacker, defender, attack, battleMenu, () => onAttackSequenceFinish(result))
+          //   return
+          // }
           this.#playAttackAnimation(attack.animationName, {
             target,
             onAnimFinish: () => this.#battleStatEffectChecks(attacker, defender, attack, battleMenu, () => onAttackSequenceFinish(result))

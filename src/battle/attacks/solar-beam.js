@@ -51,10 +51,26 @@ export class SolarBeam extends Attack {
       this._attackGameObject1.setAngle(0)
     }
 
+    const baseX = defender.x
+
+    const shakeTween = this._scene.add.tween({
+      targets: defender,
+      x: {
+        start: baseX,
+        from: baseX - 2,
+        to: baseX + 2
+      },
+      duration: 30,
+      yoyo: true,
+      repeat: -1,
+      delay: 300
+    })
+
     this._isAnimationPlaying = true
     this._attackGameObjectContainer.setPosition(coords.x, coords.y)
     this._attackGameObjectContainer.setAlpha(1)
     this._attackGameObject1.play(ATTACK_ASSET_KEYS.SOLAR_BEAM)
+    shakeTween.restart()
 
     const promises = [
       new Promise(resolve => {
@@ -64,6 +80,7 @@ export class SolarBeam extends Attack {
             this._isAnimationPlaying = false
             this._attackGameObjectContainer.setAlpha(0)
             this._attackGameObject1.setFrame(0)
+            shakeTween.stop()
             resolve()
           }
         })
