@@ -774,16 +774,22 @@ export class BattleScene extends Phaser.Scene {
 
     switch (status) {
       case STATUS_EFFECT.FREEZE:
-        msg += 'was FROZEN!'
+        msg += 'was frozen!'
         break
       case STATUS_EFFECT.BURN:
-        msg += 'was BURNT!'
+        msg += 'was burnt!'
         break
       case STATUS_EFFECT.CONFUSE:
-        msg += 'became CONFUSED!'
+        msg += 'became confused!'
         break
       case STATUS_EFFECT.PARALYSE:
-        msg += 'was PARALYZED!'
+        msg += 'became paralyzed!'
+        break
+      case STATUS_EFFECT.SLEEP:
+        msg += 'fell asleep!'
+        break
+      case STATUS_EFFECT.POISON:
+        msg += 'was poisoned!'
         break
       default:
         exhaustiveGuard(status)
@@ -825,18 +831,7 @@ export class BattleScene extends Phaser.Scene {
   }
 
   #playerAttack () {
-    this.#activePlayerMon.checkMonCanAttack((canAttack, msg) => {
-
-      if (!canAttack) {
-        this.#battleMenu.updateInfoPanelMessagesNoInputRequired(msg, {
-          callback: () => {
-            this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK_AWAIT_INPUT)
-          },
-          delayCallbackMs: 800
-        })
-        return
-      }
-
+    const attackSequence = () => {
       const attack = this.#getPlayerAttack()
       this.#attackManager.playAttackSequence(
         this.#activePlayerMon,
@@ -861,6 +856,30 @@ export class BattleScene extends Phaser.Scene {
           })
         }
       )
+    }
+
+    this.#activePlayerMon.checkMonCanAttack((canAttack, msg) => {
+      if (!canAttack) {
+        this.#battleMenu.updateInfoPanelMessagesNoInputRequired(msg, {
+          callback: () => {
+            this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK_AWAIT_INPUT)
+          },
+          delayCallbackMs: 800
+        })
+        return
+      }
+
+      if (msg) {
+        this.#battleMenu.updateInfoPanelMessagesNoInputRequired(msg, {
+          callback: () => {
+            attackSequence()
+          },
+          delayCallbackMs: 800
+        })
+        return
+      }
+      
+      attackSequence()
     })
   }
 
@@ -883,18 +902,7 @@ export class BattleScene extends Phaser.Scene {
 
 
   #enemyAttack() {
-    this.#activeEnemyMon.checkMonCanAttack((canAttack, msg) => {
-
-      if (!canAttack) {
-        this.#battleMenu.updateInfoPanelMessagesNoInputRequired(msg, {
-          callback: () => {
-            this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK_AWAIT_INPUT)
-          },
-          delayCallbackMs: 800
-        })
-        return
-      }
-
+    const attackSequence = () => {
       const attack = this.#activeEnemyMon.attacks[this.#turnDecisions.ENEMY.attackIndex]
       this.#attackManager.playAttackSequence(
         this.#activeEnemyMon,
@@ -919,6 +927,30 @@ export class BattleScene extends Phaser.Scene {
           })
         }
       )
+    }
+
+    this.#activeEnemyMon.checkMonCanAttack((canAttack, msg) => {
+      if (!canAttack) {
+        this.#battleMenu.updateInfoPanelMessagesNoInputRequired(msg, {
+          callback: () => {
+            this.#battleStateMachine.setState(BATTLE_STATES.POST_ATTACK_AWAIT_INPUT)
+          },
+          delayCallbackMs: 800
+        })
+        return
+      }
+
+      if (msg) {
+        this.#battleMenu.updateInfoPanelMessagesNoInputRequired(msg, {
+          callback: () => {
+            attackSequence()
+          },
+          delayCallbackMs: 800
+        })
+        return
+      }
+      
+      attackSequence()
     })
   }
 

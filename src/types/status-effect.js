@@ -7,5 +7,7 @@ export const STATUS_EFFECT = Object.freeze({
   FREEZE: 'FREEZE',
   PARALYSE: 'PARALYSE',
   CONFUSE: 'CONFUSE',
-  BURN: 'BURN'
+  BURN: 'BURN',
+  SLEEP: 'SLEEP',
+  POISON: 'POISON'
 })

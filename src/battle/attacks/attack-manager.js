@@ -16,6 +16,8 @@ import { DefenseCurl } from "./defense-curl.js"
 import { TailWhip } from "./tail-whip.js"
 import { MON_BATTLE_STAT } from "../../types/mon-battle-stats.js"
 import { Barrier } from "./barrier.js"
+import { SleepPowder } from "./sleep-powder.js"
+import { PoisonPowder } from "./poison-powder.js"
 /**
  * @typedef {keyof typeof ATTACK_TARGET} AttackTarget
  */
@@ -70,6 +72,14 @@ export const ATTACK_DEFINITIONS = {
   [ATTACK_KEYS.BARRIER]: {
     /** @param {Phaser.Scene} scene */
     create: (scene) => new Barrier(scene)
+  },
+  [ATTACK_KEYS.SLEEP_POWDER]: {
+    /** @param {Phaser.Scene} scene */
+    create: (scene) => new SleepPowder(scene)
+  },
+  [ATTACK_KEYS.POISON_POWDER]: {
+    /** @param {Phaser.Scene} scene */
+    create: (scene) => new PoisonPowder(scene)
   }
 }
 
@@ -133,9 +143,8 @@ export class AttackManager {
    */
   #playAttackAnimation (key, config) {
     const { onAnimFinish, target, isCharging } = config
-    
     const def = ATTACK_DEFINITIONS[key]
-
+    console.log(def)
     if (!def) {
       new Error(`Attack definition for ${key} not found.`)
       return
@@ -144,7 +153,7 @@ export class AttackManager {
     const attack = this.#getAttackInstance(key, () => {
       return def.create(this.#scene)
     })
-
+    
     attack.target = target
 
     const attacker = target === ATTACK_TARGET.PLAYER ? this.#enemyMonImageGameObject : this.#playerMonImageGameObject
@@ -184,10 +193,11 @@ export class AttackManager {
 
     battleMenu.updateInfoPanelMessagesNoInputRequired(`${attacker.name} used ${attack.name}!`, {
       callback: () => {
+        const defenderAlreadyStatusEffected = attack.statusEffect && attack.power === 0 && defender.currentStatusEffect
         const damageRes = this.#calculateAttackDamage(attacker, defender, attack)
 
         const result = {
-          isNotDamaging: attack.power === 0,
+          isNotDamaging: attack.power === 0 && !defenderAlreadyStatusEffected,
           damage: damageRes,
           statusEffect: !damageRes.wasImmune ? this.#determineStatusEffect(defender, attack) : null
         }

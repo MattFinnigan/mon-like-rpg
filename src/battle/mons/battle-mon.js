@@ -263,6 +263,18 @@ export class BattleMon extends MonCore  {
         this._monLvlGameText.setText('PARA')
         callback()
         break
+      case STATUS_EFFECT.POISON:
+        this.#playPoisonedAnim(() => {
+          this._monLvlGameText.setText('POI')
+          callback()
+        })
+        break
+      case STATUS_EFFECT.SLEEP:
+        this.#playPoisonedAnim(() => {
+          this._monLvlGameText.setText('SLP')
+          callback()
+        })
+        break
       default:
         exhaustiveGuard(status)
         break
@@ -289,8 +301,13 @@ export class BattleMon extends MonCore  {
         break
       case STATUS_EFFECT.CONFUSE:
         result = Phaser.Math.Between(this._statusEffectRemovalAttempts, 5) === 5
+        break
+      case STATUS_EFFECT.SLEEP:
+        result = Phaser.Math.Between(this._statusEffectRemovalAttempts, 5) === 5
+        break
       case STATUS_EFFECT.BURN:
       case STATUS_EFFECT.PARALYSE:
+      case STATUS_EFFECT.POISON:
         break
       default:
         exhaustiveGuard(statusEffect)
@@ -491,6 +508,62 @@ export class BattleMon extends MonCore  {
   /**
    * @param {() => void} callback
    */
+  #playPoisonedAnim (callback) {
+    // const sprite = this._scene.add.sprite(this._phaserMonImageGameObject.x - 35, this._phaserMonImageGameObject.y + 40, STATUS_EFFECT_ASSET_KEYS.BURNT, 0).setScale(1.5)
+    // sprite.play(STATUS_EFFECT_ASSET_KEYS.BURNT)
+
+    const promises = [
+      new Promise(resolve => {
+        resolve()
+        // sprite.once(Phaser.Animations.Events.ANIMATION_COMPLETE_KEY + STATUS_EFFECT_ASSET_KEYS.POISON, () => {
+        //   sprite.setAlpha(0)
+        //   resolve()
+        // })
+      }),
+      new Promise(resolve => {
+        this.#audioManager.playSfx(STATUS_EFFECT_ASSET_KEYS.POISONED, {
+          primaryAudio: true,
+          callback: () => resolve()
+        })
+      })
+    ]
+
+    Promise.all(promises).then(() => {
+      callback()
+    })
+  }
+
+  /**
+   * @param {() => void} callback
+   */
+  #playSleepingAnim (callback) {
+    // const sprite = this._scene.add.sprite(this._phaserMonImageGameObject.x - 35, this._phaserMonImageGameObject.y + 40, STATUS_EFFECT_ASSET_KEYS.BURNT, 0).setScale(1.5)
+    // sprite.play(STATUS_EFFECT_ASSET_KEYS.BURNT)
+
+    const promises = [
+      new Promise(resolve => {
+        resolve()
+        // sprite.once(Phaser.Animations.Events.ANIMATION_COMPLETE_KEY + STATUS_EFFECT_ASSET_KEYS.POISON, () => {
+        //   sprite.setAlpha(0)
+        //   resolve()
+        // })
+      }),
+      new Promise(resolve => {
+        this.#audioManager.playSfx(STATUS_EFFECT_ASSET_KEYS.SLEEPING, {
+          primaryAudio: true,
+          callback: () => resolve()
+        })
+      })
+    ]
+
+    Promise.all(promises).then(() => {
+      callback()
+    })
+  }
+
+  /**
+   * @param {() => void} callback
+   */
   #playParalyzedAnim (callback) {
     const promises = [
       new Promise(resolve => {
@@ -625,7 +698,7 @@ export class BattleMon extends MonCore  {
         return
       }
 
-      callback(true)
+      callback(true, statusMsg)
     })
   }
 
@@ -638,7 +711,8 @@ export class BattleMon extends MonCore  {
     const preAttackStatusEffects = [
       STATUS_EFFECT.FREEZE,
       STATUS_EFFECT.CONFUSE,
-      STATUS_EFFECT.PARALYSE
+      STATUS_EFFECT.PARALYSE,
+      STATUS_EFFECT.SLEEP
     ]
     
     if (!preAttackStatusEffects.includes(this.currentStatusEffect)) {
@@ -694,6 +768,16 @@ export class BattleMon extends MonCore  {
         }
         callback(true)
         break
+      case STATUS_EFFECT.SLEEP:
+        msg = result
+          ? `${this.name} woke up!`
+          : `${this.name} is fast asleep...`
+        if (!result) {
+          this.#playSleepingAnim(() => callback(canAttack, msg))
+          return
+        }
+        callback(canAttack, msg)
+        break
     }
   }
 
@@ -704,7 +788,8 @@ export class BattleMon extends MonCore  {
   checkPostBattleTurnMonStatusEffect (callback) {
     /** @type {import("../../types/status-effect.js").StatusEffect[]} */
     const postBattleStatusEffects = [
-      STATUS_EFFECT.BURN
+      STATUS_EFFECT.BURN,
+      STATUS_EFFECT.POISON
     ]
     
     if (!postBattleStatusEffects.includes(this.currentStatusEffect)) {
@@ -719,6 +804,15 @@ export class BattleMon extends MonCore  {
       case STATUS_EFFECT.BURN:
         this.#playBurntAnim(() => {
           msg = `${this.name} was hurt by their burn.`
+          this.playMonTakeDamageSequence(this.maxHealth * 0.10,  {
+            skipAnimation: true,
+            callback: () => callback(true, msg)
+          })
+        })
+        break
+      case STATUS_EFFECT.POISON:
+        this.#playPoisonedAnim(() => {
+          msg = `${this.name} was hurt by the poison.`
           this.playMonTakeDamageSequence(this.maxHealth * 0.10,  {
             skipAnimation: true,
             callback: () => callback(true, msg)

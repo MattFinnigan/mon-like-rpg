@@ -130,6 +130,8 @@ export class PreloadScene extends Phaser.Scene {
     this.load.audio(STATUS_EFFECT_ASSET_KEYS.CONFUSED, `${STATUS_EFFECT_SFX_ASSETS_PATH}/CONFUSED.wav`)
     this.load.audio(STATUS_EFFECT_ASSET_KEYS.PARALYZED, `${STATUS_EFFECT_SFX_ASSETS_PATH}/PARALYZED.wav`)
     this.load.audio(STATUS_EFFECT_ASSET_KEYS.FROZEN, `${STATUS_EFFECT_SFX_ASSETS_PATH}/FROZEN.wav`)
+    this.load.audio(STATUS_EFFECT_ASSET_KEYS.POISONED, `${STATUS_EFFECT_SFX_ASSETS_PATH}/POISONED.wav`)
+    this.load.audio(STATUS_EFFECT_ASSET_KEYS.SLEEPING, `${STATUS_EFFECT_SFX_ASSETS_PATH}/SLEEPING.wav`)
 
     this.registry.set('audio', new AudioManager(this))
   }

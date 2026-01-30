@@ -206,5 +206,39 @@
       }
     ],
     "opponentBattleStatEffects": []
+  },
+  {
+    "id": 12,
+    "name": "SLEEP POWDER",
+    "animationName": "SLEEP_POWDER",
+    "assetKeys": [],
+    "typeKey": "GRASS",
+    "power": 0,
+    "criticalHitModifier": 1,
+    "usesMonSplStat": true,
+    "statusEffect": { "name": "SLEEP", "chancePercentage": 100 },
+    "powerPoints": 15,
+    "accuracy": 90,
+    "turnsToCharge": 0,
+    "turnsOnCooldown": 0,
+    "selfBattleStatEffects": [],
+    "opponentBattleStatEffects": []
+  },
+  {
+    "id": 13,
+    "name": "POISON POWDER",
+    "animationName": "POISON_POWDER",
+    "assetKeys": [],
+    "typeKey": "POISON",
+    "power": 0,
+    "criticalHitModifier": 1,
+    "usesMonSplStat": true,
+    "statusEffect": { "name": "POISON", "chancePercentage": 100 },
+    "powerPoints": 15,
+    "accuracy": 90,
+    "turnsToCharge": 0,
+    "turnsOnCooldown": 0,
+    "selfBattleStatEffects": [],
+    "opponentBattleStatEffects": []
   }
 ]

@@ -143,7 +143,9 @@ export const STATUS_EFFECT_ASSET_KEYS = Object.freeze({
   CONFUSED: 'CONFUSED',
   BURNT: 'BURNT',
   PARALYZED: 'PARALYZED',
-  FROZEN: 'FROZEN'
+  FROZEN: 'FROZEN',
+  POISONED: 'POISONED',
+  SLEEPING: 'SLEEPING'
 })
 
 export const MON_BALLS = Object.freeze({
