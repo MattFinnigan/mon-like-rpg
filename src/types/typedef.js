@@ -199,8 +199,8 @@ import Phaser from "../lib/phaser.js";
  * @typedef Item
  * @type {object}
  * @property {ItemType} type
- * @property {import("./items.js").ItemTypeKey} typeKey
- * @property {import("./items.js").ItemKey} key
+ * @property {import("../generated/item-type-keys.js").ItemTypeKey} typeKey
+ * @property {import("../generated/item-keys.js").ItemKey} key
  * @property {string} name
  * @property {any} [value]
  */
@@ -208,7 +208,7 @@ import Phaser from "../lib/phaser.js";
 /**
  * @typedef InventoryItem
  * @type {object}
- * @property {import("./items.js").ItemKey} itemKey
+ * @property {import("../generated/item-keys.js").ItemKey} itemKey
  * @property {number} qty
  */
 

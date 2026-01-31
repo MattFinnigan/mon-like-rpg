@@ -6,12 +6,18 @@
           <th v-for="header in headers" :key="header">
             {{ header }}
           </th>
+          <th width="25%"></th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="(row, rowIndex) in contents" :key="rowIndex">
           <td v-for="header in headers" :key="header">
             {{ row[header] }}
+          </td>
+          <td>
+            <button class="btn sm" @click="$emit('view', row)">V</button>
+            <button class="btn sm" @click="$emit('copy', row)">C</button>
+            <button class="btn sm" @click="$emit('delete', row)">D</button>
           </td>
         </tr>
         <tr v-if="contents.length === 0">
@@ -25,8 +31,11 @@
 </template>
 
 <script>
+
 export default {
+  emits: ['view', 'copy', 'delete'],
   props: {
+    name: String,
     contents: {
       type: Array,
       default: () => {}

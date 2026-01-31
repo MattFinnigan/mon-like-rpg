@@ -1,11 +1,11 @@
 import { SFX_ASSET_KEYS } from "../assets/asset-keys.js"
 import { MonCore } from "../common/mon-core.js"
+import { ITEM_TYPE_KEY } from "../generated/item-type-keys.js"
 import { SCENE_KEYS } from "../scenes/scene-keys.js"
 import { EVENT_KEYS } from "../types/event-keys.js"
-import { ITEM_TYPE_DATA, ITEM_TYPE_KEY } from "../types/items.js"
+import { ITEM_TYPE_DATA } from "../types/items.js"
 import { AudioManager } from "./audio-manager.js"
 import { DATA_MANAGER_STORE_KEYS, dataManager } from "./data-manager.js"
-
 /**
  * 
  * @param {Phaser.Scene} scene

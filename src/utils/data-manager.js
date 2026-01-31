@@ -1,7 +1,7 @@
 import Phaser from "../lib/phaser.js";
 import { USE_DEV_DATA, TILE_SIZE } from "../../config.js";
 import { DIRECTION } from "../types/direction.js";
-import { ITEM_KEY } from "../types/items.js";
+import { ITEM_KEY } from "../generated/item-keys.js";
 
 const LOCAL_STORAGE_KEY = 'MF_MON_DATA'
 const DEV_LOCAL_STORAGE_KEY = 'DEV_MF_MON_DATA'

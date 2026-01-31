@@ -22,10 +22,10 @@ import { generateWildMon } from '../utils/encounter-utils.js';
 import { Menu, MENU_OPTIONS } from '../world/menu/menu.js';
 import { ItemMenu } from '../common/item-menu.js';
 import { PartyMenu } from '../common/party-menu/party-menu.js';
-import { ITEM_TYPE_KEY } from '../types/items.js';
 import { playItemEffect } from '../utils/item-manager.js';
 import { BGM_ASSETS_PATH } from '../utils/consts.js';
 import { FpsCounter } from '../common/fps-counter.js';
+import { ITEM_TYPE_KEY } from '../generated/item-type-keys.js';
 
 const CUSTOM_TILED_TYPES = Object.freeze({
   NPC: 'npc',

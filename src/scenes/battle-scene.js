@@ -15,7 +15,6 @@ import { BGM_ASSET_KEYS, SFX_ASSET_KEYS, TRAINER_SPRITES } from '../assets/asset
 import { BattlePlayer } from '../battle/characters/battle-player.js'
 import { DATA_MANAGER_STORE_KEYS, dataManager } from '../utils/data-manager.js'
 import { BattleMon } from '../battle/mons/battle-mon.js'
-import { ITEM_TYPE_KEY } from '../types/items.js'
 import { OPPONENT_TYPES } from '../types/opponent-types.js'
 import { playItemEffect } from '../utils/item-manager.js'
 import { PartyMon } from '../common/party-menu/party-mon.js'
@@ -27,6 +26,7 @@ import { LearnAttackManager } from '../common/learn-attack-mananger.js'
 import { STATUS_EFFECT } from '../types/status-effect.js'
 import { exhaustiveGuard } from '../utils/guard.js'
 import { BGM_ASSETS_PATH} from '../utils/consts.js'
+import { ITEM_TYPE_KEY } from '../generated/item-type-keys.js'
 
 
 /** @enum {object} */
