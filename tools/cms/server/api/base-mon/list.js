@@ -3,7 +3,7 @@ import { readJSON } from '../../utils/jsonStore.js'
 
 export default defineEventHandler(async event => {
 
-  /** @type {import('../../../../../src/types/typedef').Mon[]} */
-  const itemsList = await readJSON('mons')
+  /** @type {import('../../../../../src/types/typedef').BaseMon[]} */
+  const itemsList = await readJSON('base-mons')
   return Object.keys(itemsList).map(key => itemsList[parseInt(key)])
 })

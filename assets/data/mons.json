@@ -1,18 +1,39 @@
 {
+  "1": {
+    "id": 1,
+    "baseMonIndex": 24,
+    "name": "PIKACHU",
+    "currentHp": 46,
+    "currentLevel": 25,
+    "attackEV": 5,
+    "defenseEV": 29,
+    "splAttackEV": 11,
+    "splDefenseEV": 16,
+    "speedEV": 2,
+    "hpEV": 35,
+    "attackIds": [
+      2,
+      6
+    ],
+    "currentExp": 13000
+  },
   "4": {
     "id": 4,
     "baseMonIndex": 128,
-    "name": "MAGIKARP",
+    "name": "KARPY",
     "currentHp": null,
-    "currentLevel": 5,
+    "currentLevel": 6,
     "attackEV": 1,
-    "defenseEV": 1,
-    "splAttackEV": 1,
-    "splDefenseEV": 1,
+    "defenseEV": 3,
+    "splAttackEV": 4,
+    "splDefenseEV": 5,
     "speedEV": 6,
     "hpEV": 2,
-    "attackIds": [4],
-    "currentExp": 0
+    "attackIds": [
+      4,
+      7
+    ],
+    "currentExp": 100
   },
   "5": {
     "id": 5,
@@ -26,7 +47,9 @@
     "splDefenseEV": 3,
     "speedEV": 6,
     "hpEV": 4,
-    "attackIds": [2],
+    "attackIds": [
+      2
+    ],
     "currentExp": 0
   },
   "6": {
@@ -41,7 +64,12 @@
     "splDefenseEV": 10,
     "speedEV": 9,
     "hpEV": 7,
-    "attackIds": [1, 2, 5, 4],
+    "attackIds": [
+      1,
+      2,
+      5,
+      4
+    ],
     "currentExp": 0
   },
   "7": {
@@ -56,7 +84,9 @@
     "splDefenseEV": 1,
     "speedEV": 5,
     "hpEV": 2,
-    "attackIds": [4],
+    "attackIds": [
+      4
+    ],
     "currentExp": 0
   },
   "8": {
@@ -71,7 +101,9 @@
     "splDefenseEV": 8,
     "speedEV": 7,
     "hpEV": 4,
-    "attackIds": [7],
+    "attackIds": [
+      7
+    ],
     "currentExp": 0
   },
   "9": {
@@ -86,7 +118,11 @@
     "splDefenseEV": 6,
     "speedEV": 2,
     "hpEV": 9,
-    "attackIds": [1, 5, 2],
+    "attackIds": [
+      1,
+      5,
+      2
+    ],
     "currentExp": 0
   },
   "10": {
@@ -101,7 +137,9 @@
     "splDefenseEV": 6,
     "speedEV": 7,
     "hpEV": 3,
-    "attackIds": [2],
+    "attackIds": [
+      2
+    ],
     "currentExp": 0
   },
   "11": {
@@ -116,7 +154,9 @@
     "splDefenseEV": 8,
     "speedEV": 8,
     "hpEV": 4,
-    "attackIds": [2],
+    "attackIds": [
+      2
+    ],
     "currentExp": 0
   },
   "12": {
@@ -131,7 +171,9 @@
     "splDefenseEV": 1,
     "speedEV": 5,
     "hpEV": 2,
-    "attackIds": [4],
+    "attackIds": [
+      4
+    ],
     "currentExp": 0
   },
   "13": {
@@ -146,7 +188,10 @@
     "splDefenseEV": 8,
     "speedEV": 7,
     "hpEV": 4,
-    "attackIds": [2, 5],
+    "attackIds": [
+      2,
+      5
+    ],
     "currentExp": 0
   },
   "14": {
@@ -161,7 +206,9 @@
     "splDefenseEV": 5,
     "speedEV": 2,
     "hpEV": 8,
-    "attackIds": [2],
+    "attackIds": [
+      2
+    ],
     "currentExp": 0
   },
   "15": {
@@ -176,7 +223,9 @@
     "splDefenseEV": 3,
     "speedEV": 6,
     "hpEV": 4,
-    "attackIds": [2],
+    "attackIds": [
+      2
+    ],
     "currentExp": 0
   },
   "16": {
@@ -191,7 +240,9 @@
     "splDefenseEV": 3,
     "speedEV": 4,
     "hpEV": 5,
-    "attackIds": [2],
+    "attackIds": [
+      2
+    ],
     "currentExp": 0
   },
   "17": {
@@ -206,7 +257,9 @@
     "splDefenseEV": 5,
     "speedEV": 5,
     "hpEV": 5,
-    "attackIds": [2],
+    "attackIds": [
+      2
+    ],
     "currentExp": 0
   },
   "18": {
@@ -221,7 +274,12 @@
     "splDefenseEV": 10,
     "speedEV": 9,
     "hpEV": 8,
-    "attackIds": [1, 2, 5, 4],
+    "attackIds": [
+      1,
+      2,
+      5,
+      4
+    ],
     "currentExp": 0
   },
   "19": {
@@ -236,7 +294,9 @@
     "splDefenseEV": 5,
     "speedEV": 2,
     "hpEV": 6,
-    "attackIds": [2],
+    "attackIds": [
+      2
+    ],
     "currentExp": 0
   },
   "20": {
@@ -251,7 +311,9 @@
     "splDefenseEV": 6,
     "speedEV": 2,
     "hpEV": 8,
-    "attackIds": [2],
+    "attackIds": [
+      2
+    ],
     "currentExp": 0
   },
   "21": {
@@ -266,7 +328,9 @@
     "splDefenseEV": 4,
     "speedEV": 9,
     "hpEV": 5,
-    "attackIds": [2],
+    "attackIds": [
+      2
+    ],
     "currentExp": 0
   },
   "22": {
@@ -281,7 +345,9 @@
     "splDefenseEV": 3,
     "speedEV": 4,
     "hpEV": 6,
-    "attackIds": [2],
+    "attackIds": [
+      2
+    ],
     "currentExp": 0
   },
   "23": {
@@ -296,7 +362,9 @@
     "splDefenseEV": 4,
     "speedEV": 6,
     "hpEV": 5,
-    "attackIds": [2],
+    "attackIds": [
+      2
+    ],
     "currentExp": 0
   },
   "24": {
@@ -311,22 +379,10 @@
     "splDefenseEV": 6,
     "speedEV": 7,
     "hpEV": 3,
-    "attackIds": [2, 5],
+    "attackIds": [
+      2,
+      5
+    ],
     "currentExp": 0
-  },
-  "25": {
-    "id": 1,
-    "baseMonIndex": 24,
-    "name": "PIKACHU",
-    "currentHp": 46,
-    "currentLevel": 25,
-    "attackEV": 5,
-    "defenseEV": 29,
-    "splAttackEV": 11,
-    "splDefenseEV": 16,
-    "speedEV": 2,
-    "hpEV": 35,
-    "attackIds": [2, 6],
-    "currentExp": 13000
   }
 }

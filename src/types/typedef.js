@@ -42,7 +42,7 @@ import Phaser from "../lib/phaser.js";
  * @property {number|undefined} id
  * @property {string} name
  * @property {number} baseMonIndex
- * @property {number} currentHp
+ * @property {number|null} currentHp
  * @property {number} currentLevel
  * @property {number} attackEV
  * @property {number} defenseEV
