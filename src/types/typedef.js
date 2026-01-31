@@ -79,7 +79,8 @@ import Phaser from "../lib/phaser.js";
 /**
  * @typedef Trainer
  * @type {Object}
- * @property {OPPONENT_TYPES} type
+ * @property {number} id
+ * @property {OPPONENT_TYPES} [type]
  * @property {Mon[]} partyMons
  * @property {string} name
  * @property {string} trainerType

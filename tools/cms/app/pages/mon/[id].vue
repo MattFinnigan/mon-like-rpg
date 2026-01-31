@@ -24,7 +24,7 @@
         <DisplayField label="Attacks" :value="attackNames" />
       </div>
       <MonForm
-        v-if="editing"
+        v-if="editing && item"
         :initial-form="item"
         @submitted="onSubmit"
       />
@@ -51,6 +51,9 @@ export default {
   },
   mounted () {
     this.fetchItem()
+    if (this.$route.meta.edit) {
+      this.editing = true
+    }
   },
   computed: {
     heading () {

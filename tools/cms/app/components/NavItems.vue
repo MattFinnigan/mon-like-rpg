@@ -25,6 +25,12 @@
           <li><NuxtLink to="/item-type/list">Item Types</NuxtLink></li>
         </ul>
       </li>
+      <li>
+        NPCs
+        <ul>
+          <li><NuxtLink to="/trainer/list">Trainers</NuxtLink></li>
+        </ul>
+      </li>
     </ul>
   </div>
 </template>

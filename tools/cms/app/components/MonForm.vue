@@ -151,7 +151,7 @@ export default {
         return
       }
 
-      if (this.form.attackIds.includes(this.currentAttacks)) {
+      if (this.form.attackIds.includes(this.currentNewAttack)) {
         return
       }
       

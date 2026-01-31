@@ -88,7 +88,7 @@ export default defineEventHandler(async event => {
     })
   }
 
-  if (!currentExp) {
+  if (currentExp === undefined) {
     throw createError({
       status: 400,
       statusText: 'currentExp required',
