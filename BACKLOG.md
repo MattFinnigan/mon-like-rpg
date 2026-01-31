@@ -14,6 +14,7 @@ BATTLE SYSTEM
   - [] Battle state then passes in current battle situation, conditions to this decision class and returns the next decision
 
 WORLD
+- [] Add world item pickup
 - [] Add support for key items
 - [] Add support for world effecting items (Repel)
 - [] Add support for mon stat altering, level alterating items
@@ -34,6 +35,7 @@ MULTIPLAYER
 - [] Plan method of communication - Websockets, Battle scene 'check in pings'?
 
 DEVELOPMENT
+- [] Add UI to interface with save file, mons, attacks, items, npcs?
 - [] Improve workflow of adding attacks
   - [] Instant battle scene on refresh
   - [] Improve animation skipping - skip all but player 1/2's animations
