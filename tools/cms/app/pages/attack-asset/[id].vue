@@ -76,7 +76,8 @@ export default {
         }
       }
     },
-    handleCancel () {
+    async handleCancel () {
+      await this.fetchAttackAsset()
       this.editing = false
     },
     async onSubmit () {

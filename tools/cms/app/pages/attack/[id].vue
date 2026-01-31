@@ -13,7 +13,6 @@
         <DisplayField label="ID" :value="attack.id" />
         <DisplayField label="Name" :value="attack.name" />
         <DisplayField label="Animation Name" :value="attack.animationName" />
-        <DisplayField label="Asset Keys" :value="attack.assetKeys" />
         <DisplayField label="Type" :value="attack.typeKey" />
         <DisplayField label="Power" :value="attack.power" />
         <DisplayField label="Crict Modifer" :value="attack.criticalHitModifier" />
@@ -89,7 +88,8 @@ export default {
         }
       }
     },
-    handleCancel () {
+    async handleCancel () {
+      await this.fetchAttack()
       this.editing = false
     },
     async onSubmit () {

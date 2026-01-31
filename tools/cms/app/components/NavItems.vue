@@ -15,7 +15,6 @@
       <li>
         Mons
         <ul>
-          <li><NuxtLink to="/base-mon/list">Base Mons</NuxtLink></li>
           <li><NuxtLink to="/mon/list">Mons</NuxtLink></li>
         </ul>      
       </li>

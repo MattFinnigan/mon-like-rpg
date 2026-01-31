@@ -23,9 +23,34 @@ body {
     flex: 0.7;
   }
 }
+
+.form-list-items {
+  li {
+    background: #ffffff;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 2px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+.mini-form {
+  border-radius: 0.5em;
+  border: 1px solid rgba(0,0,0,0.15);
+  padding: 0.5em 1em;
+  margin: 1em 0.5em;
+  background: #fff;
+}
+
+section {
+  border-bottom: 2px solid #ddd;
+  padding: 0rem 0.75rem;
+}
+
 .nav-links {
   flex: 0.3;
 }
+
 .btn {
   background-color: rgb(164, 162, 162);
   color: #fff;

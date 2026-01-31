@@ -112,8 +112,8 @@ import Phaser from "../lib/phaser.js";
  * @property {string} typeKey
  * @property {number} power
  * @property {number} criticalHitModifier
- * @property {number} usesMonSplStat flag to uses attack mon's special attack, defener's special defense
- * @property {AttackStatusEffect} statusEffect
+ * @property {boolean} usesMonSplStat flag to uses attack mon's special attack, defener's special defense
+ * @property {AttackStatusEffect|null} statusEffect
  * @property {number} powerPoints
  * @property {number} accuracy
  * @property {number} turnsToCharge

@@ -2,41 +2,73 @@
 import { readJSON } from '../../utils/jsonStore.js'
 
 export default defineEventHandler(async event => {
-  return
   const body = await readBody(event)
-  const { key, name, typeKey, value } = body
+  /** @type {import('../../../../../src/types/typedef').Attack} */
+  const {
+    animationName,
+    typeKey,
+    power,
+    criticalHitModifier,
+    usesMonSplStat,
+    powerPoints,
+    accuracy
+  } = body
 
-  if (!key) {
+
+  if (!animationName) {
     throw createError({
       status: 400,
-      statusText: 'KEY required',
-    })
-  }
-
-  if (!name) {
-    throw createError({
-      status: 400,
-      statusText: 'NAME required',
+      statusText: 'animationName required',
     })
   }
 
   if (!typeKey) {
     throw createError({
       status: 400,
-      statusText: 'TYPEKEY required',
+      statusText: 'typeKey required',
     })
   }
 
-  if (!value) {
+  if (!power) {
     throw createError({
       status: 400,
-      statusText: 'VALUE required',
+      statusText: 'power required',
     })
   }
 
-  const items = await readJSON('items')
-  items.push(body)
-  const resp = await writeJSON('items', items)
+  if (!criticalHitModifier) {
+    throw createError({
+      status: 400,
+      statusText: 'criticalHitModifier required',
+    })
+  }
+
+  if (!usesMonSplStat) {
+    throw createError({
+      status: 400,
+      statusText: 'usesMonSplStat required',
+    })
+  }
+
+  if (!powerPoints) {
+    throw createError({
+      status: 400,
+      statusText: 'powerPoints required',
+    })
+  }
+
+  if (!accuracy) {
+    throw createError({
+      status: 400,
+      statusText: 'accuracy required',
+    })
+  }
+
+  const items = await readJSON('attacks')
+  const id = items[items.length - 1].id + 1
+
+  items.push({ ...body, id})
+  const resp = await writeJSON('attacks', items)
 
   return resp
 })

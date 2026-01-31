@@ -2,57 +2,93 @@
 import { readJSON } from '../../utils/jsonStore.js'
 
 export default defineEventHandler(async event => {
-  return
-  const { key, name, typeKey, value } = await readBody(event)
+  const body = await readBody(event)
+  /** @type {import('../../../../../src/types/typedef').Attack} */
+  const {
+    id,
+    animationName,
+    typeKey,
+    power,
+    criticalHitModifier,
+    usesMonSplStat,
+    powerPoints,
+    accuracy
+  } = body
 
-  if (!key) {
+  if (!id) {
     throw createError({
       status: 400,
-      statusText: 'KEY required',
+      statusText: 'ID required',
     })
   }
 
-  if (!name) {
+  if (!animationName) {
     throw createError({
       status: 400,
-      statusText: 'NAME required',
+      statusText: 'animationName required',
     })
   }
 
   if (!typeKey) {
     throw createError({
       status: 400,
-      statusText: 'TYPEKEY required',
+      statusText: 'typeKey required',
     })
   }
 
-  if (!value) {
+  if (!power) {
     throw createError({
       status: 400,
-      statusText: 'VALUE required',
+      statusText: 'power required',
+    })
+  }
+
+  if (!criticalHitModifier) {
+    throw createError({
+      status: 400,
+      statusText: 'criticalHitModifier required',
+    })
+  }
+
+  if (!usesMonSplStat) {
+    throw createError({
+      status: 400,
+      statusText: 'usesMonSplStat required',
+    })
+  }
+
+  if (!powerPoints) {
+    throw createError({
+      status: 400,
+      statusText: 'powerPoints required',
+    })
+  }
+
+  if (!accuracy) {
+    throw createError({
+      status: 400,
+      statusText: 'accuracy required',
     })
   }
 
   /**
-   * @type {import('../../../../../src/types/typedef').Item[]}
+   * @type {import('../../../../../src/types/typedef').Attack[]}
    */
   const attacks = await readJSON('attacks')
-  const attackFound = attacks.find(attack => attack.key === key)
+  const attackFound = attacks.find(attack => attack.id === id)
 
   if (!attackFound) {
     throw createError({
       status: 404,
-      statusMessage: `Item with key ${key} not found`
+      statusMessage: `Attack with ID ${id} not found`
     })
   }
 
   const updatedItems = attacks.map(attack => {
-    if (attack.key === key) {
+    if (attack.id === id) {
       attack = {
         ...attack,
-        name,
-        typeKey,
-        value
+        ...body
       }
     }
     return attack

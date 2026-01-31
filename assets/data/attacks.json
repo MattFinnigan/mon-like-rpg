@@ -7,7 +7,10 @@
     "power": 100,
     "criticalHitModifier": 1,
     "usesMonSplStat": true,
-    "statusEffect": { "name": "FREEZE", "chancePercentage": 20 },
+    "statusEffect": {
+      "name": "FREEZE",
+      "chancePercentage": 20
+    },
     "powerPoints": 10,
     "accuracy": 100,
     "turnsToCharge": 0,
@@ -39,7 +42,10 @@
     "power": 95,
     "criticalHitModifier": 1,
     "usesMonSplStat": true,
-    "statusEffect": { "name": "BURN", "chancePercentage": 35 },
+    "statusEffect": {
+      "name": "BURN",
+      "chancePercentage": 35
+    },
     "powerPoints": 10,
     "accuracy": 100,
     "turnsToCharge": 0,
@@ -71,7 +77,10 @@
     "power": 0,
     "criticalHitModifier": 1,
     "usesMonSplStat": true,
-    "statusEffect": { "name": "CONFUSE", "chancePercentage": 100 },
+    "statusEffect": {
+      "name": "CONFUSE",
+      "chancePercentage": 100
+    },
     "powerPoints": 15,
     "accuracy": 70,
     "turnsToCharge": 0,
@@ -87,7 +96,10 @@
     "power": 0,
     "criticalHitModifier": 1,
     "usesMonSplStat": true,
-    "statusEffect": { "name": "PARALYSE", "chancePercentage": 100 },
+    "statusEffect": {
+      "name": "PARALYSE",
+      "chancePercentage": 100
+    },
     "powerPoints": 15,
     "accuracy": 90,
     "turnsToCharge": 0,
@@ -204,7 +216,10 @@
     "power": 0,
     "criticalHitModifier": 1,
     "usesMonSplStat": true,
-    "statusEffect": { "name": "SLEEP", "chancePercentage": 100 },
+    "statusEffect": {
+      "name": "SLEEP",
+      "chancePercentage": 100
+    },
     "powerPoints": 15,
     "accuracy": 90,
     "turnsToCharge": 0,
@@ -220,7 +235,10 @@
     "power": 0,
     "criticalHitModifier": 1,
     "usesMonSplStat": true,
-    "statusEffect": { "name": "POISON", "chancePercentage": 100 },
+    "statusEffect": {
+      "name": "POISON",
+      "chancePercentage": 100
+    },
     "powerPoints": 15,
     "accuracy": 90,
     "turnsToCharge": 0,

@@ -73,7 +73,8 @@ export default {
         }
       }
     },
-    handleCancel () {
+    async handleCancel () {
+      await this.fetchItem()
       this.editing = false
     },
     async onSubmit () {
