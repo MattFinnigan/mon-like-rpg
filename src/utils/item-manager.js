@@ -3,9 +3,9 @@ import { MonCore } from "../common/mon-core.js"
 import { ITEM_TYPE_KEY } from "../generated/item-type-keys.js"
 import { SCENE_KEYS } from "../scenes/scene-keys.js"
 import { EVENT_KEYS } from "../types/event-keys.js"
-import { ITEM_TYPE_DATA } from "../types/items.js"
 import { AudioManager } from "./audio-manager.js"
 import { DATA_MANAGER_STORE_KEYS, dataManager } from "./data-manager.js"
+import { DataUtils } from "./data-utils.js"
 /**
  * 
  * @param {Phaser.Scene} scene
@@ -90,7 +90,7 @@ export function playItemEffect (scene, config) {
  * 
  */
 export function canUseItemInScene (scene, item) {
-  return ITEM_TYPE_DATA[item.typeKey].usableDuringScenes.includes(SCENE_KEYS[scene.scene.key])
+  return DataUtils.getItemTypeDetails(scene, item.typeKey).usableDuringScenes.includes(SCENE_KEYS[scene.scene.key])
 }
 
 /**

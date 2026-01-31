@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="top-row">
-      <h2>Items List</h2>
+      <h2>Items Types List</h2>
       <button class="btn" @click="handleNew">New</button>
     </div>
     <TableComponent
@@ -18,7 +18,7 @@
 export default {
   /**
    * @returns {{
-   *  list: import('../../../../../src/types/typedef').Item[]
+   *  list: import('../../../../../src/types/typedef').ItemType[]
    * }}
    */
   data () {
@@ -31,31 +31,31 @@ export default {
   },
   methods: {
     async fetchList () {
-      const res = await $fetch('/api/item/list')
+      const res = await $fetch('/api/item-type/list')
       this.list = res
     },
     /**
      *
-     * @param {import('../../../../../src/types/typedef').Item} item
+     * @param {import('../../../../../src/types/typedef').ItemType} itemType
      */
-    handleView (item) {
-      this.$router.push(`/item/${item.key}`)
+    handleView (itemType) {
+      this.$router.push(`/item-type/${itemType.key}`)
     },
     /**
      *
-     * @param {import('../../../../../src/types/typedef').Item} item
+     * @param {import('../../../../../src/types/typedef').ItemType} itemType
      */
-    handleCopy (item) {
+    handleCopy (itemType) {
       
     },
     /**
      *
-     * @param {import('../../../../../src/types/typedef').Item} item
+     * @param {import('../../../../../src/types/typedef').ItemType} itemType
      */
-    async handleDelete (item) {
+    async handleDelete (itemType) {
       if (confirm('Are you sure you want to delete?')) {
         try {
-          const response = await $fetch(`/api/item/${item.key}`, {
+          const response = await $fetch(`/api/item-type/${itemType.key}`, {
             method: 'DELETE'
           })
           console.log('Deleted:', response)
@@ -64,17 +64,11 @@ export default {
           console.error('Error:', error)
         }
       }
+      
     },
     handleNew () {
-      this.$router.push('/item/create')
+      this.$router.push('/item-type/create')
     }
   }
 }
 </script>
-<style scoped>
-.top-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-</style>

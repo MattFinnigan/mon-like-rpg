@@ -3,10 +3,12 @@
  * @returns {Promise<import('../../../../../src/types/typedef').Item>}
  */
 export default defineEventHandler(async event => {
-  return {
+  /** @type {import('../../../../../src/types/typedef').Item} */
+  const res = {
     name: '',
     key: '',
-    typeKey: null,
+    typeKey: 'BALL',
     value: 0
   }
+  return res
 })

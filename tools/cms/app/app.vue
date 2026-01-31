@@ -133,4 +133,10 @@ label:has(input[type="checkbox"]) span {
   color: #374151;
 }
 
+.top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 </style>

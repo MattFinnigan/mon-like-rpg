@@ -12,30 +12,29 @@
       Key
       <input  v-model="form.key" type="text" id="key" required/>
     </label>
+  
+    <div
+      v-for="sceneKey in sceneKeys"
+      :key="sceneKey.label"
+      :id="sceneKey.label">
+      <label :for="sceneKey.label">
+        <input
+          type="checkbox"
+          :id="sceneKey.label"
+          :checked="sceneKey.value"
+          @input="toggleScene(sceneKey.label)"
+        />
+        Enable use on {{ sceneKey.label }}
+      </label>
+    </div>
 
-    <label for="name">
-      Name
-      <input v-model="form.name" type="text" id="name" required />
-    </label>
-
-    <label for="type">
-      Type
-      <select v-model="form.typeKey" id="type">
-        <option v-for="opt in typeOptions" :value="opt.value">{{ opt.label }}</option>
-      </select>
-    </label>
-
-    <label for="value">
-      Value
-      <input v-model="form.value" type="number" id="value" required  min="0"/>
-    </label>
   </form>
 </template>
 <script>
-import { ITEM_TYPE_KEY } from '../../../../src/generated/item-type-keys'
+import { SCENE_KEYS } from '../../../../src/scenes/scene-keys'
 
 /**
- * @typedef {import('../../../../src/types/typedef').Item} Item
+ * @typedef {import('../../../../src/types/typedef').ItemType} ItemType
  */
 
 export default {
@@ -48,7 +47,7 @@ export default {
   },
   /**
    * @returns {{
-   *  form: Item
+   *  form: ItemType
    * }}
    */
   data () {
@@ -56,21 +55,26 @@ export default {
       form: { ...this.initialForm }
     }
   },
-  mounted () {
-    console.log(this.initialForm)
-  },
   computed: {
-    typeOptions () {
-      return Object.keys(ITEM_TYPE_KEY).map(key => {
-        return { label: key, value: key }
+    sceneKeys () {
+      return Object.keys(SCENE_KEYS).map(key => {
+        return { label: key, value: this.form.usableDuringScenes.includes(key) }
       })
     }
   },
   methods: {
+    toggleScene (scene) {
+      const index = this.form.usableDuringScenes.indexOf(scene)
+      if (index !== -1) {
+        this.form.usableDuringScenes.splice(index, 1)
+        return
+      }
+      this.form.usableDuringScenes.push(scene)
+    },
     async handleSave () {
       if (this.initialForm.key) {
         try {
-          const response = await $fetch(`/api/item/${this.initialForm.key}`, {
+          const response = await $fetch(`/api/item-type/${this.initialForm.key}`, {
             method: 'PATCH',
             body: this.form
           })
@@ -83,7 +87,7 @@ export default {
       }
 
       try {
-        const response = await $fetch(`/api/item/new`, {
+        const response = await $fetch(`/api/item-type/new`, {
           method: 'POST',
           body: this.form
         })

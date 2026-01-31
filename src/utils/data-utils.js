@@ -1,6 +1,5 @@
 import { DATA_ASSET_KEYS } from "../assets/asset-keys.js"
 import { ITEM_TYPE_KEY } from "../generated/item-type-keys.js"
-import { ITEM_TYPE_DATA } from "../types/items.js"
 import { MON_TYPES } from "../types/mon-types.js"
 import { getMonStats } from "./battle-utils.js"
 
@@ -86,9 +85,20 @@ export class DataUtils {
   static getItemDetails (scene) {
     const items = scene.cache.json.get(DATA_ASSET_KEYS.ITEMS)
     return items.map(item => {
-      item.type = ITEM_TYPE_DATA[ITEM_TYPE_KEY[item.typeKey]]
+      item.type = this.getItemTypeDetails(scene, item.typeKey)
       return item
     })
+  }
+
+  /**
+   * 
+   * @param {Phaser.Scene} scene 
+   * @param {string} key
+   * @returns {import("../types/typedef.js").ItemType}
+   */
+  static getItemTypeDetails (scene, key) {
+    const items = scene.cache.json.get(DATA_ASSET_KEYS.ITEM_TYPES)
+    return items.find(item => item.key === key)
   }
 
   /**

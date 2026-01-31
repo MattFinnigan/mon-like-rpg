@@ -1,6 +1,27 @@
 [
-  { "key": "BALL" },
-  { "key": "HEALING" },
-  { "key": "REPELLENT" },
-  { "key": "QUEST" }
+  {
+    "key": "BALL",
+    "usableDuringScenes": [
+      "BATTLE_SCENE"
+    ]
+  },
+  {
+    "key": "HEALING",
+    "usableDuringScenes": [
+      "BATTLE_SCENE",
+      "WORLD_SCENE"
+    ]
+  },
+  {
+    "key": "REPELLENT",
+    "usableDuringScenes": [
+      "WORLD_SCENE"
+    ]
+  },
+  {
+    "key": "QUEST",
+    "usableDuringScenes": [
+      "WORLD_SCENE"
+    ]
+  }
 ]

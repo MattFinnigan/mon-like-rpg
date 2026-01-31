@@ -1,12 +1,14 @@
+const item = 
+
 <template>
   <ViewComponent
     :editing="true"
     @cancel="handleCancel">
     <template #heading>
-      New Item
+      New Item Type
     </template>
     <template #content>
-      <ItemForm
+      <ItemTypeForm
         v-if="form"
         :initial-form="form"
         @submitted="handleSubmit"
@@ -19,7 +21,7 @@
 export default {
   /**
    * @returns {{
-   *  item: import('../../../../../src/types/typedef').Item | null
+   *  item: import('../../../../../src/types/typedef').ItemType | null
    * }}
    */
   data () {
@@ -34,13 +36,13 @@ export default {
   },
   methods: {
     async createNewItem () {
-      this.form = await $fetch('/api/item/new')
+      this.form = await $fetch('/api/item-type/new')
     },
     handleCancel () {
-      this.$router.push('/item/list')
+      this.$router.push('/item-type/list')
     },
     handleSubmit () {
-      this.$router.push('/item/list')
+      this.$router.push('/item-type/list')
     }
   }
 }

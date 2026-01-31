@@ -9,15 +9,13 @@
       {{ heading }}
     </template>
     <template #content>
-      <div v-if="!editing && item" class="viewing-mode">
-        <DisplayField label="Key" :value="item.key" />
-        <DisplayField label="Name" :value="item.name" />
-        <DisplayField label="Type" :value="item.typeKey" />
-        <DisplayField label="Value" :value="item.value" />
+      <div v-if="!editing && itemType" class="viewing-mode">
+        <DisplayField label="Key" :value="itemType.key" />
+        <DisplayField label="Usable during scenes" :value="itemType.usableDuringScenes" />
       </div>
-      <ItemForm
+      <ItemTypeForm
         v-if="editing"
-        :initial-form="item"
+        :initial-form="itemType"
         @submitted="onSubmit"
       />
     </template>
@@ -29,13 +27,13 @@
 export default {
   /**
    * @returns {{
-   *  item: import('../../../../../src/types/typedef').Item | null
+   *  itemType: import('../../../../../src/types/typedef').ItemType | null
    *  editing: boolean
    * }}
    */
   data () {
     return {
-      item: null,
+      itemType: null,
       editing: false
     }
   },
@@ -45,17 +43,17 @@ export default {
   computed: {
     heading () {
       if (this.editing) {
-        return `Editing Item "${this.item?.name}"`
+        return `Editing Item Type "${this.itemType?.key}"`
       }
-      return `Viewing Item "${this.item?.name}"`
+      return `Viewing Item Type "${this.itemType?.key}"`
     }
   },
   methods: {
     async fetchItem () {
       const key = this.$route.params.id
-      /** @type {import('../../../../../src/types/typedef').Item} */
-      const res = await $fetch(`/api/item/${key}`)
-      this.item = res
+      /** @type {import('../../../../../src/types/typedef').ItemType} */
+      const res = await $fetch(`/api/item-type/${key}`)
+      this.itemType = res
     },
     handleEdit () {
       this.editing = true
@@ -65,11 +63,11 @@ export default {
     async handleDelete () {
       if (confirm('Are you sure you want to delete?')) {
         try {
-          const response = await $fetch(`/api/item/${this.item.key}`, {
+          const response = await $fetch(`/api/item-type/${this.itemType.key}`, {
             method: 'DELETE'
           })
           console.log('Deleted:', response)
-          this.$router.push('/item/list')
+          this.$router.push('/item-type/list')
         } catch (error) {
           console.error('Error:', error)
         }
