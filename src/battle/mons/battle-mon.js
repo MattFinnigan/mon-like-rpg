@@ -8,7 +8,6 @@ import { ExpBar } from "../../common/exp-bar.js"
 import { STATUS_EFFECT } from "../../types/status-effect.js"
 import { exhaustiveGuard } from "../../utils/guard.js"
 import { Attack } from "../attacks/attack.js"
-import { ATTACK_KEYS } from "../attacks/attack-keys.js"
 import { MON_BATTLE_STAT } from "../../types/mon-battle-stats.js"
 
 /**

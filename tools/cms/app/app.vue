@@ -2,21 +2,30 @@
 </script>
 
 <template>
-  <NavItems />
-  <NuxtPage />
+  <div class="container">
+    <NavItems />
+    <NuxtPage />
+  </div>
 </template>
 <style>
 body {
   font-family: Arial, Helvetica, sans-serif;
-  max-width: 1068px;
   margin: 0 auto;
+  display: flex;
+
+}
+.container {
+  display: flex;
+  width: 95vw;
+  justify-content: center;
+  max-width: 1600px;
+  > * {
+    flex: 0.7;
+  }
 }
 .nav-links {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  flex: 0.3;
 }
-
 .btn {
   background-color: rgb(164, 162, 162);
   color: #fff;

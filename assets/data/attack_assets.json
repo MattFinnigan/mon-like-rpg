@@ -1,0 +1,51 @@
+[
+  {
+    "id": 12,
+    "attackKey": "ICE_SHARD",
+    "assetKey": "ICE_SHARD",
+    "frameWidth": 32,
+    "frameHeight": 32
+  },
+  {
+    "id": 2,
+    "attackKey": "ICE_SHARD",
+    "assetKey": "ICE_SHARD_START",
+    "frameWidth": 32,
+    "frameHeight": 32
+  },
+  {
+    "id": 3,
+    "attackKey": "FIRE_SPIN",
+    "assetKey": "FIRE_SPIN",
+    "frameWidth": 137,
+    "frameHeight": 177
+  },
+  {
+    "id": 4,
+    "attackKey": "THUNDER_WAVE",
+    "assetKey": "ELECTRIC",
+    "frameWidth": 131,
+    "frameHeight": 126
+  },
+  {
+    "id": 5,
+    "attackKey": "CONFUSE_RAY",
+    "assetKey": "RAY",
+    "frameWidth": 131,
+    "frameHeight": 126
+  },
+  {
+    "id": 6,
+    "attackKey": "HYPER_BEAM",
+    "assetKey": "HYPER_BEAM",
+    "frameWidth": 235,
+    "frameHeight": 153
+  },
+  {
+    "id": 7,
+    "attackKey": "SOLAR_BEAM",
+    "assetKey": "SOLAR_BEAM",
+    "frameWidth": 49,
+    "frameHeight": 91
+  }
+]

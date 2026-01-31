@@ -1,7 +1,6 @@
-import { ATTACK_ASSET_KEYS, BATTLE_ASSET_KEYS, BGM_ASSET_KEYS, MON_ASSET_KEYS, MON_BACK_ASSET_KEYS, MON_GRAY_ASSET_KEYS, SFX_ASSET_KEYS, TRAINER_SPRITES } from "../assets/asset-keys.js"
+import { BATTLE_ASSET_KEYS, BGM_ASSET_KEYS, MON_ASSET_KEYS, MON_BACK_ASSET_KEYS, MON_GRAY_ASSET_KEYS, SFX_ASSET_KEYS, TRAINER_SPRITES } from "../assets/asset-keys.js"
 import { ATTACK_ANIMS_PATH, ATTACK_SFX_ASSETS_PATH, BACKGROUND_ASSETS_PATH, BGM_ASSETS_PATH, MON_CRIES_ASSETS_PATH, MON_SPRITES_ASSETS_PATH, SFX_ASSETS_PATH, TRAINER_SPRITES_ASSETS_PATH } from "./consts.js"
 import { DataUtils } from "./data-utils.js"
-import { exhaustiveGuard } from "./guard.js"
 
 /**
  * 
@@ -44,41 +43,9 @@ if (!attksLoaded.includes(attkId)) {
     // sfx - bit daft going by animationName TODO
     scene.load.audio(attk.animationName, `${ATTACK_SFX_ASSETS_PATH}/${attk.animationName}.wav`)
 
-    attk.assetKeys.forEach(assetKey => {
-      let frameWidth = null
-      let frameHeight = null
-      // this is going to get long.. todo
-      switch (assetKey) {
-        case ATTACK_ASSET_KEYS.ICE_SHARD_START:
-          case ATTACK_ASSET_KEYS.ICE_SHARD:
-          frameWidth = 32
-          frameHeight = 32
-          break
-        case ATTACK_ASSET_KEYS.SLASH:
-          frameWidth = 48
-          frameHeight = 48
-          break
-        case ATTACK_ASSET_KEYS.FIRE_SPIN:
-          frameWidth = 137
-          frameHeight = 177
-          break
-        case ATTACK_ASSET_KEYS.ELECTRIC:
-          frameWidth = 131
-          frameHeight = 126
-          break
-        case ATTACK_ASSET_KEYS.RAY:
-          frameWidth = 49
-          frameHeight = 91
-          break
-        case ATTACK_ASSET_KEYS.HYPER_BEAM:
-        case ATTACK_ASSET_KEYS.SOLAR_BEAM:
-          frameWidth = 235
-          frameHeight = 153
-          break
-        default:
-          exhaustiveGuard(assetKey)
-          break
-      }
+
+    DataUtils.getAttackAssets(scene, attk.animationName).forEach(asset => {
+      const { assetKey, frameWidth, frameHeight } = asset
       if (frameWidth && frameHeight) {
         scene.load.spritesheet(assetKey, `${ATTACK_ANIMS_PATH}/${assetKey}.png`, {
           frameWidth: frameWidth,

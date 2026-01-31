@@ -15,7 +15,19 @@ export class DataUtils {
     const attk = data.find(attk => attk.id === attackId)
     return attk
   }
-  
+
+  /**
+   * 
+   * @param {Phaser.Scene} scene 
+   * @param {string} attackKey 
+   * @returns {import("../types/typedef.js").AttackAsset[]}
+   */
+  static getAttackAssets (scene, attackKey) {
+    const data = scene.cache.json.get(DATA_ASSET_KEYS.ATTACK_ASSETS)
+    const assets = data.filter(asset => asset.attackKey === attackKey)
+    return assets
+  }
+
   /**
    * 
    * @param {Phaser.Scene} scene

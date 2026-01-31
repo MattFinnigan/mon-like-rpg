@@ -35,7 +35,6 @@
 export default {
   emits: ['view', 'copy', 'delete'],
   props: {
-    name: String,
     contents: {
       type: Array,
       default: () => {}
@@ -46,7 +45,11 @@ export default {
       if (!this.contents.length) {
         return []
       }
-      return Object.keys(this.contents[0])
+      const res = []
+      for (let i = 0; i < 3; i++) {
+        res.push(Object.keys(this.contents[0])[i])
+      }
+      return res
     }
   }
 }

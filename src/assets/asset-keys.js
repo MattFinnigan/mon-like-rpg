@@ -19,6 +19,7 @@ export const UI_ASSET_KEYS = Object.freeze({
 
 export const DATA_ASSET_KEYS = Object.freeze({
   ATTACKS: 'ATTACKS',
+  ATTACK_ASSETS: 'ATTACK_ASSETS',
   ANIMATIONS: 'ANIMATIONS',
   MONS: 'MONS',
   BASE_MONS: 'BASE_MONS',
@@ -39,21 +40,6 @@ export const SYSTEM_ASSET_KEYS = Object.freeze({
   DIALOG_BACKGROUND: 'DIALOG_BACKGROUND'
 })
 
-/**
-  * @typedef {keyof typeof ATTACK_ASSET_KEYS} AttackAssetKey
- */
-
-/** @enum {AttackAssetKey} */
-export const ATTACK_ASSET_KEYS = Object.freeze({
-  ICE_SHARD: 'ICE_SHARD',
-  ICE_SHARD_START: 'ICE_SHARD_START',
-  SLASH: 'SLASH',
-  FIRE_SPIN: 'FIRE_SPIN',
-  ELECTRIC: 'ELECTRIC',
-  RAY: 'RAY',
-  HYPER_BEAM: 'HYPER_BEAM',
-  SOLAR_BEAM: 'SOLAR_BEAM'
-})
 
 export const WORLD_ASSET_KEYS = Object.freeze({
   WORLD_BACKGROUND: 'WORLD_BACKGROUND',

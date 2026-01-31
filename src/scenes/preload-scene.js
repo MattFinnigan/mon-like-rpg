@@ -67,7 +67,7 @@ export class PreloadScene extends Phaser.Scene {
     this.load.json(DATA_ASSET_KEYS.ITEMS, `${DATA_ASSETS_PATH}/items.json`)
     this.load.json(DATA_ASSET_KEYS.ITEM_TYPES, `${DATA_ASSETS_PATH}/item-types.json`)
     this.load.json(DATA_ASSET_KEYS.LEVEL_UP_MOVES, `${DATA_ASSETS_PATH}/level-up-moves.json`)
-    
+    this.load.json(DATA_ASSET_KEYS.ATTACK_ASSETS, `${DATA_ASSETS_PATH}/attack_assets.json`)
     
     // common
     this.load.atlas(TEXTURE_ASSET_KEYS.SYSTEM, 'assets/images/system.png', `${DATA_ASSETS_PATH}/system.json`);

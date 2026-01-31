@@ -108,8 +108,7 @@ import Phaser from "../lib/phaser.js";
  * @type {Object}
  * @property {number} id
  * @property {string} name
- * @property {import("../battle/attacks/attack-keys.js").AttackKeys} animationName
- * @property {import("../assets/asset-keys.js").AttackAssetKey[]} assetKeys
+ * @property {import("../generated/attack-keys.js").AttackKeys} animationName
  * @property {string} typeKey
  * @property {number} power
  * @property {number} criticalHitModifier
@@ -124,6 +123,15 @@ import Phaser from "../lib/phaser.js";
  * @property {string} [coolDownMessage]
  * @property {BattleStatEffect[]} selfBattleStatEffects
  * @property {BattleStatEffect[]} opponentBattleStatEffects
+ */
+
+/**
+ * @typedef {object} AttackAsset
+ * @property {number} id
+ * @property {import("../generated/attack-asset-keys.js").AttackAssetKey} assetKey
+ * @property {import("../generated/attack-keys.js").AttackKeys} attackKey
+ * @property {number} frameWidth
+ * @property {number} frameHeight
  */
 
 /**

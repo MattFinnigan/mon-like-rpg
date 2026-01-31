@@ -1,7 +1,6 @@
 import Phaser from "../../lib/phaser.js"
-import { ATTACK_ASSET_KEYS } from "../../assets/asset-keys.js"
 import { Attack } from "./attack.js"
-import { ATTACK_KEYS } from "./attack-keys.js"
+import { ATTACK_KEYS } from "../../generated/attack-keys.js"
 
 export class PoisonPowder extends Attack {
 

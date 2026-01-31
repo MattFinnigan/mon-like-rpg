@@ -1,4 +1,3 @@
-import { ATTACK_KEYS } from "./attack-keys.js"
 import { IceShard } from "./ice-shard.js"
 import { Slash } from "./slash.js"
 import { FireSpin } from './fire-spin.js'
@@ -18,6 +17,7 @@ import { MON_BATTLE_STAT } from "../../types/mon-battle-stats.js"
 import { Barrier } from "./barrier.js"
 import { SleepPowder } from "./sleep-powder.js"
 import { PoisonPowder } from "./poison-powder.js"
+import { ATTACK_KEYS } from "../../generated/attack-keys.js"
 /**
  * @typedef {keyof typeof ATTACK_TARGET} AttackTarget
  */
@@ -92,7 +92,7 @@ export class AttackManager {
   #enemyMonImageGameObject
   /** @type {boolean} */
   #skipBattleAnimations
-  /** @type {Map<import("./attack-keys").AttackKeys, any>} */
+  /** @type {Map<import("../../generated/attack-keys.js").AttackKeys, any>} */
   #attackInstances = new Map()
 
   /**
@@ -121,7 +121,7 @@ export class AttackManager {
   
   /**
    * 
-   * @param {import("./attack-keys.js").AttackKeys} key 
+   * @param {import("../../generated/attack-keys.js").AttackKeys} key 
    * @param {() => Attack} factory 
    * @returns {Attack}
    */
@@ -134,7 +134,7 @@ export class AttackManager {
 
   /**
    * 
-   * @param {import("./attack-keys").AttackKeys} key
+   * @param {import("../../generated/attack-keys.js").AttackKeys} key
    * @param {object} config
    * @param {() => void} config.onAnimFinish
    * @param {'PLAYER'|'ENEMY'} config.target

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="top-row">
-      <h2>Items Types List</h2>
+      <h2>Attack Asset List</h2>
       <button class="btn" @click="handleNew">New</button>
     </div>
     <TableComponent
@@ -17,7 +17,7 @@
 export default {
   /**
    * @returns {{
-   *  list: import('../../../../../src/types/typedef').ItemType[]
+   *  list: import('../../../../../src/types/typedef').AttackAsset[]
    * }}
    */
   data () {
@@ -30,31 +30,31 @@ export default {
   },
   methods: {
     async fetchList () {
-      const res = await $fetch('/api/item-type/list')
+      const res = await $fetch('/api/attack-asset/list')
       this.list = res
     },
     /**
      *
-     * @param {import('../../../../../src/types/typedef').ItemType} itemType
+     * @param {import('../../../../../src/types/typedef').AttackAsset} attkAsset
      */
-    handleView (itemType) {
-      this.$router.push(`/item-type/${itemType.key}`)
+    handleView (attkAsset) {
+      this.$router.push(`/attack-asset/${attkAsset.id}`)
     },
     /**
      *
-     * @param {import('../../../../../src/types/typedef').ItemType} itemType
+     * @param {import('../../../../../src/types/typedef').AttackAsset} attkAsset
      */
-    handleCopy (itemType) {
+    handleCopy (attkAsset) {
       
     },
     /**
      *
-     * @param {import('../../../../../src/types/typedef').ItemType} itemType
+     * @param {import('../../../../../src/types/typedef').AttackAsset} attkAsset
      */
-    async handleDelete (itemType) {
+    async handleDelete (attkAsset) {
       if (confirm('Are you sure you want to delete?')) {
         try {
-          const response = await $fetch(`/api/item-type/${itemType.key}`, {
+          const response = await $fetch(`/api/attack-asset/${attkAsset.id}`, {
             method: 'DELETE'
           })
           console.log('Deleted:', response)
@@ -63,11 +63,17 @@ export default {
           console.error('Error:', error)
         }
       }
-      
     },
     handleNew () {
-      this.$router.push('/item-type/create')
+      this.$router.push('/attack-asset/create')
     }
   }
 }
 </script>
+<style scoped>
+.top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+</style>

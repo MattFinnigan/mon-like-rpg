@@ -1,7 +1,6 @@
 import Phaser from "../../lib/phaser.js"
-import { ATTACK_ASSET_KEYS } from "../../assets/asset-keys.js"
+import { ATTACK_ASSET_KEYS } from "../../generated/attack-asset-keys.js"
 import { Attack } from "./attack.js"
-import { BattleMon } from "../mons/battle-mon.js"
 
 export class IceShard extends Attack {
   /** @protected @type {Phaser.GameObjects.Sprite} */
