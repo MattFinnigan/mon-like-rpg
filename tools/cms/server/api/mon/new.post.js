@@ -111,12 +111,14 @@ export default defineEventHandler(async event => {
     id = array.length && lastObj?.id + 1
   }
 
-  array.push({ ...body, id})
+  const newMon = { ...body, id}
+
+  array.push(newMon)
 
   const updatedObj = Object.fromEntries(
     array.map(item => [item.id, item])
   )
   const resp = await writeJSON('mons', updatedObj)
 
-  return resp
+  return newMon
 })

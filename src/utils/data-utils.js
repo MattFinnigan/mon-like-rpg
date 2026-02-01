@@ -139,4 +139,13 @@ export class DataUtils {
     return [...new Set(res)]
   }
 
+  /**
+   * 
+   * @returns {Promise<Record<string, import("../types/typedef.js").GlobalState>>}
+   */
+  static async getDefaultSaveData () {
+    const data = await fetch('/assets/data/save_data.json').then(res => res.json())
+    return data
+  }
+
 }

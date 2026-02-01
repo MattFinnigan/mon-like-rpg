@@ -50,13 +50,6 @@ export default defineEventHandler(async event => {
     })
   }
 
-  if (!usesMonSplStat) {
-    throw createError({
-      status: 400,
-      statusText: 'usesMonSplStat required',
-    })
-  }
-
   if (!powerPoints) {
     throw createError({
       status: 400,

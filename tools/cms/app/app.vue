@@ -34,7 +34,7 @@ body {
   }
 }
 
-.mini-form {
+.section {
   border-radius: 0.5em;
   border: 1px solid rgba(0,0,0,0.15);
   padding: 0.5em 1em;

@@ -51,7 +51,7 @@
         </li>
       </ul>
 
-      <div v-if="form.partyMons.length < 6" class="mini-form">
+      <div v-if="form.partyMons.length < 6" class="section">
         <label for="newMon">
           Add Mon
           <select v-model="currentNewMon" id="newMon">

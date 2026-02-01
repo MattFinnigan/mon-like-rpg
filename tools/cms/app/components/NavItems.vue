@@ -31,6 +31,13 @@
           <li><NuxtLink to="/trainer/list">Trainers</NuxtLink></li>
         </ul>
       </li>
+      <li>
+        Save Data
+        <ul>
+          <li><NuxtLink to="/save-data/view">Normal</NuxtLink></li>
+          <li><NuxtLink to="/dev-save-data/view">Dev</NuxtLink></li>
+        </ul>
+      </li>
     </ul>
   </div>
 </template>

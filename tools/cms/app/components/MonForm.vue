@@ -9,7 +9,7 @@
       label="ID"
       :value="initialForm.id"
     />
-  
+    <slot name="btns" />
     <label for="key">
       Base Mon
       <select v-model="form.baseMonIndex" id="type">
@@ -48,7 +48,7 @@
         </li>
       </ul>
 
-      <div v-if="currentAttacks.length < 4" class="mini-form">
+      <div v-if="currentAttacks.length < 4" class="section">
         <label for="newAttack">
           Add Attack
           <select v-model="currentNewAttack" id="newAttack">
@@ -103,7 +103,8 @@ export default {
     initialForm: {
       type: Object
     },
-    existing: Boolean
+    existing: Boolean,
+    dontSave: Boolean
   },
   /**
    * @returns {{
@@ -177,6 +178,12 @@ export default {
         alert('Please add at least 1 attack')
         return
       }
+
+      if (this.dontSave) {
+        this.$emit('submitted', this.form)
+        return
+      }
+      
       if (this.initialForm.id) {
         try {
           const response = await $fetch(`/api/mon/${this.initialForm.id}`, {
@@ -197,7 +204,7 @@ export default {
           body: this.form
         })
         console.log('Created:', response)
-        this.$emit('submitted')
+        this.$emit('submitted', response)
       } catch (error) {
         console.error('Error:', error)
       }

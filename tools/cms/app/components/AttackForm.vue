@@ -79,7 +79,7 @@
     <label for="statusEffect">
       Status Effect
     
-      <div v-if="form.statusEffect" class="mini-form">
+      <div v-if="form.statusEffect" class="section">
         <label for="statusEffect">
           Effect
           <select v-model="form.statusEffect.name" id="statusEffectName">
@@ -111,7 +111,7 @@
       <button v-if="!newSelfBattleStatEffect" class="btn sm" @click="newSelfBattleStatEffect = { statKey: 'ATTACK', chancePercentage: 0, amount: 0 }">Add</button>
     </label>
 
-    <div v-if="newSelfBattleStatEffect" class="mini-form">
+    <div v-if="newSelfBattleStatEffect" class="section">
       <label for="statName">
         Stat Name
         <select v-model="newSelfBattleStatEffect.statKey" id="statName">
@@ -147,7 +147,7 @@
       <button v-if="!newOppBattleStatEffect" class="btn sm" @click="newOppBattleStatEffect = { statKey: 'ATTACK', chancePercentage: 0, amount: 0 }">Add</button>
     </label>
 
-    <div v-if="newOppBattleStatEffect" class="mini-form">
+    <div v-if="newOppBattleStatEffect" class="section">
       <label for="statName">
         Stat Name
         <select v-model="newOppBattleStatEffect.statKey" id="statName">

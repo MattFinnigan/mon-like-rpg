@@ -241,3 +241,19 @@ import Phaser from "../lib/phaser.js";
  * @property {number} amount
  * @property {number|undefined} [turnsInEffect=undefined] undefined = indefinite
  */
+
+/**
+ * @typedef GlobalState
+ * @type {object}
+ * @property {object} player
+ * @property {object} player.position
+ * @property {number} player.position.x
+ * @property {number} player.position.y
+ * @property {import("../types/direction").Direction} player.direction
+ * @property {string} player.name
+ * @property {import("../types/typedef.js").Mon[]} player.partyMons
+ * @property {import("../types/typedef.js").Inventory} player.inventory
+ * @property {object} npcs
+ * @property {import("../types/typedef.js").Coordinate[]} npcs.positions
+ * @property {import("../types/direction").Direction[]} npcs.directions
+ */

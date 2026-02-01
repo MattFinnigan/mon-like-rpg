@@ -35,7 +35,7 @@ MULTIPLAYER
 - [] Plan method of communication - Websockets, Battle scene 'check in pings'?
 
 DEVELOPMENT
-- [] Add UI to interface with save file, mons, attacks, items, npcs?
+- [x] Add UI to interface with save file, mons, attacks, items, npcs?
 - [] Improve workflow of adding attacks
   - [] Instant battle scene on refresh
   - [] Improve animation skipping - skip all but player 1/2's animations
