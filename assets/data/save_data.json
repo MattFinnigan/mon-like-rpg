@@ -6,7 +6,7 @@
         "y": 11520
       },
       "direction": "DOWN",
-      "name": "MATT",
+      "name": "GAMER",
       "partyMons": [
         {
           "id": 0,
@@ -113,122 +113,26 @@
         "y": 11456
       },
       "direction": "DOWN",
-      "name": "YOU",
+      "name": "DEV",
       "partyMons": [
         {
-          "id": 1123123,
-          "baseMonIndex": 3,
-          "name": "TANK",
-          "currentHp": 900000,
-          "currentLevel": 8,
-          "attackEV": 14,
-          "defenseEV": 3,
-          "splAttackEV": 27,
-          "splDefenseEV": 8,
-          "speedEV": 19,
-          "hpEV": 22,
-          "attackIds": [
-            3,
-            4,
-            5,
-            6
-          ],
-          "currentExp": 506.6
-        },
-        {
-          "id": 11231234,
-          "baseMonIndex": 150,
-          "name": "TANK2",
-          "currentHp": 900000,
-          "currentLevel": 1,
-          "attackEV": 1,
+          "id": 1770197329980,
+          "baseMonIndex": 24,
+          "name": "PIKACHU",
+          "currentHp": 46,
+          "currentLevel": 25,
+          "attackEV": 5,
           "defenseEV": 29,
-          "splAttackEV": 1,
+          "splAttackEV": 11,
           "splDefenseEV": 16,
-          "speedEV": 1,
-          "hpEV": 35,
-          "attackIds": [
-            2,
-            8,
-            7
-          ],
-          "currentExp": 1
-        },
-        {
-          "id": 99999,
-          "baseMonIndex": 150,
-          "name": "TANK3",
-          "currentHp": 900000,
-          "currentLevel": 1,
-          "attackEV": 1,
-          "defenseEV": 29,
-          "splAttackEV": 1,
-          "splDefenseEV": 16,
-          "speedEV": 1,
-          "hpEV": 35,
-          "attackIds": [
-            9,
-            10,
-            11,
-            4
-          ],
-          "currentExp": 1
-        },
-        {
-          "id": 999997,
-          "baseMonIndex": 150,
-          "name": "TANK4",
-          "currentHp": 900000,
-          "currentLevel": 1,
-          "attackEV": 1,
-          "defenseEV": 29,
-          "splAttackEV": 1,
-          "splDefenseEV": 16,
-          "speedEV": 1,
+          "speedEV": 2,
           "hpEV": 35,
           "attackIds": [
             12,
             13,
-            4
+            1
           ],
-          "currentExp": 1
-        },
-        {
-          "id": 11231232,
-          "baseMonIndex": 149,
-          "name": "DEV GOD MON",
-          "currentHp": 900000,
-          "currentLevel": 99,
-          "attackEV": 14,
-          "defenseEV": 3,
-          "splAttackEV": 27,
-          "splDefenseEV": 8,
-          "speedEV": 19,
-          "hpEV": 22,
-          "attackIds": [
-            1,
-            2,
-            3,
-            8
-          ],
-          "currentExp": 799999
-        },
-        {
-          "id": 11231231,
-          "baseMonIndex": 6,
-          "name": "FODDER",
-          "currentHp": 1,
-          "currentLevel": 1,
-          "attackEV": 1,
-          "defenseEV": 29,
-          "splAttackEV": 1,
-          "splDefenseEV": 16,
-          "speedEV": 1,
-          "hpEV": 35,
-          "attackIds": [
-            2
-          ],
-          "currentExp": 1
+          "currentExp": 13000
         }
       ],
       "inventory": [

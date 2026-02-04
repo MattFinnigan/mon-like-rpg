@@ -107,11 +107,16 @@ export class PreloadScene extends Phaser.Scene {
       frameHeight: 112
     })
     this.load.image(STATUS_EFFECT_ASSET_KEYS.CONFUSED, `${STATUS_EFFECT_ASSETS_PATH}/CONFUSED.png`)
+    this.load.image(STATUS_EFFECT_ASSET_KEYS.POISONED, `${STATUS_EFFECT_ASSETS_PATH}/POISONED.png`)
     this.load.spritesheet(STATUS_EFFECT_ASSET_KEYS.FROZEN, `${STATUS_EFFECT_ASSETS_PATH}/FROZEN.png`, {
       frameWidth: 174,
       frameHeight: 100
     })
-
+    this.load.spritesheet(STATUS_EFFECT_ASSET_KEYS.SLEEPING, `${STATUS_EFFECT_ASSETS_PATH}/SLEEPING.png`, {
+      frameWidth: 47,
+      frameHeight: 50
+    })
+    
     // sfx
     this.load.audio(SFX_ASSET_KEYS.MENU, `${SFX_ASSETS_PATH}/MENU.wav`)
     this.load.audio(SFX_ASSET_KEYS.MENU_MOVE, `${SFX_ASSETS_PATH}/MENU_MOVE.wav`)

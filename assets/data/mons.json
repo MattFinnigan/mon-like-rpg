@@ -137,7 +137,7 @@
     "speedEV": 7,
     "hpEV": 4,
     "attackIds": [
-      7
+      1
     ],
     "currentExp": 0
   },
@@ -330,7 +330,8 @@
     "speedEV": 2,
     "hpEV": 6,
     "attackIds": [
-      2
+      2,
+      11
     ],
     "currentExp": 0
   },

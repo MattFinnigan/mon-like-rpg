@@ -50,7 +50,7 @@
       <ul class="form-list-items">
         <li v-for="(mon, i) in form.player.partyMons">
           <span>
-            <strong>{{ mon.name }} {{ mon.currentLevel }}</strong>
+            <strong>{{ mon.name }} Lv{{ mon.currentLevel }}</strong>
           </span>
           <span>
           <span @click="editingMonIndex = i">edit</span> &nbsp;
@@ -163,7 +163,7 @@ export default {
       this.newItem = null
     },
     handleMonEdited (mon) {
-      this.form.player.partyMons[this.editingMonIndex] = mon
+      this.form.player.partyMons[this.editingMonIndex] = { ...mon, id: this.form.player.partyMons[this.editingMonIndex].id}
       this.editingMonIndex = null
     },
     handleAddNewMon (e) {
@@ -174,6 +174,7 @@ export default {
       const mon = JSON.parse(JSON.stringify(this.mons.find(mon => mon.id === this.currentNewMon)))
       mon.id = Date.now() + Math.floor(Math.random() * 1000)
       this.form.player.partyMons.push(mon)
+      console.log(mon.id)
       this.currentNewMon = null
     },
     handleRemoveMon (i) {

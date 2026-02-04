@@ -62,7 +62,6 @@ export class ThunderWave extends Attack {
         })
       }),
       new Promise(resolve => {
-
         this._attackGameObject1.once(Phaser.Animations.Events.ANIMATION_COMPLETE_KEY + ATTACK_KEYS.THUNDER_WAVE, () => {
           this._isAnimationPlaying = false
           this._attackGameObjectContainer.setAlpha(0)

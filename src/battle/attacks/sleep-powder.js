@@ -1,6 +1,7 @@
 import Phaser from "../../lib/phaser.js"
 import { Attack } from "./attack.js"
 import { ATTACK_KEYS } from "../../generated/attack-keys.js"
+import { ATTACK_ASSET_KEYS } from "../../generated/attack-asset-keys.js"
 
 export class SleepPowder extends Attack {
 
@@ -10,6 +11,27 @@ export class SleepPowder extends Attack {
    */
   constructor (scene) {
     super(scene)
+
+    this._attackGameObject1 = this._scene.add.sprite(0, 0, ATTACK_ASSET_KEYS.SLEEP_POWER, 0)
+      .setOrigin(0.5, 0.3).setScale(1.15)
+
+    this._attackGameObjectContainer = this._scene.add.container(0, 0, [
+      this._attackGameObject1
+    ]).setAlpha(0)
+
+    this.#createAnimation()
+  }
+
+  #createAnimation () {
+    const anim = {
+      key: ATTACK_KEYS.SLEEP_POWDER,
+      frames: this._scene.anims.generateFrameNumbers(ATTACK_ASSET_KEYS.SLEEP_POWER, { frames: [0, 1, 2, 3, 4, 5, 6]}),
+      frameRate: 8,
+      repeat: 0,
+      yoyo: false
+    }
+
+    this._scene.anims.create(anim)
   }
 
   /**
@@ -23,6 +45,12 @@ export class SleepPowder extends Attack {
       return
     }
 
+    this._isAnimationPlaying = true
+    this._attackGameObjectContainer.setPosition(defender.x, defender.y - 70)
+    this._attackGameObjectContainer.setAlpha(1)
+    this._attackGameObject1.play(ATTACK_KEYS.SLEEP_POWDER)
+
+
     const promises = [
       new Promise(resolve => {
         this._audioManager.playSfx(ATTACK_KEYS.SLEEP_POWDER, {
@@ -31,7 +59,12 @@ export class SleepPowder extends Attack {
         })
       }),
       new Promise(resolve => {
-        this._scene.time.delayedCall(500, () => resolve())
+        this._attackGameObject1.once(Phaser.Animations.Events.ANIMATION_COMPLETE_KEY + ATTACK_KEYS.SLEEP_POWDER, () => {
+          this._isAnimationPlaying = false
+          this._attackGameObjectContainer.setAlpha(0)
+          this._attackGameObject1.setFrame(0)
+          resolve()
+        })
       })
     ]
 

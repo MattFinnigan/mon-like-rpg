@@ -269,7 +269,7 @@ export class BattleMon extends MonCore  {
         })
         break
       case STATUS_EFFECT.SLEEP:
-        this.#playPoisonedAnim(() => {
+        this.#playSleepingAnim(() => {
           this._monLvlGameText.setText('SLP')
           callback()
         })
@@ -508,16 +508,22 @@ export class BattleMon extends MonCore  {
    * @param {() => void} callback
    */
   #playPoisonedAnim (callback) {
-    // const sprite = this._scene.add.sprite(this._phaserMonImageGameObject.x - 35, this._phaserMonImageGameObject.y + 40, STATUS_EFFECT_ASSET_KEYS.BURNT, 0).setScale(1.5)
-    // sprite.play(STATUS_EFFECT_ASSET_KEYS.BURNT)
-
     const promises = [
       new Promise(resolve => {
-        resolve()
-        // sprite.once(Phaser.Animations.Events.ANIMATION_COMPLETE_KEY + STATUS_EFFECT_ASSET_KEYS.POISON, () => {
-        //   sprite.setAlpha(0)
-        //   resolve()
-        // })
+        const sprite1 = this._scene.add.sprite(this._phaserMonImageGameObject.x, this._phaserMonImageGameObject.y - 90, STATUS_EFFECT_ASSET_KEYS.POISONED, 0).setScale(1)
+        const sprite2 = this._scene.add.sprite(this._phaserMonImageGameObject.x + 70, this._phaserMonImageGameObject.y - 75, STATUS_EFFECT_ASSET_KEYS.POISONED, 0)
+          .setScale(1)
+          .setAlpha(0)
+
+        this._scene.time.delayedCall(500, () => {
+          sprite2.setAlpha(1)
+          this._scene.time.delayedCall(500, () => {
+            sprite1.setAlpha(0)
+            sprite2.setAlpha(0)
+            resolve()
+          })
+        })
+
       }),
       new Promise(resolve => {
         this.#audioManager.playSfx(STATUS_EFFECT_ASSET_KEYS.POISONED, {
@@ -536,16 +542,16 @@ export class BattleMon extends MonCore  {
    * @param {() => void} callback
    */
   #playSleepingAnim (callback) {
-    // const sprite = this._scene.add.sprite(this._phaserMonImageGameObject.x - 35, this._phaserMonImageGameObject.y + 40, STATUS_EFFECT_ASSET_KEYS.BURNT, 0).setScale(1.5)
-    // sprite.play(STATUS_EFFECT_ASSET_KEYS.BURNT)
+    const sprite = this._scene.add.sprite(this._phaserMonImageGameObject.x - 90, this._phaserMonImageGameObject.y - 80, STATUS_EFFECT_ASSET_KEYS.SLEEPING, 0).setScale(1.25)
+    sprite.play(STATUS_EFFECT_ASSET_KEYS.SLEEPING)
 
     const promises = [
       new Promise(resolve => {
         resolve()
-        // sprite.once(Phaser.Animations.Events.ANIMATION_COMPLETE_KEY + STATUS_EFFECT_ASSET_KEYS.POISON, () => {
-        //   sprite.setAlpha(0)
-        //   resolve()
-        // })
+        sprite.once(Phaser.Animations.Events.ANIMATION_COMPLETE_KEY + STATUS_EFFECT_ASSET_KEYS.SLEEPING, () => {
+          sprite.setAlpha(0)
+          resolve()
+        })
       }),
       new Promise(resolve => {
         this.#audioManager.playSfx(STATUS_EFFECT_ASSET_KEYS.SLEEPING, {

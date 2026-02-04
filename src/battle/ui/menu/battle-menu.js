@@ -337,7 +337,7 @@ export class BattleMenu {
     }
     const messageToDisplay = this.#queuedInfoPanelMessages.shift()
 
-    if (this.#queuedMessageSkipAnimation) {
+    if (this.#queuedMessageSkipAnimation || SKIP_ANIMATIONS) {
       this.#waitingForPlayerInput = true
       this.#battleTextGameObjectLine1.setText(messageToDisplay)
       this.#queuedMessageAnimationPlaying = false

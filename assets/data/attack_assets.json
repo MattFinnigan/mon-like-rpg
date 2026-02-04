@@ -47,5 +47,26 @@
     "assetKey": "SOLAR_BEAM",
     "frameWidth": 49,
     "frameHeight": 91
+  },
+  {
+    "id": 8,
+    "assetKey": "BARRIER",
+    "attackKey": "BARRIER",
+    "frameWidth": 131,
+    "frameHeight": 167
+  },
+  {
+    "id": 9,
+    "assetKey": "SLEEP_POWER",
+    "attackKey": "SLEEP_POWDER",
+    "frameWidth": 204,
+    "frameHeight": 107
+  },
+  {
+    "id": 10,
+    "assetKey": "POISON_POWDER",
+    "attackKey": "POISON_POWDER",
+    "frameWidth": 204,
+    "frameHeight": 107
   }
 ]

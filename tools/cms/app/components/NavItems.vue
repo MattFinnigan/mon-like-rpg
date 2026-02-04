@@ -35,7 +35,7 @@
         Save Data
         <ul>
           <li><NuxtLink to="/save-data/view">Normal</NuxtLink></li>
-          <li><NuxtLink to="/dev-save-data/view">Dev</NuxtLink></li>
+          <li><NuxtLink to="/save-dev-data/view">Dev</NuxtLink></li>
         </ul>
       </li>
     </ul>

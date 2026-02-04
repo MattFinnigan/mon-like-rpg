@@ -77,7 +77,7 @@ export default {
     async fetchItem () {
       const key = this.$route.params.id
       /** @type {import('../../../../../src/types/typedef').GlobalState} */
-      const res = await $fetch(`/api/dev-save-data/view`)
+      const res = await $fetch(`/api/save-dev-data/view`)
       this.item = res
 
       /** @type {import('../../../../../src/types/typedef').Attack[]} */

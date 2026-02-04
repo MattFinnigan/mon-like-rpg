@@ -36,6 +36,15 @@
     "assetKey": "BURNT"
   },
   {
+    "key": "SLEEPING",
+    "frames": [0, 1, 2],
+    "frameRate": 3,
+    "repeat": 1,
+    "delay": 0,
+    "yoyo": false,
+    "assetKey": "SLEEPING"
+  },
+  {
     "key": "FROZEN",
     "frames": [0, 1, 2, 3],
     "frameRate": 4,
